@@ -4,6 +4,9 @@ import "../Home.css";
 import { TbSlashes } from "react-icons/tb";
 import Avatar from "@mui/material/Avatar";
 import { MdOutlineStar } from "react-icons/md";
+import { FiUsers } from "react-icons/fi";
+import { HiPlayCircle } from "react-icons/hi2";
+import axios from "axios";
 import Pagination from "../Common/Pagination";
 import { IoSearch } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
@@ -11,9 +14,10 @@ import { useAllCourses } from "../../../Api/hooks/SitemapPageApi/useAllCourses";
 import { useTrainers } from "../../../Api/hooks/HomePageApi/TrainingApi/useTrainers";
 import Loader from "../Common/Loader/Loader";
 import { useTrainerOptions } from "../../../Api/hooks/InstructorSection/useTrainerOptions";
+import { useQueries } from "@tanstack/react-query";
 import { useEnrollCounts } from "../../../Api/hooks/InstructorSection/useEnrollCounts";
-import styles from './Instructors.module.css';
-import CardsPagination from "../Common/CardsPagination";
+import TrainingEvents from '../HomePage/TrainingSection/TrainingEvents'
+import Learners from "../HomePage/LearnerSection/Learners";
 
 const Instructors = () => {
   const titleRef = useRef(null);
@@ -21,7 +25,7 @@ const Instructors = () => {
 
   const [courses, setCourses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [cardsPerPage, setCardsPerPage] = useState(1);
+  const [cardsPerPage, setCardsPerPage] = useState(16);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedTeacher, setSelectedTeacher] = useState("");
@@ -30,7 +34,9 @@ const Instructors = () => {
   const { data: trainers = [], isLoading, isError, error } = useTrainers();
   const { data: teacherOptions = [] } = useTrainerOptions();
 
-  const countKey = (t) => `${t.trainer_name || ''}::${t.course_name || ''}`;
+
+  // const [enrollCounts, setEnrollCounts] = useState({});
+  const countKey = (t) => `${t.trainer_name}::${t.course_name}`;
 
   /* -----------------------------
      Courses list
@@ -49,51 +55,99 @@ const Instructors = () => {
     });
   }, []);
 
+
   /* -----------------------------
-     Filters - With proper null checks
+     Filters
   ----------------------------- */
+
   const filteredTrainers = useMemo(() => {
-    if (!Array.isArray(trainers)) return [];
+
 
     return trainers.filter((trainer) => {
-      if (!trainer) return false;
+
 
       const term = searchTerm.toLowerCase().trim();
-      const trainerName = trainer.trainer_name || "";
-      const courseName = trainer.course_name || "";
+
+
 
       const matchesSearch =
         term === "" ||
-        trainerName.toLowerCase().includes(term) ||
-        courseName.toLowerCase().includes(term);
+        trainer.trainer_name?.toLowerCase().includes(term) ||
+        trainer.course_name?.toLowerCase().includes(term);
 
       const matchesTeacher = selectedTeacher
-        ? trainerName === selectedTeacher
+        ? trainer.trainer_name === selectedTeacher
         : true;
 
       const matchesCourse = selectedCourse
-        ? courseName === selectedCourse
+        ? trainer.course_name === selectedCourse
         : true;
 
       return matchesSearch && matchesCourse && matchesTeacher;
     });
   }, [trainers, searchTerm, selectedTeacher, selectedCourse]);
 
-  // Reset to first page when filters change
+
+  /* -----------------------------
+     Responsive pagination size
+  ----------------------------- */
   useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, selectedCourse, selectedTeacher]);
+    const updateCardsPerPage = () => {
+      const width = window.innerWidth;
+      if (width <= 768) setCardsPerPage(4);
+      else if (width <= 1024) setCardsPerPage(12);
+      else setCardsPerPage(4);
+    };
+
+    updateCardsPerPage();
+    window.addEventListener("resize", updateCardsPerPage);
+    return () => window.removeEventListener("resize", updateCardsPerPage);
+  }, []);
+
 
   const enrollCounts = useEnrollCounts({
     trainers: filteredTrainers,
     countKey,
   });
 
+
+  // // Replace your current useEffect with this optimized version
+  // useEffect(() => {
+  //   if (!Array.isArray(enrollQueries) || enrollQueries.length === 0) return;
+
+  //   // Only update if there are actual changes
+  //   const updates = {};
+  //   let hasUpdates = false;
+
+  //   enrollQueries.forEach((q) => {
+  //     if (!q?.data || !Array.isArray(q.queryKey)) return;
+
+  //     const [, trainerName, courseName] = q.queryKey;
+  //     if (!trainerName || !courseName) return;
+
+  //     const key = `${trainerName}::${courseName}`;
+
+  //     // Only update if the value is different from current
+  //     if (enrollCounts[key] !== q.data) {
+  //       updates[key] = q.data;
+  //       hasUpdates = true;
+  //     }
+  //   });
+
+  //   if (hasUpdates) {
+  //     setEnrollCounts(prev => ({
+  //       ...prev,
+  //       ...updates
+  //     }));
+  //   }
+  // }, [enrollQueries]); // Only depend on enrollQueries
+
+
   /* -----------------------------
      Helpers
   ----------------------------- */
   const formatForUrl = (str) =>
-    str ? str.toLowerCase().replace(/\s+/g, "-") : "";
+    str.toLowerCase().replace(/\s+/g, "-");
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -110,19 +164,15 @@ const Instructors = () => {
     </div>
   );
 
-  const handleResetFilters = () => {
-    setSearchTerm("");
-    setSelectedCourse("");
-    setSelectedTeacher("");
-    setCurrentPage(1);
-  };
-
   if (isLoading) return <Loader />;
   if (isError) return <div>{error?.message || "Something went wrong"}</div>;
 
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  const currentCards = filteredTrainers.slice(indexOfFirstCard, indexOfLastCard);
+  const currentCards = filteredTrainers.slice(
+    indexOfFirstCard,
+    indexOfLastCard
+  );
   const totalCards = filteredTrainers.length;
 
   /* -----------------------------
@@ -146,13 +196,8 @@ const Instructors = () => {
       </div>
 
       <div className="container">
-        {/* <p ref={titleRef} className="expert-title">
-          {totalCards > 0 
-            ? `Showing Instructor ${currentPage} of ${totalCards}`
-            : 'No Instructors Found'
-          }
-        </p> */}
-
+        <p ref={titleRef} className="expert-title">
+          Instructors ({filteredTrainers.length})</p>
         {/* Filters */}
         <div className="instructors-filter">
           {/* Search */}
@@ -163,7 +208,7 @@ const Instructors = () => {
               <input
                 type="text"
                 id="search"
-                placeholder="Search by instructor name or course..."
+                placeholder="Search in your teachers..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -179,7 +224,7 @@ const Instructors = () => {
               onChange={(e) => setSelectedCourse(e.target.value)}
             >
               <option value="">All Courses</option>
-              {Array.isArray(courses) && courses.map((course, idx) => (
+              {courses.map((course, idx) => (
                 <option key={idx} value={course}>{course}</option>
               ))}
             </select>
@@ -194,14 +239,15 @@ const Instructors = () => {
               onChange={(e) => setSelectedTeacher(e.target.value)}
             >
               <option value="">All Teachers</option>
-              {Array.isArray(teacherOptions) && teacherOptions.map((trainer, idx) => (
+              {teacherOptions.map((trainer) => (
                 <option
-                  key={trainer.trainer_id || trainer.id || `teacher-${idx}`}
-                  value={trainer.trainer_name || ""}
+                  key={trainer.trainer_id || trainer.id || trainer.trainer_name}
+                  value={trainer.trainer_name}
                 >
-                  {trainer.trainer_name || "Unknown"}
+                  {trainer.trainer_name}
                 </option>
               ))}
+
             </select>
           </div>
 
@@ -209,153 +255,97 @@ const Instructors = () => {
           <div className="expert-filter-item">
             <button
               className="btn btn-secondary"
-              onClick={handleResetFilters}
+              onClick={() => {
+                setSearchTerm("");
+                setSelectedCourse("");
+                setSelectedTeacher("");
+              }}
             >
               Reset Filters
             </button>
           </div>
         </div>
 
-        {/* Instructor Section with Single Card View */}
-        <section className={styles.iswrap}>
-          <div className="container">
-            <div className={styles.ishead}>
-              <h2>Meet Your Instructor</h2>
-              <p>Learn from industry veterans with years of real-world experience</p>
-            </div>
-
+        {/* Trainer Cards */}
+        <div className="recent-entries-container">
+          <div className="profiles-grid">
             {currentCards.length > 0 ? (
-              <div className={styles.iscardsContainer}>
-                {/* Pagination */}
-                <div className={styles.paginationBottom}>
-                  <p ref={titleRef}
-                  // className="expert-title"
-                  >
-                    {totalCards > 0
-                      ? `Showing Instructor ${currentPage} of ${totalCards}`
-                      : 'No Instructors Found'
-                    }
-                  </p>
-                  <CardsPagination
-                    currentPage={currentPage}
-                    totalCards={totalCards}
-                    cardsPerPage={cardsPerPage}
-                    onPageChange={handlePageChange}
-                  />
-                </div>
-                {/* Single Card View */}
-                <div className={styles.singleCardView}>
-                  {currentCards.map((trainer) => {
-                    const trainerName = trainer.trainer_name || "Instructor";
-                    const courseName = trainer.course_name || "Course";
-                    const trainerImage = trainer.trainerImage;
-                    const trainerBio = trainer.trainer_bio || "Experienced instructor with industry expertise.";
-                    const trainerRating = trainer.trainerUserRating || 5;
-                    const otherCourses = Array.isArray(trainer.other_courses) ? trainer.other_courses : [];
-                    const key = `${trainerName}::${courseName}`;
-                    const studentCount = enrollCounts[key] ?? 0;
+              currentCards.map((trainer) => (
+                <div className="instructor-card" key={trainer.id}>
+                  <div className="card-course-details">
+                    <div className="instructor-image">
+                      <img
+                        alt={trainer.trainer_name}
+                        src={
+                          trainer.trainerImage
+                            ? `https://api.test.hachion.co/${trainer.trainerImage}`
+                            : "instructordefault.png"
+                        }
+                        className="instructor-image-single"
+                      />
 
-                    return (
-                      <div className={styles.iscard} key={trainer.id || `trainer-${currentPage}`}>
-                        {/* Photo */}
-                        <div className={styles.isphoto}>
-  <img
-    src="/instructordefault.png"
-    alt={`${trainerName} headshot`}
-    onError={(e) => {
-                e.currentTarget.src = "/InstructorDefaultImage.webp";
-              }}
-  />
-</div>
+                    </div>
+                    <div className="instrctor-content">
+                      <p className="expert-name">{trainer.trainer_name}</p>
+                      <p className="expert-course">{trainer.course_name}</p>
+                      <div className="expert-about">
+                        <p className="expert-me">About Me</p>
+                        <p className="expert-detail">
+                          {/* One day Wade Warren had enough with the 9-to-5 grind, or more like 9-to-9 in his case, and quit his job, or more like got himself fired from his own startup. */}
+                          {trainer.summary}
+                        </p>
+                      </div>
+                      <hr className="faq-seperater" />
+                      <div className="card-row">
+                        <div className="instructor-rating">
+                          {renderStarRating(trainer.trainerUserRating || 5)}
+                        </div>
 
-                        {/* Content */}
-                        <div className={styles.iscontent}>
-                          <div className={styles.istopline}>
-                            <span className={styles.isbadge}>⭐ Top Instructor</span>
-                            <h3 className={styles.isname}>{trainerName}</h3>
-                          </div>
 
-                          <div className={styles.istitle}>{courseName}</div>
+                        {/* {(enrollCounts[`${trainer.trainer_name}::${trainer.course_name}`] ?? 0) > 0 && ( */}
+                        <p className="student-count">
+                          {enrollCounts[`${trainer.trainer_name}::${trainer.course_name}`]}
+                          <FiUsers className="student-count-icon" />
+                          <span className="student-count-number">236,568</span>
+                          <span className="student-count-text">Students</span>
+                        </p>
+                        {/* )} */}
 
-                          <div className={styles.isstats}>
-                            <div className={styles.isstat}>
-                              <div className={styles.isstatval}>
-                                <span className={styles.isstatico}>
-                                  <img src="/users.png" alt="Students" />
-                                </span>
-                                {studentCount} Students
-                              </div>
-                              <div className={styles.isstatlab}>Students Taught</div>
-                            </div>
-
-                            <div className={styles.isstat}>
-                              <div className={styles.isstatval}>
-                                <span className={styles.isstatico}>
-                                  <img src="/users.png" alt="Rating" />
-                                </span>
-                                {trainerRating}
-                                <span style={{ color: "#f5a623", fontSize: "18px", marginLeft: "4px" }}>
-                                  ★
-                                </span>
-                              </div>
-                              <div className={styles.isstatlab}>Instructor Rating</div>
-                            </div>
-                          </div>
-
-                          <p className={styles.isbio}>{trainerBio}</p>
-
-                          {(courseName || otherCourses.length > 0) && (
-                            <>
-                              <div className={styles.issubhead}>Courses:</div>
-                              <ul className={styles.islist}>
-                                {courseName && <li>{courseName}</li>}
-                                {otherCourses.map((course, index) => (
-                                  <li key={`course-${index}`}>{course}</li>
-                                ))}
-                              </ul>
-                            </>
-                          )}
-
-                          {/* <div className={styles.isactions}>
-                            <button
-                              className={`${styles.isbtn} ${styles.isbtnprimary}`}
-                              onClick={() =>
-                                navigate(
-                                  `/${formatForUrl(courseName)}-${formatForUrl(trainerName)}-instructor-details`,
-                                  {
-                                    state: {
-                                      trainer,
-                                      enrollCount: studentCount,
-                                    },
-                                  }
-                                )
-                              }
-                            >
-                              View Full Profile
-                            </button>
-                          </div> */}
+                        <div className="course-count">
+                          <HiPlayCircle className="course-count-icon" />
+                          <span className="course-count-number">8</span>
+                          <span className="course-count-text">Courses</span>
                         </div>
                       </div>
-                    );
-                  })}
+                      <button
+                        className="view-profile-btn"
+                        onClick={() =>
+                          navigate(`/${formatForUrl(trainer.course_name)}-${trainer.trainer_name}-instructor-details`, { state: { trainer, enrollCount: (enrollCounts[`${trainer.trainer_name}::${trainer.course_name}`] ?? 0), } })
+                        }
+                      >
+                        View Profile
+                      </button>
+                    </div>
+                  </div>
                 </div>
-
-
-              </div>
+              ))
             ) : (
-              <div className={styles.noInstructors}>
-                <p>No instructors found matching your filters.</p>
-                <button
-                  className={`${styles.isbtn} ${styles.isbtnprimary}`}
-                  onClick={handleResetFilters}
-                  style={{ marginTop: '20px' }}
-                >
-                  Reset All Filters
-                </button>
-              </div>
+              <p>No instructors found.</p>
             )}
           </div>
-        </section>
+
+          {/* Pagination */}
+          <div className="pagination-container">
+            <Pagination
+              currentPage={currentPage}
+              totalCards={totalCards}
+              cardsPerPage={cardsPerPage}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        </div>
+        <TrainingEvents/>
+        <Learners/>
       </div>
     </div>
   );

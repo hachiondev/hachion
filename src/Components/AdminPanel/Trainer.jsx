@@ -94,7 +94,7 @@ export default function Trainer() {
   const [errorMessage, setErrorMessage] = useState('');
 
   // Mandatory fields
-  const mandatoryFields = ['trainer_name', 'course_name', 'category_name', 'experience', 'designation', 'experienceCredentials','trainerRating','summary'];
+  const mandatoryFields = ['trainer_name', 'course_name', 'category_name', 'experience', 'designation', 'experienceCredentials','trainerRating','summary', 'profileImage'];
 
   // Check form validity without setting state
   const checkFormValidity = () => {
@@ -102,8 +102,25 @@ export default function Trainer() {
     
     // Check each mandatory field
     mandatoryFields.forEach(field => {
-      if (!formData[field] || formData[field].toString().trim() === '') {
-        newErrors[field] = `${field.replace('_', ' ')} is required`;
+      if (field === 'profileImage') {
+        // Special validation for profileImage
+        // In Edit mode, we need either an existing image or a new file
+        if (formMode === 'Edit') {
+          // For edit mode: either existingImageName or a new file must be present
+          if (!formData.existingImageName && (!formData.profileImage || !(formData.profileImage instanceof File))) {
+            newErrors[field] = 'Trainer image is required';
+          }
+        } else {
+          // For add mode: must have a file
+          if (!formData.profileImage || !(formData.profileImage instanceof File)) {
+            newErrors[field] = 'Trainer image is required';
+          }
+        }
+      } else {
+        // Regular validation for other fields
+        if (!formData[field] || formData[field].toString().trim() === '') {
+          newErrors[field] = `${field.replace('_', ' ')} is required`;
+        }
       }
     });
     
@@ -497,17 +514,19 @@ export default function Trainer() {
                       name="trainer_name"
                       value={formData.trainer_name}
                       onChange={handleInputChange}
-                      // style={{ borderColor: errors.trainer_name ? 'red' : '#ced4da' }}
+                      style={{ borderColor: errors.trainer_name ? 'red' : '#ced4da' }}
                     />
-                    {/* {errors.trainer_name && (
+                    {errors.trainer_name && (
                       <div className="text-danger small">{errors.trainer_name}</div>
-                    )} */}
+                    )}
                   </div>
 
                   <div className="col-md-3">
-                    <label className="form-label">Trainer Image</label>
+                    <label className="form-label">
+                      Trainer Image <span style={{ color: 'red' }}>*</span>
+                    </label>
                     {formMode === 'Edit' && formData.existingImageName && !formData.profileImage ? (
-                      <div className="form-control d-flex justify-content-between align-items-center">
+                      <div className={`form-control d-flex justify-content-between align-items-center ${errors.profileImage ? 'border-danger' : ''}`}>
                         <span>{formData.existingImageName}</span>
                         <button
                           type="button"
@@ -527,7 +546,7 @@ export default function Trainer() {
                         />
                       </div>
                     ) : formData.profileImage ? (
-                      <div className="form-control d-flex justify-content-between align-items-center">
+                      <div className={`form-control d-flex justify-content-between align-items-center ${errors.profileImage ? 'border-danger' : ''}`}>
                         <span>{formData.profileImage.name}</span>
                         <button
                           type="button"
@@ -549,11 +568,15 @@ export default function Trainer() {
                     ) : (
                       <input
                         type="file"
-                        className="form-control"
+                        className={`form-control ${errors.profileImage ? 'border-danger' : ''}`}
                         name="profileImage"
                         accept="image/*"
                         onChange={handleFileChange}
+                        required
                       />
+                    )}
+                    {errors.profileImage && (
+                      <div className="text-danger small">{errors.profileImage}</div>
                     )}
                   </div>
                 </div>
@@ -571,7 +594,11 @@ export default function Trainer() {
                       min="0"
                       max="5"
                       onChange={handleInputChange}
+                      style={{ borderColor: errors.trainerRating ? 'red' : '#ced4da' }}
                     />
+                    {errors.trainerRating && (
+                      <div className="text-danger small">{errors.trainerRating}</div>
+                    )}
                   </div>
                   <div className="col-md-3">
                     <label className="form-label">
@@ -584,11 +611,11 @@ export default function Trainer() {
                       name="experience"
                       value={formData.experience}
                       onChange={handleInputChange}
-                      // style={{ borderColor: errors.experience ? 'red' : '#ced4da' }}
+                      style={{ borderColor: errors.experience ? 'red' : '#ced4da' }}
                     />
-                    {/* {errors.experience && (
+                    {errors.experience && (
                       <div className="text-danger small">{errors.experience}</div>
-                    )} */}
+                    )}
                   </div>
                 </div>
 
@@ -605,11 +632,11 @@ export default function Trainer() {
                       name="designation"
                       value={formData.designation}
                       onChange={handleInputChange}
-                      // style={{ borderColor: errors.designation ? 'red' : '#ced4da' }}
+                      style={{ borderColor: errors.designation ? 'red' : '#ced4da' }}
                     />
-                    {/* {errors.designation && (
+                    {errors.designation && (
                       <div className="text-danger small">{errors.designation}</div>
-                    )} */}
+                    )}
                   </div>
                   <div className="col-md-3">
                     <label className="form-label">
@@ -622,11 +649,11 @@ export default function Trainer() {
                       value={formData.experienceCredentials}
                       onChange={handleInputChange}
                       rows="3"
-                      // style={{ borderColor: errors.experienceCredentials ? 'red' : '#ced4da' }}
+                      style={{ borderColor: errors.experienceCredentials ? 'red' : '#ced4da' }}
                     />
-                    {/* {errors.experienceCredentials && (
+                    {errors.experienceCredentials && (
                       <div className="text-danger small">{errors.experienceCredentials}</div>
-                    )} */}
+                    )}
                   </div>
                 </div>
 
@@ -641,16 +668,16 @@ export default function Trainer() {
                       name="category_name"
                       value={formData.category_name}
                       onChange={handleInputChange}
-                      // style={{ borderColor: errors.category_name ? 'red' : '#ced4da' }}
+                      style={{ borderColor: errors.category_name ? 'red' : '#ced4da' }}
                     >
                       <option value="">Select Category</option>
                       {courseCategoriesList.map((curr) => (
                         <option key={curr.id} value={curr.name}>{curr.name}</option>
                       ))}
                     </select>
-                    {/* {errors.category_name && (
+                    {errors.category_name && (
                       <div className="text-danger small">{errors.category_name}</div>
-                    )} */}
+                    )}
                   </div>
 
                   <div className="col-md-3">
@@ -663,16 +690,16 @@ export default function Trainer() {
                       value={formData.course_name}
                       onChange={handleInputChange}
                       disabled={!formData.category_name}
-                      // style={{ borderColor: errors.course_name ? 'red' : '#ced4da' }}
+                      style={{ borderColor: errors.course_name ? 'red' : '#ced4da' }}
                     >
                       <option value="">Select Course</option>
                       {filterCourse.map((curr) => (
                         <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
                       ))}
                     </select>
-                    {/* {errors.course_name && (
+                    {errors.course_name && (
                       <div className="text-danger small">{errors.course_name}</div>
-                    )} */}
+                    )}
                   </div>
                 </div>
 
@@ -685,6 +712,9 @@ export default function Trainer() {
                     onChange={(content) => handleInputChange(null, 'summary', content)}
                     style={{ height: 'auto', marginBottom: '20px' }}
                   />
+                  {errors.summary && (
+                    <div className="text-danger small">{errors.summary}</div>
+                  )}
                 </div>
 
                 {/* Demo Links */}

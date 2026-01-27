@@ -288,13 +288,15 @@ const Instructors = () => {
                     <div className="instrctor-content">
                       <p className="expert-name">{trainer.trainer_name}</p>
                       <p className="expert-course">{trainer.course_name}</p>
-                      <div className="expert-about">
-                        <p className="expert-me">About Me</p>
-                        <p className="expert-detail">
-                          {/* One day Wade Warren had enough with the 9-to-5 grind, or more like 9-to-9 in his case, and quit his job, or more like got himself fired from his own startup. */}
-                          {trainer.summary}
-                        </p>
-                      </div>
+                     <div className="expert-about">
+  <p className="expert-me">About Me</p>
+
+  <div
+    className="expert-detail"
+    dangerouslySetInnerHTML={{ __html: trainer.summary }}
+  />
+</div>
+
                       <hr className="faq-seperater" />
                       <div className="card-row">
                         <div className="instructor-rating">

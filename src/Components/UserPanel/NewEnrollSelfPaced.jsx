@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styles from "./NewEnrollNow.module.css";
+import styles from './NewEnrollmentPage/NewEnrollNow.module.css';
 import { Input } from "../ui/input";
 import { useParams, useLocation } from "react-router-dom";
 import { useDemoScheduleLogic } from "../../Api/hooks/DemoClassSectionLogics/useDemoScheduleLogic";

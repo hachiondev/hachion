@@ -59,8 +59,11 @@ import UserEnrolledAssignment from './Components/UserPanel/UserEnrolledAssignmen
 import QueryGuard from './Components/UserPanel/QueryGuard';
 import NotFound from './Components/UserPanel/NotFound';
 import NewCourseDetails from './Components/UserPanel/NewcoursePage/NewCourseDetails';
+
 // import CourseDetails from './Components/UserPanel/OldcoursePage/CourseDetails';
 import NewEnrollNow from './Components/UserPanel/NewEnrollmentPage/NewEnrollNow';
+// import NewEnrollNow from './Components/UserPanel/NewEnrollNow';
+import NewEnrollSelfPaced from './Components/UserPanel/NewEnrollSelfPaced';
 import GoogleMobileNumber from './Components/UserPanel/HomePage/AuthSection/GoogleMobileNumber';
 import Layout from './Components/Layout/Layout';
 import WorkshopDetails from './Components/UserPanel/WorkshopDetails';
@@ -128,6 +131,9 @@ function AppRoutes() {
           <Route path="/view-all-reviews" element={<ViewReviews />} />
           <Route path="/coursedetails" element={<Course />} />
           <Route path="/enroll-now/:courseName" element={<NewEnrollNow />} />
+          <Route path="/enroll-self/:courseName" element={<NewEnrollSelfPaced />}
+/>
+
           <Route
             path="/coursedetails/:courseName"
             element={<NewCourseDetails />}

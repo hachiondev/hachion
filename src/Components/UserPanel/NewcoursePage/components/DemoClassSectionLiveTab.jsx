@@ -5,6 +5,7 @@ import { useCheckEnrollmentForSessions } from "../../../../Api/hooks/CourseApi/u
 import { useNavigate } from "react-router-dom";
 import { useResendEnrollEmail } from "../../../../Api/hooks/CourseApi/useResendEnrollEmail";
 import { saveRedirectUrl } from "../../../../redirectAfterLogin";
+import { useResendLiveClassEnrollEmail } from "../../../../Api/hooks/CourseApi/useResendLiveClassEnrollEmail";
 
 function DemoClassSectionLiveTab({
   scheduleLoading,
@@ -55,9 +56,8 @@ What's Included:
     courseName || ""
   );
   const navigate = useNavigate();
-
-
-  const { mutate: resendEmail } = useResendEnrollEmail();
+  const { mutate: resendDemoEmail } = useResendEnrollEmail();
+  const { mutate: resendLiveClassEmail } = useResendLiveClassEnrollEmail();
 
   const [sendingBatchId, setSendingBatchId] = React.useState(null);
   const [resendMessage, setResendMessage] = React.useState("");
@@ -95,8 +95,6 @@ What's Included:
       },
     }));
   };
-
-// Update the handleEnrollWithLoginCheck function (around line 170-180):
 const handleEnrollWithLoginCheck = (sess) => {
   if (isProfileLoading) return;
 
@@ -104,10 +102,10 @@ const handleEnrollWithLoginCheck = (sess) => {
     onCloseRegisterPrompt && onCloseRegisterPrompt();
     setIsSubmitting(false);
     
-    // 🔥 Save current URL before redirecting to login
+    
     saveRedirectUrl();
     
-    // Show login prompt
+  
     setShowRegisterPrompt(true);
     return;
   }
@@ -211,12 +209,11 @@ const handleEnrollWithLoginCheck = (sess) => {
   onClick={() => {
     if (isSubmitting || isRequestBatchLoading) return;
 
-    // 🔥 Check if user is logged in before proceeding
+    
     if (!userProfile || !userProfile.studentId) {
-      // Save current URL for redirect after login
-      saveRedirectUrl();
       
-      // Show register prompt
+      saveRedirectUrl();
+    
       setShowRegisterPrompt(true);
       return;
     }
@@ -333,30 +330,36 @@ const handleEnrollWithLoginCheck = (sess) => {
                           disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
                           onClick={() => {
                             setSendingBatchId(sess.batchId);
+const isLiveClass = sess.mode === "Live Class";
 
-                            resendEmail(
-                              {
-                                email: userProfile.email,
-                                batchId: sess.batchId,
-                              },
-                              {
-                                onSuccess: (msg) => {
-                                  setSendingBatchId(null);
-                                  setResendError("");
-                                  setResendMessage(typeof msg === "string" ? msg : msg?.message);
-                                },
-                                onError: (err) => {
-                                  setSendingBatchId(null);
-                                  const backendMsg =
-                                    typeof err?.response?.data === "string"
-                                      ? err.response.data
-                                      : err?.response?.data?.message;
+const resendFn = isLiveClass
+  ? resendLiveClassEmail   
+  : resendDemoEmail;      
 
-                                  setResendMessage("");
-                                  setResendError(backendMsg || "Failed to resend email");
-                                },
-                              }
-                            );
+resendFn(
+  {
+    email: userProfile.email,
+    batchId: sess.batchId,
+  },
+  {
+    onSuccess: (msg) => {
+      setSendingBatchId(null);
+      setResendError("");
+      setResendMessage(typeof msg === "string" ? msg : msg?.message);
+    },
+    onError: (err) => {
+      setSendingBatchId(null);
+      const backendMsg =
+        typeof err?.response?.data === "string"
+          ? err.response.data
+          : err?.response?.data?.message;
+
+      setResendMessage("");
+      setResendError(backendMsg || "Failed to resend email");
+    },
+  }
+);
+
                           }}
                         >
                           {sess.resendCount >= 3
@@ -366,7 +369,8 @@ const handleEnrollWithLoginCheck = (sess) => {
                               : "Resend"}
                         </button>
                       </div>
-                    ) : sess.mode === "Live Class" && Number(sess.amount) > 0 ? (
+                    ) : sess.mode === "Live Class" && sess._isEnrolled && Number(sess.amount) > 0
+ ? (
                       /* =========================
                          LIVE CLASS → PAID → ENROLLED
                          ========================= */
@@ -379,30 +383,36 @@ const handleEnrollWithLoginCheck = (sess) => {
                           disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
                           onClick={() => {
                             setSendingBatchId(sess.batchId);
+const isLiveClass = sess.mode === "Live Class";
 
-                            resendEmail(
-                              {
-                                email: userProfile.email,
-                                batchId: sess.batchId,
-                              },
-                              {
-                                onSuccess: (msg) => {
-                                  setSendingBatchId(null);
-                                  setResendError("");
-                                  setResendMessage(typeof msg === "string" ? msg : msg?.message);
-                                },
-                                onError: (err) => {
-                                  setSendingBatchId(null);
-                                  const backendMsg =
-                                    typeof err?.response?.data === "string"
-                                      ? err.response.data
-                                      : err?.response?.data?.message;
+const resendFn = isLiveClass
+  ? resendLiveClassEmail   
+  : resendDemoEmail;       
 
-                                  setResendMessage("");
-                                  setResendError(backendMsg || "Failed to resend email");
-                                },
-                              }
-                            );
+resendFn(
+  {
+    email: userProfile.email,
+    batchId: sess.batchId,
+  },
+  {
+    onSuccess: (msg) => {
+      setSendingBatchId(null);
+      setResendError("");
+      setResendMessage(typeof msg === "string" ? msg : msg?.message);
+    },
+    onError: (err) => {
+      setSendingBatchId(null);
+      const backendMsg =
+        typeof err?.response?.data === "string"
+          ? err.response.data
+          : err?.response?.data?.message;
+
+      setResendMessage("");
+      setResendError(backendMsg || "Failed to resend email");
+    },
+  }
+);
+
                           }}
                         >
                           {sess.resendCount >= 3

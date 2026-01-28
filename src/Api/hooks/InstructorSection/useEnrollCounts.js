@@ -1,55 +1,76 @@
 import { useQueries } from "@tanstack/react-query";
 import axios from "axios";
 
-/**
- * Fetch enroll counts per (trainer, course)
- * Logic unchanged, only React Query v5 safe
- */
+const normalize = (val) =>
+  val
+    ?.replace(/\+/g, " ")
+    ?.trim()
+    ?.toLowerCase();
+
 export const useEnrollCounts = ({ trainers = [] }) => {
   const unique = new Map();
 
   trainers.forEach((t) => {
-    if (!t?.trainer_name || !t?.course_name) return;
-    const key = `${t.trainer_name}::${t.course_name}`;
+    const trainerName = normalize(
+  t.trainer_name || t.trainerName
+);
+
+const courseName = normalize(
+  t.course_name || t.courseName
+);
+
+
+    if (!trainerName || !courseName) return;
+
+    const key = `${trainerName.trim().toLowerCase()}::${courseName
+      .trim()
+      .toLowerCase()}`;
+
     if (!unique.has(key)) {
-      unique.set(key, t);
+      unique.set(key, { trainerName, courseName });
     }
   });
 
   const uniqueTrainers = Array.from(unique.values());
 
-  // ✅ React Query v5 returns { queries }
-  const { queries } = useQueries({
+  // ✅ CORRECT v5 USAGE
+  const queries = useQueries({
     queries: uniqueTrainers.map((t) => ({
-      queryKey: ["enrollCount", t.trainer_name, t.course_name],
+      queryKey: ["enrollCount", t.trainerName, t.courseName],
       queryFn: async () => {
         const res = await axios.get(
           "https://api.test.hachion.co/enroll/count",
           {
             params: {
-              trainerName: t.trainer_name,
-              courseName: t.course_name,
+              trainerName: t.trainerName,
+              courseName: t.courseName.replace(/\s/g, "+"),
             },
           }
         );
         return res.data?.count ?? 0;
       },
-      enabled: true,
       staleTime: 1000 * 60 * 10,
       retry: 1,
     })),
   });
+return Array.isArray(queries)
+  ? queries.reduce((acc, q) => {
+      if (!q || !Array.isArray(q.queryKey) || q.queryKey.length < 3) {
+        return acc;
+      }
 
-  // ✅ Always guard
-  if (!Array.isArray(queries)) return {};
+      if (q.data == null) return acc;
 
-  return queries.reduce((acc, q) => {
-    if (!q?.data || !Array.isArray(q.queryKey)) return acc;
+      const [, trainer, course] = q.queryKey;
 
-    const [, trainer, course] = q.queryKey;
-    if (!trainer || !course) return acc;
+      acc[
+        `${trainer.trim().toLowerCase()}::${course
+          .trim()
+          .toLowerCase()}`
+      ] = q.data;
 
-    acc[`${trainer}::${course}`] = q.data;
-    return acc;
-  }, {});
+      return acc;
+    }, {})
+  : {};
+
 };

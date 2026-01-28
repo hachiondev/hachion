@@ -10,14 +10,54 @@ import axios from "axios";
 import Pagination from "../Common/Pagination";
 import { IoSearch } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { useAllCourses } from "../../../Api/hooks/SitemapPageApi/useAllCourses";
+
+import { useCourses } from "../../../Api/hooks/HomePageApi/NavbarApi/useCourses";
+import { useTrainersByCourse } from "../../../Api/hooks/CourseApi/useTrainersByCourse";
+
+
 import { useTrainers } from "../../../Api/hooks/HomePageApi/TrainingApi/useTrainers";
 import Loader from "../Common/Loader/Loader";
 import { useTrainerOptions } from "../../../Api/hooks/InstructorSection/useTrainerOptions";
 import { useQueries } from "@tanstack/react-query";
-import { useEnrollCounts } from "../../../Api/hooks/InstructorSection/useEnrollCounts";
+
 import TrainingEvents from '../HomePage/TrainingSection/TrainingEvents'
 import Learners from "../HomePage/LearnerSection/Learners";
+
+const isCourseOpen = (courseName) => {
+  if (!courseName) return false;
+
+  const blockedCourses = [
+    "az-500",
+    "az-900",
+    "az-5000"
+  ];
+
+  return !blockedCourses.includes(
+    courseName.toLowerCase().trim()
+  );
+};
+const makeEnrollKey = (trainerName, courseName) =>
+  `${trainerName?.trim().toLowerCase()}::${courseName
+    ?.replace(/\+/g, " ")
+    ?.trim()
+    .toLowerCase()}`;
+
+const getTrainerCourseCount = (allTrainers, trainerName) => {
+  return new Set(
+    allTrainers
+      .filter(
+        (t) =>
+          t.trainer_name?.trim().toLowerCase() ===
+          trainerName?.trim().toLowerCase()
+      )
+      .map((t) =>
+        t.course_name
+          ?.replace(/\+/g, " ")
+          ?.trim()
+          .toLowerCase()
+      )
+  ).size;
+};
 
 const Instructors = () => {
   const titleRef = useRef(null);
@@ -30,22 +70,23 @@ const Instructors = () => {
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedTeacher, setSelectedTeacher] = useState("");
 
-  const { data: courseAll } = useAllCourses();
+  
+  const { data: coursesData = [] } = useCourses();
+
   const { data: trainers = [], isLoading, isError, error } = useTrainers();
   const { data: teacherOptions = [] } = useTrainerOptions();
-
-
-  // const [enrollCounts, setEnrollCounts] = useState({});
+const { data: trainersByCourse = [] } = useTrainersByCourse(selectedCourse);
   const countKey = (t) => `${t.trainer_name}::${t.course_name}`;
 
   /* -----------------------------
      Courses list
   ----------------------------- */
   useEffect(() => {
-    if (Array.isArray(courseAll)) {
-      setCourses(courseAll.map((c) => c.courseName));
-    }
-  }, [courseAll]);
+  if (Array.isArray(coursesData)) {
+    setCourses(coursesData.map((c) => c.courseName));
+  }
+}, [coursesData]);
+
 
   useEffect(() => {
     window.scrollTo({
@@ -61,6 +102,12 @@ const Instructors = () => {
   ----------------------------- */
 
   const filteredTrainers = useMemo(() => {
+
+    console.log("🔍 FILTERED TRAINERS INPUT:", trainers);
+console.log("🔍 SEARCH:", searchTerm);
+console.log("🔍 SELECTED COURSE:", selectedCourse);
+console.log("🔍 SELECTED TEACHER:", selectedTeacher);
+
 
 
     return trainers.filter((trainer) => {
@@ -103,58 +150,54 @@ const Instructors = () => {
     window.addEventListener("resize", updateCardsPerPage);
     return () => window.removeEventListener("resize", updateCardsPerPage);
   }, []);
+  const [enrollCounts, setEnrollCounts] = useState({});
 
+useEffect(() => {
+  if (!filteredTrainers.length) return;
 
-  const enrollCounts = useEnrollCounts({
-    trainers: filteredTrainers,
-    countKey,
-  });
+  const fetchCounts = async () => {
+    const counts = {};
 
+    await Promise.all(
+      filteredTrainers.map(async (trainer) => {
+        if (!isCourseOpen(trainer.course_name)) return;
 
-  // // Replace your current useEffect with this optimized version
-  // useEffect(() => {
-  //   if (!Array.isArray(enrollQueries) || enrollQueries.length === 0) return;
+        try {
+          const res = await axios.get(
+            "https://api.test.hachion.co/enroll/count",
+            {
+              params: {
+                trainerName: trainer.trainer_name,
+                courseName: trainer.course_name.replace(/\s+/g, "+"),
 
-  //   // Only update if there are actual changes
-  //   const updates = {};
-  //   let hasUpdates = false;
+              },
+            }
+          );
 
-  //   enrollQueries.forEach((q) => {
-  //     if (!q?.data || !Array.isArray(q.queryKey)) return;
+          const key = makeEnrollKey(
+  trainer.trainer_name,
+  trainer.course_name
+);
+counts[key] = res.data?.count ?? 0;
 
-  //     const [, trainerName, courseName] = q.queryKey;
-  //     if (!trainerName || !courseName) return;
+        } catch (err) {
+          console.error("Enroll count error", err);
+        }
+      })
+    );
 
-  //     const key = `${trainerName}::${courseName}`;
+    setEnrollCounts(counts);
+  };
 
-  //     // Only update if the value is different from current
-  //     if (enrollCounts[key] !== q.data) {
-  //       updates[key] = q.data;
-  //       hasUpdates = true;
-  //     }
-  //   });
+  fetchCounts();
+}, [filteredTrainers]);
 
-  //   if (hasUpdates) {
-  //     setEnrollCounts(prev => ({
-  //       ...prev,
-  //       ...updates
-  //     }));
-  //   }
-  // }, [enrollQueries]); // Only depend on enrollQueries
-
-
-  /* -----------------------------
-     Helpers
-  ----------------------------- */
   const formatForUrl = (str) =>
     str.toLowerCase().replace(/\s+/g, "-");
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    // if (titleRef.current) {
-    //   const offsetTop = titleRef.current.offsetTop - 20;
-    //   window.scrollTo({ top: offsetTop, behavior: "smooth" });
-    // }
+   
   };
 
   const renderStarRating = (rating) => (
@@ -239,14 +282,18 @@ const Instructors = () => {
               onChange={(e) => setSelectedTeacher(e.target.value)}
             >
               <option value="">All Teachers</option>
-              {teacherOptions.map((trainer) => (
-                <option
-                  key={trainer.trainer_id || trainer.id || trainer.trainer_name}
-                  value={trainer.trainer_name}
-                >
-                  {trainer.trainer_name}
-                </option>
-              ))}
+            {(selectedCourse ? trainersByCourse : teacherOptions).map((trainer) => {
+  const name = typeof trainer === "string"
+    ? trainer
+    : trainer.trainer_name;
+
+  return (
+    <option key={name} value={name}>
+      {name}
+    </option>
+  );
+})}
+
 
             </select>
           </div>
@@ -267,85 +314,116 @@ const Instructors = () => {
         </div>
 
         {/* Trainer Cards */}
-        <div className="recent-entries-container">
-          <div className="profiles-grid">
-            {currentCards.length > 0 ? (
-              currentCards.map((trainer) => (
-                <div className="instructor-card" key={trainer.id}>
-                  <div className="card-course-details">
-                    <div className="instructor-image">
-                      <img
-                        alt={trainer.trainer_name}
-                        src={
-                          trainer.trainerImage
-                            ? `https://api.test.hachion.co/${trainer.trainerImage}`
-                            : "instructordefault.png"
-                        }
-                        className="instructor-image-single"
-                      />
+       {/* Trainer Cards */}
+<div className="recent-entries-container">
+  <div className="profiles-grid">
+    {currentCards.length > 0 ? (
+      currentCards.map((trainer) => {
+        const courseCount = getTrainerCourseCount(
+  trainers,
+  trainer.trainer_name
+);
 
-                    </div>
-                    <div className="instrctor-content">
-                      <p className="expert-name">{trainer.trainer_name}</p>
-                      <p className="expert-course">{trainer.course_name}</p>
-                     <div className="expert-about">
-  <p className="expert-me">About Me</p>
+const enrollKey = makeEnrollKey(
+  trainer.trainer_name,
+  trainer.course_name
+);
 
-  <div
-    className="expert-detail"
-    dangerouslySetInnerHTML={{ __html: trainer.summary }}
-  />
-</div>
-
-                      <hr className="faq-seperater" />
-                      <div className="card-row">
-                        <div className="instructor-rating">
-                          {renderStarRating(trainer.trainerUserRating || 5)}
-                        </div>
+      const studentCount = enrollCounts[enrollKey] ?? 0;
 
 
-                        {/* {(enrollCounts[`${trainer.trainer_name}::${trainer.course_name}`] ?? 0) > 0 && ( */}
-                        <p className="student-count">
-                          {enrollCounts[`${trainer.trainer_name}::${trainer.course_name}`]}
-                          <FiUsers className="student-count-icon" />
-                          <span className="student-count-number">236,568</span>
-                          <span className="student-count-text">Students</span>
-                        </p>
-                        {/* )} */}
+        return (
+          <div className="instructor-card" key={trainer.id}>
+            <div className="card-course-details">
+              <div className="instructor-image">
+                <img
+                  alt={trainer.trainer_name}
+                  src={
+                    trainer.trainerImage
+                      ? `https://api.test.hachion.co/${trainer.trainerImage}`
+                      : "instructordefault.png"
+                  }
+                  className="instructor-image-single"
+                />
+              </div>
 
-                        <div className="course-count">
-                          <HiPlayCircle className="course-count-icon" />
-                          <span className="course-count-number">8</span>
-                          <span className="course-count-text">Courses</span>
-                        </div>
-                      </div>
-                      <button
-                        className="view-profile-btn"
-                        onClick={() =>
-                          navigate(`/${formatForUrl(trainer.course_name)}-${trainer.trainer_name}-instructor-details`, { state: { trainer, enrollCount: (enrollCounts[`${trainer.trainer_name}::${trainer.course_name}`] ?? 0), } })
-                        }
-                      >
-                        View Profile
-                      </button>
-                    </div>
+              <div className="instrctor-content">
+                <p className="expert-name">{trainer.trainer_name}</p>
+                <p className="expert-course">{trainer.course_name}</p>
+
+                <div className="expert-about">
+                  <p className="expert-me">About Me</p>
+                  <div
+                    className="expert-detail"
+                    dangerouslySetInnerHTML={{ __html: trainer.summary }}
+                  />
+                </div>
+
+                <hr className="faq-seperater" />
+
+                <div className="card-row">
+                  <div className="instructor-rating">
+                    {renderStarRating(trainer.trainerUserRating || 5)}
+                  </div>
+
+                  {/* ✅ STUDENT COUNT (FIXED) */}
+                 {isCourseOpen(trainer.course_name) && (
+  <p className="student-count">
+    <FiUsers className="student-count-icon" />
+    <span className="student-count-number">
+      {studentCount}
+    </span>
+    <span className="student-count-text">Students</span>
+  </p>
+)}
+
+
+                  <div className="course-count">
+                    <HiPlayCircle className="course-count-icon" />
+                    {/* <span className="course-count-number">8</span>
+                    <span className="course-count-text">Courses</span> */}
+                     <span className="course-count-number">{courseCount}</span>
+  <span className="course-count-text">Courses</span>
                   </div>
                 </div>
-              ))
-            ) : (
-              <p>No instructors found.</p>
-            )}
-          </div>
 
-          {/* Pagination */}
-          <div className="pagination-container">
-            <Pagination
-              currentPage={currentPage}
-              totalCards={totalCards}
-              cardsPerPage={cardsPerPage}
-              onPageChange={handlePageChange}
-            />
+                <button
+                  className="view-profile-btn"
+                  onClick={() =>
+                    navigate(
+                      `/${formatForUrl(trainer.course_name)}-${trainer.trainer_name}-instructor-details`,
+                      {
+                        state: {
+                          trainer,
+                          enrollCount: studentCount,
+                        },
+                      }
+                    )
+                  }
+                >
+                  View Profile
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
+        );
+      })
+    ) : (
+      <p>No instructors found.</p>
+    )}
+  </div>
+
+  {/* Pagination */}
+  <div className="pagination-container">
+    <Pagination
+      currentPage={currentPage}
+      totalCards={totalCards}
+      cardsPerPage={cardsPerPage}
+      onPageChange={handlePageChange}
+    />
+  </div>
+</div>
+
         <TrainingEvents/>
         <Learners/>
       </div>

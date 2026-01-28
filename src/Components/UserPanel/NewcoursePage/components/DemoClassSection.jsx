@@ -206,33 +206,47 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
     return "OK";
   };
 
-  const handleClick = () => {
-    const selectedDays = Array.from(
-      document.querySelectorAll(".dayCheckbox:checked")
-    ).map((cb) => cb.nextSibling?.nextSibling?.textContent?.trim());
+const handleClick = (action) => {
+  
+  if (action === "LOGIN_REQUIRED") {
+    setShowRegisterPrompt(true);
+    return;
+  }
 
-    const allowMentoringSelf = activeTab === "mentoring" || activeTab === "self";
+  
+  if (action === "ENROLL_SELF") {
+    navigate(`/enroll-self/${courseName}`);
+    return;
+  }
 
-    const preferredTimeForTab =
-      activeTab === "mentoring"
-        ? mentoringPreferredTime
-        : activeTab === "self"
-          ? selfPreferredTime
-          : null;
+  
+  const selectedDays = Array.from(
+    document.querySelectorAll(".dayCheckbox:checked")
+  ).map((cb) => cb.nextSibling?.nextSibling?.textContent?.trim());
 
-    const notificationForTab =
-      activeTab === "mentoring"
-        ? mentoringNotification
-        : activeTab === "self"
-          ? selfNotification
-          : null;
+  const allowMentoringSelf = activeTab === "mentoring" || activeTab === "self";
 
-    handleRequestBatch({
-      preferredTime: allowMentoringSelf ? preferredTimeForTab : null,
-      notification: allowMentoringSelf ? notificationForTab : null,
-      selectedDays: allowMentoringSelf ? selectedDays : [],
-    });
-  };
+  const preferredTimeForTab =
+    activeTab === "mentoring"
+      ? mentoringPreferredTime
+      : activeTab === "self"
+        ? selfPreferredTime
+        : null;
+
+  const notificationForTab =
+    activeTab === "mentoring"
+      ? mentoringNotification
+      : activeTab === "self"
+        ? selfNotification
+        : null;
+
+  handleRequestBatch({
+    preferredTime: allowMentoringSelf ? preferredTimeForTab : null,
+    notification: allowMentoringSelf ? notificationForTab : null,
+    selectedDays: allowMentoringSelf ? selectedDays : [],
+  });
+};
+
 
   const handleEnroll = () => {
     setEnrollNow(false);
@@ -392,12 +406,7 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
 
         {/* Heading */}
         <div className={styles.dchead}>
-          {/* <button
-                  className={cn(styles.bnbtn, styles.bnbtnprimary)}
-                  // onClick={onEnroll}
-                >
-                  Free Demo Classes Available
-                </button> */}
+        
           <div className={styles.dcheadText} >
             <h2>Try Before You Enroll</h2>
             <p>
@@ -478,7 +487,7 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
             selectedCrashGroup={selectedCrashGroup}
             isRequestBatchLoading={isRequestBatchLoading}
             isProfileLoading={isProfileLoading}
-            // showMessage={tabMessage[activeTab]}
+            
             showMessage={tabMessage[activeTab] && requestSourceTab === activeTab}
 
             isRequestBatchSuccess={isRequestBatchSuccess}
@@ -540,7 +549,7 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
             userProfile={userProfile}
             courseName={courseData?.courseName || courseNameForApi}
             onCloseRegisterPrompt={() => setShowRegisterPrompt(false)}
-            onEnrollClick={handleLiveEnrollClick}
+            // onEnrollClick={handleLiveEnrollClick}
             isRequestBatchSuccess={isRequestBatchSuccess}
             requestBatchError={requestBatchError}
             onRequestClick={handleClick}

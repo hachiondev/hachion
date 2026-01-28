@@ -174,6 +174,7 @@ const Footer = () => {
             <div className="footer-column">
               <p className="footer-content" onClick={() => navigate('/terms')}>Terms & Conditions</p>
               <p className="footer-content" onClick={() => navigate('/privacy')}>Privacy Policy</p>
+              <p className="footer-content" onClick={() => navigate('/refundpolicy')}>Refund Policy</p>
               <p className="footer-content" onClick={() => navigate('/unsubscribe')}>Unsubscribe</p>
             </div>
           </div>

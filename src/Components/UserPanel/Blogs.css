@@ -2116,6 +2116,29 @@
   color: #01adee;
 }
 
+/* In your CSS file */
+.refund-list {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 0;
+}
+
+.refund-list li {
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.refund-sublist {
+    list-style-type: circle;
+    padding-left: 20px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.refund-sublist li {
+    margin-bottom: 5px;
+}
+
 
 @media (max-width: 1366px) {
   .about-us-top {

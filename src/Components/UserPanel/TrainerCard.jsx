@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Course.css';
+import './CoursePage/Course.css';
 import axios from 'axios';
 import './Corporate.css';
 import Avatar from '@mui/material/Avatar';

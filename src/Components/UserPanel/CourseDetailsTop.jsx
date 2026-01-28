@@ -5,7 +5,7 @@ import { MdOutlineStar } from "react-icons/md";
 import qaheader from '../../Assets/qa-video.webp';
 import { IoPlayCircleOutline } from 'react-icons/io5';
 import { BsFillPlayCircleFill } from 'react-icons/bs';
-import './Course.css';
+import './CoursePage/Course.css';
 import loginPopupImg from '../../Assets/loginpopup.webp';
 import logo from '../../Assets/logo.webp';
 import truncate from 'html-truncate';

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './Course.css';
+import '../CoursePage/Course.css';
 import CourseDetailsTop from '../CourseDetailsTop';
 import KeyHighlights from '../KeyHighlights';
 import UpcomingHeader from '../UpcomingHeader';

@@ -1,5 +1,5 @@
 import React from 'react';
-import './Course.css';
+import './CoursePage/Course.css';
 
 const LiveOnlineTraining = ({ description, targetAudience, features }) => {
   return (

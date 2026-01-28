@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import './Course.css'
+import './CoursePage/Course.css';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import LiveOnline from '../../Assets/la_chalkboard-teacher.webp';

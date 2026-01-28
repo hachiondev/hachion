@@ -6,7 +6,7 @@ import Medal from "../../../../Assets/icons/medal.svg";
 import LoginRequired from "./LoginRequired";
 import VideoModal from "./VideoModal";
 import { useNavigate, useParams } from "react-router-dom";
-import NewEnrollNow from "../../../UserPanel/NewEnrollNow";
+import NewEnrollNow from "../../NewEnrollmentPage/NewEnrollNow";
 import { useCourseByName } from "../../../../Api/hooks/CourseApi/useCourseByName";
 
 

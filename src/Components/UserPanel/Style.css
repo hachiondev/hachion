@@ -210,7 +210,7 @@ a:not([href]):not([class]) {
 .profiles-grid {
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(4, minmax(260px, 1fr));
   margin: 10px;
 }
 
@@ -251,6 +251,66 @@ a:not([href]):not([class]) {
   object-position: center;
   /* keeps face centered */
   display: block;
+}
+
+/* About Me Section Styles */
+.expert-about {
+  position: relative;
+}
+
+.expert-detail {
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.expert-detail.collapsed {
+  max-height: 100px; /* Approximately 5 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.expert-detail.expanded {
+  max-height: none;
+}
+
+/* Read More Button */
+.read-more-btn {
+  background: none;
+  border: none;
+  color: #00aeef;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 0;
+  margin-top: 8px;
+  text-align: left;
+  transition: color 0.2s ease;
+}
+
+.read-more-btn:hover {
+  color: #0090cc;
+  text-decoration: underline;
+}
+
+/* Ensure the content inside expert-detail doesn't overflow */
+.expert-detail p {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.expert-detail p:last-child {
+  margin-bottom: 0;
+}
+
+/* For better visual hierarchy */
+.expert-me {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 16px;
 }
 
 .instructor-card {

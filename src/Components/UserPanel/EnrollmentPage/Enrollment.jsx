@@ -35,9 +35,9 @@ const Enrollment = () => {
   const { selectedBatchData, enrollText, modeType, sendEmail,
     sendWhatsApp, requestStatus,
     sendText } = location.state || {};
-  console.log("location.state:", location.state);
-  console.log("requestStatus from location.state:", requestStatus);
-  console.log("requestStatus from localStorage:", localStorage.getItem("requestStatus"));
+  // console.log("location.state:", location.state);
+  // console.log("requestStatus from location.state:", requestStatus);
+  // console.log("requestStatus from localStorage:", localStorage.getItem("requestStatus"));
 
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Course.css';
+import './CoursePage/Course.css';
 import { FaCircle } from "react-icons/fa";
 import LiveOnlineFeesRight from './LiveOnlineFeesRight';
 import axios from 'axios';

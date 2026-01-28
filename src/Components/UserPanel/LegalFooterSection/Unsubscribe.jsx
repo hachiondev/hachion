@@ -3,11 +3,11 @@ import "./unsubscribe.css";
 import { useNavigate } from "react-router-dom";
 import { RiCloseCircleLine } from "react-icons/ri";
 import { useFormik } from "formik";
-import { LoginSchema } from "../Schemas";
-import success from "../../Assets/success.gif";
+import { LoginSchema } from "../../Schemas";
+import success from "../../../Assets/success.gif";
 import axios from "axios";
 import { GoHeartFill } from "react-icons/go";
-import { countries, getDefaultCountry } from '../../countryUtils';
+import { countries, getDefaultCountry } from '../../../countryUtils';
 
 const initialValues = {
   name: "",

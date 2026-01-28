@@ -21,14 +21,16 @@ const Briefcase = () => (
 
 export default function LearnSection() {
     const { courseName: courseNameSlug } = useParams();
-    const [currentStartIndex, setCurrentStartIndex] = useState(1); // Starting card index (1-based)
+    const [currentStartIndex, setCurrentStartIndex] = useState(1);
     const [cardsPerPage, setCardsPerPage] = useState(6);
+    const [activeTab, setActiveTab] = useState("learn"); // New state for active tab
     const [showAll, setShowAll] = useState({
         prereq: false,
         learn: false,
         who: false,
         career: false,
     });
+
     const courseName = courseNameSlug
         ? decodeURIComponent(courseNameSlug)
             .replace(/[-_]+/g, " ")
@@ -39,7 +41,6 @@ export default function LearnSection() {
 
     const { data: course } = useCourseByName(courseName);
     const { data: allTools = [], isLoading } = useToolsByCourse(courseName);
-
 
     useEffect(() => {
         const update = () => {
@@ -53,11 +54,8 @@ export default function LearnSection() {
         return () => window.removeEventListener("resize", update);
     }, []);
 
-
-
-    // Calculate paginated tools - use currentStartIndex (1-based)
     const paginatedTools = useMemo(() => {
-        const startIndex = currentStartIndex - 1; // Convert to 0-based
+        const startIndex = currentStartIndex - 1;
         const endIndex = startIndex + cardsPerPage;
         return allTools.slice(startIndex, endIndex);
     }, [allTools, currentStartIndex, cardsPerPage]);
@@ -68,7 +66,6 @@ export default function LearnSection() {
             [key]: !prev[key],
         }));
     };
-
 
     const prerequisites =
         course?.prerequisities?.trim()
@@ -93,8 +90,6 @@ export default function LearnSection() {
             .map((item) => item.trim())
             .filter(Boolean) || [];
 
-
-    // Reset to first card when tools change or cards per page changes
     useEffect(() => {
         setCurrentStartIndex(1);
     }, [allTools, cardsPerPage]);
@@ -119,116 +114,126 @@ export default function LearnSection() {
     return (
         <section className={styles.lswrap}>
             <div className="container">
-                <div className={styles.lsgrid}>
-                    {/* LEFT: What you'll learn + prerequisites */}
-                    <div>
-                        <h2 className={styles.lsh2}>What You'll Learn</h2>
+                {/* New Tabbed Navigation */}
+                <div className={styles.tabContainer}>
+                    <button
+                        className={`${styles.tab} ${activeTab === "learn" ? styles.activeTab : ""}`}
+                        onClick={() => setActiveTab("learn")}
+                    >
+                        What You'll Learn
+                    </button>
+                    <button
+                        className={`${styles.tab} ${activeTab === "prereq" ? styles.activeTab : ""}`}
+                        onClick={() => setActiveTab("prereq")}
+                    >
+                        Prerequisites
+                    </button>
+                    <button
+                        className={`${styles.tab} ${activeTab === "who" ? styles.activeTab : ""}`}
+                        onClick={() => setActiveTab("who")}
+                    >
+                        Who This Course Is For
+                    </button>
+                    <button
+                        className={`${styles.tab} ${activeTab === "career" ? styles.activeTab : ""}`}
+                        onClick={() => setActiveTab("career")}
+                    >
+                        Career Opportunities
+                    </button>
+                </div>
 
-                        <ul className={styles.lslist}>
-                            {(showAll.learn ? whatYouWillLearnItems : whatYouWillLearnItems.slice(0, 4)).map((item, index) => (
-                                <li key={item} className={styles.lslistitem} style={{ "--i": index }}>
-                                    {/* <CheckCircle /> */}
-                                    <span>{item}</span>
-                                </li>
-                            ))}
-                        </ul>
-                        {whatYouWillLearnItems.length > 4 && (
-                            <button
-                                type="button"
-                                className={styles.readMoreBtn}
-                                onClick={() => toggleShowAll("learn")}
-                            >
-                                {showAll.learn ? "Read Less ↑" : "Read More ↓"}
-                            </button>
-                        )}
+                {/* Tab Content */}
+                <div className={styles.tabContent}>
+                    {/* What You'll Learn Tab */}
+                    {activeTab === "learn" && (
+                        <div className={styles.tabPane}>
+                            <ul className={styles.lslist}>
+                                {(showAll.learn ? whatYouWillLearnItems : whatYouWillLearnItems.slice(0, 8)).map((item, index) => (
+                                    <li key={item} className={styles.lslistitem} style={{ "--i": index }}>
+                                        <CheckCircle />
+                                        <span>{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                            {whatYouWillLearnItems.length > 8 && (
+                                <button
+                                    type="button"
+                                    className={styles.readMoreBtn}
+                                    onClick={() => toggleShowAll("learn")}
+                                >
+                                    {showAll.learn ? "Read Less ↑" : "Read More ↓"}
+                                </button>
+                            )}
+                        </div>
+                    )}
 
-                        <div className={styles.lspre}>
-                            <h3>Prerequisites</h3>
-
+                    {/* Prerequisites Tab */}
+                    {activeTab === "prereq" && (
+                        <div className={styles.tabPane}>
                             <ul className={styles.lsbullets}>
-                                {(showAll.prereq ? prerequisites : prerequisites.slice(0, 4)).map(
+                                {(showAll.prereq ? prerequisites : prerequisites.slice(0, 8)).map(
                                     (p, idx) => (
                                         <li key={idx}>{p}</li>
                                     )
                                 )}
                             </ul>
-
-                            {prerequisites.length > 4 && (
+                            {prerequisites.length > 8 && (
                                 <button
                                     type="button"
                                     className={styles.readMoreBtn}
                                     onClick={() => toggleShowAll("prereq")}
                                 >
-                                    {showAll.prereq ? "Read less ↑" : "Read more ↓"}
+                                    {showAll.prereq ? "Read Less ↑" : "Read More ↓"}
                                 </button>
                             )}
-
                         </div>
+                    )}
 
-<div className={styles.lscard}>
-                            <div className={styles.lscardhead}>
-                                <span className={styles.lscardico}>
-                                    <UserGroup />
-                                </span>
-                                <h3>Who this course is for</h3>
-                            </div>
-                            <ul className={styles.lscardbullets}>
+                    {/* Who This Course Is For Tab */}
+                    {activeTab === "who" && (
+                        <div className={styles.tabPane}>
+                            <ul className={styles.lsbullets}>
                                 {Array.isArray(whoThisCourseIsForItems) && whoThisCourseIsForItems.length > 0 ? (
                                     (showAll.who
                                         ? whoThisCourseIsForItems
-                                        : whoThisCourseIsForItems.slice(0, 4)
+                                        : whoThisCourseIsForItems.slice(0, 8)
                                     ).map((item, index) => (
-                                        <li key={index} >{item}</li>
+                                        <li key={index}>{item}</li>
                                     ))
                                 ) : (
                                     <li className={styles.noData}>No data available</li>
                                 )}
                             </ul>
-
-                            {whoThisCourseIsForItems.length > 4 && (
+                            {whoThisCourseIsForItems.length > 8 && (
                                 <button
                                     type="button"
-                                    className={styles.readMoreBtn2}
+                                    className={styles.readMoreBtn}
                                     onClick={() => toggleShowAll("who")}
                                 >
                                     {showAll.who ? "Read Less ↑" : "Read More ↓"}
                                 </button>
                             )}
-
                         </div>
-                    </div>
+                    )}
 
-                    {/* RIGHT: two cards */}
-                    <div className={styles.lsright}>
-                        
-                            <EnquiryForm/>
-
-                        <div className={styles.lscard2}>
-                            <div className={styles.lscardhead}>
-                                <span className={styles.lscardico}>
-                                    <Briefcase />
-                                </span>
-                                <h3>Career Opportunities</h3>
-                            </div>
-
-                            <p className={styles.lsmuted}>Job Roles After Completion:</p>
-
+                    {/* Career Opportunities Tab */}
+                    {activeTab === "career" && (
+                        <div className={styles.tabPane}>
                             <div className={styles.lspills}>
                                 {careerItems.length > 0 ? (
                                     <>
-                                        {(showAll.career ? careerItems : careerItems.slice(0, 4)).map(
+                                        {(showAll.career ? careerItems : careerItems.slice(0, 8)).map(
                                             (p, index) => (
                                                 <span key={index} className={styles.lspill} style={{ "--i": index }}>
                                                     {p}
                                                 </span>
                                             )
                                         )}
-
-                                        {careerItems.length > 4 && (
+                                        {careerItems.length > 8 && (
                                             <div className={styles.readMoreWrapper}>
                                                 <button
                                                     type="button"
-                                                    className={`${styles.readMoreBtn2} ${styles.careerReadMoreBtn}`}
+                                                    className={styles.readMoreBtn}
                                                     onClick={() => toggleShowAll("career")}
                                                 >
                                                     {showAll.career ? "Read Less ↑" : "Read More ↓"}
@@ -240,22 +245,11 @@ export default function LearnSection() {
                                     <p className="text-dark">No data available</p>
                                 )}
                             </div>
-
-
-
-
-
-                            {/* <div className={styles.lssalary}>
-                                <div className={styles.lssalarytitle}>Average Salary Range</div>
-                                <div className={styles.lssalaryval}>  {course?.avarageSalaryRange?.trim() || "INR 65K - INR 95K"}</div>
-                            </div> */}
-
-
                         </div>
-                    </div>
+                    )}
                 </div>
 
-                {/* Tools Cover */}
+                {/* Tools Cover Section - Remains Below Tabs */}
                 <div className={styles.lstools}>
                     <div className={styles.pagiGroup}>
                         <h3 className={styles.lstoolstitle}>Tools Cover</h3>
@@ -275,38 +269,32 @@ export default function LearnSection() {
                     ) : allTools.length === 0 ? (
                         <p>No tools available for this course.</p>
                     ) : (
-                        <>
-                            <div className={styles.lstoolsgrid}>
-                                {paginatedTools.map((tool) => (
-                                    <div key={tool.toolsName} className={styles.lstoolcard}>
-                                        <div className={styles.lstoolicon}>
-                                            <img
-                                                src={`https://api.test.hachion.co/uploads/test/tools_images/${tool.imageUrl}`}
-                                                alt={tool.toolsName}
-                                                className={styles.lstooliconimg}
-                                            />
-                                        </div>
-
-                                        <div className={styles.lstoolname}>
-                                            {tool.toolsName}
-                                        </div>
-
-                                        <a
-                                            className={styles.lstoollink}
-                                            href={tool.toolsLink}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            Download link
-                                        </a>
+                        <div className={styles.lstoolsgrid}>
+                            {paginatedTools.map((tool) => (
+                                <div key={tool.toolsName} className={styles.lstoolcard}>
+                                    <div className={styles.lstoolicon}>
+                                        <img
+                                            src={`https://api.test.hachion.co/uploads/test/tools_images/${tool.imageUrl}`}
+                                            alt={tool.toolsName}
+                                            className={styles.lstooliconimg}
+                                        />
                                     </div>
-                                ))}
-                            </div>
-
-                        </>
+                                    <div className={styles.lstoolname}>
+                                        {tool.toolsName}
+                                    </div>
+                                    <a
+                                        className={styles.lstoollink}
+                                        href={tool.toolsLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        Download link
+                                    </a>
+                                </div>
+                            ))}
+                        </div>
                     )}
                 </div>
-
             </div>
         </section>
     );

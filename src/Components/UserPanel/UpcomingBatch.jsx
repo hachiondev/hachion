@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import calendar from '../../Assets/calendar.webp';
-import './Course.css';
+import './CoursePage/Course.css';
 import { useParams } from 'react-router-dom';
 import LiveOnlineFees from './LiveOnlineFees';
 import CrashCourseFee from './CrashCourseFee';
 // import MentoringModeFees from './MentoringModeFees';
 import SelfPlacedFees from './SelfPlacedFees';
 import SelfPacedQAFees from './SelfPacedQAFees';
-import RequestBatch from './RequestBatch';
+import RequestBatch from './NewcoursePage/components/RequestBatch';
 import axios from 'axios';
 import loginPopupImg from '../../Assets/loginpopup.webp';
 

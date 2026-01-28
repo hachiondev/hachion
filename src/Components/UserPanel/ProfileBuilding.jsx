@@ -1,7 +1,7 @@
 import React from 'react';
 import CareerImage from '../../Assets/la_chalkboard-teacher.webp';
 import Resume from '../../Assets/streamline_business-user-curriculum.webp';
-import './Course.css';
+import './CoursePage/Course.css';
 
 const profileContent = [
   {

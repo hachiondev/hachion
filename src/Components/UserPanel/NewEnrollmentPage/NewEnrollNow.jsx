@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from "react";
 import styles from "./NewEnrollNow.module.css";
-import { Input } from "../ui/input";
+import { Input } from "../../ui/input";
 import { useParams, useLocation } from "react-router-dom";
-import { useDemoScheduleLogic } from "../../Api/hooks/DemoClassSectionLogics/useDemoScheduleLogic";
-import { useUserProfile } from "../../Api/hooks/CourseApi/useUserProfile";
-import { useCourseByName } from "../../Api/hooks/CourseApi/useCourseByName";
-import { useCurrency } from "../../Api/hooks/CourseApi/useCurrency";
-import { useCourseDiscountRule } from "../../Api/hooks/CourseApi/useCourseDiscountRule";
-import { useCouponDiscount } from "../../Api/hooks/CourseApi/useCouponDiscount";
-import { useDemoLivePayment } from "../../Api/hooks/CourseApi/useDemoLivePayment";
+import { useDemoScheduleLogic } from "../../../Api/hooks/DemoClassSectionLogics/useDemoScheduleLogic";
+import { useUserProfile } from "../../../Api/hooks/CourseApi/useUserProfile";
+import { useCourseByName } from "../../../Api/hooks/CourseApi/useCourseByName";
+import { useCurrency } from "../../../Api/hooks/CourseApi/useCurrency";
+import { useCourseDiscountRule } from "../../../Api/hooks/CourseApi/useCourseDiscountRule";
+import { useCouponDiscount } from "../../../Api/hooks/CourseApi/useCouponDiscount";
+import { useDemoLivePayment } from "../../../Api/hooks/CourseApi/useDemoLivePayment";
 import { Link } from "react-router-dom";
 
 
 export default function NewEnrollNow() {
-    const location = useLocation();
-    const preselectedSession = location.state?.selectedSession || null;
-const preselectedBatchId = location.state?.selectedBatchId || null;
+  const location = useLocation();
+  const preselectedSession = location.state?.selectedSession || null;
+  const preselectedBatchId = location.state?.selectedBatchId || null;
 
 
   const notifyVia = location.state?.notifyVia || {
@@ -33,13 +33,17 @@ const preselectedBatchId = location.state?.selectedBatchId || null;
   const [couponError, setCouponError] = useState("");
   const [couponSuccess, setCouponSuccess] = useState("");
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  const [openInstallmentPopup, setOpenInstallmentPopup] = useState(false);
+    const { selectedBatchData, enrollText, modeType, sendEmail,
+    sendWhatsApp, requestStatus,
+    sendText } = location.state || {};
 
   // const [lockButtonsUntilBatchChange, setLockButtonsUntilBatchChange] =
   //   useState(false);
 
-  const [lockButtonsUntilBatchChange, setLockButtonsUntilBatchChange] =  useState(false);
+  const [lockButtonsUntilBatchChange, setLockButtonsUntilBatchChange] = useState(false);
 
-const [lastAction, setLastAction] = useState(null);
+  const [lastAction, setLastAction] = useState(null);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -52,17 +56,17 @@ const [lastAction, setLastAction] = useState(null);
      Params
   =============================== */
   const { courseName } = useParams();
-  
 
 
- const courseSlug = courseName
-  ? decodeURIComponent(courseName)
+
+  const courseSlug = courseName
+    ? decodeURIComponent(courseName)
       .replace(/[-_]+/g, " ")
       .replace(/\s+/g, " ")
       .trim()
       .toLowerCase()
       .replace(/\b\w/g, (c) => c.toUpperCase())
-  : "";
+    : "";
 
   /* ===============================
      APIs
@@ -71,12 +75,12 @@ const [lastAction, setLastAction] = useState(null);
 
   const { liveGroups, scheduleLoading } =
     useDemoScheduleLogic({ courseSlug, timezone });
-    
+
 
   const { data: userProfile } = useUserProfile();
   const { data: course } = useCourseByName(courseSlug);
 
-  
+
 
   const { currency } = useCurrency();
   const { data: discountRule } = useCourseDiscountRule(courseSlug);
@@ -101,27 +105,27 @@ const [lastAction, setLastAction] = useState(null);
   }, [couponSuccess]);
 
   useEffect(() => {
-  if (!preselectedSession || !liveGroups?.length) return;
+    if (!preselectedSession || !liveGroups?.length) return;
 
-  const matchedGroup = liveGroups.find(
-    (group) =>
-      group.type === "live" &&
-      group.sessions?.some(
-        (s) => s.batchId === preselectedBatchId
-      )
-  );
+    const matchedGroup = liveGroups.find(
+      (group) =>
+        group.type === "live" &&
+        group.sessions?.some(
+          (s) => s.batchId === preselectedBatchId
+        )
+    );
 
-  if (matchedGroup) {
-  setSelectedBatch(matchedGroup);
-} else {
-  // fallback: select first live batch
-  const firstLive = liveGroups.find(g => g.type === "live");
-  if (firstLive) {
-    setSelectedBatch(firstLive);
-  }
-}
+    if (matchedGroup) {
+      setSelectedBatch(matchedGroup);
+    } else {
+      // fallback: select first live batch
+      const firstLive = liveGroups.find(g => g.type === "live");
+      if (firstLive) {
+        setSelectedBatch(firstLive);
+      }
+    }
 
-}, [preselectedSession, liveGroups, preselectedBatchId]);
+  }, [preselectedSession, liveGroups, preselectedBatchId]);
 
   useEffect(() => {
     window.scrollTo({
@@ -132,8 +136,8 @@ const [lastAction, setLastAction] = useState(null);
   }, []);
 
 
-const isEnrollmentBlocked =
-  false; // Do NOT block Pay Now for already enrolled cases
+  const isEnrollmentBlocked =
+    false; // Do NOT block Pay Now for already enrolled cases
 
   const {
     data: couponApiData,
@@ -310,13 +314,13 @@ const isEnrollmentBlocked =
 
     finalPrice = Math.max(0, finalPrice);
   }
-const formattedAmount =
-  finalPrice === 0
-    ? `${displayCurrency} 0`
-    : finalPrice > 0
-    ? `${displayCurrency} ${Math.round(finalPrice)}`
-    : `${displayCurrency} 0`;
-const isZeroAmount = Number(finalPrice) === 0;
+  const formattedAmount =
+    finalPrice === 0
+      ? `${displayCurrency} 0`
+      : finalPrice > 0
+        ? `${displayCurrency} ${Math.round(finalPrice)}`
+        : `${displayCurrency} 0`;
+  const isZeroAmount = Number(finalPrice) === 0;
 
   const {
     handleLiveEnrollPayment,
@@ -336,7 +340,7 @@ const isZeroAmount = Number(finalPrice) === 0;
   });
 
   useEffect(() => {
-    
+
   }, [discountRule]);
 
   /* ===============================
@@ -352,7 +356,7 @@ const isZeroAmount = Number(finalPrice) === 0;
     );
   }
 
-  
+
   /* ===============================
      Render
   =============================== */
@@ -377,21 +381,21 @@ const isZeroAmount = Number(finalPrice) === 0;
 
             <div className={styles.enRow}>
               <div className={styles.enCol}>
-               <label className={styles.enLabel}>
-  Batch Schedule
-</label>
+                <label className={styles.enLabel}>
+                  Batch Schedule
+                </label>
 
-<div className={styles.enCourseDisplay}>
-  {selectedBatch?.day || "—"}
-</div>
+                <div className={styles.enCourseDisplay}>
+                  {selectedBatch?.day || "—"}
+                </div>
 
               </div>
 
               <div className={styles.enCol}>
                 <label className={styles.enLabel}>Learning Mode</label>
-                <Input 
-                  value={selectedMode} 
-                  readOnly 
+                <Input
+                  value={selectedMode}
+                  readOnly
                   className={styles.readOnlyInput}
                 />
               </div>
@@ -428,17 +432,17 @@ const isZeroAmount = Number(finalPrice) === 0;
               />
             </div>
 
-          
-         {couponError && (
-  lastAction === "PAY_LATER" ||
-  !(
-    couponError === "You are already enrolled for this batch." ||
-    couponError ===
-      "This enrollment record already exists for Live Class in the database."
-  )
-) && (
-  <p className={styles.errorMessage}>{couponError}</p>
-)}
+
+            {couponError && (
+              lastAction === "PAY_LATER" ||
+              !(
+                couponError === "You are already enrolled for this batch." ||
+                couponError ===
+                "This enrollment record already exists for Live Class in the database."
+              )
+            ) && (
+                <p className={styles.errorMessage}>{couponError}</p>
+              )}
 
 
             {couponSuccess && (
@@ -456,13 +460,13 @@ const isZeroAmount = Number(finalPrice) === 0;
                 checked={isTermsAccepted}
                 onChange={(e) => setIsTermsAccepted(e.target.checked)}
               />
-               <label htmlFor="terms" className={styles.enTermsLabel}>
+              <label htmlFor="terms" className={styles.enTermsLabel}>
                 I agree to the{" "}
                 <Link to="/terms" className={styles.enLink}>
                   Terms & Conditions
                 </Link>{" "}
                 and{" "}
-                <Link to="/privacy" className={styles.enLink}>
+                <Link to="/refundpolicy" className={styles.enLink}>
                   Refund Policy
                 </Link>
                 <span className={styles.requiredStarInline}>*</span>
@@ -477,62 +481,82 @@ const isZeroAmount = Number(finalPrice) === 0;
                 </span>
               </div>
 
-              <div className={styles.buttonGroup}>
-                <button
-  className={`${styles.enPayBtn} ${
-    !selectedBatch ||
-    !isTermsAccepted ||
-    lockButtonsUntilBatchChange ||
-    isZeroAmount
-      ? styles.disabledBtn
-      : ""
-  }`}
-  disabled={
-    !selectedBatch ||
-    !isTermsAccepted ||
-    lockButtonsUntilBatchChange ||
-    isZeroAmount
-  }
-  onClick={() => {
-    setLastAction("PAY_NOW");
-    selectedBatch &&
-      handleLiveEnrollPayment(selectedBatch.sessions[0], {
-        isPayNow: true,
-        email: notifyVia.email,
-        whatsapp: notifyVia.whatsapp,
-      });
-  }}
->
-  Pay Now
-</button>
+             <div className={styles.buttonGroup}>
+  <button
+    className={`${styles.enPayBtn} ${!selectedBatch ||
+        !isTermsAccepted ||
+        lockButtonsUntilBatchChange ||
+        isZeroAmount
+        ? styles.disabledBtn
+        : ""
+      }`}
+    disabled={
+      !selectedBatch ||
+      !isTermsAccepted ||
+      lockButtonsUntilBatchChange ||
+      isZeroAmount
+    }
+    onClick={() => {
+      setLastAction("PAY_NOW");
+      selectedBatch &&
+        handleLiveEnrollPayment(selectedBatch.sessions[0], {
+          isPayNow: true,
+          email: notifyVia.email,
+          whatsapp: notifyVia.whatsapp,
+        });
+    }}
+  >
+    Pay Now
+  </button>
 
-                <button
-                  className={`${styles.enPayBtn} ${
-                    !selectedBatch ||
-                    !isTermsAccepted ||
-                    isEnrollmentBlocked ||
-                    lockButtonsUntilBatchChange
-                      ? styles.disabledBtn
-                      : ""
-                  }`}
-                  disabled={
-                    !selectedBatch ||
-                    !isTermsAccepted ||
-                    isEnrollmentBlocked ||
-                    lockButtonsUntilBatchChange
-                  }
-               onClick={() => {
-  setLastAction("PAY_LATER");
-  selectedBatch &&
-    handleEnrollPayLater({
-      ...selectedBatch.sessions[0],
-      notifyVia,
-    });
-}}
-                >
-                  Enroll Now, Pay Later
-                </button>
-              </div>
+  <button
+    className={`${styles.enPayBtn} ${!selectedBatch ||
+        !isTermsAccepted ||
+        isEnrollmentBlocked ||
+        lockButtonsUntilBatchChange
+        ? styles.disabledBtn
+        : ""
+      }`}
+    disabled={
+      !selectedBatch ||
+      !isTermsAccepted ||
+      isEnrollmentBlocked ||
+      lockButtonsUntilBatchChange
+    }
+    onClick={() => {
+      setLastAction("PAY_LATER");
+      selectedBatch &&
+        handleEnrollPayLater({
+          ...selectedBatch.sessions[0],
+          notifyVia,
+        });
+    }}
+  >
+    Enroll Now, Pay Later
+  </button>
+  
+  <div className={styles.installmentBtnContainer}>
+    <button
+      className={styles.paymentBtn}
+      onClick={() => setOpenInstallmentPopup(true)}
+      disabled={requestStatus == null} // disable only if waiting
+    >
+      Request for Installments
+    </button>
+
+    {requestStatus === "rejected" && (
+      <p className={`${styles.installmentStatusMessage} ${styles.rejectedStatus}`}>
+        Your request has been rejected
+      </p>
+    )}
+
+    {requestStatus == null && (
+      <p className={`${styles.installmentStatusMessage} ${styles.pendingStatus}`}>
+        Your request sent to admin. Please wait for approval
+      </p>
+    )}
+  </div>
+</div>
             </div>
           </div>
         </div>

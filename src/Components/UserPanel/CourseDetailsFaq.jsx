@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './Course.css';
+import './CoursePage/Course.css';
 import axios from 'axios';
 import { BsFileEarmarkPdfFill } from 'react-icons/bs';
 import { FaPlus, FaMinus } from 'react-icons/fa6';

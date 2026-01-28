@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Course.css';
+import './CoursePage/Course.css';
 import InterviewPreparation from './InterviewPreparation';
 import JobAssistance from './JobAssistance';
 import ProfileBuilding from './ProfileBuilding';

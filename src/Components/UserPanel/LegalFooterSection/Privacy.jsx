@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './Blogs.css';
+import '../Blogs.css';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 
 const Privacy = () => {

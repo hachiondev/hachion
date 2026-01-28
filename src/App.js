@@ -20,8 +20,8 @@ import ForgotPassword from './Components/UserPanel/HomePage/AuthSection/ForgotPa
 import Course from './Components/UserPanel/CoursePage/Course';
 // import CourseDetails from './Components/UserPanel/CourseDetails';
 import CorporateTraining from './Components/UserPanel/CorporateTraining';
-import Terms from './Components/UserPanel/Terms';
-import Privacy from './Components/UserPanel/Privacy';
+import Terms from './Components/UserPanel/LegalFooterSection/Terms';
+import Privacy from './Components/UserPanel/LegalFooterSection/Privacy';
 import Blogs from './Components/UserPanel/Blogs';
 import BlogDetails from './Components/UserPanel/BlogDetails';
 import Aboutus from './Components/UserPanel/Aboutus';
@@ -38,7 +38,7 @@ import CourseSchedule from './Components/AdminPanel/CourseSchedule';
 import Workshop from './Components/UserPanel/Workshop';
 import ProtectedRoute from './ProtectedRoute';
 import CorporateCourses from './Components/AdminPanel/CorporateCourses';
-import Unsubscribe from './Components/UserPanel/Unsubscribe';
+import Unsubscribe from './Components/UserPanel/LegalFooterSection/Unsubscribe';
 import Sitemap from './Components/UserPanel/SitemapPage/Sitemap';
 import KidsSummer from './Components/UserPanel/KidsSummer';
 import LeadForm from './Components/UserPanel/LeadForm';
@@ -59,11 +59,13 @@ import UserEnrolledAssignment from './Components/UserPanel/UserEnrolledAssignmen
 import QueryGuard from './Components/UserPanel/QueryGuard';
 import NotFound from './Components/UserPanel/NotFound';
 import NewCourseDetails from './Components/UserPanel/NewcoursePage/NewCourseDetails';
-import NewEnrollNow from './Components/UserPanel/NewEnrollNow';
+// import CourseDetails from './Components/UserPanel/OldcoursePage/CourseDetails';
+import NewEnrollNow from './Components/UserPanel/NewEnrollmentPage/NewEnrollNow';
 import GoogleMobileNumber from './Components/UserPanel/HomePage/AuthSection/GoogleMobileNumber';
 import Layout from './Components/Layout/Layout';
 import WorkshopDetails from './Components/UserPanel/WorkshopDetails';
 import AuthLayout from './Components/Layout/AuthLayout';
+import RefundPolicy from './Components/UserPanel/LegalFooterSection/RefundPolicy';
 
 const RedirectToLowercase = () => {
   const location = useLocation();
@@ -130,6 +132,10 @@ function AppRoutes() {
             path="/coursedetails/:courseName"
             element={<NewCourseDetails />}
           />
+          {/* <Route
+            path="/coursedetails/:courseName"
+            element={<CourseDetails />}
+          /> */}
           <Route path="/corporate" element={<CorporateTraining />} />
           <Route path="/hire-from-us" element={<HirefromUs />} />
           <Route path="/career" element={<ApplyHiring />} />
@@ -152,6 +158,7 @@ function AppRoutes() {
           <Route path="/review" element={<UserWriteReview />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/refundpolicy" element={<RefundPolicy/>} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
           <Route path="/sitemap" element={<Sitemap />} />
           <Route

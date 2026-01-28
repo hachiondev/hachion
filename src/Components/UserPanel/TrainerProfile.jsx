@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
-import './Course.css';
+import './CoursePage/Course.css';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import axios from 'axios';

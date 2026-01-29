@@ -26,7 +26,9 @@ const tabs = [
 ];
 
 const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
-  const [activeTab, setActiveTab] = useState("live");
+  // const [activeTab, setActiveTab] = useState("live");
+  const [activeTab, setActiveTab] = useState(null);
+
   const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const [tz, setTz] = useState(browserTz);
 
@@ -321,31 +323,78 @@ const handleClick = (action) => {
 
   const { currency, exchangeRate } = useCurrency();
 
-  const getTabPrice = (tabKey) => {
-    if (!courseData) return `${currency} 0`;
+  // const getTabPrice = (tabKey) => {
+  //   if (!courseData) return `${currency} 0`;
 
-    let baseAmount = 0;
+  //   let baseAmount = 0;
 
-    if (currency === "INR") {
-      if (tabKey === "live") baseAmount = courseData.itotal ?? courseData.iamount;
-      if (tabKey === "crash") baseAmount = courseData.ictotal ?? courseData.icamount;
-      if (tabKey === "mentoring") baseAmount = courseData.isqtotal ?? courseData.isqmamount;
-      if (tabKey === "self") baseAmount = courseData.istotal ?? courseData.isamount;
-    }
+  //   if (currency === "INR") {
+  //     if (tabKey === "live") baseAmount = courseData.itotal ?? courseData.iamount;
+  //     if (tabKey === "crash") baseAmount = courseData.ictotal ?? courseData.icamount;
+  //     if (tabKey === "mentoring") baseAmount = courseData.isqtotal ?? courseData.isqmamount;
+  //     if (tabKey === "self") baseAmount = courseData.istotal ?? courseData.isamount;
+  //   }
 
-    else {
-      if (tabKey === "live") baseAmount = courseData.total ?? courseData.amount;
-      if (tabKey === "crash") baseAmount = courseData.ctotal ?? courseData.camount;
-      if (tabKey === "mentoring") baseAmount = courseData.sqtotal ?? courseData.sqamount;
-      if (tabKey === "self") baseAmount = courseData.stotal ?? courseData.samount;
+  //   else {
+  //     if (tabKey === "live") baseAmount = courseData.total ?? courseData.amount;
+  //     if (tabKey === "crash") baseAmount = courseData.ctotal ?? courseData.camount;
+  //     if (tabKey === "mentoring") baseAmount = courseData.sqtotal ?? courseData.sqamount;
+  //     if (tabKey === "self") baseAmount = courseData.stotal ?? courseData.samount;
 
-      baseAmount = baseAmount * exchangeRate;
-    }
+  //     baseAmount = baseAmount * exchangeRate;
+  //   }
 
-    const safeAmount = Number(baseAmount) || 0;
+  //   const safeAmount = Number(baseAmount) || 0;
 
-    return `${currency} ${Math.round(safeAmount)}`;
+  //   return `${currency} ${Math.round(safeAmount)}`;
+  // };
+const getTabPrice = (tabKey) => {
+  if (!courseData) {
+    return { text: "Not Available", disabled: true };
+  }
+
+  let baseAmount = 0;
+
+  if (currency === "INR") {
+    if (tabKey === "live") baseAmount = courseData.itotal ?? courseData.iamount;
+    if (tabKey === "crash") baseAmount = courseData.ictotal ?? courseData.icamount;
+    if (tabKey === "mentoring") baseAmount = courseData.isqtotal ?? courseData.isqmamount;
+    if (tabKey === "self") baseAmount = courseData.istotal ?? courseData.isamount;
+  } else {
+    if (tabKey === "live") baseAmount = courseData.total ?? courseData.amount;
+    if (tabKey === "crash") baseAmount = courseData.ctotal ?? courseData.camount;
+    if (tabKey === "mentoring") baseAmount = courseData.sqtotal ?? courseData.sqamount;
+    if (tabKey === "self") baseAmount = courseData.stotal ?? courseData.samount;
+
+    baseAmount = baseAmount * exchangeRate;
+  }
+
+  const safeAmount = Number(baseAmount) || 0;
+
+  if (safeAmount <= 0) {
+    return { text: "Not Available", disabled: true };
+  }
+
+  return {
+    text: `${currency} ${Math.round(safeAmount)}`,
+    disabled: false,
   };
+};
+useEffect(() => {
+  if (!courseData || activeTab) return;
+
+  // Priority order
+  const tabOrder = ["live", "crash", "mentoring", "self"];
+
+  const firstAvailableTab = tabOrder.find((tabKey) => {
+    const priceInfo = getTabPrice(tabKey);
+    return !priceInfo.disabled;
+  });
+
+  if (firstAvailableTab) {
+    setActiveTab(firstAvailableTab);
+  }
+}, [courseData, currency, exchangeRate, activeTab]);
 
   return (
     <section className={styles.dcwrap} >
@@ -425,23 +474,51 @@ const handleClick = (action) => {
 
         {/* Tabs */}
         <div className={styles.dctabs} ref={ref} id="demoClassSection">
-          {tabs.map((t) => (
-            <button
-              key={t.key}
-              ref={(el) => (tabRefs.current[t.key] = el)}
-              className={cn(
-                styles.dctab,
-                activeTab === t.key && styles.dctabisactive
-              )}
-              onClick={() => setActiveTab(t.key)}
-            >
-              <span className={styles.tabLabel}>{t.label}</span>
-              <span className={styles.feeAmount}>
-                {getTabPrice(t.key)}
-              </span>
+         {tabs.map((t) => {
+  const priceInfo = getTabPrice(t.key);
 
-            </button>
-          ))}
+  return (
+    <button
+      key={t.key}
+      ref={(el) => (tabRefs.current[t.key] = el)}
+      className={cn(
+        styles.dctab,
+        activeTab === t.key && styles.dctabisactive
+      )}
+      disabled={priceInfo.disabled}
+      style={{
+        cursor: priceInfo.disabled ? "not-allowed" : "pointer",
+      }}
+      onClick={() => {
+        if (priceInfo.disabled) return;
+        setActiveTab(t.key);
+      }}
+    >
+      <span className={styles.tabLabel}>{t.label}</span>
+
+     <span
+  className={styles.feeAmount}
+  style={{
+    cursor: priceInfo.disabled ? "not-allowed" : "pointer",
+
+    /* 🔥 FIX FOR "Not Available" */
+    minWidth: "90px",
+    padding: "4px 10px",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    whiteSpace: "nowrap",
+    lineHeight: "1.2",
+    fontSize: "12px",
+  }}
+>
+  {priceInfo.text}
+</span>
+
+    </button>
+  );
+})}
+
         </div>
 
 

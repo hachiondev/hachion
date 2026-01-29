@@ -74,6 +74,7 @@ const Instructors = () => {
   const { data: trainers = [], isLoading, isError, error } = useTrainers();
   const { data: teacherOptions = [] } = useTrainerOptions();
   const { data: trainersByCourse = [] } = useTrainersByCourse(selectedCourse);
+    const [enrollCounts, setEnrollCounts] = useState({});
 
   /* -----------------------------
      Courses list
@@ -138,8 +139,6 @@ const Instructors = () => {
     return () => window.removeEventListener("resize", updateCardsPerPage);
   }, []);
 
-  const [enrollCounts, setEnrollCounts] = useState({});
-
   useEffect(() => {
     if (!filteredTrainers.length) return;
 
@@ -183,6 +182,10 @@ const Instructors = () => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
+        if (titleRef.current) {
+      const offsetTop = titleRef.current.offsetTop - 20;
+      window.scrollTo({ top: offsetTop, behavior: "smooth" });
+    }
   };
 
   const renderStarRating = (rating) => (

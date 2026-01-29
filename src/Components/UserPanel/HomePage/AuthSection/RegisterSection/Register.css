@@ -110,7 +110,8 @@
 
 .country-select-button {
   height: 48px;
-  padding: 0 8px; /* Even more reduced padding */
+  padding: 0 8px;
+  /* Even more reduced padding */
   border: none;
   background: #fff;
   color: #00aaef;
@@ -119,10 +120,14 @@
   justify-content: space-between;
   cursor: pointer;
   border-right: 1px solid #ddd;
-  font-size: 15px; /* Smaller font */
-  min-width: 120px; /* Reduced more */
-  max-width: 100px; /* Compact */
-  flex-shrink: 0; /* Prevent shrinking */
+  font-size: 15px;
+  /* Smaller font */
+  min-width: 120px;
+  /* Reduced more */
+  max-width: 100px;
+  /* Compact */
+  flex-shrink: 0;
+  /* Prevent shrinking */
   transition: all 0.2s ease;
 }
 
@@ -131,13 +136,15 @@
 }
 
 .country-flag-icon {
-  width: 16px; /* Smaller flag */
+  width: 16px;
+  /* Smaller flag */
   height: 12px;
   flex-shrink: 0;
 }
 
 .country-code-display {
-  font-size: 13px; /* Smaller font */
+  font-size: 13px;
+  /* Smaller font */
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
@@ -155,14 +162,18 @@
 
 /* PHONE INPUT FIELD - WIDER AND MORE PROMINENT */
 .phone-number-input-field {
-  flex: 1 1 auto; /* Take all available space */
+  flex: 1 1 auto;
+  /* Take all available space */
   height: 48px;
   border: none;
   padding: 12px 16px;
-  font-size: 16px; /* Larger font for better readability */
+  font-size: 16px;
+  /* Larger font for better readability */
   background-color: #fff;
-  width: 100%; /* Ensure full width */
-  min-width: 0; /* Allow shrinking if needed */
+  width: 100%;
+  /* Ensure full width */
+  min-width: 0;
+  /* Allow shrinking if needed */
   color: #333;
 }
 
@@ -192,25 +203,25 @@
 } */
 
 .primary-submit-button {
-width: 100% !important;
-    height: 48px;
-    border-radius: 6px;
-    margin: 10px 0 10px 0;
-    font-size: 16px;
-    background-color: #00AEEF;
-    color: white;
-    border: none;
-    transition: background-color 0.2s ease;
-    font-weight: 500;
+  width: 100% !important;
+  height: 48px;
+  border-radius: 6px;
+  margin: 10px 0 10px 0;
+  font-size: 16px;
+  background-color: #00AEEF;
+  color: white;
+  border: none;
+  transition: background-color 0.2s ease;
+  font-weight: 500;
 }
 
 .form-separator {
-    border: 1px solid #6A6A6A;
-    height: 2px;
-    background: #6A6A6A;
-    width: 100%;
-    /* margin: 20px 0; */
-    box-sizing: border-box;
+  border: 1px solid #6A6A6A;
+  height: 2px;
+  background: #6A6A6A;
+  width: 100%;
+  /* margin: 20px 0; */
+  box-sizing: border-box;
 }
 
 .google-signin-button {
@@ -373,6 +384,7 @@ width: 100% !important;
   background: #ccc;
   cursor: not-allowed;
 }
+
 /* 
 .other-btn {
   width: 100%;
@@ -628,6 +640,7 @@ width: 100% !important;
 /* ===== RESPONSIVE DESIGN ===== */
 /* Tablet (1024px and below) */
 @media (max-width: 1024px) {
+
   .register-form,
   .register-login {
     display: flex;
@@ -693,6 +706,7 @@ width: 100% !important;
 
 /* Small Tablet (768px and below) */
 @media (max-width: 768px) {
+
   .register-form,
   .register-login {
     padding: 20px;
@@ -704,11 +718,12 @@ width: 100% !important;
     margin-bottom: 0px;
     font-weight: 600;
     color: #333;
-}
+  }
 
-    .breadcrumb-item, .breadcrumb-item.active {
+  .breadcrumb-item,
+  .breadcrumb-item.active {
     font-size: 17px;
-}
+  }
 
   .register-form-container,
   .register-login-left {
@@ -757,19 +772,19 @@ width: 100% !important;
     margin-top: 1vh;
   }
 
- .country-code-display{
+  .country-code-display {
     font-size: 15px;
   }
 
-   .primary-submit-button{
+  .primary-submit-button {
     font-size: 19px;
-   }
+  }
 
-  .form-divider-container{
+  .form-divider-container {
     margin: 0px;
   }
 
-  .auth-redirect-message{
+  .auth-redirect-message {
     font-size: 18px;
   }
 
@@ -792,6 +807,7 @@ width: 100% !important;
 
 /* Mobile (480px and below) */
 @media (max-width: 480px) {
+
   .register-form,
   .register-login {
     display: flex;
@@ -802,9 +818,10 @@ width: 100% !important;
     min-height: 40vh;
   }
 
-  .breadcrumb-item, .breadcrumb-item.active {
-    font-size: 19px;
-}
+  .breadcrumb-item,
+  .breadcrumb-item.active {
+    font-size: 16px;
+  }
 
   .register-form-container,
   .register-login-left {
@@ -829,6 +846,7 @@ width: 100% !important;
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   }
+
   .register-form-title,
   .register-login-continue {
     font-size: 26px;
@@ -1172,7 +1190,10 @@ width: 100% !important;
   }
 
   /* Ensure all inputs are properly aligned */
-  input, button, select, textarea {
+  input,
+  button,
+  select,
+  textarea {
     max-width: 100%;
     font-family: inherit;
   }
@@ -1185,8 +1206,8 @@ width: 100% !important;
   }
 
   /* Improve spacing for form sections */
-  .register-form-content > *:not(:last-child),
-  .register-login-mid > *:not(:last-child) {
+  .register-form-content>*:not(:last-child),
+  .register-login-mid>*:not(:last-child) {
     margin-bottom: 10px;
   }
 
@@ -1205,8 +1226,8 @@ width: 100% !important;
   }
 
   /* Make the form more touch-friendly on mobile */
-  button, 
-  input[type="submit"], 
+  button,
+  input[type="submit"],
   input[type="button"] {
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
@@ -1227,6 +1248,7 @@ width: 100% !important;
 
 /* Small Mobile (375px and below) */
 @media (max-width: 375px) {
+
   .register-form-content,
   .register-login-mid {
     padding: 16px 12px;
@@ -1307,6 +1329,11 @@ width: 100% !important;
     flex-shrink: 0;
   }
 
+  .breadcrumb-item,
+  .breadcrumb-item.active {
+    font-size: 14px;
+  }
+
   .country-flag-icon {
     width: 15px;
     height: 12px;
@@ -1334,7 +1361,8 @@ width: 100% !important;
     padding: 10px 12px;
     flex: 1;
     min-width: 0;
-    width: calc(100% - 90px); /* 90px for country button */
+    width: calc(100% - 90px);
+    /* 90px for country button */
   }
 
   .phone-number-input-field::placeholder {
@@ -1355,7 +1383,8 @@ width: 100% !important;
     padding-left: 10px;
     font-size: 15px;
     flex: 1;
-    min-width: 0; /* Prevent overflow */
+    min-width: 0;
+    /* Prevent overflow */
   }
 
   .primary-submit-button,
@@ -1575,7 +1604,10 @@ width: 100% !important;
   }
 
   /* Ensure inputs don't overflow */
-  input, button, select, textarea {
+  input,
+  button,
+  select,
+  textarea {
     max-width: 100%;
   }
 
@@ -1633,6 +1665,7 @@ width: 100% !important;
 
 /* Extra small devices (320px and below) */
 @media (max-width: 320px) {
+
   .register-form-content,
   .register-login-mid {
     padding: 10px 8px;

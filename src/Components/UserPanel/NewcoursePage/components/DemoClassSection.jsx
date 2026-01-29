@@ -136,6 +136,7 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
           notifyVia,
           selectedBatchId: session.batchId,
           selectedSession: session,
+          requestStatus: "pending",   // 👈 IMPORTANT
         },
       });
       return;

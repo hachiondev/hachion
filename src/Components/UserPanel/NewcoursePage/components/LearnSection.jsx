@@ -120,7 +120,8 @@ export default function LearnSection() {
   className={`${styles.tab} ${activeTab === "learn" ? styles.activeTab : ""}`}
   onClick={() => setActiveTab("learn")}
 >
-  What You’ll Learn in {course?.courseName || "this course"}
+  What You’ll Learn
+  {/* {course?.courseName || "this course"} */}
 </button>
 
                     <button
@@ -140,7 +141,8 @@ export default function LearnSection() {
   onClick={() => setActiveTab("career")}
 >
   
-  {course?.courseName || "This Course"} – Career Opportunities
+  {/* {course?.courseName || "This Course"} */}
+   Career Opportunities
   
 </button>
 

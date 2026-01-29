@@ -113,6 +113,7 @@ const handleEnrollWithLoginCheck = (sess) => {
   onEnrollClick(sess, {
     email: notifyViaMap[sess.id]?.email ?? true,
     whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
+    requestInstallment: true,   // 👈 ADD THIS
   });
 };
 

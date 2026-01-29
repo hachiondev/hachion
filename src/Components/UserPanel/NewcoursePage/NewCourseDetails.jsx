@@ -13,6 +13,8 @@ import SuccessStories from '../NewcoursePage/components/SuccessStories';
 import { useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAllCourses } from '../../../Api/hooks/SitemapPageApi/useAllCourses';
+import { Link } from 'react-router-dom';
+import { MdKeyboardArrowRight } from 'react-icons/md';
 
 
 const slugify = (text = "") =>
@@ -23,8 +25,8 @@ const slugify = (text = "") =>
     .replace(/^-+|-+$/g, "");
 
 const NewCourseDetails = () => {
-   const { courseName } = useParams();
-     const navigate = useNavigate();
+  const { courseName } = useParams();
+  const navigate = useNavigate();
 
   const { data: allCourses = [], isLoading } =
     useAllCourses("courseDetailsPage");
@@ -41,15 +43,15 @@ const NewCourseDetails = () => {
       }
     }
   }, [courseName, courseData, isLoading, navigate]);
-  
-    const demoClassRef = useRef(null);
+
+  const demoClassRef = useRef(null);
   useEffect(() => {
-  window.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: "smooth",
-  });
-}, [courseName]);
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  }, [courseName]);
 
   const scrollToDemoClass = () => {
     demoClassRef.current?.scrollIntoView({
@@ -59,13 +61,30 @@ const NewCourseDetails = () => {
   };
   return (
     <div>
+      <div className="blogs-header" style={{ marginLeft: "6vw" }}>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <Link to="/coursedetails">Courses</Link> <MdKeyboardArrowRight />
+            </li>
+            <li className="breadcrumb-item">
+              <Link to="/coursedetails">
+                {courseData?.courseCategory}
+              </Link> <MdKeyboardArrowRight />
+            </li>
+            <li className="breadcrumb-item active" aria-current="page">
+              {courseData?.courseName}
+            </li>
+          </ol>
+        </nav>
+      </div>
       <CourseBanner
-       onEnroll={scrollToDemoClass}
+        onEnroll={scrollToDemoClass}
         onAddToCart={() => console.log("Add to cart")}
       />
       <LearnSection />
-      <DemoClassSection ref={demoClassRef} onViewDemoClass={scrollToDemoClass}/>
-      <CourseCurriculum onViewDemoClass={scrollToDemoClass}/>
+      <DemoClassSection ref={demoClassRef} onViewDemoClass={scrollToDemoClass} />
+      <CourseCurriculum onViewDemoClass={scrollToDemoClass} />
       <InstructorSection />
       {/* <CareerOutcomes /> */}
       <CertificateSection />

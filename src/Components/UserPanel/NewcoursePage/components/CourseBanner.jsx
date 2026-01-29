@@ -17,13 +17,31 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 
 
 dayjs.extend(customParseFormat);
+function extractYoutubeInfo(url) {
+  if (!url) return { type: null };
 
-function extractYoutubeId(url) {
-  if (!url) return "";
-  const regExp =
-    /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/;
-  const match = url.match(regExp);
-  return match ? match[1] : "";
+  try {
+    const parsedUrl = new URL(url);
+if (parsedUrl.searchParams.has("list")) {
+  return {
+    type: "playlist",
+    playlistId: parsedUrl.searchParams.get("list"),
+    videoId: parsedUrl.searchParams.get("v") || null, 
+  };
+}
+    const match = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})(?:\?|&|$)/);
+
+    if (match) {
+      return {
+        type: "video",
+        videoId: match[1],
+      };
+    }
+
+    return { type: null };
+  } catch {
+    return { type: null };
+  }
 }
 
 
@@ -86,20 +104,13 @@ export default function CourseBanner({ onEnroll }) {
   const courseNameForApi = courseName
   ? decodeURIComponent(courseName)
 
-      // 1️⃣ Convert triple-dash SEO separator to real hyphen
+      
       .replace(/---+/g, " - ")
-
-      // 2️⃣ Preserve certification codes like AZ-400, AZ-104
-      // (temporarily protect them)
       .replace(/\b([a-zA-Z]{2,3})-(\d{3})\b/g, "$1@@$2")
 
-      // 3️⃣ Convert remaining hyphens & underscores to spaces
+      
       .replace(/[-_]+/g, " ")
-
-      // 4️⃣ Restore protected certification codes
       .replace(/@@/g, "-")
-
-      // 5️⃣ Normalize spaces
       .replace(/\s+/g, " ")
       .trim()
       .toLowerCase()
@@ -114,8 +125,9 @@ export default function CourseBanner({ onEnroll }) {
 
   const { data: course, isLoading, isError } = useCourseByName(courseNameForApi);
 
-  const youtubeId = extractYoutubeId(course?.youtubeLink);
-  const hasYoutubeDemo = youtubeId && youtubeId.length > 0;
+  const youtubeInfo = extractYoutubeInfo(course?.youtubeLink);
+const hasYoutubeDemo = youtubeInfo.type !== null;
+
 
   const { currency, exchangeRate } = useCurrency();
 
@@ -450,14 +462,18 @@ const price = hasValidPrice
           {/* Right */}
           <div className={styles.bnright}>
             <div className={styles.bnhero}>
-              <img
-                src={
-                  hasYoutubeDemo
-                    ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
-                    : heroImage
-                }
-                alt="Course preview"
-              />
+           <img
+  src={
+    youtubeInfo.type === "video"
+      ? `https://img.youtube.com/vi/${youtubeInfo.videoId}/hqdefault.jpg`
+      : youtubeInfo.type === "playlist" && youtubeInfo.videoId
+      ? `https://img.youtube.com/vi/${youtubeInfo.videoId}/hqdefault.jpg`
+      : heroImage
+  }
+  alt="Course preview"
+/>
+
+
 
               {hasYoutubeDemo && (
                 <button
@@ -524,15 +540,18 @@ const price = hasValidPrice
       )}
 
       {showVideo && (
-        <VideoModal
-          videoSrc={
-            hasYoutubeDemo
-              ? `https://www.youtube.com/embed/${youtubeId}?autoplay=1`
-              : "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
-          }
-          isYoutube={hasYoutubeDemo}
-          onClose={() => setShowVideo(false)}
-        />
+       <VideoModal
+  videoSrc={
+    youtubeInfo.type === "playlist"
+      ? `https://www.youtube.com/embed/videoseries?list=${youtubeInfo.playlistId}&autoplay=1`
+      : youtubeInfo.type === "video"
+      ? `https://www.youtube.com/embed/${youtubeInfo.videoId}?autoplay=1`
+      : ""
+  }
+  isYoutube={hasYoutubeDemo}
+  onClose={() => setShowVideo(false)}
+/>
+
       )}
       {showRegisterPrompt && (
         <div

@@ -476,13 +476,22 @@ const price = hasValidPrice
 
 
               {hasYoutubeDemo && (
-                <button
-                  className={styles.bnplay}
-                  aria-label="Watch demo video"
-                  onClick={() => setShowVideo(true)}
-                >
-                  <Play />
-                </button>
+              <button
+  className={styles.bnplay}
+  aria-label="Watch demo video"
+  onClick={() => {
+    if (youtubeInfo.type === "playlist") {
+    
+      window.open(course.youtubeLink, "_blank", "noopener,noreferrer");
+    } else {
+    
+      setShowVideo(true);
+    }
+  }}
+>
+  <Play />
+</button>
+
               )}
 
               <div className={styles.bnherotext}>

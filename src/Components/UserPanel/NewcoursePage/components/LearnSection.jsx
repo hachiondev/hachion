@@ -117,11 +117,12 @@ export default function LearnSection() {
                 {/* New Tabbed Navigation */}
                 <div className={styles.tabContainer}>
                     <button
-                        className={`${styles.tab} ${activeTab === "learn" ? styles.activeTab : ""}`}
-                        onClick={() => setActiveTab("learn")}
-                    >
-                        What You'll Learn
-                    </button>
+  className={`${styles.tab} ${activeTab === "learn" ? styles.activeTab : ""}`}
+  onClick={() => setActiveTab("learn")}
+>
+  What You’ll Learn in {course?.courseName || "this course"}
+</button>
+
                     <button
                         className={`${styles.tab} ${activeTab === "prereq" ? styles.activeTab : ""}`}
                         onClick={() => setActiveTab("prereq")}
@@ -135,11 +136,14 @@ export default function LearnSection() {
                         Who This Course Is For
                     </button>
                     <button
-                        className={`${styles.tab} ${activeTab === "career" ? styles.activeTab : ""}`}
-                        onClick={() => setActiveTab("career")}
-                    >
-                        Career Opportunities
-                    </button>
+  className={`${styles.tab} ${activeTab === "career" ? styles.activeTab : ""}`}
+  onClick={() => setActiveTab("career")}
+>
+  
+  {course?.courseName || "This Course"} – Career Opportunities
+  
+</button>
+
                 </div>
 
                 {/* Tab Content */}
@@ -252,7 +256,10 @@ export default function LearnSection() {
                 {/* Tools Cover Section - Remains Below Tabs */}
                 <div className={styles.lstools}>
                     <div className={styles.pagiGroup}>
-                        <h3 className={styles.lstoolstitle}>Tools Cover</h3>
+                        <h3 className={styles.lstoolstitle}>
+  Tools Cover in {course?.courseName || "this course"}
+</h3>
+
                         {allTools.length > cardsPerPage && (
                             <div className={styles.cardPaginationContainer}>
                                 <CardsPagination

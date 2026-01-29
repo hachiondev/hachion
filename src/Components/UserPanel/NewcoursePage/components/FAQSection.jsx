@@ -80,7 +80,12 @@ export default function FAQSection({
     <section className={styles.faqwrap}>
       <div className="container">
         <div className={styles.faqhead}>
-          <h2>Frequently Asked Questions</h2>
+          <h2>
+  {course?.courseName
+    ? `Frequently Asked Questions in ${course.courseName}`
+    : "Frequently Asked Questions"}
+</h2>
+
           <p>Got questions? We’ve got answers</p>
 
           {(!faqs || faqs.length === 0) && (

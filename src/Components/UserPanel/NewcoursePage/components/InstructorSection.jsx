@@ -82,7 +82,13 @@ export default function InstructorSection({
     <section className={styles.iswrap}>
       <div className="container">
         <div className={styles.ishead}>
-          <h2>Meet Your Instructor</h2>
+          <h2>
+  {courseData?.courseName
+    ? `Meet Your ${courseData.courseName} Instructor`
+    : "Meet Your Instructor"}
+</h2>
+
+
           <p>Learn from industry veterans with years of real-world experience</p>
         </div>
 

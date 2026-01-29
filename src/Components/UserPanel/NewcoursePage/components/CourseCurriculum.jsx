@@ -223,7 +223,15 @@ export default function CourseCurriculum({ onViewDemoClass }) {
       <div className="container">
         {/* HEADER */}
         <div className={styles.cchead}>
-          <h2>Course Curriculum</h2>
+          {/* <h2>Course Curriculum</h2> */}
+         <h2>
+  {courseDetails?.courseName
+    ? `${courseDetails.courseName} Course Curriculum`
+    : "Course Curriculum"}
+</h2>
+
+
+
           <p>
             {courseDetails?.aboutCourse ||
               "Master industry-level skills — unlock hands-on modules, video learning sessions, and real project work."}

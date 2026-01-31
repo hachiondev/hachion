@@ -48,33 +48,45 @@ const RequestInstallment = ({
  const location = useLocation();
  const modalRef = useRef(null);
 
-
-   console.log("selectedBatchData:", selectedBatchData);
-    console.log("courseFee:", courseFee);
-    console.log("email:", email);
-    console.log("studentId:", studentId);
-    console.log("studentName:", studentName);
-    console.log("courseData:", courseData);
-    console.log("mobile (from parent):", mobile);
-
-    
-    console.log("localStorage studentId:", localStorage.getItem("studentId"));
-    console.log("localStorage courseName:", localStorage.getItem("courseName"));
-    console.log("localStorage batchId:", localStorage.getItem("batchId"));
-    console.log("localStorage selectedBatchData:", localStorage.getItem("selectedBatchData"));
-    console.log("localStorage loginuserData:", localStorage.getItem("loginuserData"));
-
 const handleSubmitRequest = async () => {
+  console.log("🚀 Submit Installment button clicked");
+
   try {
-    // studentId;
-    // studentName;
+    console.log("📌 Props received:", {
+      studentId,
+      studentName,
+      email,
+      mobile,
+      selectedBatchData,
+      courseData,
+      courseFee,
+      selectedInstallments,
+    });
+
     const payerEmail = email;
-    // mobile;
     const batchId = selectedBatchData?.batchId;
-    const courseName = selectedBatchData?.courseName || courseData.courseName;
+    const courseName =
+      selectedBatchData?.courseName || courseData?.courseName;
+
+    console.log("📌 Derived values:", {
+      payerEmail,
+      batchId,
+      courseName,
+    });
 
     if (!studentId || !courseName || !batchId) {
+      console.error("❌ Missing required fields", {
+        studentId,
+        courseName,
+        batchId,
+      });
       setErrorMessage("Missing required student or course info.");
+      return;
+    }
+
+    if (!selectedInstallments) {
+      console.error("❌ Installments not selected");
+      setErrorMessage("Please select number of installments.");
       return;
     }
 
@@ -85,33 +97,46 @@ const handleSubmitRequest = async () => {
       mobile,
       courseName,
       batchId,
-      courseFee: courseData.iamount,
+      courseFee: courseFee, 
       numSelectedInstallments: selectedInstallments,
-    };  
-      
+    };
+
+    console.log("📤 Installment Request Payload:", requestData);
+
     const response = await axios.post(
       "https://api.test.hachion.co/razorpay/installment-request",
       requestData
     );
+
+    console.log("✅ Installment API response:", response);
 
     if (response.status === 200) {
       setSuccessMessage(
         "Your installment request has been submitted successfully. Once it is approved, you will receive an email notification."
       );
       setErrorMessage("");
+
       setTimeout(() => {
-        navigate(`/coursedetails/${courseName.toLowerCase().replace(/\s+/g, "-")}`);
+        navigate(
+          `/coursedetails/${courseName.toLowerCase().replace(/\s+/g, "-")}`
+        );
       }, 5000);
     } else {
-      setErrorMessage("Failed to submit installment request. Please try again.");
+      console.error("❌ Unexpected response status:", response.status);
+      setErrorMessage("Failed to submit installment request.");
     }
   } catch (error) {
-    console.error("Error submitting installment request:", error);
+    console.error("🔥 Installment API error:", {
+      message: error.message,
+      response: error.response,
+    });
+
     setErrorMessage(
       error.response?.data?.message || "Something went wrong. Please try again."
     );
   }
 };
+
 
 useEffect(() => {
     const handleClickOutside = (event) => {
@@ -232,18 +257,25 @@ const courseSlug = courseData?.courseName?.toLowerCase().replace(/\s+/g, '-');
                   <TableBody>
                  {selectedInstallments > 0 &&
   Array.from({ length: selectedInstallments }).map((_, index) => {
-    const baseInstallment = Number(courseData.itotal) / selectedInstallments;
-    const totalWithCharge = baseInstallment + 500;
+  const totalCourseFee = Number(courseFee); 
+  const baseInstallment =
+    selectedInstallments > 0 ? totalCourseFee / selectedInstallments : 0;
+
+  const installmentCharge = Number(courseData?.charge || 500);
+  const totalWithCharge = baseInstallment + installmentCharge;
+
     
                         return (
                           <StyledTableRow key={index}>
                             <StyledTableCell align="center">{index + 1}</StyledTableCell>
                             <StyledTableCell align="center">
-          {currency} {baseInstallment.toFixed(2)}
-        </StyledTableCell>
-        <StyledTableCell align="center">
-          <strong>{currency} {totalWithCharge.toFixed(2)}</strong>
-        </StyledTableCell>
+  {currency} {Math.round(baseInstallment)}
+</StyledTableCell>
+
+<StyledTableCell align="center">
+  <strong>{currency} {Math.round(totalWithCharge)}</strong>
+</StyledTableCell>
+
                           </StyledTableRow>
                         );
                       })}

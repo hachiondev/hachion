@@ -12,22 +12,26 @@ import { useDemoLivePayment } from "../../../Api/hooks/CourseApi/useDemoLivePaym
 import { Link } from "react-router-dom";
 import RequestInstallment from "../EnrollmentPage/components/RequestInstallment";
 import { Dialog, DialogContent } from "@mui/material";
-import { useAllCourses } from "../../../Api/hooks/SitemapPageApi/useAllCourses";
+
 import { useStudentDetails } from "../../../Api/hooks/CourseApi/useStudentDetails";
 import { useInstallmentStatus } from "../../../Api/hooks/CourseApi/useInstallmentStatus";
+
+import { useCheckEnrollmentForSessions } 
+  from "../../../Api/hooks/CourseApi/useCheckEnrollmentForSessions";
 
 
 export default function NewEnrollNow() {
   const location = useLocation();
   const preselectedSession = location.state?.selectedSession || null;
   const preselectedBatchId = location.state?.selectedBatchId || null;
-  // Get initial requestStatus from location.state
+  
   const initialRequestStatus = location.state?.requestStatus;
 
   const notifyVia = location.state?.notifyVia || {
     email: true,
     whatsapp: true,
   };
+  
 
   /* ===============================
      State
@@ -44,11 +48,14 @@ export default function NewEnrollNow() {
   const [studentDataView, setStudentDataView] = useState(null);
   const { selectedBatchData, enrollText, modeType, sendEmail,
     sendWhatsApp, requestStatus,
+
     sendText } = location.state || {};
-  const { data: courseData = [] } = useAllCourses()
+  
   const user = JSON.parse(localStorage.getItem('loginuserData'));
   const email = user?.email;
   const { data: studentData, isLoading, error } = useStudentDetails(email);
+  
+
 
   const [lockButtonsUntilBatchChange, setLockButtonsUntilBatchChange] = useState(false);
   const [lastAction, setLastAction] = useState(null);
@@ -59,6 +66,7 @@ export default function NewEnrollNow() {
     phone: "",
     coupon: "",
   });
+
 
   /* ===============================
      Params
@@ -85,19 +93,53 @@ export default function NewEnrollNow() {
   const { data: userProfile } = useUserProfile();
   const { data: course } = useCourseByName(courseSlug);
 
-  // NOW USE course AFTER it's defined
-  const { data: installmentStatusData } = useInstallmentStatus(
-    email,
-    course?.courseId || course?._id
-  );
+const selectedSessions = selectedBatch?.sessions || [];
 
-  // Use either API data or location.state data
-  const currentRequestStatus =
-    installmentStatusData?.status ?? location.state?.requestStatus ?? "none";
+const {
+  data: enrollmentCheckResults = [],
+  isLoading: enrollmentCheckLoading,
+} = useCheckEnrollmentForSessions(
+  selectedSessions,
+  studentData?.studentId,
+  course?.courseName
+);
+
+const isAlreadyEnrolledForBatch = enrollmentCheckResults.some(
+  (s) => s._isEnrolled === true
+);
+const studentId = studentData?.studentId;
+const courseNameForInstallment = course?.courseName;
+
+const {
+  data: installmentStatusData,
+  isLoading: installmentStatusLoading,
+} = useInstallmentStatus(studentId, courseNameForInstallment);
+
+    const selectedBatchIdForEnroll =
+  selectedBatch?.sessions?.[0]?.batchId || "";
+
+
+  const hasInstallmentRequest =
+  installmentStatusData?.numSelectedInstallments === 2 ||
+  installmentStatusData?.numSelectedInstallments === 3;
+
+  const currentRequestStatus = installmentStatusLoading
+  ? "loading"
+  : installmentStatusData?.requestStatus === "approved"
+    ? "approved"
+    : installmentStatusData?.requestStatus === "rejected"
+      ? "rejected"
+      : hasInstallmentRequest
+        ? "pending"
+        : "none";
+const isInstallmentDisabled =
+  installmentStatusLoading ||
+  currentRequestStatus !== "none" ||
+  !isTermsAccepted;
 
   const { currency } = useCurrency();
   const { data: discountRule } = useCourseDiscountRule(courseSlug);
-  // const isApproved = currentRequestStatus === "approved";
+  
 
   useEffect(() => {
     if (!couponSuccess) return;
@@ -132,7 +174,7 @@ export default function NewEnrollNow() {
     if (matchedGroup) {
       setSelectedBatch(matchedGroup);
     } else {
-      // fallback: select first live batch
+      
       const firstLive = liveGroups.find(g => g.type === "live");
       if (firstLive) {
         setSelectedBatch(firstLive);
@@ -263,6 +305,8 @@ export default function NewEnrollNow() {
     setCouponData(null);
     setCouponSuccess("");
   }, [couponApiError]);
+
+
 
   /* ===============================
      Schedules
@@ -528,7 +572,7 @@ export default function NewEnrollNow() {
                   Pay Now
                 </button>
 
-                <button
+                {/* <button
                   className={`${styles.enPayBtn} ${!selectedBatch ||
                     !isTermsAccepted ||
                     isEnrollmentBlocked ||
@@ -552,20 +596,52 @@ export default function NewEnrollNow() {
                   }}
                 >
                   Enroll Now, Pay Later
-                </button>
+                </button> */}
+               <button
+  className={`${styles.enPayBtn} ${!selectedBatch ||
+    !isTermsAccepted ||
+    isEnrollmentBlocked ||
+    lockButtonsUntilBatchChange ||
+    isAlreadyEnrolledForBatch     
+      ? styles.disabledBtn
+      : ""
+  }`}
+  disabled={
+    !selectedBatch ||
+    !isTermsAccepted ||
+    isEnrollmentBlocked ||
+    lockButtonsUntilBatchChange ||
+    isAlreadyEnrolledForBatch     
+  }
+  onClick={() => {
+    setLastAction("PAY_LATER");
+    selectedBatch &&
+      handleLiveEnrollPayment(selectedBatch.sessions[0], {
+        isPayNow: false,
+        notifyVia,
+      });
+  }}
+>
+  Enroll Now, Pay Later
+</button>
+
+
 
                 <div className={styles.installmentBtnContainer}>
-                  <button
-                    className={styles.paymentBtn}
-                    onClick={() => setOpenInstallmentPopup(true)}
-                    disabled={currentRequestStatus !== "none"}
-                    style={{
-                      opacity: currentRequestStatus == null ? 0.6 : 1,
-                      cursor: currentRequestStatus == null ? "not-allowed" : "pointer",
-                    }}
-                  >
-                    Request for Installments
-                  </button>
+                 
+
+<button
+  className={styles.paymentBtn}
+  onClick={() => setOpenInstallmentPopup(true)}
+  disabled={isInstallmentDisabled}
+  style={{
+    opacity: isInstallmentDisabled ? 0.6 : 1,
+    cursor: isInstallmentDisabled ? "not-allowed" : "pointer",
+  }}
+>
+  Request for Installments
+</button>
+
 
                   {currentRequestStatus === "pending" && (
                     <p className={styles.pendingStatus}>
@@ -575,13 +651,13 @@ export default function NewEnrollNow() {
 
                   {currentRequestStatus === "approved" && (
                     <p className={styles.approvedStatus}>
-                      ✅ Installment request approved. You can now enroll.
+                      ✅ Installment request is approved for this course.
                     </p>
                   )}
 
                   {currentRequestStatus === "rejected" && (
                     <p className={styles.rejectedStatus}>
-                      ❌ Installment request rejected
+                      ❌ Installment request rejected for this course, please contact with Hachion team
                     </p>
                   )}
                 </div>
@@ -598,13 +674,14 @@ export default function NewEnrollNow() {
       >
         <DialogContent>
           <RequestInstallment
-            selectedBatchData={selectedBatchData}
+            selectedBatchData={selectedBatch?.sessions?.[0]}
             closeModal={() => setOpenInstallmentPopup(false)}
-            courseFee={courseData?.iamount || 0}
+            
+            courseFee={Math.round(finalPrice)}
             email={studentData?.email || ''}
             studentId={studentData?.studentId || ''}
             studentName={studentData?.userName || ''}
-            courseData={courseData}
+            courseData={course}
             mobile={mobileNumber}
           />
         </DialogContent>

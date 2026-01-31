@@ -6,7 +6,7 @@ export function useTrainerDetailsByCourse(courseName) {
     queryKey: ["trainerDetailsByCourse", courseName],
     queryFn: async () => {
       const res = await axios.get(
-        "https://api.hachion.co/coursedetails/by-course",
+        "https://api.test.hachion.co/coursedetails/by-course",
         { params: { courseName } }
       );
 

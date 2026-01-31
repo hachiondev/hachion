@@ -93,65 +93,75 @@ export default function InstructorSection({
         <div className={styles.iscard}>
           {/* ================= TOP ROW ================= */}
           <div className={styles.istoprow}>
-            {/* Photo */}
-           
-
             {/* Content */}
             <div className={styles.iscontent}>
               <div className={styles.istopline}>
-                <div className={styles.isphoto}>
-              <img
-                src="/instructordefault.png"
-                alt={`${trainerName || name} headshot`}
-                onError={(e) => {
-                  e.currentTarget.src = "/InstructorDefaultImage.webp";
-                }}
-              />
-            </div>
-                <span className={styles.isbadge}>⭐ Top Instructor</span>
-                <h3 className={styles.isname}>{trainerName || name}</h3>
-                
-              </div>
+  
 
-              <div className={styles.istitle}>
-                {designation || title}
-              </div>
+  {/* LEFT: INFO */}
+  <div className={styles.isinfo}>
+<div className={styles.isnamesection}>
+      <h3 className={styles.isname}>{trainerName || name}</h3>
 
-              {/* Stats */}
-              <div className={styles.isstats}>
-                <div className={styles.isstat}>
-                  <div className={styles.isstatval}>
-                    <span className={styles.isstatico}>
-                      <img src="/users.png" alt="icon" />
-                    </span>
-                    {experience ? `${experience}+` : stats.years}
-                  </div>
-                  <div className={styles.isstatlab}>Years Experience</div>
-                </div>
+    <span className={styles.isbadge}>⭐ Top Instructor</span>
+</div>
 
-                <div className={styles.isstat}>
-                  <div className={styles.isstatval}>
-                    <span className={styles.isstatico}>
-                      <img src="/users.png" alt="icon" />
-                    </span>
-                    {stats.students}
-                  </div>
-                  <div className={styles.isstatlab}>Students Taught</div>
-                </div>
+    <div className={styles.istitle}>
+      {designation || title}
+    </div>
 
-                <div className={styles.isstat}>
-                  <div className={styles.isstatval}>
-                    <span className={styles.isstatico}>
-                      <img src="/users.png" alt="icon" />
-                    </span>
-                    {finalRating}&nbsp;&nbsp;
-                    <span style={{ color: "#f5a623", fontSize: "18px" }}>
-                      {stars}
-                    </span>
-                  </div>
-                  <div className={styles.isstatlab}>Instructor Rating</div>
-                </div>
-              </div>
+    {/* Stats */}
+    <div className={styles.isstats}>
+      <div className={styles.isstat}>
+        <div className={styles.isstatval}>
+          <span className={styles.isstatico}>
+            <img src="/users.png" alt="icon" />
+          </span>
+          {experience ? `${experience}+` : stats.years}
+        </div>
+        <div className={styles.isstatlab}>Years Experience</div>
+      </div>
+
+      <div className={styles.isstat}>
+        <div className={styles.isstatval}>
+          <span className={styles.isstatico}>
+            <img src="/users.png" alt="icon" />
+          </span>
+          {stats.students}
+        </div>
+        <div className={styles.isstatlab}>Students Taught</div>
+      </div>
+
+      <div className={styles.isstat}>
+        <div className={styles.isstatval}>
+          <span className={styles.isstatico}>
+            <img src="/users.png" alt="icon" />
+          </span>
+          {finalRating}
+          <span style={{ color: "#f5a623", fontSize: "18px", marginLeft: "6px" }}>
+            {stars}
+          </span>
+        </div>
+        <div className={styles.isstatlab}>Instructor Rating</div>
+      </div>
+    </div>
+  </div>
+  {/* RIGHT: PHOTO */}
+  <div className={styles.isphoto}>
+    <img
+      src="/instructordefault.png"
+      alt={`${trainerName || name} headshot`}
+      onError={(e) => {
+        e.currentTarget.src = "/InstructorDefaultImage.webp";
+      }}
+    />
+  </div>
+</div>
+
+
+              
+
+              
 
               {/* Bio */}
               <p className={styles.isbio}>
@@ -162,10 +172,7 @@ export default function InstructorSection({
                 )}
               </p>
             </div>
-             
-          </div>
-
-          {/* ================= BOTTOM ROW ================= */}
+{/* ================= BOTTOM ROW ================= */}
           <div className={styles.isbottomrow}>
             <div className={styles.issubhead}>Experience & Credentials:</div>
             <ul className={styles.islist}>
@@ -195,6 +202,9 @@ export default function InstructorSection({
                 Ask a Question
               </button>
           </div> */}
+          </div>
+
+          
         </div>
       </div>
     </section>

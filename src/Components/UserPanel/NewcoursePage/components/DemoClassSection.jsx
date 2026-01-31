@@ -17,6 +17,7 @@ import { useCourseByName } from "../../../../Api/hooks/CourseApi/useCourseByName
 import { useDemoLivePayment } from "../../../../Api/hooks/CourseApi/useDemoLivePayment";
 import { useCurrency } from "../../../../Api/hooks/CourseApi/useCurrency";
 import { saveRedirectUrl } from "../../../../redirectAfterLogin";
+import LoginModal from "../../Common/Loginmodal";
 
 const tabs = [
   { key: "live", label: "Live Training" },
@@ -210,46 +211,46 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
     return "OK";
   };
 
-const handleClick = (action) => {
-  
-  if (action === "LOGIN_REQUIRED") {
-    setShowRegisterPrompt(true);
-    return;
-  }
+  const handleClick = (action) => {
 
-  
-  if (action === "ENROLL_SELF") {
-    navigate(`/enroll-self/${courseName}`);
-    return;
-  }
+    if (action === "LOGIN_REQUIRED") {
+      setShowRegisterPrompt(true);
+      return;
+    }
 
-  
-  const selectedDays = Array.from(
-    document.querySelectorAll(".dayCheckbox:checked")
-  ).map((cb) => cb.nextSibling?.nextSibling?.textContent?.trim());
 
-  const allowMentoringSelf = activeTab === "mentoring" || activeTab === "self";
+    if (action === "ENROLL_SELF") {
+      navigate(`/enroll-self/${courseName}`);
+      return;
+    }
 
-  const preferredTimeForTab =
-    activeTab === "mentoring"
-      ? mentoringPreferredTime
-      : activeTab === "self"
-        ? selfPreferredTime
-        : null;
 
-  const notificationForTab =
-    activeTab === "mentoring"
-      ? mentoringNotification
-      : activeTab === "self"
-        ? selfNotification
-        : null;
+    const selectedDays = Array.from(
+      document.querySelectorAll(".dayCheckbox:checked")
+    ).map((cb) => cb.nextSibling?.nextSibling?.textContent?.trim());
 
-  handleRequestBatch({
-    preferredTime: allowMentoringSelf ? preferredTimeForTab : null,
-    notification: allowMentoringSelf ? notificationForTab : null,
-    selectedDays: allowMentoringSelf ? selectedDays : [],
-  });
-};
+    const allowMentoringSelf = activeTab === "mentoring" || activeTab === "self";
+
+    const preferredTimeForTab =
+      activeTab === "mentoring"
+        ? mentoringPreferredTime
+        : activeTab === "self"
+          ? selfPreferredTime
+          : null;
+
+    const notificationForTab =
+      activeTab === "mentoring"
+        ? mentoringNotification
+        : activeTab === "self"
+          ? selfNotification
+          : null;
+
+    handleRequestBatch({
+      preferredTime: allowMentoringSelf ? preferredTimeForTab : null,
+      notification: allowMentoringSelf ? notificationForTab : null,
+      selectedDays: allowMentoringSelf ? selectedDays : [],
+    });
+  };
 
 
   const handleEnroll = () => {
@@ -350,53 +351,53 @@ const handleClick = (action) => {
 
   //   return `${currency} ${Math.round(safeAmount)}`;
   // };
-const getTabPrice = (tabKey) => {
-  if (!courseData) {
-    return { text: "Not Available", disabled: true };
-  }
+  const getTabPrice = (tabKey) => {
+    if (!courseData) {
+      return { text: "Not Available", disabled: true };
+    }
 
-  let baseAmount = 0;
+    let baseAmount = 0;
 
-  if (currency === "INR") {
-    if (tabKey === "live") baseAmount = courseData.itotal ?? courseData.iamount;
-    if (tabKey === "crash") baseAmount = courseData.ictotal ?? courseData.icamount;
-    if (tabKey === "mentoring") baseAmount = courseData.isqtotal ?? courseData.isqmamount;
-    if (tabKey === "self") baseAmount = courseData.istotal ?? courseData.isamount;
-  } else {
-    if (tabKey === "live") baseAmount = courseData.total ?? courseData.amount;
-    if (tabKey === "crash") baseAmount = courseData.ctotal ?? courseData.camount;
-    if (tabKey === "mentoring") baseAmount = courseData.sqtotal ?? courseData.sqamount;
-    if (tabKey === "self") baseAmount = courseData.stotal ?? courseData.samount;
+    if (currency === "INR") {
+      if (tabKey === "live") baseAmount = courseData.itotal ?? courseData.iamount;
+      if (tabKey === "crash") baseAmount = courseData.ictotal ?? courseData.icamount;
+      if (tabKey === "mentoring") baseAmount = courseData.isqtotal ?? courseData.isqmamount;
+      if (tabKey === "self") baseAmount = courseData.istotal ?? courseData.isamount;
+    } else {
+      if (tabKey === "live") baseAmount = courseData.total ?? courseData.amount;
+      if (tabKey === "crash") baseAmount = courseData.ctotal ?? courseData.camount;
+      if (tabKey === "mentoring") baseAmount = courseData.sqtotal ?? courseData.sqamount;
+      if (tabKey === "self") baseAmount = courseData.stotal ?? courseData.samount;
 
-    baseAmount = baseAmount * exchangeRate;
-  }
+      baseAmount = baseAmount * exchangeRate;
+    }
 
-  const safeAmount = Number(baseAmount) || 0;
+    const safeAmount = Number(baseAmount) || 0;
 
-  if (safeAmount <= 0) {
-    return { text: "Not Available", disabled: true };
-  }
+    if (safeAmount <= 0) {
+      return { text: "Not Available", disabled: true };
+    }
 
-  return {
-    text: `${currency} ${Math.round(safeAmount)}`,
-    disabled: false,
+    return {
+      text: `${currency} ${Math.round(safeAmount)}`,
+      disabled: false,
+    };
   };
-};
-useEffect(() => {
-  if (!courseData || activeTab) return;
+  useEffect(() => {
+    if (!courseData || activeTab) return;
 
-  // Priority order
-  const tabOrder = ["live", "crash", "mentoring", "self"];
+    // Priority order
+    const tabOrder = ["live", "crash", "mentoring", "self"];
 
-  const firstAvailableTab = tabOrder.find((tabKey) => {
-    const priceInfo = getTabPrice(tabKey);
-    return !priceInfo.disabled;
-  });
+    const firstAvailableTab = tabOrder.find((tabKey) => {
+      const priceInfo = getTabPrice(tabKey);
+      return !priceInfo.disabled;
+    });
 
-  if (firstAvailableTab) {
-    setActiveTab(firstAvailableTab);
-  }
-}, [courseData, currency, exchangeRate, activeTab]);
+    if (firstAvailableTab) {
+      setActiveTab(firstAvailableTab);
+    }
+  }, [courseData, currency, exchangeRate, activeTab]);
 
   return (
     <section className={styles.dcwrap} >
@@ -457,7 +458,7 @@ useEffect(() => {
 
         {/* Heading */}
         <div className={styles.dchead}>
-        
+
           <div className={styles.dcheadText} >
             <h2>Try Before You Enroll</h2>
             <p>
@@ -476,50 +477,50 @@ useEffect(() => {
 
         {/* Tabs */}
         <div className={styles.dctabs} ref={ref} id="demoClassSection">
-         {tabs.map((t) => {
-  const priceInfo = getTabPrice(t.key);
+          {tabs.map((t) => {
+            const priceInfo = getTabPrice(t.key);
 
-  return (
-    <button
-      key={t.key}
-      ref={(el) => (tabRefs.current[t.key] = el)}
-      className={cn(
-        styles.dctab,
-        activeTab === t.key && styles.dctabisactive
-      )}
-      disabled={priceInfo.disabled}
-      style={{
-        cursor: priceInfo.disabled ? "not-allowed" : "pointer",
-      }}
-      onClick={() => {
-        if (priceInfo.disabled) return;
-        setActiveTab(t.key);
-      }}
-    >
-      <span className={styles.tabLabel}>{t.label}</span>
+            return (
+              <button
+                key={t.key}
+                ref={(el) => (tabRefs.current[t.key] = el)}
+                className={cn(
+                  styles.dctab,
+                  activeTab === t.key && styles.dctabisactive
+                )}
+                disabled={priceInfo.disabled}
+                style={{
+                  cursor: priceInfo.disabled ? "not-allowed" : "pointer",
+                }}
+                onClick={() => {
+                  if (priceInfo.disabled) return;
+                  setActiveTab(t.key);
+                }}
+              >
+                <span className={styles.tabLabel}>{t.label}</span>
 
-     <span
-  className={styles.feeAmount}
-  style={{
-    cursor: priceInfo.disabled ? "not-allowed" : "pointer",
+                <span
+                  className={styles.feeAmount}
+                  style={{
+                    cursor: priceInfo.disabled ? "not-allowed" : "pointer",
 
-    /* 🔥 FIX FOR "Not Available" */
-    minWidth: "90px",
-    padding: "4px 10px",
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    whiteSpace: "nowrap",
-    lineHeight: "1.2",
-    fontSize: "12px",
-  }}
->
-  {priceInfo.text}
-</span>
+                    /* 🔥 FIX FOR "Not Available" */
+                    minWidth: "90px",
+                    padding: "4px 10px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    whiteSpace: "nowrap",
+                    lineHeight: "1.2",
+                    fontSize: "12px",
+                  }}
+                >
+                  {priceInfo.text}
+                </span>
 
-    </button>
-  );
-})}
+              </button>
+            );
+          })}
 
         </div>
 
@@ -545,7 +546,7 @@ useEffect(() => {
             onEnrollClick={handleLiveEnrollClick}
             enrollSuccessMessage={enrollSuccessMessage}
             enrollErrorMessage={enrollErrorMessage}
-    
+
             userProfile={userProfile}
             courseName={courseData?.courseName || courseNameForApi}
             showRegisterPrompt={showRegisterPrompt}
@@ -566,7 +567,7 @@ useEffect(() => {
             selectedCrashGroup={selectedCrashGroup}
             isRequestBatchLoading={isRequestBatchLoading}
             isProfileLoading={isProfileLoading}
-            
+
             showMessage={tabMessage[activeTab] && requestSourceTab === activeTab}
 
             isRequestBatchSuccess={isRequestBatchSuccess}
@@ -657,113 +658,124 @@ useEffect(() => {
 
       {/* Register Prompt Modal */}
       {showRegisterPrompt && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            background: "rgba(0,0,0,0.55)",
-            zIndex: 9999,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              width: "520px",
-              background: "#fff",
-              borderRadius: "12px",
-              display: "flex",
-              padding: "20px",
-              boxShadow: "0 10px 35px rgba(0,0,0,0.28)",
-            }}
-          >
-            {/* LEFT IMAGE */}
-            <div
-              style={{
-                width: "42%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <img
-                src={require("../../../../Assets/loginpopup.webp")}
-                alt="login popup"
-                style={{
-                  width: "100%",
-                  borderRadius: "8px",
-                  objectFit: "cover",
-                  transform: "scaleX(-1)",
-                }}
-              />
-            </div>
+        // <div
+        //   style={{
+        //     position: "fixed",
+        //     top: 0,
+        //     left: 0,
+        //     width: "100%",
+        //     height: "100%",
+        //     background: "rgba(0,0,0,0.55)",
+        //     zIndex: 9999,
+        //     display: "flex",
+        //     justifyContent: "center",
+        //     alignItems: "center",
+        //   }}
+        // >
+        //   <div
+        //     style={{
+        //       width: "520px",
+        //       background: "#fff",
+        //       borderRadius: "12px",
+        //       display: "flex",
+        //       padding: "20px",
+        //       boxShadow: "0 10px 35px rgba(0,0,0,0.28)",
+        //     }}
+        //   >
+            
+        //     <div
+        //       style={{
+        //         width: "42%",
+        //         display: "flex",
+        //         justifyContent: "center",
+        //         alignItems: "center",
+        //       }}
+        //     >
+        //       <img
+        //         src={require("../../../../Assets/loginpopup.webp")}
+        //         alt="login popup"
+        //         style={{
+        //           width: "100%",
+        //           borderRadius: "8px",
+        //           objectFit: "cover",
+        //           transform: "scaleX(-1)",
+        //         }}
+        //       />
+        //     </div>
 
-            {/* RIGHT CONTENT */}
-            <div
-              style={{
-                width: "58%",
-                paddingLeft: "14px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <h3 style={{ margin: 0, fontSize: "20px", marginBottom: "6px" }}>
-                Please Login
-              </h3>
+        //     <div
+        //       style={{
+        //         width: "58%",
+        //         paddingLeft: "14px",
+        //         display: "flex",
+        //         flexDirection: "column",
+        //         justifyContent: "center",
+        //       }}
+        //     >
+        //       <h3 style={{ margin: 0, fontSize: "20px", marginBottom: "6px" }}>
+        //         Please Login
+        //       </h3>
 
-              <p style={{ fontSize: "14px", marginBottom: "20px", color: "#555" }}>
-                Before proceeding, please login into our Hachion.
-              </p>
+        //       <p style={{ fontSize: "14px", marginBottom: "20px", color: "#555" }}>
+        //         Before proceeding, please login into our Hachion.
+        //       </p>
 
-              <div style={{ display: "flex", gap: "10px" }}>
-                <button
-  style={{
-    padding: "8px 14px",
-    borderRadius: "6px",
-    border: "none",
-    background: "#2563eb",
-    color: "#fff",
-    fontSize: "14px",
-    cursor: "pointer",
-  }}
-  onClick={() => {
-    // 🔥 Save current URL before redirecting to login
-    saveRedirectUrl();
-    
-    navigate("/login");
-    setShowRegisterPrompt(false);
-  }}
->
-  Login
-</button>
+        //       <div style={{ display: "flex", gap: "10px" }}>
+        //         <button
+        //           style={{
+        //             padding: "8px 14px",
+        //             borderRadius: "6px",
+        //             border: "none",
+        //             background: "#2563eb",
+        //             color: "#fff",
+        //             fontSize: "14px",
+        //             cursor: "pointer",
+        //           }}
+        //           onClick={() => {
+        //             // 🔥 Save current URL before redirecting to login
+        //             saveRedirectUrl();
 
-                <button
-                  style={{
-                    padding: "8px 14px",
-                    background: "#f1f5f9",
-                    color: "#333",
-                    borderRadius: "6px",
-                    border: "1px solid #ccc",
-                    fontSize: "14px",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    setShowRegisterPrompt(false);
-                    setResetLiveSubmitting(Date.now()); // 🔥 notify child
-                  }}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        //             navigate("/login");
+        //             setShowRegisterPrompt(false);
+        //           }}
+        //         >
+        //           Login
+        //         </button>
+
+        //         <button
+        //           style={{
+        //             padding: "8px 14px",
+        //             background: "#f1f5f9",
+        //             color: "#333",
+        //             borderRadius: "6px",
+        //             border: "1px solid #ccc",
+        //             fontSize: "14px",
+        //             cursor: "pointer",
+        //           }}
+        //           onClick={() => {
+        //             setShowRegisterPrompt(false);
+        //             setResetLiveSubmitting(Date.now()); // 🔥 notify child
+        //           }}
+        //         >
+        //           Cancel
+        //         </button>
+        //       </div>
+        //     </div>
+        //   </div>
+        // </div>
+        <LoginModal isOpen={showRegisterPrompt} description="Before proceeding, please login into our Hachion." onLogin={() => {
+        // 🔥 Save current URL before redirecting to login
+        saveRedirectUrl();
+        navigate("/login");
+        setShowRegisterPrompt(false);
+      }}
+        onClose={() => {
+          setShowRegisterPrompt(false);
+          setResetLiveSubmitting(Date.now()); // 🔥 notify child
+        }}
+      />
       )}
+      
     </section>
   );
 });

@@ -1,0 +1,129 @@
+.modalBackdropCustom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+.loginModal {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 450px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+.modalHeaderCustom {
+  background: linear-gradient(135deg, #00c9ff 0%, #00b4d8 100%);
+  padding: 0;
+  position: relative;
+  border: none;
+}
+
+.modalImage {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.closeBtn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.modalBodyCustom {
+  padding: 40px 30px;
+  text-align: center;
+}
+
+.modalTitleCustom {
+  font-size: 24px;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 12px;
+}
+
+.modalTextCustom {
+  font-size: 15px;
+  color: #6c757d;
+  margin-bottom: 30px;
+}
+
+.modalActions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+}
+
+.btnCancel {
+  background: transparent;
+  border: none;
+  color: #212529;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px 30px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.btnCancel:hover {
+  color: #00b4d8;
+}
+
+.btnLogin {
+  background: #00c9ff;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px 50px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btnLogin:hover {
+  background: #00b4d8;
+}
+
+@media (max-width: 576px) {
+  .modalBodyCustom {
+    padding: 30px 20px;
+  }
+  
+  .modalActions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .btnCancel, .btnLogin {
+    width: 100%;
+  }
+}

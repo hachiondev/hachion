@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useResendEnrollEmail } from "../../../../Api/hooks/CourseApi/useResendEnrollEmail";
 import { saveRedirectUrl } from "../../../../redirectAfterLogin";
 import { useResendLiveClassEnrollEmail } from "../../../../Api/hooks/CourseApi/useResendLiveClassEnrollEmail";
+import LoginModal from "../../Common/Loginmodal";
 
 function DemoClassSectionLiveTab({
   scheduleLoading,
@@ -562,7 +563,8 @@ resendFn(
       </div>
 
       {showRegisterPrompt && (
-        <div
+        <>
+        {/* <div
           style={{
             position: "fixed",
             top: 0,
@@ -586,7 +588,6 @@ resendFn(
               boxShadow: "0 10px 35px rgba(0,0,0,0.28)",
             }}
           >
-            {/* LEFT SIDE — GIRL IMAGE */}
             <div
               style={{
                 width: "42%",
@@ -608,7 +609,6 @@ resendFn(
 
             </div>
 
-            {/* RIGHT SIDE — TEXT + BUTTONS */}
             <div
               style={{
                 width: "58%",
@@ -676,7 +676,17 @@ resendFn(
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
+        <LoginModal
+        isOpen={showRegisterPrompt}
+        description="Before proceeding, please login into our Hachion."
+        onClose={() => onCloseRegisterPrompt && onCloseRegisterPrompt()}
+        onLogin={() => {
+                    navigate("/login");
+                    onCloseRegisterPrompt && onCloseRegisterPrompt();
+                  }}
+      />
+        </>
       )}
 
       {/* RIGHT: Dynamic Info Card */}

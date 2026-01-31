@@ -28,6 +28,7 @@ const tabs = [
 const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
   // const [activeTab, setActiveTab] = useState("live");
   const [activeTab, setActiveTab] = useState(null);
+  const isFirstTabSet = useRef(true);
 
   const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const [tz, setTz] = useState(browserTz);
@@ -255,16 +256,16 @@ const handleClick = (action) => {
     setEnrollNow(false);
   };
 
-  useEffect(() => {
-    const el = tabRefs.current[activeTab];
-    if (el) {
-      el.scrollIntoView({
-        behavior: "smooth",
-        inline: "center",
-        block: "nearest",
-      });
-    }
-  }, [activeTab]);
+  // useEffect(() => {
+  //   const el = tabRefs.current[activeTab];
+  //   if (el) {
+  //     el.scrollIntoView({
+  //       behavior: "smooth",
+  //       inline: "center",
+  //       block: "nearest",
+  //     });
+  //   }
+  // }, [activeTab]);
 
   useEffect(() => {
     if (isRequestBatchSuccess) {

@@ -39,13 +39,26 @@
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 14px;
-  display: grid;
-  grid-template-columns: 0.8fr 1.2fr;
-  gap: 22px;
-  padding: 0;
-  overflow: hidden;
+  padding: 22px;
   box-shadow: var(--shadow);
+
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 30px;
 }
+
+.istoprow {
+  display: grid;
+  grid-template-columns:2.2fr 0.4fr;
+  gap: 22px;
+  align-items: start;
+}
+
+.isbottomrow {
+  grid-column: 1 / -1;
+}
+
+
 
 /* photo */
 .isphoto {
@@ -53,15 +66,14 @@
 }
 
 .isphoto img {
-  display: block;
   width: 100%;
-  height: 100%;
+  height: 150px;
   object-fit: cover;
 }
 
 /* content */
 .iscontent {
-  padding: 20px 22px;
+  padding: 20px 10px;
 }
 
 .istopline {
@@ -183,7 +195,7 @@
 }
 
 .issubhead {
-  margin-top: 35px;
+  margin-top: 5px;
   font-weight: 600;
   color: #0f172a;
   font-size: 20px;

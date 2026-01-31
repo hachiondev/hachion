@@ -83,97 +83,92 @@ export default function InstructorSection({
       <div className="container">
         <div className={styles.ishead}>
           <h2>
-  {courseData?.courseName
-    ? `Meet Your ${courseData.courseName} Instructor`
-    : "Meet Your Instructor"}
-</h2>
-
-
+            {courseData?.courseName
+              ? `Meet Your ${courseData.courseName} Instructor`
+              : "Meet Your Instructor"}
+          </h2>
           <p>Learn from industry veterans with years of real-world experience</p>
         </div>
 
         <div className={styles.iscard}>
-          {/* Photo */}
-          <div className={styles.isphoto}>
-            <img
-              src="/instructordefault.png"
-              alt={`${trainerName || name} headshot`}
-              onError={(e) => {
-                e.currentTarget.src = "/InstructorDefaultImage.webp";
-              }}
-            />
+          {/* ================= TOP ROW ================= */}
+          <div className={styles.istoprow}>
+            {/* Photo */}
+           
+
+            {/* Content */}
+            <div className={styles.iscontent}>
+              <div className={styles.istopline}>
+                <div className={styles.isphoto}>
+              <img
+                src="/instructordefault.png"
+                alt={`${trainerName || name} headshot`}
+                onError={(e) => {
+                  e.currentTarget.src = "/InstructorDefaultImage.webp";
+                }}
+              />
+            </div>
+                <span className={styles.isbadge}>⭐ Top Instructor</span>
+                <h3 className={styles.isname}>{trainerName || name}</h3>
+                
+              </div>
+
+              <div className={styles.istitle}>
+                {designation || title}
+              </div>
+
+              {/* Stats */}
+              <div className={styles.isstats}>
+                <div className={styles.isstat}>
+                  <div className={styles.isstatval}>
+                    <span className={styles.isstatico}>
+                      <img src="/users.png" alt="icon" />
+                    </span>
+                    {experience ? `${experience}+` : stats.years}
+                  </div>
+                  <div className={styles.isstatlab}>Years Experience</div>
+                </div>
+
+                <div className={styles.isstat}>
+                  <div className={styles.isstatval}>
+                    <span className={styles.isstatico}>
+                      <img src="/users.png" alt="icon" />
+                    </span>
+                    {stats.students}
+                  </div>
+                  <div className={styles.isstatlab}>Students Taught</div>
+                </div>
+
+                <div className={styles.isstat}>
+                  <div className={styles.isstatval}>
+                    <span className={styles.isstatico}>
+                      <img src="/users.png" alt="icon" />
+                    </span>
+                    {finalRating}&nbsp;&nbsp;
+                    <span style={{ color: "#f5a623", fontSize: "18px" }}>
+                      {stars}
+                    </span>
+                  </div>
+                  <div className={styles.isstatlab}>Instructor Rating</div>
+                </div>
+              </div>
+
+              {/* Bio */}
+              <p className={styles.isbio}>
+                {trainerBio ? (
+                  <span dangerouslySetInnerHTML={{ __html: trainerBio }} />
+                ) : (
+                  bio
+                )}
+              </p>
+            </div>
+             
           </div>
 
-          {/* Content */}
-          <div className={styles.iscontent}>
-            <div className={styles.istopline}>
-              <span className={styles.isbadge}>⭐ Top Instructor</span>
-              <h3 className={styles.isname}>{trainerName || name}</h3>
-            </div>
-
-            {/* <div className={styles.istitle}>{title}</div> */}
-            <div className={styles.istitle}>
-              {designation || title}
-            </div>
-
-            <div className={styles.isstats}>
-              <div className={styles.isstat}>
-                <div className={styles.isstatval}>
-                  <span className={styles.isstatico}>
-                    <img src="/users.png" alt="logo" />
-                  </span>
-                  {experience ? `${experience}+` : stats.years}
-
-                </div>
-                <div className={styles.isstatlab}>Years Experience</div>
-              </div>
-
-              <div className={styles.isstat}>
-                <div className={styles.isstatval}>
-                  <span className={styles.isstatico}>
-                    <img src="/users.png" alt="logo" />
-                  </span>
-                  {stats.students}
-                </div>
-                <div className={styles.isstatlab}>Students Taught</div>
-              </div>
-
-              <div className={styles.isstat}>
-                <div className={styles.isstatval}>
-                  <span className={styles.isstatico}>
-                    <img src="/users.png" alt="logo" />
-                  </span>
-
-                  {/* ⭐ EXACT fractional rating */}
-                  {finalRating} &nbsp;&nbsp;
-                  <span style={{ color: "#f5a623", fontSize: "18px" }}>
-                    {stars}
-                  </span>
-
-                </div>
-                <div className={styles.isstatlab}>Instructor Rating</div>
-              </div>
-            </div>
-
-            <p
-              className={styles.isbio}
-              // style={{
-              //   fontSize: "14px",
-              //   lineHeight: "1.6",
-              //   color: "#374151",
-              // }}
-            >
-              {trainerBio ? (
-                <span
-                  dangerouslySetInnerHTML={{ __html: trainerBio }}
-                />
-              ) : (
-                bio
-              )}
-            </p>
+          {/* ================= BOTTOM ROW ================= */}
+          <div className={styles.isbottomrow}>
             <div className={styles.issubhead}>Experience & Credentials:</div>
             <ul className={styles.islist}>
-              
               {(experienceCredentialsArray.length > 0
                 ? experienceCredentialsArray
                 : creds
@@ -181,11 +176,9 @@ export default function InstructorSection({
                 <li key={index}>{c}</li>
               ))}
             </ul>
-
-
-
-            <div className={styles.isactions}>
-              {/* <button
+          </div>
+          {/* <div className={styles.isactions}>
+            <button
                 className={cn(styles.isbtn, styles.isbtnoutline)}
                 onClick={onLinkedIn}
               >
@@ -193,16 +186,15 @@ export default function InstructorSection({
                   <img src="LinkedIn.png" alt="LinkedIn" height={22} />
                 </span>
                 View LinkedIn Profile
-              </button> */}
+              </button>
 
-              {/* <button
+            <button
                 className={cn(styles.isbtn, styles.isbtnoutline)}
                 onClick={onAsk}
               >
                 Ask a Question
-              </button> */}
-            </div>
-          </div>
+              </button>
+          </div> */}
         </div>
       </div>
     </section>

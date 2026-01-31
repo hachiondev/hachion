@@ -1,3 +1,4 @@
+import React from 'react';
 import CourseBanner from '../NewcoursePage/components/CourseBanner';
 import CareerOutcomes from '../NewcoursePage/components/CareerOutcomes';
 import CertificateSection from '../NewcoursePage/components/CertificateSection';
@@ -10,12 +11,12 @@ import LearnSection from '../NewcoursePage/components/LearnSection';
 import StudentsAlsoEnrolled from '../NewcoursePage/components/StudentsAlsoEnrolled';
 import StudentsSay from '../NewcoursePage/components/StudentsSay';
 import SuccessStories from '../NewcoursePage/components/SuccessStories';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAllCourses } from '../../../Api/hooks/SitemapPageApi/useAllCourses';
 import { Link } from 'react-router-dom';
 import { MdKeyboardArrowRight } from 'react-icons/md';
-
+import EnrollmentPopup from './Enrollmentpopup';
 
 const slugify = (text = "") =>
   text
@@ -23,6 +24,8 @@ const slugify = (text = "") =>
     .trim()
     .replace(/\s+/g, "-")
     .replace(/^-+|-+$/g, "");
+
+const POPUP_DELAY = 5000; // ⏱️ 30 seconds
 
 const NewCourseDetails = () => {
   const { courseName } = useParams();
@@ -35,6 +38,14 @@ const NewCourseDetails = () => {
     (c) => slugify(c.courseName) === slugify(courseName)
   );
 
+  // Popup state
+  const [showPopup, setShowPopup] = useState(false);
+  const [hasShownPopup, setHasShownPopup] = useState(false);
+
+  // Section refs for tracking scroll
+  const sectionRefs = useRef([]);
+  const demoClassRef = useRef(null);
+
   useEffect(() => {
     if (!isLoading && courseData) {
       const correctSlug = slugify(courseData.courseName);
@@ -44,14 +55,34 @@ const NewCourseDetails = () => {
     }
   }, [courseName, courseData, isLoading, navigate]);
 
-  const demoClassRef = useRef(null);
+  {/* Always top on load */ }
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "smooth",
-    });
+    window.scrollTo({ top: 0, behavior: "instant" });
   }, [courseName]);
+
+  /** ⏱️ TIME-BASED POPUP LOGIC */
+  useEffect(() => {
+    if (hasShownPopup) return;
+
+    const timer = setTimeout(() => {
+      setShowPopup(true);
+      setHasShownPopup(true);
+    }, POPUP_DELAY);
+
+    return () => clearTimeout(timer);
+  }, [hasShownPopup]);
+
+  useEffect(() => {
+    // Reset popup when course changes
+    setShowPopup(false);
+    setHasShownPopup(false);
+  }, [courseName]);
+
+  /** Lock body scroll */
+  useEffect(() => {
+    document.body.style.overflow = showPopup ? "hidden" : "unset";
+    return () => (document.body.style.overflow = "unset");
+  }, [showPopup]);
 
   const scrollToDemoClass = () => {
     demoClassRef.current?.scrollIntoView({
@@ -59,6 +90,16 @@ const NewCourseDetails = () => {
       block: "start",
     });
   };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
+
+  // Helper to add section refs
+  const addSectionRef = (index) => (el) => {
+    sectionRefs.current[index] = el;
+  };
+
   return (
     <div>
       <div className="blogs-header" style={{ marginLeft: "6vw" }}>
@@ -68,7 +109,7 @@ const NewCourseDetails = () => {
               <Link to="/coursedetails">Courses</Link> <MdKeyboardArrowRight />
             </li>
             <li className="breadcrumb-item">
-              <Link to="/coursedetails">
+              <Link to="/coursedetails" state={{ selectedCategory: courseData?.courseCategory }}>
                 {courseData?.courseCategory}
               </Link> <MdKeyboardArrowRight />
             </li>
@@ -78,28 +119,50 @@ const NewCourseDetails = () => {
           </ol>
         </nav>
       </div>
-      <CourseBanner
-        onEnroll={scrollToDemoClass}
-        onAddToCart={() => console.log("Add to cart")}
-      />
+
+      {/* Sections with refs for scroll tracking */}
+      <div ref={addSectionRef(0)}>
+        <CourseBanner
+          onEnroll={scrollToDemoClass}
+          onAddToCart={() => console.log("Add to cart")}
+        />
+      </div>
+
+
       <LearnSection />
-      <DemoClassSection ref={demoClassRef} onViewDemoClass={scrollToDemoClass} />
+
+      <div ref={demoClassRef}>
+        <DemoClassSection ref={demoClassRef} onViewDemoClass={scrollToDemoClass} />
+      </div>
+
+
       <CourseCurriculum onViewDemoClass={scrollToDemoClass} />
+
       <InstructorSection />
+
+
       {/* <CareerOutcomes /> */}
       <CertificateSection />
       {/* <SuccessStories /> */}
+
       <StudentsSay />
+
       <StudentsAlsoEnrolled />
       <FAQSection
         onChat={() => console.log("Open chat widget")}
         onSchedule={() => console.log("Open scheduler")}
       />
+
       {/* <FinalCTA
         onEnroll={() => console.log("Enroll clicked")}
         onAddToCart={() => console.log("Add to cart")}
       /> */}
 
+      {/* Enrollment Popup */}
+      <EnrollmentPopup
+        isOpen={showPopup}
+        onClose={handleClosePopup}
+      />
     </div>
   );
 };

@@ -117,12 +117,12 @@ export default function LearnSection() {
                 {/* New Tabbed Navigation */}
                 <div className={styles.tabContainer}>
                     <button
-  className={`${styles.tab} ${activeTab === "learn" ? styles.activeTab : ""}`}
-  onClick={() => setActiveTab("learn")}
->
-  What You’ll Learn
-  {/* {course?.courseName || "this course"} */}
-</button>
+                        className={`${styles.tab} ${activeTab === "learn" ? styles.activeTab : ""}`}
+                        onClick={() => setActiveTab("learn")}
+                    >
+                        What You’ll Learn
+                        {/* {course?.courseName || "this course"} */}
+                    </button>
 
                     <button
                         className={`${styles.tab} ${activeTab === "prereq" ? styles.activeTab : ""}`}
@@ -137,14 +137,14 @@ export default function LearnSection() {
                         Who This Course Is For
                     </button>
                     <button
-  className={`${styles.tab} ${activeTab === "career" ? styles.activeTab : ""}`}
-  onClick={() => setActiveTab("career")}
->
-  
-  {/* {course?.courseName || "This Course"} */}
-   Career Opportunities
-  
-</button>
+                        className={`${styles.tab} ${activeTab === "career" ? styles.activeTab : ""}`}
+                        onClick={() => setActiveTab("career")}
+                    >
+
+                        {/* {course?.courseName || "This Course"} */}
+                        Career Opportunities
+
+                    </button>
 
                 </div>
 
@@ -153,11 +153,10 @@ export default function LearnSection() {
                     {/* What You'll Learn Tab */}
                     {activeTab === "learn" && (
                         <div className={styles.tabPane}>
-                            <ul className={styles.lslist}>
+                            <ul className={styles.lsbullets}>
                                 {(showAll.learn ? whatYouWillLearnItems : whatYouWillLearnItems.slice(0, 8)).map((item, index) => (
-                                    <li key={item} className={styles.lslistitem} style={{ "--i": index }}>
-                                        <CheckCircle />
-                                        <span>{item}</span>
+                                    <li key={item}  style={{ "--i": index }}>
+                                        {item}
                                     </li>
                                 ))}
                             </ul>
@@ -259,8 +258,8 @@ export default function LearnSection() {
                 <div className={styles.lstools}>
                     <div className={styles.pagiGroup}>
                         <h3 className={styles.lstoolstitle}>
-  Tools Cover in {course?.courseName || "this course"}
-</h3>
+                            Tools Cover in {course?.courseName || "this course"}
+                        </h3>
 
                         {allTools.length > cardsPerPage && (
                             <div className={styles.cardPaginationContainer}>

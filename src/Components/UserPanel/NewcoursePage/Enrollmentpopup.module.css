@@ -1,0 +1,141 @@
+/* Backdrop overlay */
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 9998;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Popup container */
+.popupContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 0px;
+  overflow-y: auto;
+}
+
+/* Popup content wrapper */
+.popupContent {
+  position: relative;
+  max-width: 500px;
+  width: 100%;
+  /* max-height: 90vh;
+  overflow-y: auto; */
+  animation: slideUp 0.4s ease-out;
+  border-radius: 12px;
+}
+
+/* Close button */
+/* .closeButton {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.closeButton:hover {
+  background: #ff4444;
+  color: white;
+  transform: rotate(90deg);
+} */
+
+/* Animations */
+/* @keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+} */
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scrollbar styling for popup content */
+.popupContent::-webkit-scrollbar {
+  width: 8px;
+}
+
+.popupContent::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.popupContent::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.popupContent::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .popupContainer {
+    padding: 10px;
+    align-items: flex-start;
+    padding-top: 60px;
+  }
+
+  .popupContent {
+    max-height: calc(100vh - 70px);
+  }
+
+  .closeButton {
+    top: 15px;
+    right: 15px;
+    width: 35px;
+    height: 35px;
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .popupContainer {
+    padding: 5px;
+    padding-top: 55px;
+  }
+
+  .closeButton {
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    font-size: 24px;
+  }
+}

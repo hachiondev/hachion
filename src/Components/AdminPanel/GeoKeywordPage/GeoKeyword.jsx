@@ -27,7 +27,6 @@ import { BsFileEarmarkPdfFill } from 'react-icons/bs';
 import { GoPlus } from 'react-icons/go';
 import { useCategories } from "../../../Api/hooks/HomePageApi/NavbarApi/useCategories";
 import { useCourses } from "../../../Api/hooks/HomePageApi/NavbarApi/useCourses";
-
 import { useUpdateProject } from "../../../Api/hooks/AdminProjects/useUpdateProject";
 import { useDeleteProject } from "../../../Api/hooks/AdminProjects/useDeleteProject";
 import dayjs from 'dayjs';
@@ -79,21 +78,18 @@ const GeoKeyword = ({
   const [showAddCourse, setShowAddCourse] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  // const [editingProjectId, setEditingProjectId] = useState(null);
   const [editingGeoKeywordId, setEditingGeoKeywordId] = useState(null);
-
+  
+  // New state for checkbox selection
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
 
   const { data: categories = [], isLoading } = useCategories();
-
-
-  // const { data: projects = [], isLoading: projectsLoading } = useProjects();
   const [projects, setProjects] = useState([]);
-const [projectsLoading, setProjectsLoading] = useState(false);
-
+  const [projectsLoading, setProjectsLoading] = useState(false);
 
   const { mutate: updateProject } = useUpdateProject();
   const { mutate: deleteProject } = useDeleteProject();
-
 
   const isEditMode = formMode === "Edit";
   const isAddMode = formMode === "Add";
@@ -102,7 +98,6 @@ const [projectsLoading, setProjectsLoading] = useState(false);
     courseCategory: "",
     courseName: "",
   });
-
 
   const showTimedMessage = (type, message, duration = 6000) => {
     if (type === "success") {
@@ -119,15 +114,10 @@ const [projectsLoading, setProjectsLoading] = useState(false);
     }, duration);
   };
 
-
-
   const currentDate = new Date().toISOString().split('T')[0];
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [payload, setPayload] = useState(null);
-
-
-  // const { mutate: saveProjects, data: projectResponse, isPending: isSavingProjects } = useAddProjects();
   const [isSavingProjects, setIsSavingProjects] = useState(false);
 
   const { data: allCourses = [] } = useCourses();
@@ -135,92 +125,82 @@ const [projectsLoading, setProjectsLoading] = useState(false);
   const filteredCoursesByCategory = allCourses.filter(
     (c) => c.courseCategory === formData.courseCategory
   );
-const [rows, setRows] = useState([
-  { id: 1, title: '', isExisting: false }
-]);
-
-
+  
+  const [rows, setRows] = useState([
+    { id: 1, title: '', isExisting: false }
+  ]);
 
   const hasCategory = formData.courseCategory?.trim() !== "";
-
-
   const hasCourseName = formData.courseName?.trim() !== "";
-const allProjectsComplete = rows.every(row =>
-  row.title && row.title.trim() !== ''
-);
-
-
-
+  const allProjectsComplete = rows.every(row =>
+    row.title && row.title.trim() !== ''
+  );
   const hasAtLeastOneProject = rows.length > 0;
-
-
   const isSubmitDisabled = !hasCategory || !hasCourseName || !allProjectsComplete || !hasAtLeastOneProject;
-React.useEffect(() => {
-  // ✅ ONLY for ADD MODE
-  if (
-    isAddMode &&
-    formData.courseCategory &&
-    formData.courseName
-  ) {
-    const loadExistingGeoKeywords = async () => {
-      try {
-        setIsSavingProjects(true);
+  
+  React.useEffect(() => {
+    if (
+      isAddMode &&
+      formData.courseCategory &&
+      formData.courseName
+    ) {
+      const loadExistingGeoKeywords = async () => {
+        try {
+          setIsSavingProjects(true);
 
-        const response = await fetchGeoKeywordsByCategoryCourse(
-          formData.courseCategory,
-          formData.courseName
-        );
-
-        if (response?.geoKeywords?.length > 0) {
-          setRows(
-            response.geoKeywords.map((kw, index) => ({
-              id: index + 1,
-              title: kw.geoKeywordName,
-              isExisting: true,
-            }))
+          const response = await fetchGeoKeywordsByCategoryCourse(
+            formData.courseCategory,
+            formData.courseName
           );
-        } else {
-          // No existing keywords → show empty row
-          setRows([{ id: 1, title: "" }]);
+
+          if (response?.geoKeywords?.length > 0) {
+            setRows(
+              response.geoKeywords.map((kw, index) => ({
+                id: index + 1,
+                title: kw.geoKeywordName,
+                isExisting: true,
+              }))
+            );
+          } else {
+            setRows([{ id: 1, title: "" }]);
+          }
+        } catch (err) {
+          console.error("Failed to load existing geo keywords", err);
+        } finally {
+          setIsSavingProjects(false);
         }
-      } catch (err) {
-        console.error("Failed to load existing geo keywords", err);
+      };
+
+      loadExistingGeoKeywords();
+    }
+  }, [
+    isAddMode,
+    formData.courseCategory,
+    formData.courseName,
+  ]);
+
+  React.useEffect(() => {
+    const fetchGeoKeywords = async () => {
+      try {
+        setProjectsLoading(true);
+        const res = await axios.get(
+          "https://api.test.hachion.co/api/admin/geo-keywords"
+        );
+        setProjects(res.data);
+      } catch (error) {
+        console.error(error);
+        setErrorMessage("❌ Failed to load GeoKeywords");
       } finally {
-        setIsSavingProjects(false);
+        setProjectsLoading(false);
       }
     };
 
-    loadExistingGeoKeywords();
-  }
-}, [
-  isAddMode,
-  formData.courseCategory,
-  formData.courseName,
-]);
-
-
-  React.useEffect(() => {
-  const fetchGeoKeywords = async () => {
-    try {
-      setProjectsLoading(true);
-      const res = await axios.get(
-        "https://api.test.hachion.co/api/admin/geo-keywords"
-      );
-      setProjects(res.data);
-    } catch (error) {
-      console.error(error);
-      setErrorMessage("❌ Failed to load GeoKeywords");
-    } finally {
-      setProjectsLoading(false);
-    }
-  };
-
-  fetchGeoKeywords();
-}, []);
-const [autoLoaded, setAutoLoaded] = useState(false);
+    fetchGeoKeywords();
+  }, []);
+  
+  const [autoLoaded, setAutoLoaded] = useState(false);
 
   const handleDateFilter = () => {
-
     console.log('Filter applied');
   };
 
@@ -245,13 +225,11 @@ const [autoLoaded, setAutoLoaded] = useState(false);
     e.preventDefault();
     if (!hasCategory) {
       showTimedMessage("error", "❌ Please select a Category Name.");
-
       return;
     }
 
     if (!hasCourseName) {
       showTimedMessage("error", "❌ Please select a Course Name.");
-
       return;
     }
 
@@ -261,135 +239,122 @@ const [autoLoaded, setAutoLoaded] = useState(false);
     }
 
     if (!allProjectsComplete) {
-      // setErrorMessage("❌ Please fill both GeoKeyword and Description for all project rows.");
       setErrorMessage("❌ Please fill GeoKeyword for all rows.");
-
       return;
     }
-   if (formMode === "Edit") {
-  try {
-    setIsSavingProjects(true);
-
-    await axios.put(
-  "https://api.test.hachion.co/api/admin/geo-keywords/update",
-  {
-    geoKeywordId: editingGeoKeywordId,
-    geoKeywordName: rows[0].title,
-  }
-);
-
-showTimedMessage("success", "⚡ GeoKeyword updated successfully!");
-// ✅ Reset form state after successful update
-setFormData({
-  courseCategory: "",
-  courseName: "",
-});
-setRows([{ id: 1, title: "" }]);
-
-
-// ✅ Optimistic UI update (NO API CALL)
-setProjects(prev =>
-  prev.map(item =>
-    item.geoKeywordId === editingGeoKeywordId
-      ? { ...item, geoKeywordName: rows[0].title }
-      : item
-  )
-);
-
-// ✅ reset edit state
-setEditingGeoKeywordId(null);
-setFormMode("Add");
-setShowAddCourse(false);
-
-
-  } catch (error) {
-    showTimedMessage(
-      "error",
-      error.response?.data?.message ||
-        "❌ GeoKeyword already exists for this Category & Course"
-    );
-  } finally {
-    setIsSavingProjects(false);
-  }
-}
- else {
-     try {
-  setIsSavingProjects(true);
-
-  const geoKeywordPayload = {
-    categoryName: formData.courseCategory,
-    courseName: formData.courseName,
-    geoKeywords: rows.map(row => row.title),
-  };
-
-  const response = await axios.post(
-    "https://api.test.hachion.co/api/admin/geo-keywords",
-    geoKeywordPayload
-  );
-
-  console.log("GeoKeyword API Response:", response.data);
-
-  showTimedMessage("success", "⚡ GeoKeywords saved successfully!");
-
-} catch (error) {
-  console.error(error);
-  showTimedMessage("error", "❌ Failed to save GeoKeywords");
-} finally {
-  setIsSavingProjects(false);
-}
-    }
-   // ❗ Only reset form when NOT in Edit mode
-if (formMode !== "Edit") {
-  setErrorMessage("");
-  setEditingGeoKeywordId(null);
-  setFormMode("Add");
-  setShowAddCourse(false);
-}
-
     
+    if (formMode === "Edit") {
+      try {
+        setIsSavingProjects(true);
+
+        await axios.put(
+          "https://api.test.hachion.co/api/admin/geo-keywords/update",
+          {
+            geoKeywordId: editingGeoKeywordId,
+            geoKeywordName: rows[0].title,
+          }
+        );
+
+        showTimedMessage("success", "⚡ GeoKeyword updated successfully!");
+        
+        setProjects(prev =>
+          prev.map(item =>
+            item.geoKeywordId === editingGeoKeywordId
+              ? { ...item, geoKeywordName: rows[0].title }
+              : item
+          )
+        );
+
+        setFormData({
+          courseCategory: "",
+          courseName: "",
+        });
+        setRows([{ id: 1, title: "" }]);
+        setEditingGeoKeywordId(null);
+        setFormMode("Add");
+        setShowAddCourse(false);
+      } catch (error) {
+        showTimedMessage(
+          "error",
+          error.response?.data?.message ||
+            "❌ GeoKeyword already exists for this Category & Course"
+        );
+      } finally {
+        setIsSavingProjects(false);
+      }
+    } else {
+      try {
+        setIsSavingProjects(true);
+
+        const geoKeywordPayload = {
+          categoryName: formData.courseCategory,
+          courseName: formData.courseName,
+          geoKeywords: rows.map(row => row.title),
+        };
+
+        const response = await axios.post(
+          "https://api.test.hachion.co/api/admin/geo-keywords",
+          geoKeywordPayload
+        );
+
+        console.log("GeoKeyword API Response:", response.data);
+        showTimedMessage("success", "⚡ GeoKeywords saved successfully!");
+
+        // Refresh the list after successful addition
+        const refreshRes = await axios.get(
+          "https://api.test.hachion.co/api/admin/geo-keywords"
+        );
+        setProjects(refreshRes.data);
+
+        setFormData({
+          courseCategory: "",
+          courseName: "",
+        });
+        setRows([{ id: 1, title: "" }]);
+        setShowAddCourse(false);
+      } catch (error) {
+        console.error(error);
+        showTimedMessage("error", "❌ Failed to save GeoKeywords");
+      } finally {
+        setIsSavingProjects(false);
+      }
+    }
   };
-const handleEditClick = async (project) => {
-  try {
-    setFormMode("Edit");
-    setShowAddCourse(true);
-    setIsSavingProjects(true);
 
-    setFormData({
-      courseCategory: project.categoryName,
-      courseName: project.courseName,
-    });
+  const handleEditClick = async (project) => {
+    try {
+      setFormMode("Edit");
+      setShowAddCourse(true);
+      setIsSavingProjects(true);
 
-    // 🔥 CALL NEW API
-    const response = await fetchGeoKeywordsByCategoryCourse(
-      project.categoryName,
-      project.courseName
-    );
+      setFormData({
+        courseCategory: project.categoryName,
+        courseName: project.courseName,
+      });
 
-    // ✅ Load ALL keywords into rows
-   // ✅ EDIT MODE: load ONLY the selected keyword
-setRows([
-  {
-    id: 1,
-    title: project.geoKeywordName,
-  },
-]);
+      const response = await fetchGeoKeywordsByCategoryCourse(
+        project.categoryName,
+        project.courseName
+      );
 
+      setRows([
+        {
+          id: 1,
+          title: project.geoKeywordName,
+        },
+      ]);
 
-setEditingGeoKeywordId(project.geoKeywordId);
-
-
-  } catch (error) {
-    showTimedMessage(
-      "error",
-      error.response?.data?.message ||
-        "❌ Failed to load GeoKeywords for editing"
-    );
-  } finally {
-    setIsSavingProjects(false);
-  }
-};
-
-
+      setEditingGeoKeywordId(project.geoKeywordId);
+    } catch (error) {
+      showTimedMessage(
+        "error",
+        error.response?.data?.message ||
+          "❌ Failed to load GeoKeywords for editing"
+      );
+    } finally {
+      setIsSavingProjects(false);
+    }
+  };
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -403,102 +368,167 @@ setEditingGeoKeywordId(project.geoKeywordId);
     setRowsPerPage(rows);
     setCurrentPage(1);
   };
+  
   const stripHtml = (html = "") =>
     html
       .replace(/<[^>]+>/g, " ")
       .replace(/\s+/g, " ")
       .trim()
       .toLowerCase();
-const filteredProjects = projects.filter((item) => {
-  const projectDate = new Date(item.groupCreatedDate);
+      
+  const filteredProjects = projects.filter((item) => {
+    const projectDate = new Date(item.groupCreatedDate);
+    const search = searchTerm.toLowerCase();
 
-  const search = searchTerm.toLowerCase();
+    const matchSearch =
+      item.geoKeywordName?.toLowerCase().includes(search) ||
+      item.courseName?.toLowerCase().includes(search) ||
+      item.categoryName?.toLowerCase().includes(search);
 
-  const matchSearch =
-    item.geoKeywordName?.toLowerCase().includes(search) ||
-    item.courseName?.toLowerCase().includes(search) ||
-    item.categoryName?.toLowerCase().includes(search);
+    const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+    const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
 
-  const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
-  const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+    const inRange =
+      (!start || projectDate >= start) &&
+      (!end || projectDate <= end);
 
-  const inRange =
-    (!start || projectDate >= start) &&
-    (!end || projectDate <= end);
-
-  return matchSearch && inRange;
-});
-
+    return matchSearch && inRange;
+  });
 
   const displayedProjects = filteredProjects.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
-const handleDeleteConfirmation = async (geoKeywordId) => {
-  if (!geoKeywordId) {
-    showTimedMessage("error", "❌ Invalid GeoKeyword ID");
-    return;
-  }
-
-  if (window.confirm("Are you sure you want to delete this GeoKeyword?")) {
-    try {
-      await axios.delete(
-        `https://api.test.hachion.co/api/admin/geo-keywords/${geoKeywordId}`
-      );
-
-      // ✅ Remove deleted item from UI
-      setProjects((prev) =>
-        prev.filter((item) => item.geoKeywordId !== geoKeywordId)
-      );
-
-      showTimedMessage("success", "🗑️ GeoKeyword deleted successfully!");
-    } catch (error) {
-      showTimedMessage(
-        "error",
-        error.response?.data?.message || "❌ Failed to delete GeoKeyword"
-      );
+  
+  // Handle Select All checkbox
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allIds = displayedProjects.map(project => project.geoKeywordId);
+      setSelectedIds(allIds);
+      setSelectAll(true);
+    } else {
+      setSelectedIds([]);
+      setSelectAll(false);
     }
-  }
-};
-const handleAddTrendingCourseClick = async () => {
-  setFormMode("Add");
-  setEditingGeoKeywordId(null);
-  setAutoLoaded(true); // lock future auto calls
-  setShowAddCourse(true);
+  };
 
-  setFormData({
-    courseCategory: "",
-    courseName: "",
-  });
+  // Handle individual checkbox
+  const handleSelectOne = (id) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+      setSelectAll(false);
+    } else {
+      const newSelectedIds = [...selectedIds, id];
+      setSelectedIds(newSelectedIds);
+      // Check if all items are selected
+      if (newSelectedIds.length === displayedProjects.length) {
+        setSelectAll(true);
+      }
+    }
+  };
 
-  setRows([{ id: 1, title: "" }]);
-  setErrorMessage("");
-  setSuccessMessage("");
-};
+  // Update selectAll state when page changes
+  React.useEffect(() => {
+    const allCurrentPageIds = displayedProjects.map(project => project.geoKeywordId);
+    const allSelected = allCurrentPageIds.length > 0 && 
+                       allCurrentPageIds.every(id => selectedIds.includes(id));
+    setSelectAll(allSelected);
+  }, [currentPage, displayedProjects, selectedIds]);
 
+  const handleDeleteConfirmation = async (geoKeywordId) => {
+    if (!geoKeywordId) {
+      showTimedMessage("error", "❌ Invalid GeoKeyword ID");
+      return;
+    }
 
+    if (window.confirm("Are you sure you want to delete this GeoKeyword?")) {
+      try {
+        await axios.delete(
+          `https://api.test.hachion.co/api/admin/geo-keywords/${geoKeywordId}`
+        );
+
+        setProjects((prev) =>
+          prev.filter((item) => item.geoKeywordId !== geoKeywordId)
+        );
+
+        // Remove from selectedIds if present
+        setSelectedIds(prev => prev.filter(id => id !== geoKeywordId));
+
+        showTimedMessage("success", "🗑️ GeoKeyword deleted successfully!");
+      } catch (error) {
+        showTimedMessage(
+          "error",
+          error.response?.data?.message || "❌ Failed to delete GeoKeyword"
+        );
+      }
+    }
+  };
+
+  // Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      showTimedMessage("error", "Please select at least one GeoKeyword to delete");
+      return;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'GeoKeyword' : 'GeoKeywords'}?`;
+    
+    if (window.confirm(confirmMessage)) {
+      try {
+        setIsSavingProjects(true);
+        
+        // Delete all selected GeoKeywords
+        await Promise.all(
+          selectedIds.map(id =>
+            axios.delete(`https://api.test.hachion.co/api/admin/geo-keywords/${id}`)
+          )
+        );
+
+        // Update state
+        const updatedProjects = projects.filter(item => !selectedIds.includes(item.geoKeywordId));
+        setProjects(updatedProjects);
+        
+        setSelectedIds([]);
+        setSelectAll(false);
+        
+        showTimedMessage("success", `${selectedIds.length} ${selectedIds.length === 1 ? 'GeoKeyword' : 'GeoKeywords'} deleted successfully`);
+      } catch (error) {
+        console.error("Error deleting GeoKeywords:", error);
+        showTimedMessage("error", "Error deleting some GeoKeywords. Please try again.");
+      } finally {
+        setIsSavingProjects(false);
+      }
+    }
+  };
+
+  const handleAddTrendingCourseClick = async () => {
+    setFormMode("Add");
+    setEditingGeoKeywordId(null);
+    setAutoLoaded(true);
+    setShowAddCourse(true);
+
+    setFormData({
+      courseCategory: "",
+      courseName: "",
+    });
+
+    setRows([{ id: 1, title: "" }]);
+    setErrorMessage("");
+    setSuccessMessage("");
+  };
 
   const addRow = () => {
     const newId = rows.length > 0 ? Math.max(...rows.map(row => row.id)) + 1 : 1;
-    // setRows([...rows, { id: newId, title: '', topic: '' }]);
-    // setRows([...rows, { id: newId, title: '' }]);
     setRows([...rows, { id: newId, title: '', isExisting: false }]);
-
-
   };
 
   const deleteRow = (id) => {
     if (rows.length > 1) {
       setRows(rows.filter(row => row.id !== id));
     } else {
-
-      // setRows([{ id: 1, title: '' }]);
       setRows([{ id: 1, title: '', isExisting: false }]);
-
-
     }
   };
-
 
   const handleRowChange = (index, field, value) => {
     const updatedRows = [...rows];
@@ -535,46 +565,40 @@ const handleAddTrendingCourseClick = async () => {
                     <label className="form-label">
                       Category Name <span style={{ color: "red" }}>*</span>
                     </label>
-
-                  <select
-  className="form-select"
-  name="courseCategory"
-  value={formData.courseCategory}
-  onChange={handleInputChange}
-  disabled={isEditMode}
-  required
->
-
+                    <select
+                      className="form-select"
+                      name="courseCategory"
+                      value={formData.courseCategory}
+                      onChange={handleInputChange}
+                      disabled={isEditMode}
+                      required
+                    >
                       <option value="">Select Category</option>
-
                       {categories.map((cat) => (
                         <option key={cat.id} value={cat.name}>
                           {cat.name}
                         </option>
                       ))}
                     </select>
-
                   </div>
                   <div className="col">
                     <label className="form-label">
                       Course Name <span style={{ color: "red" }}>*</span>
                     </label>
-                   <select
-  className="form-select"
-  name="courseName"
-  value={formData.courseName}
-  onChange={handleInputChange}
-  disabled={isEditMode}
-  required
->
-
+                    <select
+                      className="form-select"
+                      name="courseName"
+                      value={formData.courseName}
+                      onChange={handleInputChange}
+                      disabled={isEditMode}
+                      required
+                    >
                       <option value="">Select Course</option>
                       {filteredCoursesByCategory.map((course) => (
                         <option key={course.id} value={course.courseName}>
                           {course.courseName}
                         </option>
                       ))}
-
                     </select>
                   </div>
                 </div>
@@ -587,9 +611,6 @@ const handleAddTrendingCourseClick = async () => {
                       <StyledTableCell align='center' sx={{ fontSize: '16px', width: '25%' }}>
                         GeoKeyword <span style={{ color: "red" }}>*</span>
                       </StyledTableCell>
-                      {/* <StyledTableCell align="center" sx={{ fontSize: '16px', width: '30%' }}>
-                        Description <span style={{ color: "red" }}>*</span>
-                      </StyledTableCell> */}
                       <StyledTableCell align="center" sx={{ fontSize: '16px', width: '120px' }}>Add/Delete Row</StyledTableCell>
                     </TableRow>
                   </TableHead>
@@ -597,46 +618,26 @@ const handleAddTrendingCourseClick = async () => {
                     {rows.map((row, index) => (
                       <StyledTableRow key={row.id}>
                         <StyledTableCell align='center'>
-                         <input
-  className='table-curriculum'
-  name='title'
-  value={row.title}
-  onChange={(e) => handleRowChange(index, 'title', e.target.value)}
-  placeholder={
-    row.isExisting && isAddMode
-      ? "Existing GeoKeyword (Locked)"
-      : "Enter GeoKeyword (Required)"
-  }
-  required
-  disabled={isAddMode && row.isExisting} // 🔒 LOCK EXISTING
-  style={{
-    backgroundColor: isAddMode && row.isExisting ? "#f5f5f5" : "white",
-    cursor: isAddMode && row.isExisting ? "not-allowed" : "text",
-    borderColor:
-      !row.title || row.title.trim() === '' ? 'red' : '#ced4da'
-  }}
-/>
-
+                          <input
+                            className='table-curriculum'
+                            name='title'
+                            value={row.title}
+                            onChange={(e) => handleRowChange(index, 'title', e.target.value)}
+                            placeholder={
+                              row.isExisting && isAddMode
+                                ? "Existing GeoKeyword (Locked)"
+                                : "Enter GeoKeyword (Required)"
+                            }
+                            required
+                            disabled={isAddMode && row.isExisting}
+                            style={{
+                              backgroundColor: isAddMode && row.isExisting ? "#f5f5f5" : "white",
+                              cursor: isAddMode && row.isExisting ? "not-allowed" : "text",
+                              borderColor:
+                                !row.title || row.title.trim() === '' ? 'red' : '#ced4da'
+                            }}
+                          />
                         </StyledTableCell>
-                        {/* <StyledTableCell align='center' style={{ maxWidth: 500, overflow: 'hidden' }}>
-                          <div style={{ maxWidth: '100%' }}>
-                            <ReactQuill
-                              theme="snow"
-                              value={row.topic}
-                              onChange={(value) => {
-                                const updatedRows = [...rows];
-                                updatedRows[index].topic = value;
-                                setRows(updatedRows);
-                              }}
-                              style={{
-                                width: '100%',
-                                wordWrap: 'break-word',
-                                overflowWrap: 'break-word',
-                              }}
-                              placeholder="Enter GeoKeyword description (Required)"
-                            />
-                          </div>
-                        </StyledTableCell> */}
 
                         <StyledTableCell align="center">
                           {!isEditMode && (
@@ -676,24 +677,23 @@ const handleAddTrendingCourseClick = async () => {
               )}
 
               <div className="course-row">
-<button
-  className="submit-btn"
-  onClick={handleSubmit}
-  disabled={isSubmitDisabled || isSavingProjects}
-  style={{
-    cursor: isSavingProjects ? "not-allowed" : "pointer",
-    opacity: isSavingProjects ? 0.7 : 1,
-  }}
->
-  {isSavingProjects
-    ? isEditMode
-      ? "Updating..."
-      : "Submitting..."
-    : isEditMode
-    ? "Update"
-    : "Submit"}
-</button>
-
+                <button
+                  className="submit-btn"
+                  onClick={handleSubmit}
+                  disabled={isSubmitDisabled || isSavingProjects}
+                  style={{
+                    cursor: isSavingProjects ? "not-allowed" : "pointer",
+                    opacity: isSavingProjects ? 0.7 : 1,
+                  }}
+                >
+                  {isSavingProjects
+                    ? isEditMode
+                      ? "Updating..."
+                      : "Submitting..."
+                    : isEditMode
+                    ? "Update"
+                    : "Submit"}
+                </button>
               </div>
             </form>
 
@@ -712,6 +712,10 @@ const handleAddTrendingCourseClick = async () => {
               <div className="category-header">
                 <p style={{ marginBottom: 0 }}>{headerTitle}</p>
               </div>
+
+              {/* Success and Error Messages */}
+              {successMessage && <p style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</p>}
+              {errorMessage && <p style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</p>}
 
               <div className="date-schedule">
                 Start Date
@@ -760,6 +764,16 @@ const handleAddTrendingCourseClick = async () => {
                       <button className="btn-search"><IoSearch /></button>
                     </div>
                   </div>
+                  {selectedIds.length > 0 && (
+                    <button 
+                      type="button" 
+                      className="btn-category" 
+                      onClick={handleBulkDelete}
+                      style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
+                    >
+                      <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+                    </button>
+                  )}
                   <button className="btn-category" onClick={handleAddTrendingCourseClick}>
                     <FiPlus /> {buttonLabel}
                   </button>
@@ -770,12 +784,17 @@ const handleAddTrendingCourseClick = async () => {
                 <Table sx={{ minWidth: 700 }}>
                   <TableHead>
                     <TableRow>
-                      <StyledTableCell align="center"><Checkbox /></StyledTableCell>
+                      <StyledTableCell align="center" sx={{ width: '50px' }}>
+                        <Checkbox 
+                          checked={selectAll}
+                          onChange={handleSelectAll}
+                          indeterminate={selectedIds.length > 0 && selectedIds.length < displayedProjects.length}
+                        />
+                      </StyledTableCell>
                       <StyledTableCell align="center">S.No.</StyledTableCell>
                       <StyledTableCell align="center">Category Name</StyledTableCell>
                       <StyledTableCell align="center">Course Name</StyledTableCell>
                       <StyledTableCell align="center">GeoKeyword</StyledTableCell>
-                      {/* <StyledTableCell align="center">Description</StyledTableCell> */}
                       <StyledTableCell align="center">Date</StyledTableCell>
                       <StyledTableCell align="center">Action</StyledTableCell>
                     </TableRow>
@@ -784,9 +803,11 @@ const handleAddTrendingCourseClick = async () => {
                     {displayedProjects.length > 0 ? (
                       displayedProjects.map((project, idx) => (
                         <StyledTableRow key={`${project.geoKeywordGroupId}-${idx}`}>
-
                           <StyledTableCell align="center">
-                            <Checkbox />
+                            <Checkbox 
+                              checked={selectedIds.includes(project.geoKeywordId)}
+                              onChange={() => handleSelectOne(project.geoKeywordId)}
+                            />
                           </StyledTableCell>
 
                           <StyledTableCell align="center">
@@ -804,18 +825,12 @@ const handleAddTrendingCourseClick = async () => {
                           <StyledTableCell align="left">
                             {project.geoKeywordName}
                           </StyledTableCell>
-
-                          {/* <StyledTableCell align="left">
-                            <div
-                              dangerouslySetInnerHTML={{ __html: project.description }}
-                            />
-                          </StyledTableCell> */}
+                          
                           <StyledTableCell align="center">
-                           {project.groupCreatedDate
-  ? dayjs(project.groupCreatedDate).format("MMM-DD-YYYY").toUpperCase()
-  : "N/A"}
+                            {project.groupCreatedDate
+                              ? dayjs(project.groupCreatedDate).format("MMM-DD-YYYY").toUpperCase()
+                              : "N/A"}
                           </StyledTableCell>
-
 
                           <StyledTableCell align="center">
                             <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
@@ -824,37 +839,31 @@ const handleAddTrendingCourseClick = async () => {
                                 onClick={() => handleEditClick(project)}
                                 style={{ cursor: "pointer", color: "#00AEEF" }}
                               />
-                             <RiDeleteBin6Line
-  className="delete"
-  onClick={() => handleDeleteConfirmation(project.geoKeywordId)}
-  style={{ cursor: "pointer", color: "#FF0000" }}
-/>
-
+                              <RiDeleteBin6Line
+                                className="delete"
+                                onClick={() => handleDeleteConfirmation(project.geoKeywordId)}
+                                style={{ cursor: "pointer", color: "#FF0000" }}
+                              />
                             </div>
                           </StyledTableCell>
                         </StyledTableRow>
                       ))
                     ) : (
                       <StyledTableRow>
-                        <StyledTableCell colSpan={8} align="center">
+                        <StyledTableCell colSpan={7} align="center">
                           No GeoKeyword available.
                         </StyledTableCell>
                       </StyledTableRow>
                     )}
                   </TableBody>
-
                 </Table>
               </TableContainer>
-
-              {successMessage && <p style={{ color: "green", fontWeight: "bold", margin: "10px 0" }}>{successMessage}</p>}
-              {errorMessage && <p style={{ color: "red", fontWeight: "bold", margin: "10px 0" }}>{errorMessage}</p>}
 
               <div className="pagination-container">
                 <AdminPagination
                   currentPage={currentPage}
                   rowsPerPage={rowsPerPage}
                   totalRows={filteredProjects.length}
-
                   onPageChange={handlePageChange}
                 />
               </div>

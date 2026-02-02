@@ -55,7 +55,13 @@ export default function CorporateReview() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [selectedReview, setSelectedReview] = useState(null);
- const [existingLogo, setExistingLogo] = useState("");
+  const [existingLogo, setExistingLogo] = useState("");
+  
+  // New state for checkbox selection
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [reviewData, setReviewData] = useState({
     corporateReviewId: "",
@@ -140,25 +146,23 @@ export default function CorporateReview() {
     const formData = new FormData();
     formData.append("review", JSON.stringify(reviewObject));
     if (reviewData.companyLogo) {
-      
       formData.append("company_logo", reviewData.companyLogo);
     }
 
     try {
       if (selectedReview) {
-        
         const response = await axios.put(
           `${API_BASE}/corporatereview/update/${selectedReview}`,
           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
         if (response.status === 200) {
-          
           await fetchReview();
-          setMessage("✅ Corporate review updated successfully");
+          setSuccessMessage("✅ Corporate review updated successfully");
+          setErrorMessage("");
+          setTimeout(() => setSuccessMessage(""), 5000);
         }
       } else {
-        
         const response = await axios.post(
           `${API_BASE}/corporatereview/add`,
           formData,
@@ -167,15 +171,18 @@ export default function CorporateReview() {
 
         if (response.status === 201) {
           await fetchReview();
-          setMessage("✅ Corporate review added successfully");
+          setSuccessMessage("✅ Corporate review added successfully");
+          setErrorMessage("");
+          setTimeout(() => setSuccessMessage(""), 5000);
         }
       }
       handleReset();
       setShowForm(false);
-      setTimeout(() => setMessage(""), 5000);
     } catch (error) {
       console.error(error);
-      setMessage("❌ Error saving corporate review");
+      setErrorMessage("❌ Error saving corporate review");
+      setSuccessMessage("");
+      setTimeout(() => setErrorMessage(""), 5000);
     }
   };
 
@@ -185,11 +192,18 @@ export default function CorporateReview() {
       await axios.delete(`${API_BASE}/corporatereview/delete/${corporateReviewId}`);
       setReview((prev) => prev.filter((rev) => rev.corporateReviewId !== corporateReviewId));
       setFilteredReview((prev) => prev.filter((rev) => rev.corporateReviewId !== corporateReviewId));
-      setMessage("✅ Corporate review deleted successfully");
-      setTimeout(() => setMessage(""), 5000);
+      
+      // Remove from selectedIds if present
+      setSelectedIds(prev => prev.filter(id => id !== corporateReviewId));
+      
+      setSuccessMessage("✅ Corporate review deleted successfully");
+      setErrorMessage("");
+      setTimeout(() => setSuccessMessage(""), 5000);
     } catch (error) {
       console.error(error);
-      setMessage("❌ Failed to delete corporate review");
+      setErrorMessage("❌ Failed to delete corporate review");
+      setSuccessMessage("");
+      setTimeout(() => setErrorMessage(""), 5000);
     }
   };
 
@@ -259,6 +273,85 @@ export default function CorporateReview() {
     currentPage * rowsPerPage
   );
 
+  // Handle Select All checkbox
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allIds = displayedReviews.map(review => review.corporateReviewId);
+      setSelectedIds(allIds);
+      setSelectAll(true);
+    } else {
+      setSelectedIds([]);
+      setSelectAll(false);
+    }
+  };
+
+  // Handle individual checkbox
+  const handleSelectOne = (id) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+      setSelectAll(false);
+    } else {
+      const newSelectedIds = [...selectedIds, id];
+      setSelectedIds(newSelectedIds);
+      // Check if all items are selected
+      if (newSelectedIds.length === displayedReviews.length) {
+        setSelectAll(true);
+      }
+    }
+  };
+
+  // Update selectAll state when page changes
+  useEffect(() => {
+    const allCurrentPageIds = displayedReviews.map(review => review.corporateReviewId);
+    const allSelected = allCurrentPageIds.length > 0 && 
+                       allCurrentPageIds.every(id => selectedIds.includes(id));
+    setSelectAll(allSelected);
+  }, [currentPage, displayedReviews, selectedIds]);
+
+  // Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      setErrorMessage("Please select at least one review to delete");
+      setTimeout(() => setErrorMessage(""), 3000);
+      return;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'review' : 'reviews'}?`;
+    
+    if (window.confirm(confirmMessage)) {
+      try {
+        // Delete all selected reviews
+        await Promise.all(
+          selectedIds.map(id =>
+            axios.delete(`${API_BASE}/corporatereview/delete/${id}`)
+          )
+        );
+
+        // Update state
+        const updatedReviews = review.filter(item => !selectedIds.includes(item.corporateReviewId));
+        setReview(updatedReviews);
+        setFilteredReview(updatedReviews);
+        
+        setSelectedIds([]);
+        setSelectAll(false);
+        
+        setSuccessMessage(`${selectedIds.length} ${selectedIds.length === 1 ? 'review' : 'reviews'} deleted successfully`);
+        setErrorMessage("");
+        
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 6000);
+      } catch (error) {
+        console.error("Error deleting reviews:", error);
+        setSuccessMessage("");
+        setErrorMessage("Error deleting some reviews. Please try again.");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 6000);
+      }
+    }
+  };
+
   const logoSrc = (companyLogo) => {
     if (!companyLogo) return null;
     
@@ -291,43 +384,38 @@ export default function CorporateReview() {
                   <input type="text" className="form-control" placeholder='Enter Name'
                     name="employeeName" value={reviewData.employeeName} onChange={handleChange} />
                 </div>
-                {/* <div className="col-md-4">
-                  <label className="form-label">Company Logo</label>
-                  <input type="file" className="form-control"
-                    name="companyLogo" onChange={handleFileChange} />
-                </div> */}
                 <div className="col-md-4">
-  <label className="form-label">Company Logo</label>
-  <div className="d-flex align-items-center" style={{ gap: 8 }}>
-    {(existingLogo || reviewData.companyLogo) ? (
-      <img
-        src={
-          reviewData.companyLogo
-            ? URL.createObjectURL(reviewData.companyLogo)
-            : `${API_BASE}/corporatereview/logos/${String(existingLogo).replace(/^logos\//, '')}`
-        }
-        alt="Company"
-        width={50}
-        height={50}
-        style={{ objectFit: 'cover', borderRadius: 6 }}
-      />
-    ) : null}
+                  <label className="form-label">Company Logo</label>
+                  <div className="d-flex align-items-center" style={{ gap: 8 }}>
+                    {(existingLogo || reviewData.companyLogo) ? (
+                      <img
+                        src={
+                          reviewData.companyLogo
+                            ? URL.createObjectURL(reviewData.companyLogo)
+                            : `${API_BASE}/corporatereview/logos/${String(existingLogo).replace(/^logos\//, '')}`
+                        }
+                        alt="Company"
+                        width={50}
+                        height={50}
+                        style={{ objectFit: 'cover', borderRadius: 6 }}
+                      />
+                    ) : null}
 
-    <input
-      type="file"
-      className="form-control"
-      name="companyLogo"
-      onChange={handleFileChange}
-      accept="image/*"
-    />
-  </div>
+                    <input
+                      type="file"
+                      className="form-control"
+                      name="companyLogo"
+                      onChange={handleFileChange}
+                      accept="image/*"
+                    />
+                  </div>
 
-  <small className="text-muted" style={{ display: 'block', marginTop: 4 }}>
-    {reviewData.companyLogo?.name
-      ? reviewData.companyLogo.name
-      : (existingLogo ? existingLogo.replace(/^logos\//, '') : 'No file chosen')}
-  </small>
-</div>
+                  <small className="text-muted" style={{ display: 'block', marginTop: 4 }}>
+                    {reviewData.companyLogo?.name
+                      ? reviewData.companyLogo.name
+                      : (existingLogo ? existingLogo.replace(/^logos\//, '') : 'No file chosen')}
+                  </small>
+                </div>
 
                 <div className="col-md-4">
                   <label className="form-label">Company</label>
@@ -339,39 +427,35 @@ export default function CorporateReview() {
               <div className='course-row'>
                 <div className="col-md-4">
                   <label className="form-label">Employee Rating</label>
-                  {/* <input type="number" className="form-control"
-                    name="employeeRating" value={reviewData.employeeRating} onChange={handleChange} /> */}
-                    <input
-  type="number"
-  className="form-control"
-  name="employeeRating"
-  value={reviewData.employeeRating === "" ? "" : Number(reviewData.employeeRating)}
-  min="0"
-  max="5"
-  onChange={(e) => {
-    let val = e.target.value;
+                  <input
+                    type="number"
+                    className="form-control"
+                    name="employeeRating"
+                    value={reviewData.employeeRating === "" ? "" : Number(reviewData.employeeRating)}
+                    min="0"
+                    max="5"
+                    onChange={(e) => {
+                      let val = e.target.value;
 
-    
-    if (val === "") {
-      setReviewData((prev) => ({ ...prev, employeeRating: "" }));
-      return;
-    }
+                      if (val === "") {
+                        setReviewData((prev) => ({ ...prev, employeeRating: "" }));
+                        return;
+                      }
 
-    val = val.replace(/^0+/, "");
+                      val = val.replace(/^0+/, "");
 
-    let num = Number(val);
+                      let num = Number(val);
 
-    if (isNaN(num)) {
-      num = "";
-    } else {
-      if (num > 5) num = 5;   
-      if (num < 0) num = 0;   
-    }
+                      if (isNaN(num)) {
+                        num = "";
+                      } else {
+                        if (num > 5) num = 5;   
+                        if (num < 0) num = 0;   
+                      }
 
-    setReviewData((prev) => ({ ...prev, employeeRating: num }));
-  }}
-/>
-
+                      setReviewData((prev) => ({ ...prev, employeeRating: num }));
+                    }}
+                  />
                 </div>
                 <div className="col-md-4">
                   <label className="form-label">Role</label>
@@ -429,6 +513,11 @@ export default function CorporateReview() {
                 <div className='category-header'>
                   <p style={{ marginBottom: 0 }}>Corporate Reviews</p>
                 </div>
+                
+                {/* Success and Error Messages */}
+                {successMessage && <p style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</p>}
+                {errorMessage && <p style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</p>}
+                
                 <div className='date-schedule'>
                   Start Date
                   <DatePicker value={startDate} onChange={setStartDate} />
@@ -456,6 +545,16 @@ export default function CorporateReview() {
                         value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                       <button className="btn-search" type="button"><IoSearch style={{ fontSize: '2rem' }} /></button>
                     </div>
+                    {selectedIds.length > 0 && (
+                      <button 
+                        type="button" 
+                        className="btn-category" 
+                        onClick={handleBulkDelete}
+                        style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
+                      >
+                        <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+                      </button>
+                    )}
                     <button type="button" className="btn-category" onClick={() => setShowForm(true)}><FiPlus /> Add Corporate Review</button>
                   </div>
                 </div>
@@ -467,7 +566,13 @@ export default function CorporateReview() {
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
-                  <StyledTableCell align='center'><Checkbox /></StyledTableCell>
+                  <StyledTableCell align='center' sx={{ width: '50px' }}>
+                    <Checkbox 
+                      checked={selectAll}
+                      onChange={handleSelectAll}
+                      indeterminate={selectedIds.length > 0 && selectedIds.length < displayedReviews.length}
+                    />
+                  </StyledTableCell>
                   <StyledTableCell align='center'>S.No.</StyledTableCell>
                   <StyledTableCell align='center'>Company Logo</StyledTableCell>
                   <StyledTableCell align='center'>Employee Name</StyledTableCell>
@@ -484,7 +589,12 @@ export default function CorporateReview() {
               <TableBody>
                 {displayedReviews.length > 0 ? displayedReviews.map((curr, index) => (
                   <StyledTableRow key={curr.corporateReviewId}>
-                    <StyledTableCell align="center"><Checkbox /></StyledTableCell>
+                    <StyledTableCell align="center">
+                      <Checkbox 
+                        checked={selectedIds.includes(curr.corporateReviewId)}
+                        onChange={() => handleSelectOne(curr.corporateReviewId)}
+                      />
+                    </StyledTableCell>
                     <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
                     <StyledTableCell align="center">
                       {curr.companyLogo

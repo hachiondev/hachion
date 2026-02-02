@@ -15,6 +15,8 @@ import axios from 'axios';
 import AdminPagination from './AdminPagination';
 import dayjs from 'dayjs';
 import './Admin.css';
+import { FiPlus } from 'react-icons/fi';
+import { RiDeleteBin6Line } from 'react-icons/ri';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -46,20 +48,26 @@ export default function StudentReview() {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  // New state for checkbox selection
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   useEffect(() => {
     const fetchReview = async () => {
-        try {
-            const response = await axios.get('https://api.test.hachion.co/userreview');
-            const filteredReviews = response.data.filter(review => review.type === false);
-            setReview(filteredReviews);
-            setFilteredReview(filteredReviews);
-        } catch (error) {
-            console.error("Error fetching reviews:", error.message);
-        }
+      try {
+        const response = await axios.get('https://api.test.hachion.co/userreview');
+        const filteredReviews = response.data.filter(review => review.type === false);
+        setReview(filteredReviews);
+        setFilteredReview(filteredReviews);
+      } catch (error) {
+        console.error("Error fetching reviews:", error.message);
+      }
     };
 
     fetchReview();
-}, []);
+  }, []);
 
 
   useEffect(() => {
@@ -85,63 +93,168 @@ export default function StudentReview() {
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
+
+  // Handle Select All checkbox
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allIds = displayedReviews.map(review => review.review_id);
+      setSelectedIds(allIds);
+      setSelectAll(true);
+    } else {
+      setSelectedIds([]);
+      setSelectAll(false);
+    }
+  };
+
+  // Handle individual checkbox
+  const handleSelectOne = (id) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+      setSelectAll(false);
+    } else {
+      const newSelectedIds = [...selectedIds, id];
+      setSelectedIds(newSelectedIds);
+      // Check if all items are selected
+      if (newSelectedIds.length === displayedReviews.length) {
+        setSelectAll(true);
+      }
+    }
+  };
+
+  // Update selectAll state when page changes
+  useEffect(() => {
+    const allCurrentPageIds = displayedReviews.map(review => review.review_id);
+    const allSelected = allCurrentPageIds.length > 0 &&
+      allCurrentPageIds.every(id => selectedIds.includes(id));
+    setSelectAll(allSelected);
+  }, [currentPage, displayedReviews, selectedIds]);
+
   const handleApprove = async (review_id) => {
     try {
-        
-        const reviewToUpdate = review.find((item) => item.review_id === review_id);
-        
-        if (!reviewToUpdate) return;
-        const updatedReview = { ...reviewToUpdate, type: true, status: 'approved' };
 
-        
-        const formData = new FormData();
-        formData.append("review", JSON.stringify(updatedReview)); 
+      const reviewToUpdate = review.find((item) => item.review_id === review_id);
 
-        const response = await axios.put(`https://api.test.hachion.co/userreview/update/${review_id}`, formData, {
-            headers: { "Content-Type": "multipart/form-data" }
-        });
+      if (!reviewToUpdate) return;
+      const updatedReview = { ...reviewToUpdate, type: true, status: 'approved' };
 
-        if (response.status === 200) {
-            
-            const updatedReviews = review.map((item) =>
-                item.review_id === review_id ? updatedReview : item
-            );
-            setReview(updatedReviews);
-            setFilteredReview(updatedReviews);
-            console.log("Review approved and updated in backend successfully!");
-        }
+
+      const formData = new FormData();
+      formData.append("review", JSON.stringify(updatedReview));
+
+      const response = await axios.put(`https://api.test.hachion.co/userreview/update/${review_id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+
+      if (response.status === 200) {
+
+        const updatedReviews = review.map((item) =>
+          item.review_id === review_id ? updatedReview : item
+        );
+        setReview(updatedReviews);
+        setFilteredReview(updatedReviews);
+
+        // Remove from selectedIds if present
+        setSelectedIds(prev => prev.filter(id => id !== review_id));
+
+        console.log("Review approved and updated in backend successfully!");
+        setSuccessMessage("Review approved successfully!");
+        setErrorMessage("");
+
+        setTimeout(() => setSuccessMessage(""), 4000);
+      }
     } catch (error) {
-        console.error("Error updating review:", error.message);
+      console.error("Error updating review:", error.message);
+      setErrorMessage("Failed to approve review.");
+      setSuccessMessage("");
+
+      setTimeout(() => setErrorMessage(""), 4000);
     }
-};
+  };
 
 
-const handleReject = async (review_id) => {
-  try {
-    const reviewToUpdate = review.find((item) => item.review_id === review_id);
-    if (!reviewToUpdate) return;
+  const handleReject = async (review_id) => {
+    try {
+      const reviewToUpdate = review.find((item) => item.review_id === review_id);
+      if (!reviewToUpdate) return;
 
-    const updatedReview = { ...reviewToUpdate, status: 'rejected' };
+      const updatedReview = { ...reviewToUpdate, status: 'rejected' };
 
-    const formData = new FormData();
-    formData.append("review", JSON.stringify(updatedReview));
+      const formData = new FormData();
+      formData.append("review", JSON.stringify(updatedReview));
 
-    const response = await axios.put(`https://api.test.hachion.co/userreview/update/${review_id}`, formData, {
-      headers: { "Content-Type": "multipart/form-data" }
-    });
+      const response = await axios.put(`https://api.test.hachion.co/userreview/update/${review_id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
 
-    if (response.status === 200) {
-      const updatedReviews = review.map((item) =>
-        item.review_id === review_id ? updatedReview : item
-      );
-      setReview(updatedReviews);
-      setFilteredReview(updatedReviews);
-      console.log("Review rejected and updated in backend successfully!");
+      if (response.status === 200) {
+        const updatedReviews = review.map((item) =>
+          item.review_id === review_id ? updatedReview : item
+        );
+        setReview(updatedReviews);
+        setFilteredReview(updatedReviews);
+
+        // Remove from selectedIds if present
+        setSelectedIds(prev => prev.filter(id => id !== review_id));
+
+        console.log("Review rejected and updated in backend successfully!");
+        setSuccessMessage("Review rejected successfully!");
+        setErrorMessage("");
+
+        setTimeout(() => setSuccessMessage(""), 4000);
+      }
+    } catch (error) {
+      console.error("Error rejecting review:", error.message);
+      setErrorMessage("Failed to reject review.");
+      setSuccessMessage("");
+
+      setTimeout(() => setErrorMessage(""), 4000);
     }
-  } catch (error) {
-    console.error("Error rejecting review:", error.message);
-  }
-};
+  };
+
+  // Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      setErrorMessage("Please select at least one review to delete");
+      setTimeout(() => setErrorMessage(""), 3000);
+      return;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'review' : 'reviews'}?`;
+
+    if (window.confirm(confirmMessage)) {
+      try {
+        // Delete all selected reviews
+        await Promise.all(
+          selectedIds.map(id =>
+            axios.delete(`https://api.test.hachion.co/userreview/delete/${id}`)
+          )
+        );
+
+        // Update state
+        const updatedReviews = review.filter(item => !selectedIds.includes(item.review_id));
+        setReview(updatedReviews);
+        setFilteredReview(updatedReviews);
+
+        setSelectedIds([]);
+        setSelectAll(false);
+
+        setSuccessMessage(`${selectedIds.length} ${selectedIds.length === 1 ? 'review' : 'reviews'} deleted successfully`);
+        setErrorMessage("");
+
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 6000);
+      } catch (error) {
+        console.error("Error deleting reviews:", error);
+        setSuccessMessage("");
+        setErrorMessage("Error deleting some reviews. Please try again.");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 6000);
+      }
+    }
+  };
+
   return (
     <>
       <div className='course-category'>
@@ -149,6 +262,11 @@ const handleReject = async (review_id) => {
           <div className='category-header'>
             <p style={{ marginBottom: 0 }}>View Student Reviews</p>
           </div>
+
+          {/* Success and Error Messages */}
+          {successMessage && <p style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</p>}
+          {errorMessage && <p style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</p>}
+
           <div className='entries'>
             <div className='entries-left'>
               <p style={{ marginBottom: '0' }}>Show</p>
@@ -167,10 +285,20 @@ const handleReject = async (review_id) => {
             <div className='entries-right'>
               <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
                 <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
-                    value={searchTerm}
-                     onChange={(e) => setSearchTerm(e.target.value)}/>
-                   <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
-                 </div>
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)} />
+                <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
+              </div>
+              {selectedIds.length > 0 && (
+                <button
+                  type="button"
+                  className="btn-category"
+                  onClick={handleBulkDelete}
+                  style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
+                >
+                  <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -180,7 +308,13 @@ const handleReject = async (review_id) => {
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow>
-              <StyledTableCell align='center' sx={{ width: '100px' }}><Checkbox /></StyledTableCell>
+              <StyledTableCell align='center' sx={{ width: '50px' }}>
+                <Checkbox
+                  checked={selectAll}
+                  onChange={handleSelectAll}
+                  indeterminate={selectedIds.length > 0 && selectedIds.length < displayedReviews.length}
+                />
+              </StyledTableCell>
               <StyledTableCell align='center'>S.No.</StyledTableCell>
               <StyledTableCell align='center'>Image</StyledTableCell>
               <StyledTableCell align='center'>Student Name</StyledTableCell>
@@ -195,16 +329,21 @@ const handleReject = async (review_id) => {
             {displayedReviews.length > 0 ? (
               displayedReviews.map((review, index) => (
                 <StyledTableRow key={review.review_id}>
-                  <StyledTableCell align="center"><Checkbox /></StyledTableCell>
+                  <StyledTableCell align="center">
+                    <Checkbox
+                      checked={selectedIds.includes(review.review_id)}
+                      onChange={() => handleSelectOne(review.review_id)}
+                    />
+                  </StyledTableCell>
                   <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
                   <StyledTableCell align="center">
-  <img
-    src={`https://api.test.hachion.co/uploads/test/user_review/${review.user_image}`}
-    alt="User"
-    width="50"
-    height="50"
-  />
-</StyledTableCell>
+                    <img
+                      src={`https://api.test.hachion.co/uploads/test/user_review/${review.user_image}`}
+                      alt="User"
+                      width="50"
+                      height="50"
+                    />
+                  </StyledTableCell>
 
                   <StyledTableCell align="left">{review.name}</StyledTableCell>
                   <StyledTableCell align="center">{review.social_id}</StyledTableCell>
@@ -213,32 +352,34 @@ const handleReject = async (review_id) => {
                     {review.review}
                   </StyledTableCell>
                   <StyledTableCell align="left">{review.date
-                                                 ? dayjs(review.date).format("MMM-DD-YYYY").toUpperCase()
-                                                 : "N/A"}</StyledTableCell>
+                    ? dayjs(review.date).format("MMM-DD-YYYY").toUpperCase()
+                    : "N/A"}</StyledTableCell>
                   <StyledTableCell align="center">
-                  <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-                  {review.status === 'approved' ? (
-                      <span className="approved">Approved</span>
-                    ) : review.status === 'rejected' ? (
-                      <span className="rejected">Rejected</span>
-                    ) : (
-                      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-                        <FaCheckCircle
-                          className="approve"
-                          onClick={() => handleApprove(review.review_id)}
-                        />
-                        <RiCloseCircleLine
-                          className="reject"
-                          onClick={() => handleReject(review.review_id)}
-                        />
-                      </div>
-                    )}
-                  </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+                      {review.status === 'approved' ? (
+                        <span className="approved">Approved</span>
+                      ) : review.status === 'rejected' ? (
+                        <span className="rejected">Rejected</span>
+                      ) : (
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                          <FaCheckCircle
+                            className="approve"
+                            onClick={() => handleApprove(review.review_id)}
+                          />
+                          <RiCloseCircleLine
+                            className="reject"
+                            onClick={() => handleReject(review.review_id)}
+                          />
+                        </div>
+                      )}
+                    </div>
                   </StyledTableCell>
                 </StyledTableRow>
               ))
             ) : (
-              <StyledTableRow><StyledTableCell colSpan={8} align="center">No Data Available</StyledTableCell></StyledTableRow>
+              <StyledTableRow>
+                <StyledTableCell colSpan={9} align="center">No Data Available</StyledTableCell>
+              </StyledTableRow>
             )}
           </TableBody>
         </Table>

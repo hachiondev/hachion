@@ -68,82 +68,70 @@ const Project = ({
   const [showAddCourse, setShowAddCourse] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-const [editingProjectId, setEditingProjectId] = useState(null);
+  const [editingProjectId, setEditingProjectId] = useState(null);
+  
+  // New state for checkbox selection
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
 
   const { data: categories = [], isLoading } = useCategories();
   
 
   const { data: projects = [], isLoading: projectsLoading } = useProjects();
 
-const { mutate: updateProject } = useUpdateProject();
-const { mutate: deleteProject } = useDeleteProject();
+  const { mutate: updateProject } = useUpdateProject();
+  const { mutate: deleteProject } = useDeleteProject();
 
+  const isEditMode = formMode === "Edit";
 
-const isEditMode = formMode === "Edit";
-
-const [formData, setFormData] = useState({
-  courseCategory: "",
-  courseName: "",
-});
-
+  const [formData, setFormData] = useState({
+    courseCategory: "",
+    courseName: "",
+  });
 
   const showTimedMessage = (type, message, duration = 6000) => {
-  if (type === "success") {
-    setSuccessMessage(message);
-    setErrorMessage("");
-  } else {
-    setErrorMessage(message);
-    setSuccessMessage("");
-  }
+    if (type === "success") {
+      setSuccessMessage(message);
+      setErrorMessage("");
+    } else {
+      setErrorMessage(message);
+      setSuccessMessage("");
+    }
 
-  setTimeout(() => {
-    setSuccessMessage("");
-    setErrorMessage("");
-  }, duration);
-};
-
-
+    setTimeout(() => {
+      setSuccessMessage("");
+      setErrorMessage("");
+    }, duration);
+  };
 
   const currentDate = new Date().toISOString().split('T')[0];
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-const [payload, setPayload] = useState(null);
+  const [payload, setPayload] = useState(null);
 
+  const { mutate: saveProjects, data: projectResponse, isPending: isSavingProjects } = useAddProjects();
+  const { data: allCourses = [] } = useCourses();
 
-const { mutate: saveProjects, data: projectResponse, isPending: isSavingProjects } = useAddProjects();
-const { data: allCourses = [] } = useCourses();
+  const filteredCoursesByCategory = allCourses.filter(
+    (c) => c.courseCategory === formData.courseCategory
+  );
 
-const filteredCoursesByCategory = allCourses.filter(
-  (c) => c.courseCategory === formData.courseCategory
-);
-
-  
-  
   const [rows, setRows] = useState([
     { id: 1, title: '', topic: '' }
   ]);
 
   const hasCategory = formData.courseCategory?.trim() !== "";
-
-  
   const hasCourseName = formData.courseName?.trim() !== "";
-
   const allProjectsComplete = rows.every(row =>
     row.title.trim() !== '' &&
     row.topic &&
     row.topic.trim() !== '' &&
     row.topic !== '<p><br></p>'
   );
-
-  
   const hasAtLeastOneProject = rows.length > 0;
-
-  
   const isSubmitDisabled = !hasCategory || !hasCourseName || !allProjectsComplete || !hasAtLeastOneProject;
 
-
   const handleDateFilter = () => {
-    
     console.log('Filter applied');
   };
 
@@ -168,13 +156,11 @@ const filteredCoursesByCategory = allCourses.filter(
     e.preventDefault();
     if (!hasCategory) {
       showTimedMessage("error", "❌ Please select a Category Name.");
-
       return;
     }
 
     if (!hasCourseName) {
       showTimedMessage("error", "❌ Please select a Course Name.");
-      
       return;
     }
 
@@ -187,60 +173,55 @@ const filteredCoursesByCategory = allCourses.filter(
       setErrorMessage("❌ Please fill both Project Name and Description for all project rows.");
       return;
     }
-if (formMode === "Edit") {
-  updateProject({
-    id: editingProjectId,
-    payload: {
-      courseCategory: formData.courseCategory,
-      courseName: formData.courseName,
-      projectName: rows[0].title,
-      description: rows[0].topic,
-    },
-  });
+    
+    if (formMode === "Edit") {
+      updateProject({
+        id: editingProjectId,
+        payload: {
+          courseCategory: formData.courseCategory,
+          courseName: formData.courseName,
+          projectName: rows[0].title,
+          description: rows[0].topic,
+        },
+      });
 
-  showTimedMessage("success", "⚡ Project updated successfully!");
-} else {
-  const projectPayload = rows.map(row => ({
-    courseCategory: formData.courseCategory,
-    courseName: formData.courseName,
-    projectName: row.title,
-    description: row.topic,
-  }));
+      showTimedMessage("success", "⚡ Project updated successfully!");
+    } else {
+      const projectPayload = rows.map(row => ({
+        courseCategory: formData.courseCategory,
+        courseName: formData.courseName,
+        projectName: row.title,
+        description: row.topic,
+      }));
 
-  saveProjects(projectPayload);
-  showTimedMessage("success", "⏳ Saving projects...");
-}
+      saveProjects(projectPayload);
+      showTimedMessage("success", "⏳ Saving projects...");
+    }
 
-setErrorMessage("");
-setEditingProjectId(null);
-setFormMode("Add");
-setShowAddCourse(false);
-
-
-setShowAddCourse(false);
-
+    setErrorMessage("");
+    setEditingProjectId(null);
+    setFormMode("Add");
+    setShowAddCourse(false);
   };
 
   const handleEditClick = (project) => {
-  setFormMode("Edit");
-  setShowAddCourse(true);
-  setEditingProjectId(project.projectId);
+    setFormMode("Edit");
+    setShowAddCourse(true);
+    setEditingProjectId(project.projectId);
 
-  
-  setFormData({
-    courseCategory: project.courseCategory,
-    courseName: project.courseName,
-  });
+    setFormData({
+      courseCategory: project.courseCategory,
+      courseName: project.courseName,
+    });
 
-  
-  setRows([
-    {
-      id: 1,
-      title: project.projectName,
-      topic: project.description,
-    },
-  ]);
-};
+    setRows([
+      {
+        id: 1,
+        title: project.projectName,
+        topic: project.description,
+      },
+    ]);
+  };
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -254,52 +235,116 @@ setShowAddCourse(false);
     setRowsPerPage(rows);
     setCurrentPage(1);
   };
-const stripHtml = (html = "") =>
-  html
-    .replace(/<[^>]+>/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .toLowerCase();
+  
+  const stripHtml = (html = "") =>
+    html
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
 
-const filteredProjects = projects.filter((item) => {
-  const projectDate = new Date(item.date);
+  const filteredProjects = projects.filter((item) => {
+    const projectDate = new Date(item.date);
 
-  const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
-  const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+    const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+    const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
 
-  const search = searchTerm.toLowerCase();
+    const search = searchTerm.toLowerCase();
 
-  const matchSearch =
-    item.projectName?.toLowerCase().includes(search) ||
-    item.courseName?.toLowerCase().includes(search) ||
-    item.courseCategory?.toLowerCase().includes(search) ||
-    stripHtml(item.description).includes(search); 
+    const matchSearch =
+      item.projectName?.toLowerCase().includes(search) ||
+      item.courseName?.toLowerCase().includes(search) ||
+      item.courseCategory?.toLowerCase().includes(search) ||
+      stripHtml(item.description).includes(search);
 
-  const inRange =
-    (!start || projectDate >= start) &&
-    (!end || projectDate <= end);
+    const inRange =
+      (!start || projectDate >= start) &&
+      (!end || projectDate <= end);
 
-  return matchSearch && inRange;
-});
+    return matchSearch && inRange;
+  });
 
-const displayedProjects = filteredProjects.slice(
-  (currentPage - 1) * rowsPerPage,
-  currentPage * rowsPerPage
-);
+  const displayedProjects = filteredProjects.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
 
+  // Handle Select All checkbox
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allIds = displayedProjects.map(project => project.projectId);
+      setSelectedIds(allIds);
+      setSelectAll(true);
+    } else {
+      setSelectedIds([]);
+      setSelectAll(false);
+    }
+  };
+
+  // Handle individual checkbox
+  const handleSelectOne = (id) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+      setSelectAll(false);
+    } else {
+      const newSelectedIds = [...selectedIds, id];
+      setSelectedIds(newSelectedIds);
+      // Check if all items are selected
+      if (newSelectedIds.length === displayedProjects.length) {
+        setSelectAll(true);
+      }
+    }
+  };
+
+  // Update selectAll state when page changes
+  React.useEffect(() => {
+    const allCurrentPageIds = displayedProjects.map(project => project.projectId);
+    const allSelected = allCurrentPageIds.length > 0 && 
+                       allCurrentPageIds.every(id => selectedIds.includes(id));
+    setSelectAll(allSelected);
+  }, [currentPage, displayedProjects, selectedIds]);
 
   const handleDeleteConfirmation = (id) => {
-    if (window.confirm("Are you sure you want to delete this Course?")) {
+    if (window.confirm("Are you sure you want to delete this Project?")) {
+      deleteProject(id);
+      showTimedMessage("success", "🗑️ Project deleted successfully!");
       
-  deleteProject(id);
-  showTimedMessage("success", "🗑️ Project deleted successfully!");
+      // Remove from selectedIds if present
+      setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
+    }
+  };
+
+  // Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      showTimedMessage("error", "Please select at least one project to delete");
+      return;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'project' : 'projects'}?`;
+    
+    if (window.confirm(confirmMessage)) {
+      try {
+        // Delete all selected projects
+        await Promise.all(
+          selectedIds.map(id => deleteProject(id))
+        );
+
+        // Clear selection
+        setSelectedIds([]);
+        setSelectAll(false);
+        
+        showTimedMessage("success", `${selectedIds.length} ${selectedIds.length === 1 ? 'project' : 'projects'} deleted successfully`);
+      } catch (error) {
+        console.error("Error deleting projects:", error);
+        showTimedMessage("error", "Error deleting some projects. Please try again.");
+      }
     }
   };
 
   const handleAddTrendingCourseClick = () => {
     setFormMode('Add');
     setShowAddCourse(true);
-    
   };
 
   const addRow = () => {
@@ -311,23 +356,19 @@ const displayedProjects = filteredProjects.slice(
     if (rows.length > 1) {
       setRows(rows.filter(row => row.id !== id));
     } else {
-      
       setRows([{ id: 1, title: '', topic: '' }]);
     }
   };
 
-  
-React.useEffect(() => {
-  if (!payload) return;
-  if (isSavingProjects) return;
+  React.useEffect(() => {
+    if (!payload) return;
+    if (isSavingProjects) return;
 
-  if (projectResponse) {
-    showTimedMessage("success", "⚡ Projects saved successfully!");
-
-    setPayload(null); 
-  }
-}, [projectResponse, isSavingProjects]);
-
+    if (projectResponse) {
+      showTimedMessage("success", "⚡ Projects saved successfully!");
+      setPayload(null);
+    }
+  }, [projectResponse, isSavingProjects]);
 
   const handleRowChange = (index, field, value) => {
     const updatedRows = [...rows];
@@ -364,22 +405,20 @@ React.useEffect(() => {
                     <label className="form-label">
                       Category Name <span style={{ color: "red" }}>*</span>
                     </label>
-                  <select
-  className="form-select"
-  name="courseCategory"
-  value={formData.courseCategory}
-  onChange={handleInputChange}
-  required
->
-  <option value="">Select Category</option>
-
-  {categories.map((cat) => (
-    <option key={cat.id} value={cat.name}>
-      {cat.name}
-    </option>
-  ))}
-</select>
-
+                    <select
+                      className="form-select"
+                      name="courseCategory"
+                      value={formData.courseCategory}
+                      onChange={handleInputChange}
+                      required
+                    >
+                      <option value="">Select Category</option>
+                      {categories.map((cat) => (
+                        <option key={cat.id} value={cat.name}>
+                          {cat.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div className="col">
                     <label className="form-label">
@@ -394,11 +433,10 @@ React.useEffect(() => {
                     >
                       <option value="">Select Course</option>
                       {filteredCoursesByCategory.map((course) => (
-  <option key={course.id} value={course.courseName}>
-    {course.courseName}
-  </option>
-))}
-
+                        <option key={course.id} value={course.courseName}>
+                          {course.courseName}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -454,28 +492,28 @@ React.useEffect(() => {
                         </StyledTableCell>
                        
                         <StyledTableCell align="center">
-  {!isEditMode && (
-    <>
-      <GoPlus
-        onClick={addRow}
-        style={{
-          fontSize: "2rem",
-          color: "#00AEEF",
-          marginRight: "10px",
-          cursor: "pointer",
-        }}
-      />
-      <IoClose
-        onClick={() => deleteRow(row.id)}
-        style={{
-          fontSize: "2rem",
-          color: "red",
-          cursor: "pointer",
-        }}
-      />
-    </>
-  )}
-</StyledTableCell>
+                          {!isEditMode && (
+                            <>
+                              <GoPlus
+                                onClick={addRow}
+                                style={{
+                                  fontSize: "2rem",
+                                  color: "#00AEEF",
+                                  marginRight: "10px",
+                                  cursor: "pointer",
+                                }}
+                              />
+                              <IoClose
+                                onClick={() => deleteRow(row.id)}
+                                style={{
+                                  fontSize: "2rem",
+                                  color: "red",
+                                  cursor: "pointer",
+                                }}
+                              />
+                            </>
+                          )}
+                        </StyledTableCell>
 
                       </StyledTableRow>
                     ))}
@@ -491,15 +529,13 @@ React.useEffect(() => {
               )}
 
               <div className="course-row">
-              
                 <button
-  className="submit-btn"
-  onClick={handleSubmit}
-  disabled={isSubmitDisabled}
->
-  {isEditMode ? "Update" : "Submit"}
-</button>
-
+                  className="submit-btn"
+                  onClick={handleSubmit}
+                  disabled={isSubmitDisabled}
+                >
+                  {isEditMode ? "Update" : "Submit"}
+                </button>
               </div>
             </form>
 
@@ -518,6 +554,10 @@ React.useEffect(() => {
               <div className="category-header">
                 <p style={{ marginBottom: 0 }}>{headerTitle}</p>
               </div>
+
+              {/* Success and Error Messages */}
+              {successMessage && <p style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</p>}
+              {errorMessage && <p style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</p>}
 
               <div className="date-schedule">
                 Start Date
@@ -566,6 +606,16 @@ React.useEffect(() => {
                       <button className="btn-search"><IoSearch /></button>
                     </div>
                   </div>
+                  {selectedIds.length > 0 && (
+                    <button 
+                      type="button" 
+                      className="btn-category" 
+                      onClick={handleBulkDelete}
+                      style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
+                    >
+                      <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+                    </button>
+                  )}
                   <button className="btn-category" onClick={handleAddTrendingCourseClick}>
                     <FiPlus /> {buttonLabel}
                   </button>
@@ -576,7 +626,13 @@ React.useEffect(() => {
                 <Table sx={{ minWidth: 700 }}>
                   <TableHead>
                     <TableRow>
-                      <StyledTableCell align="center"><Checkbox /></StyledTableCell>
+                      <StyledTableCell align="center" sx={{ width: '50px' }}>
+                        <Checkbox 
+                          checked={selectAll}
+                          onChange={handleSelectAll}
+                          indeterminate={selectedIds.length > 0 && selectedIds.length < displayedProjects.length}
+                        />
+                      </StyledTableCell>
                       <StyledTableCell align="center">S.No.</StyledTableCell>
                       <StyledTableCell align="center">Category Name</StyledTableCell>
                       <StyledTableCell align="center">Course Name</StyledTableCell>
@@ -586,79 +642,77 @@ React.useEffect(() => {
                       <StyledTableCell align="center">Action</StyledTableCell>
                     </TableRow>
                   </TableHead>
-                 <TableBody>
-  {displayedProjects.length > 0 ? (
-    displayedProjects.map((project, idx) => (
-      <StyledTableRow key={project.projectId}>
-        <StyledTableCell align="center">
-          <Checkbox />
-        </StyledTableCell>
+                  <TableBody>
+                    {displayedProjects.length > 0 ? (
+                      displayedProjects.map((project, idx) => (
+                        <StyledTableRow key={project.projectId}>
+                          <StyledTableCell align="center">
+                            <Checkbox 
+                              checked={selectedIds.includes(project.projectId)}
+                              onChange={() => handleSelectOne(project.projectId)}
+                            />
+                          </StyledTableCell>
 
-        <StyledTableCell align="center">
-          {idx + 1 + (currentPage - 1) * rowsPerPage}
-        </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {idx + 1 + (currentPage - 1) * rowsPerPage}
+                          </StyledTableCell>
 
-        <StyledTableCell align="left">
-          {project.courseCategory}
-        </StyledTableCell>
+                          <StyledTableCell align="left">
+                            {project.courseCategory}
+                          </StyledTableCell>
 
-        <StyledTableCell align="left">
-          {project.courseName}
-        </StyledTableCell>
+                          <StyledTableCell align="left">
+                            {project.courseName}
+                          </StyledTableCell>
 
-        <StyledTableCell align="left">
-          {project.projectName}
-        </StyledTableCell>
+                          <StyledTableCell align="left">
+                            {project.projectName}
+                          </StyledTableCell>
 
-        <StyledTableCell align="left">
-          <div
-            dangerouslySetInnerHTML={{ __html: project.description }}
-          />
-        </StyledTableCell>
-<StyledTableCell align="center">
-  {project.date
-    ? dayjs(project.date, "YYYY-MM-DD").format("MMM-DD-YYYY").toUpperCase()
-    : "N/A"}
-</StyledTableCell>
+                          <StyledTableCell align="left">
+                            <div
+                              dangerouslySetInnerHTML={{ __html: project.description }}
+                            />
+                          </StyledTableCell>
+                          
+                          <StyledTableCell align="center">
+                            {project.date
+                              ? dayjs(project.date, "YYYY-MM-DD").format("MMM-DD-YYYY").toUpperCase()
+                              : "N/A"}
+                          </StyledTableCell>
 
-
-        <StyledTableCell align="center">
-          <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
-            <FaEdit
-              className="edit"
-              onClick={() => handleEditClick(project)}
-              style={{ cursor: "pointer", color: "#00AEEF" }}
-            />
-            <RiDeleteBin6Line
-              className="delete"
-              onClick={() => handleDeleteConfirmation(project.projectId)}
-              style={{ cursor: "pointer", color: "#FF0000" }}
-            />
-          </div>
-        </StyledTableCell>
-      </StyledTableRow>
-    ))
-  ) : (
-    <StyledTableRow>
-      <StyledTableCell colSpan={8} align="center">
-        No projects available.
-      </StyledTableCell>
-    </StyledTableRow>
-  )}
-</TableBody>
-
+                          <StyledTableCell align="center">
+                            <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+                              <FaEdit
+                                className="edit"
+                                onClick={() => handleEditClick(project)}
+                                style={{ cursor: "pointer", color: "#00AEEF" }}
+                              />
+                              <RiDeleteBin6Line
+                                className="delete"
+                                onClick={() => handleDeleteConfirmation(project.projectId)}
+                                style={{ cursor: "pointer", color: "#FF0000" }}
+                              />
+                            </div>
+                          </StyledTableCell>
+                        </StyledTableRow>
+                      ))
+                    ) : (
+                      <StyledTableRow>
+                        <StyledTableCell colSpan={8} align="center">
+                          No projects available.
+                        </StyledTableCell>
+                      </StyledTableRow>
+                    )}
+                  </TableBody>
                 </Table>
               </TableContainer>
-
-              {successMessage && <p style={{ color: "green", fontWeight: "bold", margin: "10px 0" }}>{successMessage}</p>}
-              {errorMessage && <p style={{ color: "red", fontWeight: "bold", margin: "10px 0" }}>{errorMessage}</p>}
 
               <div className="pagination-container">
                 <AdminPagination
                   currentPage={currentPage}
                   rowsPerPage={rowsPerPage}
                   totalRows={filteredProjects.length}
-
                   onPageChange={handlePageChange}
                 />
               </div>

@@ -63,7 +63,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const extractOriginalFileName = (imageUrl) => {
   if (!imageUrl) return null;
 
-  const fileName = imageUrl.split("/").pop(); 
+  const fileName = imageUrl.split("/").pop();
   const parts = fileName.split("_");
   return parts.length >= 3 ? parts.slice(2).join("_") : fileName;
 };
@@ -86,8 +86,8 @@ export default function AdminTools() {
     courseName: "",
   });
   const [rows, setRows] = useState([
-  { id: Date.now(), toolKey: null, toolImages: null, preview: null }
-]);
+    { id: Date.now(), toolKey: null, toolImages: null, preview: null }
+  ]);
 
 
   const [endDate, setEndDate] = useState(null);
@@ -100,11 +100,16 @@ export default function AdminTools() {
   });
   const [editingRow, setEditingRow] = useState(null);
 
-const [toolNames, setToolNames] = useState([]);
+  const [toolNames, setToolNames] = useState([]);
 
-const [selectedTools, setSelectedTools] = useState([]);
+  const [selectedTools, setSelectedTools] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // New state for checkbox selection
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+
   const {
     data: categories = [],
     isLoading: categoriesLoading,
@@ -122,19 +127,19 @@ const [selectedTools, setSelectedTools] = useState([]);
     error: addError,
   } = useAddTools();
 
-const removeImageOnly = (rowId) => {
-  setRows((prevRows) =>
-    prevRows.map((row) =>
-      row.id === rowId
-        ? {
+  const removeImageOnly = (rowId) => {
+    setRows((prevRows) =>
+      prevRows.map((row) =>
+        row.id === rowId
+          ? {
             ...row,
             toolImages: null,
             preview: null,
           }
-        : row
-    )
-  );
-};
+          : row
+      )
+    );
+  };
 
   const {
     data: toolsFlat = [],
@@ -154,12 +159,12 @@ const removeImageOnly = (rowId) => {
 
   const isEditMode = !!toolsData.tool_id;
   const isRowValid = (row) => {
-  return (
-    row.toolsLink &&
-    row.toolsLink.trim() !== ""
-    
-  );
-};
+    return (
+      row.toolsLink &&
+      row.toolsLink.trim() !== ""
+
+    );
+  };
 
   const isFormValid = React.useMemo(() => {
     if (!toolsData.category_name || !toolsData.courseName) {
@@ -185,37 +190,37 @@ const removeImageOnly = (rowId) => {
   };
 
   const addRow = () => {
-  setRows([...rows, { id: Date.now(), toolKey: null, toolImages: null, preview: null }]);
-};
+    setRows([...rows, { id: Date.now(), toolKey: null, toolImages: null, preview: null }]);
+  };
 
-const deleteRow = (id) => {
-  setRows((prevRows) => {
-    const rowToDelete = prevRows.find((r) => r.id === id);
+  const deleteRow = (id) => {
+    setRows((prevRows) => {
+      const rowToDelete = prevRows.find((r) => r.id === id);
 
-    if (rowToDelete?.toolKey) {
-      setSelectedTools((prev) => prev.filter((t) => t !== rowToDelete.toolKey));
-    }
+      if (rowToDelete?.toolKey) {
+        setSelectedTools((prev) => prev.filter((t) => t !== rowToDelete.toolKey));
+      }
 
-    return prevRows.filter((r) => r.id !== id);
-  });
-};
+      return prevRows.filter((r) => r.id !== id);
+    });
+  };
 
   const handleRowsPerPageChange = (rowsCount) => {
     setRowsPerPage(rowsCount);
     setCurrentPage(1);
   };
-const handleReset = () => {
-  setToolsData({
-    tool_id: "",
-    category_name: "",
-    courseName: "",
-    toolsName: "",
-    toolsLink: "",
-  });
-  setRows([{ id: Date.now(), toolImages: null, preview: null }]);
-  setSelectedTools([]); 
-};
 
+  const handleReset = () => {
+    setToolsData({
+      tool_id: "",
+      category_name: "",
+      courseName: "",
+      toolsName: "",
+      toolsLink: "",
+    });
+    setRows([{ id: Date.now(), toolImages: null, preview: null }]);
+    setSelectedTools([]);
+  };
 
   const normalizeToDate = (val) => {
     if (!val) return null;
@@ -251,6 +256,7 @@ const handleReset = () => {
     setSearchTerm('');
     setFilteredTools(tools);
   };
+
   useEffect(() => {
     if (successMessage || errorMessage) {
       const timer = setTimeout(() => {
@@ -262,11 +268,11 @@ const handleReset = () => {
     }
   }, [successMessage, errorMessage]);
 
-useEffect(() => {
-  axios.get("https://api.test.hachion.co/api/tools/names")
-    .then(res => setToolNames(res.data))
-    .catch(() => setToolNames([]));
-}, []);
+  useEffect(() => {
+    axios.get("https://api.test.hachion.co/api/tools/names")
+      .then(res => setToolNames(res.data))
+      .catch(() => setToolNames([]));
+  }, []);
 
   useEffect(() => {
     const filtered = allData.filter((item) => {
@@ -312,10 +318,9 @@ useEffect(() => {
       setToolsData((prev) => ({ ...prev, courseName: "" }));
     }
   };
+
   const handleAddTrendingCourseClick = () => {
-
     setEditingRow(null);
-
     setToolsData({
       tool_id: "",
       category_name: "",
@@ -323,12 +328,9 @@ useEffect(() => {
       toolsName: "",
       toolsLink: "",
     });
-
-   setRows([
-  { id: Date.now(), toolKey: null, toolImages: null, preview: null }
-]);
-
-
+    setRows([
+      { id: Date.now(), toolKey: null, toolImages: null, preview: null }
+    ]);
     setShowAddCourse(true);
     setSuccessMessage("");
     setErrorMessage("");
@@ -341,9 +343,9 @@ useEffect(() => {
     updated[index].preview = URL.createObjectURL(file);
     setRows(updated);
   };
+
   const filteredCourses = React.useMemo(() => {
     if (!toolsData.category_name) return [];
-
     return courses.filter(
       (c) => c.courseCategory === toolsData.category_name
     );
@@ -390,18 +392,17 @@ useEffect(() => {
       return;
     }
 
-   const validRows = rows.filter(
-  r =>
-    r.toolsName &&
-    r.toolsLink &&
-    (r.toolImages instanceof File || typeof r.toolImages === "string")
-);
+    const validRows = rows.filter(
+      r =>
+        r.toolsName &&
+        r.toolsLink &&
+        (r.toolImages instanceof File || typeof r.toolImages === "string")
+    );
 
-if (validRows.length === 0) {
-  setErrorMessage("Please add at least one valid tool");
-  return;
-}
-
+    if (validRows.length === 0) {
+      setErrorMessage("Please add at least one valid tool");
+      return;
+    }
 
     addTools(
       {
@@ -427,13 +428,11 @@ if (validRows.length === 0) {
 
   const handleEditClick = (row) => {
     setEditingRow(row);
-
     setToolsData({
       tool_id: row.id,
       category_name: row.category_name,
       courseName: row.courseName,
     });
-
     setRows([
       {
         id: row.id,
@@ -445,9 +444,9 @@ if (validRows.length === 0) {
         toolsLink: row.toolsLink,
       },
     ]);
-
     setShowAddCourse(true);
   };
+
   const handleDeleteClick = (row) => {
     if (!window.confirm("Are you sure you want to delete this tool?")) {
       return;
@@ -463,6 +462,8 @@ if (validRows.length === 0) {
         onSuccess: () => {
           setSuccessMessage("Tool deleted successfully");
           setErrorMessage("");
+          // Remove from selectedIds if present
+          setSelectedIds(prev => prev.filter(id => id !== row.id));
         },
         onError: (err) => {
           setErrorMessage(
@@ -472,59 +473,53 @@ if (validRows.length === 0) {
       }
     );
   };
-const handleToolCheckboxChange = async (toolName, isChecked) => {
-  if (isChecked) {
-    try {
-      const res = await axios.get(
-        "https://api.test.hachion.co/api/tools/details",
-        { params: { toolName } }
-      );
 
-      const tool = res.data;
+  const handleToolCheckboxChange = async (toolName, isChecked) => {
+    if (isChecked) {
+      try {
+        const res = await axios.get(
+          "https://api.test.hachion.co/api/tools/details",
+          { params: { toolName } }
+        );
 
-      setSelectedTools((prev) =>
-        prev.includes(toolName) ? prev : [...prev, toolName]
-      );
+        const tool = res.data;
 
-  
-      setRows((prevRows) => {
-        const firstRowEmpty =
-          prevRows.length === 1 &&
-          !prevRows[0].toolsName &&
-          !prevRows[0].toolsLink &&
-          !prevRows[0].preview;
-const newRow = {
-  id: Date.now() + Math.random(),
-  toolKey: toolName,
-  toolsName: tool.toolsName,
-  toolsLink: tool.toolsLink,
+        setSelectedTools((prev) =>
+          prev.includes(toolName) ? prev : [...prev, toolName]
+        );
 
-  
-  toolImages: tool.imageUrl,
+        setRows((prevRows) => {
+          const firstRowEmpty =
+            prevRows.length === 1 &&
+            !prevRows[0].toolsName &&
+            !prevRows[0].toolsLink &&
+            !prevRows[0].preview;
 
-  preview: tool.imageUrl
-    ? `https://api.test.hachion.co/uploads/test/tools_images/${tool.imageUrl}`
-    : null,
-};
+          const newRow = {
+            id: Date.now() + Math.random(),
+            toolKey: toolName,
+            toolsName: tool.toolsName,
+            toolsLink: tool.toolsLink,
+            toolImages: tool.imageUrl,
+            preview: tool.imageUrl
+              ? `https://api.test.hachion.co/uploads/test/tools_images/${tool.imageUrl}`
+              : null,
+          };
 
+          if (firstRowEmpty) {
+            return [{ ...prevRows[0], ...newRow, id: prevRows[0].id }];
+          }
 
-        if (firstRowEmpty) {
-          return [{ ...prevRows[0], ...newRow, id: prevRows[0].id }];
-        }
-
-        return [...prevRows, newRow];
-      });
-    } catch (e) {
-      setErrorMessage("Failed to load tool details");
+          return [...prevRows, newRow];
+        });
+      } catch (e) {
+        setErrorMessage("Failed to load tool details");
+      }
+    } else {
+      setSelectedTools((prev) => prev.filter((t) => t !== toolName));
+      setRows((prevRows) => prevRows.filter((row) => row.toolKey !== toolName));
     }
-  } else {
-    
-    setSelectedTools((prev) => prev.filter((t) => t !== toolName));
-
-    setRows((prevRows) => prevRows.filter((row) => row.toolKey !== toolName));
-  }
-};
-
+  };
 
   useEffect(() => {
     if (toolsFlat.length > 0) {
@@ -533,6 +528,93 @@ const newRow = {
     }
   }, [toolsFlat]);
 
+  // Handle Select All checkbox
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allIds = displayedCategories.map(tool => tool.id);
+      setSelectedIds(allIds);
+      setSelectAll(true);
+    } else {
+      setSelectedIds([]);
+      setSelectAll(false);
+    }
+  };
+
+  // Handle individual checkbox
+  const handleSelectOne = (id) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+      setSelectAll(false);
+    } else {
+      const newSelectedIds = [...selectedIds, id];
+      setSelectedIds(newSelectedIds);
+      // Check if all items are selected
+      if (newSelectedIds.length === displayedCategories.length) {
+        setSelectAll(true);
+      }
+    }
+  };
+
+  // Update selectAll state when page changes
+  useEffect(() => {
+    const allCurrentPageIds = displayedCategories.map(tool => tool.id);
+    const allSelected = allCurrentPageIds.length > 0 &&
+      allCurrentPageIds.every(id => selectedIds.includes(id));
+    setSelectAll(allSelected);
+  }, [currentPage, displayedCategories, selectedIds]);
+
+  // Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      setErrorMessage("Please select at least one tool to delete");
+      setTimeout(() => setErrorMessage(""), 3000);
+      return;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'tool' : 'tools'}?`;
+
+    if (window.confirm(confirmMessage)) {
+      try {
+        // Delete all selected tools
+        await Promise.all(
+          selectedIds.map(id => {
+            const tool = allData.find(t => t.id === id);
+            if (!tool) return Promise.resolve();
+
+            return axios.delete(`https://api.test.hachion.co/tools/delete`, {
+              data: {
+                itemId: id,
+                category_name: tool.category_name,
+                courseName: tool.courseName
+              }
+            });
+          })
+        );
+
+        // Update state
+        setAllData(prev => prev.filter(item => !selectedIds.includes(item.id)));
+        setFilteredTools(prev => prev.filter(item => !selectedIds.includes(item.id)));
+
+        setSelectedIds([]);
+        setSelectAll(false);
+
+        setSuccessMessage(`${selectedIds.length} ${selectedIds.length === 1 ? 'tool' : 'tools'} deleted successfully`);
+        setErrorMessage("");
+
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 6000);
+      } catch (error) {
+        console.error("Error deleting tools:", error);
+        setSuccessMessage("");
+        setErrorMessage("Error deleting some tools. Please try again.");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 6000);
+      }
+    }
+  };
+
   return (
     <>
       {showAddCourse ? (
@@ -540,13 +622,10 @@ const newRow = {
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
               <li className="breadcrumb-item">
-                {/* <a href="#!" onClick={() => setShowAddCourse(false)}>Tools Covered </a> <MdKeyboardArrowRight /> */}
                 <a
                   href="#!"
                   onClick={() => {
                     setShowAddCourse(false);
-
-
                     setEditingRow(null);
                     setToolsData({
                       tool_id: "",
@@ -575,7 +654,6 @@ const newRow = {
               <div className='course-row'>
                 <div className="col-md-3">
                   <label htmlFor="inputState" className="form-label">Category Name <span className="required">*</span></label>
-                  {/* <select id="inputState" className="form-select" name='category_name' value={toolsData.category_name} onChange={handleChange}> */}
                   <select
                     id="inputState"
                     className="form-select"
@@ -584,29 +662,24 @@ const newRow = {
                     onChange={handleChange}
                     disabled={!!toolsData.tool_id}
                   >
-
                     <option value="" disabled>
                       Select Category
                     </option>
                     {categoriesLoading && (
                       <option disabled>Loading categories...</option>
                     )}
-
                     {categoriesError && (
                       <option disabled>Error loading categories</option>
                     )}
-
                     {categories.map((curr) => (
                       <option key={curr.id} value={curr.name}>
                         {curr.name}
                       </option>
                     ))}
-
                   </select>
                 </div>
                 <div className="col-md-3">
                   <label htmlFor="course" className="form-label">Course Name <span className="required">*</span></label>
-
                   <select
                     id="course"
                     className="form-select"
@@ -614,24 +687,19 @@ const newRow = {
                     value={toolsData.courseName}
                     onChange={handleChange}
                     disabled={!toolsData.category_name || !!toolsData.tool_id}
-
                   >
                     <option value="" disabled>
                       Select Course
                     </option>
-
                     {!toolsData.category_name && (
                       <option disabled>Select category first</option>
                     )}
-
                     {coursesLoading && (
                       <option disabled>Loading courses...</option>
                     )}
-
                     {coursesError && (
                       <option disabled>Error loading courses</option>
                     )}
-
                     {filteredCourses.map((curr, index) => (
                       <option
                         key={`${curr.courseName}-${index}`}
@@ -643,124 +711,90 @@ const newRow = {
                   </select>
                 </div>
                 <div className="col-md-3">
-  <label htmlFor="toolName" className="form-label">Tool Name 
-    {/* <span className="required">*</span> */}
-    </label>
-  <div className="dropdown">
-    <button
-      className="form-select d-flex justify-content-between align-items-center"
-      type="button"
-      id="toolDropdown"
-      data-bs-toggle="dropdown"
-      aria-expanded="false"
-      style={{ textAlign: 'left' }}
-    >
-      {/* <span>
-        {rows[0]?.selectedTools && rows[0]?.selectedTools.length > 0 
-          ? `${rows[0]?.selectedTools.length} tool${rows[0]?.selectedTools.length !== 1 ? 's' : ''} selected` 
-          : 'Select Tools'}
-      </span> */}
-      <span>
-  {selectedTools.length > 0
-    ? `${selectedTools.length} tool${selectedTools.length !== 1 ? "s" : ""} selected`
-    : "Select Tools"}
-</span>
+                  <label htmlFor="toolName" className="form-label">Tool Name
+                  </label>
+                  <div className="dropdown">
+                    <button
+                      className="form-select d-flex justify-content-between align-items-center"
+                      type="button"
+                      id="toolDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      style={{ textAlign: 'left' }}
+                    >
+                      <span>
+                        {selectedTools.length > 0
+                          ? `${selectedTools.length} tool${selectedTools.length !== 1 ? "s" : ""} selected`
+                          : "Select Tools"}
+                      </span>
+                    </button>
+                    <ul className="dropdown-menu" aria-labelledby="toolDropdown" style={{ width: '100%', maxHeight: '300px', overflowY: 'auto' }}>
+                      {toolNames.map((tool, index) => (
+                        <li key={index}>
+                          <div className="dropdown-item">
+                            <div className="form-check">
+                              <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id={`tool-${index}`}
+                                checked={selectedTools.includes(tool)}
+                                onChange={(e) => handleToolCheckboxChange(tool, e.target.checked)}
+                                disabled={isEditMode}
+                              />
+                              <label className="form-check-label" htmlFor={`tool-${index}`}>
+                                {tool}
+                              </label>
+                            </div>
+                          </div>
+                        </li>
+                      ))}
+                      <li>
+                        <hr className="dropdown-divider" />
+                      </li>
+                      <li>
+                        <div className="dropdown-item">
+                          <div className="form-check">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              id="tool-other"
+                              checked={selectedTools.includes('Other (Custom)')}
+                              onChange={(e) => handleToolCheckboxChange('Other (Custom)', e.target.checked)}
+                              disabled={isEditMode}
+                            />
+                            <label className="form-check-label" htmlFor="tool-other">
+                              Other (Custom)
+                            </label>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
 
-    </button>
-    <ul className="dropdown-menu" aria-labelledby="toolDropdown" style={{ width: '100%', maxHeight: '300px', overflowY: 'auto' }}>
-     {toolNames.map((tool, index) => (
-
-        <li key={index}>
-          <div className="dropdown-item">
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id={`tool-${index}`}
-                
-                checked={selectedTools.includes(tool)}
-
-
-                onChange={(e) => handleToolCheckboxChange(tool, e.target.checked)}
-                disabled={isEditMode}
-              />
-              <label className="form-check-label" htmlFor={`tool-${index}`}>
-                {tool}
-              </label>
-            </div>
-          </div>
-        </li>
-      ))}
-      <li>
-        <hr className="dropdown-divider" />
-      </li>
-      <li>
-        <div className="dropdown-item">
-          <div className="form-check">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              id="tool-other"
-              checked={rows[0]?.selectedTools?.includes('Other') || false}
-              onChange={(e) => handleToolCheckboxChange('Other (Custom)', e.target.checked)}
-              disabled={isEditMode}
-            />
-            <label className="form-check-label" htmlFor="tool-other">
-              Other (Custom)
-            </label>
-          </div>
-        </div>
-      </li>
-    </ul>
-  </div>
-  
-  {/* Display selected tools as tags */}
-  {/* {rows[0]?.selectedTools && rows[0]?.selectedTools.length > 0 && (
-    <div className="selected-tools-container mt-2">
-      <small className="text-muted">Selected: </small>
-      <div className="d-flex flex-wrap gap-1 mt-1">
-        {rows[0].selectedTools.map((tool, index) => (
-          <span key={index} className="badge bg-primary d-flex align-items-center">
-            {tool}
-            {!isEditMode && (
-              <button 
-                type="button" 
-                className="btn-close btn-close-white ms-1" 
-                style={{ fontSize: '0.5rem' }}
-                onClick={() => handleToolCheckboxChange(tool, false)}
-                aria-label="Remove"
-              ></button>
-            )}
-          </span>
-        ))}
-      </div>
-    </div>
-  )} */}
-  {selectedTools.length > 0 && (
-  <div className="selected-tools-container mt-2">
-    <small className="text-muted">Selected:</small>
-    <div className="d-flex flex-wrap gap-1 mt-1">
-      {selectedTools.map((tool, index) => (
-        <span
-          key={index}
-          className="badge bg-primary d-flex align-items-center"
-        >
-          {tool}
-          {!isEditMode && (
-            <button
-              type="button"
-              className="btn-close btn-close-white ms-1"
-              style={{ fontSize: "0.5rem" }}
-              onClick={() => handleToolCheckboxChange(tool, false)}
-            />
-          )}
-        </span>
-      ))}
-    </div>
-  </div>
-)}
-
-</div>
+                  {selectedTools.length > 0 && (
+                    <div className="selected-tools-container mt-2">
+                      <small className="text-muted">Selected:</small>
+                      <div className="d-flex flex-wrap gap-1 mt-1">
+                        {selectedTools.map((tool, index) => (
+                          <span
+                            key={index}
+                            className="badge bg-primary d-flex align-items-center"
+                          >
+                            {tool}
+                            {!isEditMode && (
+                              <button
+                                type="button"
+                                className="btn-close btn-close-white ms-1"
+                                style={{ fontSize: "0.5rem" }}
+                                onClick={() => handleToolCheckboxChange(tool, false)}
+                              />
+                            )}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <TableContainer component={Paper}>
@@ -768,9 +802,8 @@ const newRow = {
                   <TableHead>
                     <TableRow>
                       <StyledTableCell align="center">Tools Images <span className="required">*</span></StyledTableCell>
-                      <StyledTableCell align="center">Tools Name 
-                        {/* <span className="required">*</span> */}
-                        </StyledTableCell>
+                      <StyledTableCell align="center">Tools Name
+                      </StyledTableCell>
                       <StyledTableCell align="center">Tools Download Link <span className="required">*</span></StyledTableCell>
                       <StyledTableCell align="center" sx={{ width: '150px' }}>Add/Delete Row</StyledTableCell>
                     </TableRow>
@@ -786,21 +819,19 @@ const newRow = {
                                 alt="tool"
                                 style={{ width: 120, height: 80, objectFit: 'cover', borderRadius: 6, border: '1px solid #ccc' }}
                               />
-                             <IoClose
-  style={{
-    position: "absolute",
-    top: -8,
-    right: -8,
-    fontSize: "1.2rem",
-    color: "red",
-    cursor: "pointer",
-    backgroundColor: "#fff",
-    borderRadius: "50%",
-  }}
-  onClick={() => removeImageOnly(row.id)}   
-/>
-
-
+                              <IoClose
+                                style={{
+                                  position: "absolute",
+                                  top: -8,
+                                  right: -8,
+                                  fontSize: "1.2rem",
+                                  color: "red",
+                                  cursor: "pointer",
+                                  backgroundColor: "#fff",
+                                  borderRadius: "50%",
+                                }}
+                                onClick={() => removeImageOnly(row.id)}
+                              />
                             </div>
                           ) : (
                             <label style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
@@ -855,7 +886,6 @@ const newRow = {
                             </>
                           )}
                         </StyledTableCell>
-
                       </StyledTableRow>
                     ))}
                   </TableBody>
@@ -875,8 +905,6 @@ const newRow = {
                 >
                   {toolsData.tool_id ? "Update" : "Submit"}
                 </button>
-                
-
                 <button className='reset-btn' onClick={handleReset}>Reset</button>
               </div>
             </div>
@@ -942,12 +970,21 @@ const newRow = {
                       />
                       <button className="btn-search" type="button"><IoSearch style={{ fontSize: '2rem' }} /></button>
                     </div>
+                    {selectedIds.length > 0 && (
+                      <button
+                        type="button"
+                        className="btn-category"
+                        onClick={handleBulkDelete}
+                        style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
+                      >
+                        <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+                      </button>
+                    )}
                     <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick} >
                       <FiPlus /> Add Tools
                     </button>
                   </div>
                 </div>
-
               </div>
             </div>
           </LocalizationProvider>
@@ -957,7 +994,11 @@ const newRow = {
               <TableHead>
                 <TableRow>
                   <StyledTableCell align='center' sx={{ width: '50px' }}>
-                    <Checkbox />
+                    <Checkbox
+                      checked={selectAll}
+                      onChange={handleSelectAll}
+                      indeterminate={selectedIds.length > 0 && selectedIds.length < displayedCategories.length}
+                    />
                   </StyledTableCell>
                   <StyledTableCell align='center' sx={{ width: '80px' }}>S.No.</StyledTableCell>
                   <StyledTableCell align="center">Category Name</StyledTableCell>
@@ -972,26 +1013,18 @@ const newRow = {
               <TableBody>
                 {displayedCategories.length > 0 ? (
                   displayedCategories.map((courseRow, index) => (
-                    <StyledTableRow key={courseRow.curr_id}>
+                    <StyledTableRow key={courseRow.id}>
                       <StyledTableCell align="center">
-                        <Checkbox />
+                        <Checkbox
+                          checked={selectedIds.includes(courseRow.id)}
+                          onChange={() => handleSelectOne(courseRow.id)}
+                        />
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {index + 1 + (currentPage - 1) * rowsPerPage}
                       </StyledTableCell>
                       <StyledTableCell align="left">{courseRow.category_name}</StyledTableCell>
                       <StyledTableCell align="left">{courseRow.courseName}</StyledTableCell>
-                      {/* <StyledTableCell align="left">
-                        {(courseRow.toolImages || []).length ? (
-                          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                            {courseRow.toolImages.slice(0, 4).map((img, i) => (
-                              <img key={i} src={img.url} alt={img.name} style={{ width: 40, height: 28, objectFit: 'cover', borderRadius: 4, border: '1px solid #ddd' }} />
-                            ))}
-                            {courseRow.toolImages.length > 4 && <span>+{courseRow.toolImages.length - 4}</span>}
-                          </div>
-                        ) : ("")}
-                      </StyledTableCell> */}
-                      
                       <StyledTableCell align="center">
                         {courseRow.imageUrl && (
                           <img
@@ -1007,7 +1040,6 @@ const newRow = {
                           />
                         )}
                       </StyledTableCell>
-
                       <StyledTableCell align="left">{courseRow.toolsName}</StyledTableCell>
                       <StyledTableCell align="left">{courseRow.toolsLink}</StyledTableCell>
                       <StyledTableCell align="center">
@@ -1015,18 +1047,14 @@ const newRow = {
                           ? dayjs(courseRow.createdDate).format("MMM-DD-YYYY").toUpperCase()
                           : "N/A"}
                       </StyledTableCell>
-
-
                       <StyledTableCell align="center">
                         <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                           <FaEdit className="edit" onClick={() => handleEditClick(courseRow)} style={{ cursor: 'pointer' }} />
-                          {/* <RiDeleteBin6Line className="delete" onClick={() => handleDeleteClick(courseRow.curr_id)} style={{ cursor: 'pointer' }} /> */}
                           <RiDeleteBin6Line
                             className="delete"
                             onClick={() => handleDeleteClick(courseRow)}
                             style={{ cursor: "pointer" }}
                           />
-
                         </div>
                       </StyledTableCell>
                     </StyledTableRow>

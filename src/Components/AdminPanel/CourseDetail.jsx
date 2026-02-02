@@ -88,6 +88,10 @@ const CourseDetail = ({
     self2: '', headerTitle: '', courseKeyword: '', courseKeywordDescription: '', aboutCourse: '', courseHighlight: '', courseDescription: '', date: currentDate, whatYouWillLearn: '', numberOfProjects: '', whoIsThisCourseFor: '', careerOpportunities: '', avarageSalaryRange: '', prerequisities: '', liveTraining: '', crashCourse: '', mentoringMode: '', selfPacedLearning: '',
   });
 
+  // New state for checkbox selection
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+
   useEffect(() => {
     const fetchTrainerNames = async () => {
       if (
@@ -513,6 +517,8 @@ const CourseDetail = ({
         setCategories((prev) => prev.filter((course) => course.id !== id));
         setFilteredCourses((prev) => prev.filter((course) => course.id !== id));
         setAllCourses((prev) => prev.filter((course) => course.id !== id));
+        // Also remove from selectedIds if present
+        setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
       } else {
         setSuccessMessage("");
         setErrorMessage("❌ Failed to delete the course.");
@@ -702,6 +708,87 @@ const CourseDetail = ({
 
   };
   const isSubmitDisabled = !areMandatoryFieldsFilled() || duplicateError;
+
+  // Handle Select All checkbox
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allIds = displayedCategories.map(course => course.id);
+      setSelectedIds(allIds);
+      setSelectAll(true);
+    } else {
+      setSelectedIds([]);
+      setSelectAll(false);
+    }
+  };
+
+  // Handle individual checkbox
+  const handleSelectOne = (id) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+      setSelectAll(false);
+    } else {
+      const newSelectedIds = [...selectedIds, id];
+      setSelectedIds(newSelectedIds);
+      // Check if all items are selected
+      if (newSelectedIds.length === displayedCategories.length) {
+        setSelectAll(true);
+      }
+    }
+  };
+
+  // Update selectAll state when page changes
+  useEffect(() => {
+    const allCurrentPageIds = displayedCategories.map(course => course.id);
+    const allSelected = allCurrentPageIds.length > 0 &&
+      allCurrentPageIds.every(id => selectedIds.includes(id));
+    setSelectAll(allSelected);
+  }, [currentPage, displayedCategories, selectedIds]);
+
+  // Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      setErrorMessage("Please select at least one course to delete");
+      setTimeout(() => setErrorMessage(""), 3000);
+      return;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'course' : 'courses'}?`;
+
+    if (window.confirm(confirmMessage)) {
+      try {
+        // Delete all selected courses
+        await Promise.all(
+          selectedIds.map(id =>
+            axios.delete(`https://api.test.hachion.co/courses/delete/${id}`)
+          )
+        );
+
+        // Update state
+        setCourses(prev => prev.filter(item => !selectedIds.includes(item.id)));
+        setCategories(prev => prev.filter(item => !selectedIds.includes(item.id)));
+        setFilteredCourses(prev => prev.filter(item => !selectedIds.includes(item.id)));
+        setAllCourses(prev => prev.filter(item => !selectedIds.includes(item.id)));
+
+        setSelectedIds([]);
+        setSelectAll(false);
+
+        setSuccessMessage(`${selectedIds.length} ${selectedIds.length === 1 ? 'course' : 'courses'} deleted successfully`);
+        setErrorMessage("");
+
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 6000);
+      } catch (error) {
+        console.error("Error deleting courses:", error);
+        setSuccessMessage("");
+        setErrorMessage("Error deleting some courses. Please try again.");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 6000);
+      }
+    }
+  };
+
   return (
     <>
       {showAddCourse ? (
@@ -1828,6 +1915,16 @@ const CourseDetail = ({
                       <button className="btn-search"><IoSearch /></button>
                     </div>
                   </div>
+                  {selectedIds.length > 0 && (
+                    <button
+                      type="button"
+                      className="btn-category"
+                      onClick={handleBulkDelete}
+                      style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
+                    >
+                      <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+                    </button>
+                  )}
                   <button className="btn-category" onClick={handleAddTrendingCourseClick}>
                     <FiPlus /> {buttonLabel}
                   </button>
@@ -1837,7 +1934,13 @@ const CourseDetail = ({
                 <Table sx={{ minWidth: 700 }}>
                   <TableHead>
                     <TableRow>
-                      <StyledTableCell align="center"><Checkbox /></StyledTableCell>
+                      <StyledTableCell align="center" sx={{ width: 100 }}>
+                        <Checkbox
+                          checked={selectAll}
+                          onChange={handleSelectAll}
+                          indeterminate={selectedIds.length > 0 && selectedIds.length < displayedCategories.length}
+                        />
+                      </StyledTableCell>
                       <StyledTableCell align="center">S.No.</StyledTableCell>
                       <StyledTableCell align="center">Image</StyledTableCell>
                       <StyledTableCell align="center">Category Name</StyledTableCell>
@@ -1850,7 +1953,12 @@ const CourseDetail = ({
                   <TableBody>
                     {displayedCategories.length > 0 ? displayedCategories.map((course, idx) => (
                       <StyledTableRow key={course.id}>
-                        <StyledTableCell align="center"><Checkbox /></StyledTableCell>
+                        <StyledTableCell align="center" sx={{ width: 100 }}>
+                          <Checkbox
+                            checked={selectedIds.includes(course.id)}
+                            onChange={() => handleSelectOne(course.id)}
+                          />
+                        </StyledTableCell>
                         <StyledTableCell align="center">{idx + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
                         <StyledTableCell align="center">
                           {course.courseImage

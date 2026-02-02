@@ -1,4 +1,4 @@
-import  React, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { duration, styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -36,7 +36,7 @@ import { IoClose } from "react-icons/io5";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { MdKeyboardArrowRight } from 'react-icons/md';
-import AdminPagination from './AdminPagination'; 
+import AdminPagination from './AdminPagination';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -63,498 +63,635 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 export default function Resume() {
-  const [course,setCourse]=useState([]);
-   const [courseCategory,setCourseCategory]=useState([]);
-  const [searchTerm,setSearchTerm]=useState("")
-    const [showAddCourse, setShowAddCourse] = useState(false);
-    const[resume,setResume]=useState([]);
-    const[filterCourse,setFilterCourse]=useState([]);
-    const[filteredResume,setFilteredResume]=useState([])
-    const [open, setOpen] = React.useState(false);
-    const currentDate = new Date().toISOString().split('T')[0];
-    const[message,setMessage]=useState(false);
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
-    const [editedData, setEditedData] = useState({category_name:"",course_name:"",junior_level:"",middle_level:"",senior_level:""});
-    const [resumeData, setResumeData] = useState({
-        resume_id:"",
-          category_name:"",
-            course_name: "",
-            date:currentDate,
-           junior_level:"",
-           middle_level:"",
-           senior_level:""
-         });
- const [currentPage, setCurrentPage] = useState(1);
-           const [rowsPerPage, setRowsPerPage] = useState(10);
-           
-           const handlePageChange = (page) => {
-            setCurrentPage(page);
-            window.scrollTo(0, window.scrollY);
-          };
-          // Inside your CourseCategory component
-        
-        const handleRowsPerPageChange = (rows) => {
-          setRowsPerPage(rows);
-          setCurrentPage(1); // Reset to the first page whenever rows per page changes
-        };
+  const [course, setCourse] = useState([]);
+  const [courseCategory, setCourseCategory] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("")
+  const [showAddCourse, setShowAddCourse] = useState(false);
+  const [resume, setResume] = useState([]);
+  const [filterCourse, setFilterCourse] = useState([]);
+  const [filteredResume, setFilteredResume] = useState([])
+  const [open, setOpen] = React.useState(false);
+  const currentDate = new Date().toISOString().split('T')[0];
+  const [message, setMessage] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [editedData, setEditedData] = useState({ category_name: "", course_name: "", junior_level: "", middle_level: "", senior_level: "" });
+  const [resumeData, setResumeData] = useState({
+    resume_id: "",
+    category_name: "",
+    course_name: "",
+    date: currentDate,
+    junior_level: "",
+    middle_level: "",
+    senior_level: ""
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  // New state for checkbox selection
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-        const displayedCategories = filteredResume.slice(
-          (currentPage - 1) * rowsPerPage,
-          currentPage * rowsPerPage
-        );
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo(0, window.scrollY);
+  };
+  // Inside your CourseCategory component
 
-         const handleReset=()=>{
-            setResumeData({
-              resume_id:"",
-              category_name:"",
-              course_name: "",
-              date:currentDate,
-             junior_level:"",
-             middle_level:"",
-             senior_level:""
-                 });
-        
-         }
-         const handleInputChange = (e) => {
-            const { name, value } = e.target;
-            setEditedData((prev) => ({
-              ...prev,
-              [name]: value,
-            }));
-          };
-   
-    const handleClose = () => {
-      setOpen(false); // Close the modal
+  const handleRowsPerPageChange = (rows) => {
+    setRowsPerPage(rows);
+    setCurrentPage(1); // Reset to the first page whenever rows per page changes
+  };
+
+  const displayedCategories = filteredResume.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
+  const handleReset = () => {
+    setResumeData({
+      resume_id: "",
+      category_name: "",
+      course_name: "",
+      date: currentDate,
+      junior_level: "",
+      middle_level: "",
+      senior_level: ""
+    });
+  }
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleClose = () => {
+    setOpen(false); // Close the modal
+  };
+
+  useEffect(() => {
+    const fetchResume = async () => {
+      try {
+        const response = await axios.get('https://api.test.hachion.co/resume');
+        setResume(response.data); // Use the curriculum state
+        setFilteredResume(response.data);
+      } catch (error) {
+        console.error("Error fetching resume:", error.message);
+      }
     };
- 
-    useEffect(() => {
-      const fetchResume = async () => {
-          try {
-              const response = await axios.get('https://api.test.hachion.co/resume');
-              setResume(response.data); // Use the curriculum state
-          } catch (error) {
-              console.error("Error fetching resume:", error.message);
-          }
-      };
-      fetchResume();
-      setFilteredResume(resume);
+    fetchResume();
   }, []); // Empty dependency array ensures it runs only once
 
-    const handleDeleteConfirmation = (resume_id) => {
-        if (window.confirm("Are you sure you want to delete this Resume details")) {
-          handleDelete(resume_id);
-        }
-      };
-  
-      const handleDateFilter = () => {
-        const filtered = resume.filter((item) => {
-          const videoDate = new Date(item.date); // Parse the date field
-          const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
-          const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
-      
-          return (
-            (!start || videoDate >= start) &&
-            (!end || videoDate <= end)
-          );
-        });
-      
-        setFilteredResume(filtered);
-      };
-      const handleSave = async () => {
-        try {
-            const response = await axios.put(
-                `https://api.test.hachion.co/videoaccess/update/${editedData.resume_id}`,editedData
-            );
-            setResume((prev) =>
-                prev.map(curr =>
-                    curr.resume_id === editedData.resume_id ? response.data : curr
-                )
-            );
-            setMessage("Resume updated successfully!");
-            setTimeout(() => setMessage(""), 5000);
-            setOpen(false);
-        } catch (error) {
-            setMessage("Error updating Resume.");
-        }
-    };
-            
-      const handleDelete = async (resume_id) => {
-       
-         try { 
-          const response = await axios.delete(`https://api.test.hachion.co/resume/delete/${resume_id}`); 
-          console.log("Resume deleted successfully:", response.data); 
-        } catch (error) { 
-          console.error("Error deleting Resume:", error); 
-        } }; 
-        useEffect(() => {
-          const filtered = resume.filter(resume =>
-              resume.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              resume.category_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              resume.junior_level.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              resume.middle_level.toLowerCase().includes(searchTerm.toLowerCase())||
-              resume.senior_level.toLowerCase().includes(searchTerm.toLowerCase())
-          );
-          setFilteredResume(filtered);
-      }, [searchTerm,filteredResume]);
-
-        const handleClickOpen = (row) => {
-            console.log(row);
-              setEditedData(row)// Set the selected row data
-              setOpen(true); // Open the modal
-             
-            };
-    
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setResumeData((prevData) => ({
-          ...prevData,
-          [name]: value,
-        }));
-      };
-      const handleSubmit = async (e) => {
-        e.preventDefault();
-      
-        const currentDate = new Date().toISOString().split("T")[0]; // Today's date
-        const dataToSubmit = { 
-          ...resumeData, 
-          date: currentDate, // Ensure this is added
-        };
-      
-        try {
-          const response = await axios.post("https://api.test.hachion.co/resume/add", dataToSubmit);
-          if (response.status === 200) {
-            alert("Resume details added successfully");
-            setResumeData([...resumeData, dataToSubmit]); // Update local state
-            handleReset(); // Clear form fields
-          }
-        } catch (error) {
-          console.error("Error adding resume:", error.message);
-          alert("Error adding resume.");
-        }
-      };
-    const handleAddTrendingCourseClick = () => {setShowAddCourse(true);
+  const handleDeleteConfirmation = (resume_id) => {
+    if (window.confirm("Are you sure you want to delete this Resume details")) {
+      handleDelete(resume_id);
     }
-    useEffect(() => {
-      const fetchCategory = async () => {
-        try {
-          const response = await axios.get("https://api.test.hachion.co/course-categories/all");
-          setCourse(response.data); // Assuming the data contains an array of trainer objects
-        } catch (error) {
-          console.error("Error fetching categories:", error.message);
-        }
-      };
-      fetchCategory();
-    }, []);
-    useEffect(() => {
-      const fetchCourseCategory = async () => {
-        try {
-          const response = await axios.get("https://api.test.hachion.co/courses/all");
-          setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
-        } catch (error) {
-          console.error("Error fetching categories:", error.message);
-        }
-      };
-      fetchCourseCategory();
-    }, []);
-useEffect(() => {
-                      if (resumeData.category_name) {
-                        const filtered = courseCategory.filter(
-                          (course) => course.courseCategory === resumeData.category_name
-                        );
-                        setFilterCourse(filtered);
-                      } else {
-                        setFilterCourse([]); // Reset when no category is selected
-                      }
-                    }, [resumeData.category_name, courseCategory]);
+  };
+
+  const handleDateFilter = () => {
+    const filtered = resume.filter((item) => {
+      const videoDate = new Date(item.date); // Parse the date field
+      const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+      const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+
+      return (
+        (!start || videoDate >= start) &&
+        (!end || videoDate <= end)
+      );
+    });
+
+    setFilteredResume(filtered);
+  };
+
+  const handleSave = async () => {
+    try {
+      const response = await axios.put(
+        `https://api.test.hachion.co/resume/update/${editedData.resume_id}`, editedData
+      );
+      setResume((prev) =>
+        prev.map(curr =>
+          curr.resume_id === editedData.resume_id ? response.data : curr
+        )
+      );
+      setFilteredResume((prev) =>
+        prev.map(curr =>
+          curr.resume_id === editedData.resume_id ? response.data : curr
+        )
+      );
+      setMessage("Resume updated successfully!");
+      setTimeout(() => setMessage(""), 5000);
+      setOpen(false);
+    } catch (error) {
+      setMessage("Error updating Resume.");
+    }
+  };
+
+  const handleDelete = async (resume_id) => {
+    try {
+      const response = await axios.delete(`https://api.test.hachion.co/resume/delete/${resume_id}`);
+      console.log("Resume deleted successfully:", response.data);
+
+      // Update state
+      setResume(prev => prev.filter(item => item.resume_id !== resume_id));
+      setFilteredResume(prev => prev.filter(item => item.resume_id !== resume_id));
+
+      // Remove from selectedIds if present
+      setSelectedIds(prev => prev.filter(id => id !== resume_id));
+
+      setSuccessMessage("Resume deleted successfully!");
+      setErrorMessage("");
+
+      setTimeout(() => setSuccessMessage(""), 4000);
+
+    } catch (error) {
+      console.error("Error deleting Resume:", error);
+
+      setErrorMessage("Failed to delete resume.");
+      setSuccessMessage("");
+
+      setTimeout(() => setErrorMessage(""), 4000);
+    }
+  };
+
+  useEffect(() => {
+    const filtered = resume.filter(resume =>
+      resume.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      resume.category_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      resume.junior_level.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      resume.middle_level.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      resume.senior_level.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredResume(filtered);
+  }, [searchTerm, resume]);
+
+  const handleClickOpen = (row) => {
+    console.log(row);
+    setEditedData(row)// Set the selected row data
+    setOpen(true); // Open the modal
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setResumeData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const currentDate = new Date().toISOString().split("T")[0]; // Today's date
+    const dataToSubmit = {
+      ...resumeData,
+      date: currentDate, // Ensure this is added
+    };
+
+    try {
+      const response = await axios.post("https://api.test.hachion.co/resume/add", dataToSubmit);
+      if (response.status === 200) {
+        alert("Resume details added successfully");
+        setResumeData([...resumeData, dataToSubmit]); // Update local state
+        handleReset(); // Clear form fields
+      }
+    } catch (error) {
+      console.error("Error adding resume:", error.message);
+      alert("Error adding resume.");
+    }
+  };
+
+  const handleAddTrendingCourseClick = () => { setShowAddCourse(true); }
+
+  useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        const response = await axios.get("https://api.test.hachion.co/course-categories/all");
+        setCourse(response.data); // Assuming the data contains an array of trainer objects
+      } catch (error) {
+        console.error("Error fetching categories:", error.message);
+      }
+    };
+    fetchCategory();
+  }, []);
+
+  useEffect(() => {
+    const fetchCourseCategory = async () => {
+      try {
+        const response = await axios.get("https://api.test.hachion.co/courses/all");
+        setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
+      } catch (error) {
+        console.error("Error fetching categories:", error.message);
+      }
+    };
+    fetchCourseCategory();
+  }, []);
+
+  useEffect(() => {
+    if (resumeData.category_name) {
+      const filtered = courseCategory.filter(
+        (course) => course.courseCategory === resumeData.category_name
+      );
+      setFilterCourse(filtered);
+    } else {
+      setFilterCourse([]); // Reset when no category is selected
+    }
+  }, [resumeData.category_name, courseCategory]);
+
+  // Handle Select All checkbox
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allIds = displayedCategories.map(resume => resume.resume_id);
+      setSelectedIds(allIds);
+      setSelectAll(true);
+    } else {
+      setSelectedIds([]);
+      setSelectAll(false);
+    }
+  };
+
+  // Handle individual checkbox
+  const handleSelectOne = (id) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+      setSelectAll(false);
+    } else {
+      const newSelectedIds = [...selectedIds, id];
+      setSelectedIds(newSelectedIds);
+      // Check if all items are selected
+      if (newSelectedIds.length === displayedCategories.length) {
+        setSelectAll(true);
+      }
+    }
+  };
+
+  // Update selectAll state when page changes
+  useEffect(() => {
+    const allCurrentPageIds = displayedCategories.map(resume => resume.resume_id);
+    const allSelected = allCurrentPageIds.length > 0 &&
+      allCurrentPageIds.every(id => selectedIds.includes(id));
+    setSelectAll(allSelected);
+  }, [currentPage, displayedCategories, selectedIds]);
+
+  // Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      setErrorMessage("Please select at least one resume to delete");
+      setTimeout(() => setErrorMessage(""), 3000);
+      return;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'resume' : 'resumes'}?`;
+
+    if (window.confirm(confirmMessage)) {
+      try {
+        // Delete all selected resumes
+        await Promise.all(
+          selectedIds.map(id =>
+            axios.delete(`https://api.test.hachion.co/resume/delete/${id}`)
+          )
+        );
+
+        // Update state
+        setResume(prev => prev.filter(item => !selectedIds.includes(item.resume_id)));
+        setFilteredResume(prev => prev.filter(item => !selectedIds.includes(item.resume_id)));
+
+        setSelectedIds([]);
+        setSelectAll(false);
+
+        setSuccessMessage(`${selectedIds.length} ${selectedIds.length === 1 ? 'resume' : 'resumes'} deleted successfully`);
+        setErrorMessage("");
+
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 6000);
+      } catch (error) {
+        console.error("Error deleting resumes:", error);
+        setSuccessMessage("");
+        setErrorMessage("Error deleting some resumes. Please try again.");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 6000);
+      }
+    }
+  };
 
   return (
-    
-    <>  
-     {showAddCourse ?  (<div className='course-category'>
-      <nav aria-label="breadcrumb">
-                    <ol className="breadcrumb">
-                      <li className="breadcrumb-item">
-                      <a href="#!" onClick={() => setShowAddCourse(false)}>Resume</a> <MdKeyboardArrowRight />
-                      </li>
-                      <li className="breadcrumb-item active" aria-current="page">
-                        Add Resume
-                      </li>
-                    </ol>
-                  </nav>
-<div className='category'>
-<div className='category-header'>
-<p style={{ marginBottom: 0 }}>Add Resume</p>
-</div>
-<div className='course-details'>
-<div className='course-row'>
 
-  <div class="col-md-3">
-    <label for="inputState" class="form-label">Category Name</label>
-    <select id="inputState" class="form-select" name='category_name' value={resumeData.category_name} onChange={handleChange}>
-    <option value="" disabled>
-          Select Category
-        </option>
-        {course.map((curr) => (
-          <option key={curr.id} value={curr.name}>
-            {curr.name}
-          </option>
-        ))}
-    </select>
-
-</div>
-<div className="col-md-3">
-        <label htmlFor="course" className="form-label">Course Name</label>
-        <select
-          id="course"
-          className="form-select"
-          name="course_name"
-          value={resumeData.course_name}
-          onChange={handleChange}
-          disabled={!resumeData.category_name}
-        >
-          <option value="" disabled>Select Course</option>
-          {filterCourse.map((curr) => (
-            <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
-          ))}
-        </select>
-      </div>
-  
-  </div>
-  <div class="mb-6">
-  <label for="exampleFormControlTextarea1" class="form-label">Enter Junior level Position Path</label>
-  <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
-  name="junior_level"
-  value={resumeData.junior_level}
-  onChange={handleChange}/></div>
-   <div class="mb-6">
-  <label for="exampleFormControlTextarea1" class="form-label">Enter middle level Position Path</label>
-  <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
-  name="middle_level"
-  value={resumeData.middle_level}
-  onChange={handleChange}/></div>
-     <div class="mb-6">
-  <label for="exampleFormControlTextarea1" class="form-label">Enter senior level Position Path</label>
-  <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
-  name="senior_level"
-  value={resumeData.senior_level}
-  onChange={handleChange}/></div>
-
-
-
-<div className="course-row">
-  <button className='submit-btn' onClick={handleSubmit}>Submit</button>
-  <button className='reset-btn' onClick={handleReset}>Reset</button>
-  
-</div>
-</div>
-</div>
-</div>
-):(<div>
-   <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className='course-category'>
-       
+    <>
+      {showAddCourse ? (<div className='course-category'>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <a href="#!" onClick={() => setShowAddCourse(false)}>Resume</a> <MdKeyboardArrowRight />
+            </li>
+            <li className="breadcrumb-item active" aria-current="page">
+              Add Resume
+            </li>
+          </ol>
+        </nav>
         <div className='category'>
           <div className='category-header'>
-            <p style={{ marginBottom: 0 }}>Resume</p>
+            <p style={{ marginBottom: 0 }}>Add Resume</p>
           </div>
-          <div className='date-schedule'>
-            Start Date
-            <DatePicker 
-    selected={startDate} 
-    onChange={(date) => setStartDate(date)} 
-    isClearable 
-    sx={{
-      '& .MuiIconButton-root':{color: '#00aeef'}
-   }}/>
-            End Date
-            <DatePicker 
-    selected={endDate} 
-    onChange={(date) => setEndDate(date)} 
-    isClearable 
-    sx={{
-      '& .MuiIconButton-root':{color: '#00aeef'}
-   }}
-  />
-            <button className='filter' onClick={handleDateFilter} >Filter</button>
-           
-          </div>
-          <div className='entries'>
-            <div className='entries-left'>
-            <p style={{ marginBottom: '0' }}>Show</p>
-  <div className="btn-group">
-    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-      {rowsPerPage}
-    </button>
-    <ul className="dropdown-menu">
-      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
-      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
-      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
-    </ul>
-  </div>
-  <p style={{ marginBottom: '0' }}>entries</p>
-</div>
-            <div className='entries-right'>
-              <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
-                <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}/>
-                <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
+          <div className='course-details'>
+            <div className='course-row'>
+
+              <div class="col-md-3">
+                <label for="inputState" class="form-label">Category Name</label>
+                <select id="inputState" class="form-select" name='category_name' value={resumeData.category_name} onChange={handleChange}>
+                  <option value="" disabled>
+                    Select Category
+                  </option>
+                  {course.map((curr) => (
+                    <option key={curr.id} value={curr.name}>
+                      {curr.name}
+                    </option>
+                  ))}
+                </select>
+
               </div>
-              <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick} >
-                <FiPlus /> Add Resume
-              </button>
+              <div className="col-md-3">
+                <label htmlFor="course" className="form-label">Course Name</label>
+                <select
+                  id="course"
+                  className="form-select"
+                  name="course_name"
+                  value={resumeData.course_name}
+                  onChange={handleChange}
+                  disabled={!resumeData.category_name}
+                >
+                  <option value="" disabled>Select Course</option>
+                  {filterCourse.map((curr) => (
+                    <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+                  ))}
+                </select>
+              </div>
+
+            </div>
+            <div class="mb-6">
+              <label for="exampleFormControlTextarea1" class="form-label">Enter Junior level Position Path</label>
+              <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
+                name="junior_level"
+                value={resumeData.junior_level}
+                onChange={handleChange} /></div>
+            <div class="mb-6">
+              <label for="exampleFormControlTextarea1" class="form-label">Enter middle level Position Path</label>
+              <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
+                name="middle_level"
+                value={resumeData.middle_level}
+                onChange={handleChange} /></div>
+            <div class="mb-6">
+              <label for="exampleFormControlTextarea1" class="form-label">Enter senior level Position Path</label>
+              <input type="text" id="inputtext6" class="form-control" aria-describedby="passwordHelpInline"
+                name="senior_level"
+                value={resumeData.senior_level}
+                onChange={handleChange} /></div>
+
+
+
+            <div className="course-row">
+              <button className='submit-btn' onClick={handleSubmit}>Submit</button>
+              <button className='reset-btn' onClick={handleReset}>Reset</button>
+
             </div>
           </div>
-
         </div>
       </div>
-    </LocalizationProvider>
-  <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell  align='center' sx={{ width: '100px' }}>
-              <Checkbox />
-            </StyledTableCell>
-            <StyledTableCell align='center' sx={{ width: '100px' }}>S.No.</StyledTableCell>
-            <StyledTableCell align='center'>Category Name</StyledTableCell>
-            <StyledTableCell align='center'>Course Name</StyledTableCell>
-            <StyledTableCell align="center">Junior level position link</StyledTableCell>
-            <StyledTableCell align="center">Middle  level position link</StyledTableCell>
-            <StyledTableCell align="center">Senior level position link </StyledTableCell>
-            <StyledTableCell align="center">Created Date</StyledTableCell>
-            <StyledTableCell align="center" sx={{ width: '150px' }}>Action</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-        {displayedCategories.length > 0 ? (
-  displayedCategories.map((row, index) => (
-    <StyledTableRow key={row.resume_id}>
-      <StyledTableCell align="center">
-        <Checkbox />
-      </StyledTableCell>
-      <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell> {/* S.No. */}
-      <StyledTableCell align="left">{row.category_name}</StyledTableCell>
-      <StyledTableCell align="left">{row.course_name}</StyledTableCell>
-      <StyledTableCell align="left">{row.junior_level}</StyledTableCell>
-      <StyledTableCell align="left">{row.middle_level}</StyledTableCell>
-      <StyledTableCell align="left">
-  {row.senior_level}
-</StyledTableCell>
-      <StyledTableCell align="center">{row.date? dayjs(row.date).format('MMM-DD-YYYY').toUpperCase() : 'N/A'}</StyledTableCell>
-      <StyledTableCell align="center">
-      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-        <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
-        <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.resume_id)} />
-        </div>
-      </StyledTableCell>
-    </StyledTableRow>
- ))
-) : (
-  <p>No Data available</p>
-)}
-</TableBody>
-    </Table>
-    </TableContainer>
-        <div className='pagination-container'>
-              <AdminPagination
-          currentPage={currentPage}
-          rowsPerPage={rowsPerPage}
-          totalRows={filteredResume.length} // Use the full list for pagination
-          onPageChange={handlePageChange}
-        />
-                  </div>
-        {message && <div className="success-message">{message}</div>}
-    
-        </div>)}
+      ) : (<div>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <div className='course-category'>
 
-    <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
+            <div className='category'>
+              <div className='category-header'>
+                <p style={{ marginBottom: 0 }}>Resume</p>
+              </div>
+              <div className='date-schedule'>
+                Start Date
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  isClearable
+                  sx={{
+                    '& .MuiIconButton-root': { color: '#00aeef' }
+                  }} />
+                End Date
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  isClearable
+                  sx={{
+                    '& .MuiIconButton-root': { color: '#00aeef' }
+                  }}
+                />
+                <button className='filter' onClick={handleDateFilter} >Filter</button>
+
+              </div>
+              <div className='entries'>
+                <div className='entries-left'>
+                  <p style={{ marginBottom: '0' }}>Show</p>
+                  <div className="btn-group">
+                    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                      {rowsPerPage}
+                    </button>
+                    <ul className="dropdown-menu">
+                      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+                      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+                      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+                    </ul>
+                  </div>
+                  <p style={{ marginBottom: '0' }}>entries</p>
+                </div>
+                <div className='entries-right'>
+                  <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
+                    <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)} />
+                    <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
+                  </div>
+                  {selectedIds.length > 0 && (
+                    <button
+                      type="button"
+                      className="btn-category"
+                      onClick={handleBulkDelete}
+                      style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
+                    >
+                      <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+                    </button>
+                  )}
+                  <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick} >
+                    <FiPlus /> Add Resume
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </LocalizationProvider>
+
+        {/* Success and Error Messages */}
+        {successMessage && <p style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</p>}
+        {errorMessage && <p style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</p>}
+
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell align='center' sx={{ width: '50px' }}>
+                  <Checkbox
+                    checked={selectAll}
+                    onChange={handleSelectAll}
+                    indeterminate={selectedIds.length > 0 && selectedIds.length < displayedCategories.length}
+                  />
+                </StyledTableCell>
+                <StyledTableCell align='center' sx={{ width: '100px' }}>S.No.</StyledTableCell>
+                <StyledTableCell align='center'>Category Name</StyledTableCell>
+                <StyledTableCell align='center'>Course Name</StyledTableCell>
+                <StyledTableCell align="center">Junior level position link</StyledTableCell>
+                <StyledTableCell align="center">Middle  level position link</StyledTableCell>
+                <StyledTableCell align="center">Senior level position link </StyledTableCell>
+                <StyledTableCell align="center">Created Date</StyledTableCell>
+                <StyledTableCell align="center" sx={{ width: '150px' }}>Action</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {displayedCategories.length > 0 ? (
+                displayedCategories.map((row, index) => (
+                  <StyledTableRow key={row.resume_id}>
+                    <StyledTableCell align="center">
+                      <Checkbox
+                        checked={selectedIds.includes(row.resume_id)}
+                        onChange={() => handleSelectOne(row.resume_id)}
+                      />
+                    </StyledTableCell>
+                    <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell> {/* S.No. */}
+                    <StyledTableCell align="left">{row.category_name}</StyledTableCell>
+                    <StyledTableCell align="left">{row.course_name}</StyledTableCell>
+                    <StyledTableCell align="left">{row.junior_level}</StyledTableCell>
+                    <StyledTableCell align="left">{row.middle_level}</StyledTableCell>
+                    <StyledTableCell align="left">
+                      {row.senior_level}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">{row.date ? dayjs(row.date).format('MMM-DD-YYYY').toUpperCase() : 'N/A'}</StyledTableCell>
+                    <StyledTableCell align="center">
+                      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+                        <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
+                        <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.resume_id)} />
+                      </div>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))
+              ) : (
+                <StyledTableRow>
+                  <StyledTableCell colSpan={9} align="center">
+                    No Data available
+                  </StyledTableCell>
+                </StyledTableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <div className='pagination-container'>
+          <AdminPagination
+            currentPage={currentPage}
+            rowsPerPage={rowsPerPage}
+            totalRows={filteredResume.length} // Use the full list for pagination
+            onPageChange={handlePageChange}
+          />
+        </div>
+        {message && <div className="success-message">{message}</div>}
+
+      </div>)}
+
+      <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
         PaperProps={{
           style: { borderRadius: 20 },
         }}>
-      <div className="dialog-title">
-    <DialogTitle id="edit-schedule-dialog">Edit  Resume</DialogTitle>
-    <Button onClick={handleClose} className="close-btn">
-      <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
-    </Button>
-  </div>
-  <DialogContent>
-  <div className="course-row">
-    <div className="col">
-      <label htmlFor="categoryName" className="form-label">Category Name</label>
-      <select
-        id="categoryName"
-        className="form-select"
-        name="category_name"
-        value={editedData.category_name || ""}
-        onChange={handleInputChange}
-      >
-         <option value="" disabled>
-          Select Category
-        </option>
-        {course.map((curr) => (
-          <option key={curr.id} value={curr.name}>
-            {curr.name}
-          </option>
-        ))}
-      </select>
-    </div>
+        <div className="dialog-title">
+          <DialogTitle id="edit-schedule-dialog">Edit  Resume</DialogTitle>
+          <Button onClick={handleClose} className="close-btn">
+            <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
+          </Button>
+        </div>
+        <DialogContent>
+          <div className="course-row">
+            <div className="col">
+              <label htmlFor="categoryName" className="form-label">Category Name</label>
+              <select
+                id="categoryName"
+                className="form-select"
+                name="category_name"
+                value={editedData.category_name || ""}
+                onChange={handleInputChange}
+              >
+                <option value="" disabled>
+                  Select Category
+                </option>
+                {course.map((curr) => (
+                  <option key={curr.id} value={curr.name}>
+                    {curr.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-    <div className="col">
-      <label htmlFor="courseName" className="form-label">Course Name</label>
-      <select
-        id="courseName"
-        className="form-select"
-        name="course_name"
-        value={editedData.course_name || ""}
-        onChange={handleInputChange}
-      >
-        <option value="" disabled>
-          Select Course
-        </option>
-        {courseCategory.map((curr) => (
-          <option key={curr.id} value={curr.courseName}>
-            {curr.courseName}
-          </option>
-        ))}
-      </select>
-    </div>
-    </div>
+            <div className="col">
+              <label htmlFor="courseName" className="form-label">Course Name</label>
+              <select
+                id="courseName"
+                className="form-select"
+                name="course_name"
+                value={editedData.course_name || ""}
+                onChange={handleInputChange}
+              >
+                <option value="" disabled>
+                  Select Course
+                </option>
+                {courseCategory.map((curr) => (
+                  <option key={curr.id} value={curr.courseName}>
+                    {curr.courseName}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-    <label htmlFor="topic">Enter junior level position path</label>
-    <input
-      id="topic"
-      className="form-control"
-      name="junior_level"
-      value={editedData.junior_level || ""}
-      onChange={handleInputChange}
-    />
-    
-    <label htmlFor="topic">Enter Middle level position path</label>
-    <input
-      id="topic"
-      className="form-control"
-      name="middle_level"
-      value={editedData.middle_level || ""}
-      onChange={handleInputChange}
-    />
+          <label htmlFor="topic">Enter junior level position path</label>
+          <input
+            id="topic"
+            className="form-control"
+            name="junior_level"
+            value={editedData.junior_level || ""}
+            onChange={handleInputChange}
+          />
+
+          <label htmlFor="topic">Enter Middle level position path</label>
+          <input
+            id="topic"
+            className="form-control"
+            name="middle_level"
+            value={editedData.middle_level || ""}
+            onChange={handleInputChange}
+          />
           <label htmlFor="topic">Enter Senior level position path</label>
-    <input
-      id="topic"
-      className="form-control"
-      name="senior_level"
-      value={editedData.senior_level || ""}
-      onChange={handleInputChange}
-    />
-  </DialogContent>
-  <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
-    <Button onClick={handleSave} className="update-btn">Update</Button>
-  </DialogActions>
-</Dialog>
+          <input
+            id="topic"
+            className="form-control"
+            name="senior_level"
+            value={editedData.senior_level || ""}
+            onChange={handleInputChange}
+          />
+        </DialogContent>
+        <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
+          <Button onClick={handleSave} className="update-btn">Update</Button>
+        </DialogActions>
+      </Dialog>
 
-    {/* <div
+      {/* <div
                   className='modal fade'
                   id='exampleModal'
                   tabIndex='-1'
@@ -585,6 +722,6 @@ useEffect(() => {
                     </div>
                     </div>
                     </div> */}
-   
- </> );
+
+    </>);
 }

@@ -182,27 +182,27 @@ const Footer = () => {
         </div>
         <hr />
         {/* ✅ DYNAMIC COURSE KEYWORDS (REPLACED FIRST HACHION) */}
-          <div className="footer-head">
-            {/* <p className="footer-heading">
+        <div className="footer-head">
+          {/* <p className="footer-heading">
   {normalizedCourseName || 'Course Keywords'}
 </p> */}
-            <p className="footer-heading">Popular Searches</p>
+          <p className="footer-heading">Popular Searches</p>
 
 
-            <div className="footer-column-search">
-              {geoLoading ? (
-                <p>Loading...</p>
-              ) : geoKeywords.length > 0 ? (
-                geoKeywords.map(item => (
-                  <p key={item.geoKeywordId} className="footer-content-search">
-                    {item.geoKeywordName}
-                  </p>
-                ))
-              ) : (
-                <p>No keywords available</p>
-              )}
-            </div>
+          <div className="footer-column-search">
+            {geoLoading ? (
+              <p>Loading...</p>
+            ) : geoKeywords.length > 0 ? (
+              geoKeywords.map(item => (
+                <p key={item.geoKeywordId} className="footer-content-search">
+                  {item.geoKeywordName}
+                </p>
+              ))
+            ) : (
+              <p>No keywords available</p>
+            )}
           </div>
+        </div>
       </div>
     </div>
   );

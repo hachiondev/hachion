@@ -789,57 +789,63 @@
 }
 
 @media (max-width: 480px) {
+  /* Wrapper */
   .lswrap {
     padding: 24px 16px;
   }
 
+  /* Tabs */
   .tabContainer {
     background: none;
     box-shadow: none;
-    gap: 8px;
+    gap: 10px;
   }
 
   .tab {
-    margin: 0;
-    padding: 14px 0;
+    padding: 14px 16px;
     font-size: 15px;
     font-weight: 600;
     min-height: 48px;
-    border-radius: 12px;
+    border-radius: 14px;
     color: #000;
     flex: 0 0 auto;
-    min-width: 100%;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
     border: 2px solid transparent;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
   }
 
   .tab:hover {
     transform: translateY(-2px);
   }
 
-  .tab:not(:last-child) {
-    border-right: none;
-  }
-
   .activeTab {
     color: #ffffff !important;
     border: 2px solid #00aeef;
-    box-shadow: 0 8px 25px rgba(31, 182, 255, 0.3);
+    box-shadow: 0 8px 22px rgba(31, 182, 255, 0.28);
   }
 
+  /* Content */
   .tabContent {
     padding: 24px 16px;
-    min-height: 280px;
+    min-height: auto;
+    border-radius: 16px;
   }
 
+  /* Headings */
+  .lsh2 {
+    font-size: 24px;
+    margin-bottom: 18px;
+  }
+
+  /* Learn list */
   .lslist {
-    gap: 10px;
+    gap: 12px;
   }
 
   .lslistitem {
     font-size: 14px;
-    gap: 12px;
     padding: 12px 16px;
+    gap: 12px;
   }
 
   .lsicon {
@@ -847,32 +853,40 @@
     height: 20px;
   }
 
+  /* Bullets */
   .lsbullets {
-    gap: 8px;
     font-size: 14px;
-    padding: 0;
+    gap: 10px;
   }
 
   .lsbullets li {
-    padding: 10px 16px;
+    padding: 12px 16px 12px 28px;
   }
 
+  /* Pills */
   .lspills {
+    grid-template-columns: 1fr;
     gap: 12px;
   }
 
   .lspill {
-    font-size: 13px;
-    padding: 10px 16px;
+    font-size: 14px;
+    padding: 10px 18px;
+  }
+
+  /* Tools section */
+  .lstoolstitle {
+    font-size: 22px;
+    margin-bottom: 12px;
   }
 
   .lstoolsgrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
   }
 
   .lstoolcard {
-    padding: 16px 12px;
+    padding: 16px 14px;
   }
 
   .lstoolicon {
@@ -886,8 +900,118 @@
     height: 32px;
   }
 
+  .lstoolname {
+    font-size: 15px;
+  }
+
+  .lstoollink {
+    font-size: 12px;
+  }
+
+  /* Buttons */
+  .readMoreBtn,
+  .readMoreBtn2 {
+    width: 100%;
+    font-size: 14px;
+    padding: 12px 0;
+  }
+}
+
+
+@media (max-width: 375px) {
+  /* Wrapper */
+  .lswrap {
+    padding: 20px 14px;
+  }
+
+  /* Tabs */
+  .tabContainer {
+    gap: 10px;
+  }
+
+  .tab {
+    padding: 14px 12px;
+    font-size: 14px;
+    min-height: 48px;
+    border-radius: 14px;
+  }
+
+  .activeTab {
+    box-shadow: 0 6px 18px rgba(31, 182, 255, 0.25);
+  }
+
+  /* Content */
+  .tabContent {
+    padding: 20px 14px;
+    min-height: auto;
+  }
+
+  /* Headings */
+  .lsh2 {
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+
+  /* Lists */
+  .lslist {
+    gap: 10px;
+  }
+
+  .lslistitem {
+    font-size: 13.5px;
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .lsicon {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Bullets */
+  .lsbullets {
+    font-size: 13px;
+    gap: 8px;
+  }
+
+  .lsbullets li {
+    padding: 10px 14px 10px 26px;
+  }
+
+  /* Pills */
+  .lspills {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .lspill {
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+
+  /* Tools */
   .lstoolstitle {
     font-size: 20px;
+  }
+
+  .lstoolsgrid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .lstoolcard {
+    padding: 14px;
+  }
+
+  .lstoolicon {
+    width: 48px;
+    height: 48px;
+    padding: 8px;
+  }
+
+  .lstooliconimg {
+    width: 28px;
+    height: 28px;
   }
 
   .lstoolname {
@@ -898,39 +1022,12 @@
     font-size: 12px;
   }
 
+  /* Buttons */
   .readMoreBtn,
   .readMoreBtn2 {
-    font-size: 14px;
-    margin-top: 20px;
-    padding: 10px 28px;
     width: 100%;
-  }
-}
-
-@media (max-width: 375px) {
-  .tab {
-    padding: 12px 0;
     font-size: 14px;
-  }
-
-  .tabContent {
-    padding: 20px 14px;
-  }
-
-  .lslistitem {
-    font-size: 13px;
-  }
-
-  .lsbullets {
-    font-size: 13px;
-  }
-
-  .lsbullets li {
-    padding: 8px 14px;
-  }
-
-  .lstoolsgrid {
-    grid-template-columns: 1fr;
+    padding: 12px 0;
   }
 }
 

@@ -9,6 +9,7 @@ import { useAssessmentAccess } from "../../../../Api/hooks/CurriculumApi/useAsse
 import { useCourseByName } from "../../../../Api/hooks/CourseApi/useCourseByName";
 import { useProjectsByCourseName } from "../../../../Api/hooks/CurriculumApi/useProjectsByCourseName";
 import { saveRedirectUrl } from "../../../../redirectAfterLogin";
+import LoginModal from "../../Common/Loginmodal";
 
 function toEmbedUrl(url) {
   if (!url) return "";
@@ -224,11 +225,11 @@ export default function CourseCurriculum({ onViewDemoClass }) {
         {/* HEADER */}
         <div className={styles.cchead}>
           {/* <h2>Course Curriculum</h2> */}
-         <h2>
-  {courseDetails?.courseName
-    ? `${courseDetails.courseName} Course Curriculum`
-    : "Course Curriculum"}
-</h2>
+          <h2>
+            {courseDetails?.courseName
+              ? `${courseDetails.courseName} Course Curriculum`
+              : "Course Curriculum"}
+          </h2>
 
 
 
@@ -246,12 +247,12 @@ export default function CourseCurriculum({ onViewDemoClass }) {
         <div className={styles.ccgrid}>
           {/* LEFT SIDE ACCORDION */}
           <div className={styles.ccgridbody}>
-            {(uiCurriculum.length === 0 || 
+            {(uiCurriculum.length === 0 ||
               uiCurriculum.filter((m) => m.title && m.title.trim() !== "").length === 0) && (
-              <div className={styles.noDataMessage}>
-                <p>No curriculum available.</p>
-              </div>
-            )}
+                <div className={styles.noDataMessage}>
+                  <p>No curriculum available.</p>
+                </div>
+              )}
 
             {uiCurriculum
               .filter((m) => m.title && m.title.trim() !== "")
@@ -519,41 +520,51 @@ export default function CourseCurriculum({ onViewDemoClass }) {
 
         {/* LOGIN PROMPT MODAL */}
         {showRegisterPrompt && (
-          <div className={styles.modalOverlay}>
-            <div className={styles.modalContent}>
-              <div className={styles.modalImage}>
-                <img
-                  src={require("../../../../Assets/loginpopup.webp")}
-                  alt="login popup"
-                  className={styles.modalImg}
-                />
-              </div>
+          // <div className={styles.modalOverlay}>
+          //   <div className={styles.modalContent}>
+          //     <div className={styles.modalImage}>
+          //       <img
+          //         src={require("../../../../Assets/loginpopup.webp")}
+          //         alt="login popup"
+          //         className={styles.modalImg}
+          //       />
+          //     </div>
 
-              <div className={styles.modalText}>
-                <h3>Please Login</h3>
-                <p>Login to access assignments and syllabus.</p>
+          //     <div className={styles.modalText}>
+          //       <h3>Please Login</h3>
+          //       <p>Login to access assignments and syllabus.</p>
 
-                <div className={styles.modalButtons}>
-                  <button
-                    className={styles.modalLoginBtn}
-                    onClick={() => {
-                      saveRedirectUrl(); // 🔥 Save URL before navigating
-                      navigation("/login");
-                    }}
-                  >
-                    Login
-                  </button>
+          //       <div className={styles.modalButtons}>
+          //         <button
+          //           className={styles.modalLoginBtn}
+          //           onClick={() => {
+          //             saveRedirectUrl(); // 🔥 Save URL before navigating
+          //             navigation("/login");
+          //           }}
+          //         >
+          //           Login
+          //         </button>
 
-                  <button
-                    className={styles.modalCancelBtn}
-                    onClick={() => setShowRegisterPrompt(false)}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          //         <button
+          //           className={styles.modalCancelBtn}
+          //           onClick={() => setShowRegisterPrompt(false)}
+          //         >
+          //           Cancel
+          //         </button>
+          //       </div>
+          //     </div>
+          //   </div>
+          // </div>
+          <LoginModal isOpen={showRegisterPrompt} description="Login to access assignments and syllabus." onLogin={() => {
+            // 🔥 Save current URL before redirecting to login
+            saveRedirectUrl();
+            navigation("/login");
+            setShowRegisterPrompt(false);
+          }}
+            onClose={() => {
+              setShowRegisterPrompt(false)
+            }}
+          />
         )}
 
         {/* ENROLL PROMPT MODAL */}

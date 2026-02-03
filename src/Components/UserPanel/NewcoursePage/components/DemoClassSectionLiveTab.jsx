@@ -56,6 +56,12 @@ What's Included:
     userProfile?.studentId || "",
     courseName || ""
   );
+
+  const sessionsToRender =
+  userProfile?.studentId && checkedSessions.length > 0
+    ? checkedSessions
+    : selectedGroup?.sessions || [];
+
   const navigate = useNavigate();
   const { mutate: resendDemoEmail } = useResendEnrollEmail();
   const { mutate: resendLiveClassEmail } = useResendLiveClassEnrollEmail();
@@ -299,7 +305,11 @@ const handleEnrollWithLoginCheck = (sess) => {
                   boxSizing: "border-box",
                 }}
               >
-                {checkedSessions.map((sess) => (
+                {sessionsToRender.map((sess) => {
+  const isEnrolled = sess._isEnrolled ?? false;
+
+  return (
+
                   <div key={sess.id} className={styles.dcdetailrow}>
                     <div>
                       <div className={styles.dcmuted}>
@@ -314,7 +324,7 @@ const handleEnrollWithLoginCheck = (sess) => {
 
                       </div>
                     </div>
-                    {sess.mode === "Live Demo" && sess._isEnrolled ? (
+                    {sess.mode === "Live Demo" && isEnrolled ? (
                       /* =========================
                          LIVE DEMO → OLD BEHAVIOR
                          ========================= */
@@ -371,7 +381,7 @@ resendFn(
                               : "Resend"}
                         </button>
                       </div>
-                    ) : sess.mode === "Live Class" && sess._isEnrolled && Number(sess.amount) > 0
+                    ) : sess.mode === "Live Class" && isEnrolled && Number(sess.amount) > 0
  ? (
                       /* =========================
                          LIVE CLASS → PAID → ENROLLED
@@ -473,7 +483,9 @@ resendFn(
 
 
                   </div>
-                ))}
+                  );
+})}
+
 
 
 

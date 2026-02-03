@@ -85,6 +85,7 @@ export function useDemoLivePayment({
     }
     /* ====================================================== */
 
+
     
     if (!notifyVia?.isPayNow) {
       try {
@@ -278,8 +279,73 @@ export function useDemoLivePayment({
       }
     }
   };
+const handleEnrollPayLater = async (sessionWithNotify) => {
+  setEnrollSuccessMessage("");
+  setEnrollErrorMessage("");
 
+  const { notifyVia, ...session } = sessionWithNotify;
+
+  if (!session) {
+    setEnrollErrorMessage("No session selected.");
+    return;
+  }
+
+  if (!userProfile?.email) {
+    setEnrollErrorMessage("Please login to continue.");
+    return;
+  }
+
+  const courseName =
+    session.course_name || courseData?.courseName || courseNameForApi;
+
+  try {
+    // 🔒 FINAL SAFETY CHECK
+    const check = await axios.get(`${API_BASE}/enroll/is-enrolled`, {
+      params: {
+        studentId: userProfile.studentId,
+        courseName,
+        batchId: session.batchId,
+      },
+    });
+
+    if (check?.data?.enrolled) {
+      setEnrollErrorMessage(
+        "This enrollment record already exists for Live Class in the database."
+      );
+      return;
+    }
+
+    // ✅ DIRECT ENROLL (NO RAZORPAY)
+    await axios.post(`${API_BASE}/enroll/add`, {
+      name: userProfile.userName || userProfile.name || "",
+      studentId: userProfile.studentId,
+      email: userProfile.email,
+      mobile: userProfile.mobile || "",
+      course_name: courseName,
+      enroll_date: session.schedule_date,
+      week: session.week,
+      time: session.time,
+      amount: 0,
+      mode: "Live Class",
+      type: "Live Class",
+      trainer: session.trainer || "",
+      meeting_link: session.meeting_link || "",
+      batchId: session.batchId,
+      paymentType: "PAY_LATER",
+      paymentStatus: "PENDING",
+      sendEmail: !!notifyVia?.email,
+      sendWhatsApp: !!notifyVia?.whatsapp,
+    });
+
+    setEnrollSuccessMessage("Enrollment successful. Pay later enabled.");
+
+  } catch (err) {
+    console.error(err);
+    setEnrollErrorMessage("Failed to enroll. Please try again.");
+  }
+};
   return {
     handleLiveEnrollPayment,
+    handleEnrollPayLater
   };
 }

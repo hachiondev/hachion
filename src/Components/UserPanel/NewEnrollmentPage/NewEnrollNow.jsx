@@ -597,12 +597,12 @@ const isInstallmentDisabled =
                 >
                   Enroll Now, Pay Later
                 </button> */}
-               <button
+             <button
   className={`${styles.enPayBtn} ${!selectedBatch ||
     !isTermsAccepted ||
     isEnrollmentBlocked ||
     lockButtonsUntilBatchChange ||
-    isAlreadyEnrolledForBatch     
+    isAlreadyEnrolledForBatch
       ? styles.disabledBtn
       : ""
   }`}
@@ -611,13 +611,13 @@ const isInstallmentDisabled =
     !isTermsAccepted ||
     isEnrollmentBlocked ||
     lockButtonsUntilBatchChange ||
-    isAlreadyEnrolledForBatch     
+    isAlreadyEnrolledForBatch
   }
   onClick={() => {
     setLastAction("PAY_LATER");
     selectedBatch &&
-      handleLiveEnrollPayment(selectedBatch.sessions[0], {
-        isPayNow: false,
+      handleEnrollPayLater({
+        ...selectedBatch.sessions[0],
         notifyVia,
       });
   }}

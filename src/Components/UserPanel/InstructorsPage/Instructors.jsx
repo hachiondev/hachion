@@ -331,7 +331,7 @@ const Instructors = () => {
                           src={
                             trainer.trainerImage
                               ? `https://api.test.hachion.co/${trainer.trainerImage}`
-                              : "instructordefault.png"
+                              : "defaulttrainer.jpg"
                           }
                           className="instructor-image-single"
                         />

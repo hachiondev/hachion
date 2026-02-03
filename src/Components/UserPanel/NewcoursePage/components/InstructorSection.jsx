@@ -80,9 +80,9 @@ export default function InstructorSection({
 
   const trainerImagePath = selectedTrainer?.trainerImage;
 
-const trainerImageSrc = trainerImagePath
-  ? `https://api.test.hachion.co/${trainerImagePath}`
-  : "/InstructorDefaultImage.webp";
+  const trainerImageSrc = trainerImagePath
+    ? `https://api.test.hachion.co/${trainerImagePath}`
+    : "/defaulttrainer.jpg";
 
 
   return (
@@ -103,76 +103,70 @@ const trainerImageSrc = trainerImagePath
             {/* Content */}
             <div className={styles.iscontent}>
               <div className={styles.istopline}>
-  
-
-  {/* LEFT: INFO */}
-  <div className={styles.isinfo}>
-<div className={styles.isnamesection}>
-      <h3 className={styles.isname}>{trainerName || name}</h3>
-
-    <span className={styles.isbadge}>⭐ Top Instructor</span>
-</div>
-
-    <div className={styles.istitle}>
-      {designation || title}
-    </div>
-
-    {/* Stats */}
-    <div className={styles.isstats}>
-      <div className={styles.isstat}>
-        <div className={styles.isstatval}>
-          <span className={styles.isstatico}>
-            <img src="/users.png" alt="icon" />
-          </span>
-          {experience ? `${experience}+` : stats.years}
-        </div>
-        <div className={styles.isstatlab}>Years Experience</div>
-      </div>
-
-      <div className={styles.isstat}>
-        <div className={styles.isstatval}>
-          <span className={styles.isstatico}>
-            <img src="/users.png" alt="icon" />
-          </span>
-          {stats.students}
-        </div>
-        <div className={styles.isstatlab}>Students Taught</div>
-      </div>
-
-      <div className={styles.isstat}>
-        <div className={styles.isstatval}>
-          <span className={styles.isstatico}>
-            <img src="/users.png" alt="icon" />
-          </span>
-          {finalRating}
-          <span style={{ color: "#f5a623", fontSize: "18px", marginLeft: "6px" }}>
-            {stars}
-          </span>
-        </div>
-        <div className={styles.isstatlab}>Instructor Rating</div>
-      </div>
-    </div>
-  </div>
-  {/* RIGHT: PHOTO */}
-  <div className={styles.isphoto}>
-   <img
-  src={trainerImageSrc}
-  alt={`${trainerName || name} headshot`}
-  loading="lazy"
-  onError={(e) => {
-    console.error("Trainer image failed:", trainerImageSrc);
-    e.currentTarget.src = "/InstructorDefaultImage.webp";
-  }}
-/>
-
-  </div>
-</div>
 
 
-              
+                {/* LEFT: INFO */}
+                <div className={styles.isinfo}>
+                  <div className={styles.isnamesection}>
+                    <h3 className={styles.isname}>{trainerName || name}</h3>
 
-              
+                    <span className={styles.isbadge}>⭐ Top Instructor</span>
+                  </div>
 
+                  <div className={styles.istitle}>
+                    {designation || title}
+                  </div>
+
+                  {/* Stats */}
+                  <div className={styles.isstats}>
+                    <div className={styles.isstat}>
+                      <div className={styles.isstatval}>
+                        <span className={styles.isstatico}>
+                          <img src="/users.png" alt="icon" />
+                        </span>
+                        {experience ? `${experience}+` : stats.years}
+                      </div>
+                      <div className={styles.isstatlab}>Years Experience</div>
+                    </div>
+
+                    <div className={styles.isstat}>
+                      <div className={styles.isstatval}>
+                        <span className={styles.isstatico}>
+                          <img src="/users.png" alt="icon" />
+                        </span>
+                        {stats.students}
+                      </div>
+                      <div className={styles.isstatlab}>Students Taught</div>
+                    </div>
+
+                    <div className={styles.isstat}>
+                      <div className={styles.isstatval}>
+                        <span className={styles.isstatico}>
+                          <img src="/users.png" alt="icon" />
+                        </span>
+                        {finalRating}
+                        <span style={{ color: "#f5a623", fontSize: "18px", marginLeft: "6px" }}>
+                          {stars}
+                        </span>
+                      </div>
+                      <div className={styles.isstatlab}>Instructor Rating</div>
+                    </div>
+                  </div>
+                </div>
+                {/* RIGHT: PHOTO */}
+                <div className={styles.isphoto}>
+                  <img
+                    src={trainerImageSrc}
+                    alt={`${trainerName || name} headshot`}
+                    loading="lazy"
+                    onError={(e) => {
+                      console.error("Trainer image failed:", trainerImageSrc);
+                      e.currentTarget.src = "/defaulttrainer.jpg";
+                    }}
+                  />
+
+                </div>
+              </div>
               {/* Bio */}
               <p className={styles.isbio}>
                 {trainerBio ? (
@@ -182,19 +176,19 @@ const trainerImageSrc = trainerImagePath
                 )}
               </p>
             </div>
-{/* ================= BOTTOM ROW ================= */}
-          <div className={styles.isbottomrow}>
-            <div className={styles.issubhead}>Experience & Credentials:</div>
-            <ul className={styles.islist}>
-              {(experienceCredentialsArray.length > 0
-                ? experienceCredentialsArray
-                : creds
-              ).map((c, index) => (
-                <li key={index}>{c}</li>
-              ))}
-            </ul>
-          </div>
-          {/* <div className={styles.isactions}>
+            {/* ================= BOTTOM ROW ================= */}
+            <div className={styles.isbottomrow}>
+              <div className={styles.issubhead}>Experience & Credentials:</div>
+              <ul className={styles.islist}>
+                {(experienceCredentialsArray.length > 0
+                  ? experienceCredentialsArray
+                  : creds
+                ).map((c, index) => (
+                  <li key={index}>{c}</li>
+                ))}
+              </ul>
+            </div>
+            {/* <div className={styles.isactions}>
             <button
                 className={cn(styles.isbtn, styles.isbtnoutline)}
                 onClick={onLinkedIn}
@@ -214,7 +208,7 @@ const trainerImageSrc = trainerImagePath
           </div> */}
           </div>
 
-          
+
         </div>
       </div>
     </section>

@@ -9,31 +9,31 @@ export default function Jobs() {
     setActiveTab(tab);
   };
   return (
-    <>   
-    <h3>Jobs</h3>
+    <>
+      <h3>Jobs</h3>
       <div className="certificate-tabs">
-        <div 
+        <div
           className={`tab-item ${activeTab === 'adminPostJob' ? 'active-tab' : ''}`}
           onClick={() => handleTabChange('adminPostJob')}
         >
           Jobs Posted
         </div>
-        <div 
+        <div
           className={`tab-item ${activeTab === 'adminApplyJobs' ? 'active-tab' : ''}`}
           onClick={() => handleTabChange('adminApplyJobs')}
         >
           Applied Jobs
         </div>
-        <div 
+        <div
           className={`tab-item ${activeTab === 'adminInstructorJobs' ? 'active-tab' : ''}`}
           onClick={() => handleTabChange('adminInstructorJobs')}
         >
           Instructor Applied Jobs
         </div>
       </div>
-      {activeTab==='adminPostJob' &&  <AdminPostJob/>}
-      {activeTab==='adminApplyJobs' &&  <AdminApplyJobs/>}
-      {activeTab==='adminInstructorJobs' &&  <AdminInstructorJobs/>}
+      {activeTab === 'adminPostJob' && <AdminPostJob />}
+      {activeTab === 'adminApplyJobs' && <AdminApplyJobs />}
+      {activeTab === 'adminInstructorJobs' && <AdminInstructorJobs />}
     </>
   );
 }

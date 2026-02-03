@@ -47,7 +47,15 @@ export default function OnlineEnroll() {
   const [endDate, setEndDate] = useState(null);
   const [message, setMessage] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [filteredData, setFilteredData] = useState([]);
+  
+  // ADDED: State for checkbox selection
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
   useEffect(() => {
     axios.get("https://api.test.hachion.co/enroll")
       .then((response) => {
@@ -60,79 +68,169 @@ export default function OnlineEnroll() {
   }, []);
 
   const handleDeleteConfirmation = (id) => {
-  const confirmed = window.confirm("Are you sure you want to delete this enrollment?");
-  if (confirmed) {
-    handleDelete(id);
-  }
-};
+    const confirmed = window.confirm("Are you sure you want to delete this enrollment?");
+    if (confirmed) {
+      handleDelete(id);
+    }
+  };
 
-const handleDelete = async (id) => {
-  try {
-    await axios.delete(`https://api.test.hachion.co/enroll/delete/${id}`);
-    setEnrollData((prev) => prev.filter((item) => item.id !== id));
-     setFilteredData((prev) => prev.filter((item) => item.id !== id));
-    setSuccessMessage("✅ Enrollment deleted successfully.");
-  } catch (error) {
-    console.error("Error deleting entry:", error);
-  }
-};
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`https://api.test.hachion.co/enroll/delete/${id}`);
+      setEnrollData((prev) => prev.filter((item) => item.id !== id));
+      setFilteredData((prev) => prev.filter((item) => item.id !== id));
+      
+      // Remove from selectedIds if present
+      setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
+      
+      setSuccessMessage("✅ Enrollment deleted successfully.");
+      setErrorMessage("");
+    } catch (error) {
+      console.error("Error deleting entry:", error);
+      setErrorMessage("❌ Failed to delete enrollment.");
+      setSuccessMessage("");
+    }
+  };
 
-  // const handleDelete = async (id) => {
-  //   try {
-  //     await axios.delete(`https://api.test.hachion.co/enroll/delete/${id}`);
-  //     setEnrollData(enrollData.filter((item) => item.id !== id));
-  //   } catch (error) {
-  //     console.error("Error deleting entry:", error);
-  //   }
-  // };
-
-const searchedData = filteredData.filter((item) => {
-  return (
-    searchTerm === '' ||
-    [item.batchId, item.studentId, item.name, item.email, item.mobile, item.enroll_date, item.completion_date, item.course_name, item.mode]
-      .map(field => (field || '').toLowerCase())
-      .some(field => field.includes(searchTerm.toLowerCase()))
-  );
-});
-
-const handleDateFilter = () => {
-  const filtered = enrollData.filter((item) => {
-    const enrollDate = new Date(item.date || item.enroll_date);
-    const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
-    const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+  const searchedData = filteredData.filter((item) => {
     return (
-      (!start || enrollDate >= start) &&
-      (!end || enrollDate <= end)
+      searchTerm === '' ||
+      [item.batchId, item.studentId, item.name, item.email, item.mobile, item.enroll_date, item.completion_date, item.course_name, item.mode]
+        .map(field => (field || '').toLowerCase())
+        .some(field => field.includes(searchTerm.toLowerCase()))
     );
   });
-  setFilteredData(filtered);
-};
+
+  const handleDateFilter = () => {
+    const filtered = enrollData.filter((item) => {
+      const enrollDate = new Date(item.date || item.enroll_date);
+      const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+      const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+      return (
+        (!start || enrollDate >= start) &&
+        (!end || enrollDate <= end)
+      );
+    });
+    setFilteredData(filtered);
+    setCurrentPage(1); // Reset to first page
+  };
+  
   const handleDateReset = () => {
-  setStartDate(null);
-  setEndDate(null);
-  setFilteredData(enrollData);
-};
-    const [currentPage, setCurrentPage] = useState(1);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const handlePageChange = (page) => {
-      setCurrentPage(page);
-      window.scrollTo(0, window.scrollY);
-    };
-    const handleRowsPerPageChange = (rows) => {
-      setRowsPerPage(rows);
-      setCurrentPage(1);
-    };
-    const displayedCategories = searchedData.slice(
-      (currentPage - 1) * rowsPerPage,
-      currentPage * rowsPerPage
-    );
+    setStartDate(null);
+    setEndDate(null);
+    setFilteredData(enrollData);
+    setCurrentPage(1); // Reset to first page
+  };
+  
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo(0, window.scrollY);
+  };
+  
+  const handleRowsPerPageChange = (rows) => {
+    setRowsPerPage(rows);
+    setCurrentPage(1);
+  };
+  
+  const displayedCategories = searchedData.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
+  // ADDED: Handle Select All checkbox
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allIds = displayedCategories.map(enrollment => enrollment.id);
+      setSelectedIds(allIds);
+      setSelectAll(true);
+    } else {
+      setSelectedIds([]);
+      setSelectAll(false);
+    }
+  };
+
+  // ADDED: Handle individual checkbox
+  const handleSelectOne = (id) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+      setSelectAll(false);
+    } else {
+      const newSelectedIds = [...selectedIds, id];
+      setSelectedIds(newSelectedIds);
+      // Check if all items are selected
+      if (newSelectedIds.length === displayedCategories.length) {
+        setSelectAll(true);
+      }
+    }
+  };
+
+  // ADDED: Update selectAll state when page changes
+  useEffect(() => {
+    const allCurrentPageIds = displayedCategories.map(enrollment => enrollment.id);
+    const allSelected = allCurrentPageIds.length > 0 && 
+                       allCurrentPageIds.every(id => selectedIds.includes(id));
+    setSelectAll(allSelected);
+  }, [currentPage, displayedCategories, selectedIds]);
+
+  // ADDED: Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      setErrorMessage("Please select at least one enrollment to delete");
+      setSuccessMessage("");
+      setTimeout(() => setErrorMessage(""), 3000);
+      return;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'enrollment' : 'enrollments'}?`;
+    
+    if (window.confirm(confirmMessage)) {
+      try {
+        // Delete all selected enrollments
+        await Promise.all(
+          selectedIds.map(id =>
+            axios.delete(`https://api.test.hachion.co/enroll/delete/${id}`)
+          )
+        );
+
+        // Update state
+        const updatedEnrollments = enrollData.filter(item => !selectedIds.includes(item.id));
+        setEnrollData(updatedEnrollments);
+        setFilteredData(updatedEnrollments);
+        
+        setSelectedIds([]);
+        setSelectAll(false);
+        
+        setSuccessMessage(`${selectedIds.length} ${selectedIds.length === 1 ? 'enrollment' : 'enrollments'} deleted successfully`);
+        setErrorMessage("");
+        
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 6000);
+      } catch (error) {
+        console.error("Error deleting enrollments:", error);
+        setSuccessMessage("");
+        setErrorMessage("Error deleting some enrollments. Please try again.");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 6000);
+      }
+    }
+  };
+
   return (
     <>
-        <div>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <div className='course-category'>
-        <div className='category'>
-          <div className='category-header'><p style={{ marginBottom: 0 }}>View Online Enrollment List</p></div>
+      <div>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <div className='course-category'>
+            <div className='category'>
+              <div className='category-header'>
+                <p style={{ marginBottom: 0 }}>View Online Enrollment List</p>
+              </div>
+              
+              {/* ADDED: Success and Error Messages */}
+              {successMessage && <div style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</div>}
+              {errorMessage && <div style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</div>}
+              
               <div className='date-schedule'>
                 Start Date
                 <DatePicker
@@ -153,7 +251,7 @@ const handleDateFilter = () => {
                   }}
                 />
                 <button className='filter' onClick={handleDateFilter}>Filter</button>
-              <button className="filter" onClick={handleDateReset}>Reset</button>
+                <button className="filter" onClick={handleDateReset}>Reset</button>
               </div>
               <div style={{ display: 'flex', flexDirection: 'row', justifyContent:'left', padding:'1.5vh', gap: '30' }}>
                 <div className='entries-left'>
@@ -182,84 +280,114 @@ const handleDateFilter = () => {
                     />
                     <button className="btn-search" type="submit"><IoSearch style={{ fontSize: '2rem' }} /></button>
                   </div>
+                  
+                  {/* ADDED: Bulk Delete Button */}
+                  {selectedIds.length > 0 && (
+                    <button 
+                      type="button" 
+                      className="btn-category" 
+                      onClick={handleBulkDelete}
+                      style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
+                    >
+                      <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         </LocalizationProvider>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align='center'><Checkbox /></StyledTableCell>
-              <StyledTableCell sx={{ width: 50 }} align='center'>S.No.</StyledTableCell>
-              <StyledTableCell align="center">Batch ID</StyledTableCell>
-              <StyledTableCell align="center">Student ID</StyledTableCell>
-              <StyledTableCell align="center">Student Name</StyledTableCell>
-              <StyledTableCell align="center">Email</StyledTableCell>
-              <StyledTableCell align="center">Mobile</StyledTableCell>
-              <StyledTableCell align="center">Course Name</StyledTableCell>
-              <StyledTableCell align="center">Enrollment Date</StyledTableCell>
-              <StyledTableCell align="center">Week</StyledTableCell>
-              <StyledTableCell align="center">Time</StyledTableCell>
-              <StyledTableCell align="center">Mode</StyledTableCell>
-              <StyledTableCell align="center">Type</StyledTableCell>
-              <StyledTableCell align="center">Trainer</StyledTableCell>
-              <StyledTableCell align="center">Completed Date</StyledTableCell>
-              <StyledTableCell align="center">Resend email count</StyledTableCell>
-              <StyledTableCell align="center">Action</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-          {displayedCategories.length > 0 ? (
+        
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                {/* ADDED: Select All Checkbox */}
+                <StyledTableCell align='center'>
+                  <Checkbox 
+                    checked={selectAll}
+                    onChange={handleSelectAll}
+                    indeterminate={selectedIds.length > 0 && selectedIds.length < displayedCategories.length}
+                  />
+                </StyledTableCell>
+                <StyledTableCell sx={{ width: 50 }} align='center'>S.No.</StyledTableCell>
+                <StyledTableCell align="center">Batch ID</StyledTableCell>
+                <StyledTableCell align="center">Student ID</StyledTableCell>
+                <StyledTableCell align="center">Student Name</StyledTableCell>
+                <StyledTableCell align="center">Email</StyledTableCell>
+                <StyledTableCell align="center">Mobile</StyledTableCell>
+                <StyledTableCell align="center">Course Name</StyledTableCell>
+                <StyledTableCell align="center">Enrollment Date</StyledTableCell>
+                <StyledTableCell align="center">Week</StyledTableCell>
+                <StyledTableCell align="center">Time</StyledTableCell>
+                <StyledTableCell align="center">Mode</StyledTableCell>
+                <StyledTableCell align="center">Type</StyledTableCell>
+                <StyledTableCell align="center">Trainer</StyledTableCell>
+                <StyledTableCell align="center">Completed Date</StyledTableCell>
+                <StyledTableCell align="center">Resend email count</StyledTableCell>
+                <StyledTableCell align="center">Action</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {displayedCategories.length > 0 ? (
                 displayedCategories.map((row, index) => (
                   <StyledTableRow key={row.id}>
-                  <StyledTableCell><Checkbox /></StyledTableCell>
-                  <StyledTableCell align="center">
+                    {/* ADDED: Individual Checkbox */}
+                    <StyledTableCell align="center">
+                      <Checkbox 
+                        checked={selectedIds.includes(row.id)}
+                        onChange={() => handleSelectOne(row.id)}
+                      />
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
                       {index + 1 + (currentPage - 1) * rowsPerPage}
                     </StyledTableCell>
-                  <StyledTableCell align="left">{row.batchId}</StyledTableCell>
-                  <StyledTableCell align="left">{row.studentId}</StyledTableCell>
-                  <StyledTableCell align="left">{row.name}</StyledTableCell>
-                  <StyledTableCell align="left">{row.email}</StyledTableCell>
-                  <StyledTableCell align="center">{row.mobile}</StyledTableCell>
-                  <StyledTableCell align="left">{row.course_name}</StyledTableCell>
-                  <StyledTableCell align="center">{row.enroll_date ? dayjs(row.enroll_date).format('MMM-DD-YYYY').toUpperCase() : ''}</StyledTableCell>
-                  <StyledTableCell align="center">{row.week}</StyledTableCell>
-                  <StyledTableCell align="center">{row.time}</StyledTableCell>
-                  <StyledTableCell align="center">{row.mode}</StyledTableCell>
-                  <StyledTableCell align="center">{row.type}</StyledTableCell>
-                  <StyledTableCell align="center">{row.trainer}</StyledTableCell>
-                  <StyledTableCell align="center">{row.completion_date ? dayjs(row.completion_date).format('MMM-DD-YYYY').toUpperCase(): ''}</StyledTableCell>
-                  <StyledTableCell align="center">{row.resendCount}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    <RiDeleteBin6Line
-                      className="delete"
-                      onClick={() => handleDeleteConfirmation(row.id)}
-                      style={{ cursor: "pointer", color: "red" }}
-                    />
-                  </StyledTableCell>
+                    <StyledTableCell align="left">{row.batchId}</StyledTableCell>
+                    <StyledTableCell align="left">{row.studentId}</StyledTableCell>
+                    <StyledTableCell align="left">{row.name}</StyledTableCell>
+                    <StyledTableCell align="left">{row.email}</StyledTableCell>
+                    <StyledTableCell align="center">{row.mobile}</StyledTableCell>
+                    <StyledTableCell align="left">{row.course_name}</StyledTableCell>
+                    <StyledTableCell align="center">{row.enroll_date ? dayjs(row.enroll_date).format('MMM-DD-YYYY').toUpperCase() : ''}</StyledTableCell>
+                    <StyledTableCell align="center">{row.week}</StyledTableCell>
+                    <StyledTableCell align="center">{row.time}</StyledTableCell>
+                    <StyledTableCell align="center">{row.mode}</StyledTableCell>
+                    <StyledTableCell align="center">{row.type}</StyledTableCell>
+                    <StyledTableCell align="center">{row.trainer}</StyledTableCell>
+                    <StyledTableCell align="center">{row.completion_date ? dayjs(row.completion_date).format('MMM-DD-YYYY').toUpperCase(): ''}</StyledTableCell>
+                    <StyledTableCell align="center">{row.resendCount}</StyledTableCell>
+                    <StyledTableCell align="center">
+                      <RiDeleteBin6Line
+                        className="delete"
+                        onClick={() => handleDeleteConfirmation(row.id)}
+                        style={{ cursor: "pointer", color: "red" }}
+                      />
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))
+              ) : (
+                <StyledTableRow>
+                  {/* UPDATED: Changed colSpan from 15 to 16 to include checkbox column */}
+                  <StyledTableCell colSpan={16} align="center">No data available</StyledTableCell>
                 </StyledTableRow>
-              ))
-            ) : (
-              <StyledTableRow>
-                <StyledTableCell colSpan={15} align="center">No data available</StyledTableCell>
-              </StyledTableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-{successMessage && <div style={{ color: "green" }}>{successMessage}</div>}
-      <div className='pagination-container'>
-        <AdminPagination
-          currentPage={currentPage}
-          rowsPerPage={rowsPerPage}
-          totalRows={filteredData.length}
-          onPageChange={handlePageChange}
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        
+        {/* REMOVED: Duplicate messages (already shown above) */}
+        {/* {successMessage && <div style={{ color: "green" }}>{successMessage}</div>} */}
+        
+        <div className='pagination-container'>
+          <AdminPagination
+            currentPage={currentPage}
+            rowsPerPage={rowsPerPage}
+            totalRows={searchedData.length}
+            onPageChange={handlePageChange}
           />
-          </div>
-          {message && <div className="success-message">{message}</div>}
         </div>
-      </>
-    );
-  };
+        {message && <div className="success-message">{message}</div>}
+      </div>
+    </>
+  );
+}

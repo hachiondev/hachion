@@ -1,4 +1,4 @@
-import  React, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -53,32 +53,35 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function TrendingCourseTable() {
-  const [category,setCategory]=useState([]);
-  const [course,setCourse]=useState([]); 
-  const [searchTerm,setSearchTerm]=useState("")
+  const [category, setCategory] = useState([]);
+  const [course, setCourse] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("")
   const [showAddCourse, setShowAddCourse] = useState(false);
-  const[trendingCourse,setTrendingCourse]=useState([]);
-  const[filteredCourse,setFilteredCourse]=useState([])
-  const[filterCourse,setFilterCourse]=useState([]); 
+  const [trendingCourse, setTrendingCourse] = useState([]);
+  const [filteredCourse, setFilteredCourse] = useState([])
+  const [filterCourse, setFilterCourse] = useState([]);
   const [open, setOpen] = React.useState(false);
   const currentDate = new Date().toISOString().split('T')[0];
-  
+
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [editedData, setEditedData] = useState({trendingcourse_id:"", category_name:"",course_name:"",status:false});
+  const [editedData, setEditedData] = useState({ trendingcourse_id: "", category_name: "", course_name: "", status: false });
   const [courseData, setCourseData] = useState({
-      trendingcourse_id:"",
-      category_name:"",
-      course_name: "",
-      date:currentDate,
-      status:false
+    trendingcourse_id: "",
+    category_name: "",
+    course_name: "",
+    date: currentDate,
+    status: false
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [status, setStatus] = useState(false);
 
-const [successMessage, setSuccessMessage] = useState("");
-const [errorMessage, setErrorMessage] = useState("");
+  // ADDED: State for checkbox selection
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [editCourseOptions, setEditCourseOptions] = useState([]);
 
@@ -87,13 +90,13 @@ const [errorMessage, setErrorMessage] = useState("");
     window.scrollTo(0, window.scrollY);
   };
 
-  
+
   const fetchCourseNamesByCategory = async (categoryName) => {
     if (!categoryName) return [];
     const url = `https://api.test.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(categoryName)}`;
     try {
       const { data } = await axios.get(url);
-      
+
       if (Array.isArray(data)) {
         return data.map((n) => ({ id: n, courseName: n }));
       }
@@ -104,7 +107,7 @@ const [errorMessage, setErrorMessage] = useState("");
     }
   };
 
-  
+
   useEffect(() => {
     let ignore = false;
     (async () => {
@@ -124,7 +127,7 @@ const [errorMessage, setErrorMessage] = useState("");
   };
 
   const handleSwitchToggle = () => {
-    setStatus(!status); 
+    setStatus(!status);
   };
 
   const handleStatusChange = (e) => {
@@ -141,19 +144,19 @@ const [errorMessage, setErrorMessage] = useState("");
     }));
   };
 
-  
+
   const displayedCourse = filteredCourse.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
 
-  const handleReset=()=>{
+  const handleReset = () => {
     setCourseData({
-      trendingcourse_id:"",
-      category_name:"",
+      trendingcourse_id: "",
+      category_name: "",
       course_name: "",
-      date:currentDate,
-      status:false
+      date: currentDate,
+      status: false
     });
     setFilterCourse([]);
   }
@@ -167,7 +170,7 @@ const [errorMessage, setErrorMessage] = useState("");
   };
 
   const handleClose = () => {
-    setOpen(false); 
+    setOpen(false);
     setEditCourseOptions([]);
   };
 
@@ -182,7 +185,7 @@ const [errorMessage, setErrorMessage] = useState("");
       }
     };
     fetchCourse();
-  }, []); 
+  }, []);
 
   const handleDeleteConfirmation = (trendingcourse_id) => {
     if (window.confirm("Are you sure you want to delete this Course?")) {
@@ -204,77 +207,79 @@ const [errorMessage, setErrorMessage] = useState("");
   const handleSave = async () => {
     try {
       const response = await axios.put(
-        `https://api.test.hachion.co/trendingcourse/update/${editedData.trendingcourse_id}`,editedData
+        `https://api.test.hachion.co/trendingcourse/update/${editedData.trendingcourse_id}`, editedData
       );
       setTrendingCourse((prev) =>
         prev.map(curr =>
           curr.trendingcourse_id === editedData.trendingcourse_id ? response.data : curr
         )
       );
-      
-setFilteredCourse(prev =>
-  prev.map(curr =>
-    curr.trendingcourse_id === editedData.trendingcourse_id
-      ? response.data
-      : curr
-  )
-);
-setSuccessMessage("✅ Trending course updated successfully.");
-setErrorMessage("");
-setTimeout(() => setSuccessMessage(""), 6000);
+
+      setFilteredCourse(prev =>
+        prev.map(curr =>
+          curr.trendingcourse_id === editedData.trendingcourse_id
+            ? response.data
+            : curr
+        )
+      );
+      setSuccessMessage("✅ Trending course updated successfully.");
+      setErrorMessage("");
+      setTimeout(() => setSuccessMessage(""), 6000);
 
       setOpen(false);
       setEditCourseOptions([]);
     } catch (error) {
-      
-      setErrorMessage("❌ Failed to update trending course.");
-setSuccessMessage("");
 
-setTimeout(() => setErrorMessage(""), 6000);
+      setErrorMessage("❌ Failed to update trending course.");
+      setSuccessMessage("");
+
+      setTimeout(() => setErrorMessage(""), 6000);
 
     }
   };
 
   const handleDelete = async (trendingcourse_id) => {
-    try { 
-      
+    try {
+
       await axios.delete(
-  `https://api.test.hachion.co/trendingcourse/delete/${trendingcourse_id}`
-);
+        `https://api.test.hachion.co/trendingcourse/delete/${trendingcourse_id}`
+      );
 
+      // Remove from selectedIds if present
+      setSelectedIds(prev => prev.filter(id => id !== trendingcourse_id));
 
-setTrendingCourse(prev =>
-  prev.filter(item => item.trendingcourse_id !== trendingcourse_id)
-);
-setFilteredCourse(prev =>
-  prev.filter(item => item.trendingcourse_id !== trendingcourse_id)
-);
-setSuccessMessage("✅ Trending course deleted successfully.");
-setErrorMessage("");
+      setTrendingCourse(prev =>
+        prev.filter(item => item.trendingcourse_id !== trendingcourse_id)
+      );
+      setFilteredCourse(prev =>
+        prev.filter(item => item.trendingcourse_id !== trendingcourse_id)
+      );
+      setSuccessMessage("✅ Trending course deleted successfully.");
+      setErrorMessage("");
 
-setTimeout(() => setSuccessMessage(""), 6000);
+      setTimeout(() => setSuccessMessage(""), 6000);
 
-    } catch (error) { 
-    
+    } catch (error) {
+
       setErrorMessage("❌ Failed to delete trending course.");
-setSuccessMessage("");
+      setSuccessMessage("");
 
-setTimeout(() => setErrorMessage(""), 6000);
+      setTimeout(() => setErrorMessage(""), 6000);
 
     }
   };
 
-  
+
   useEffect(() => {
     const filtered = trendingCourse.filter(trendingCourse =>
       (trendingCourse.course_name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (trendingCourse.category_name || '').toLowerCase().includes(searchTerm.toLowerCase()) 
+      (trendingCourse.category_name || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredCourse(filtered);
     setCurrentPage(1);
   }, [searchTerm, trendingCourse]);
 
-  
+
   const handleClickOpen = async (row) => {
     setEditedData({
       trendingcourse_id: row.trendingcourse_id,
@@ -287,7 +292,7 @@ setTimeout(() => setErrorMessage(""), 6000);
     setOpen(true);
   };
 
-  
+
   useEffect(() => {
     let ignore = false;
     (async () => {
@@ -305,54 +310,54 @@ setTimeout(() => setErrorMessage(""), 6000);
       [e.target.name]: e.target.value,
     });
   };
-      const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const currentDate = new Date().toISOString().split("T")[0];
-  const dataToSubmit = { 
-    ...courseData,
-    date: currentDate,
+    const currentDate = new Date().toISOString().split("T")[0];
+    const dataToSubmit = {
+      ...courseData,
+      date: currentDate,
+    };
+
+    try {
+      const response = await axios.post(
+        "https://api.test.hachion.co/trendingcourse/add",
+        dataToSubmit
+      );
+
+      if (response.status === 201) {
+
+        const newTrendingCourse = {
+          trendingcourse_id: Date.now(),
+          category_name: courseData.category_name,
+          course_name: courseData.course_name,
+          status: courseData.status,
+          date: currentDate
+        };
+
+
+        setTrendingCourse(prev => [...prev, newTrendingCourse]);
+        setFilteredCourse(prev => [...prev, newTrendingCourse]);
+
+        setSuccessMessage("✅ Trending course added successfully.");
+        setErrorMessage("");
+
+        setTimeout(() => setSuccessMessage(""), 6000);
+
+        handleReset();
+        setShowAddCourse(false);
+      }
+
+    } catch (error) {
+      console.error("Error adding courses:", error);
+
+      setErrorMessage("❌ Failed to add trending course.");
+      setSuccessMessage("");
+      setTimeout(() => setErrorMessage(""), 6000);
+
+    }
   };
-
-  try {
-    const response = await axios.post(
-      "https://api.test.hachion.co/trendingcourse/add",
-      dataToSubmit
-    );
-
-    if (response.status === 201) {
-
-  const newTrendingCourse = {
-    trendingcourse_id: Date.now(), 
-    category_name: courseData.category_name,
-    course_name: courseData.course_name,
-    status: courseData.status,
-    date: currentDate
-  };
-
-  
-  setTrendingCourse(prev => [...prev, newTrendingCourse]);
-  setFilteredCourse(prev => [...prev, newTrendingCourse]);
-
-  setSuccessMessage("✅ Trending course added successfully.");
-  setErrorMessage("");
-
-  setTimeout(() => setSuccessMessage(""), 6000);
-
-  handleReset();
-  setShowAddCourse(false);
-}
-
-  } catch (error) {
-    console.error("Error adding courses:", error);
-    
-    setErrorMessage("❌ Failed to add trending course.");
-setSuccessMessage("");
-setTimeout(() => setErrorMessage(""), 6000);
-
-  }
-};
-  const handleAddTrendingCourseClick = () => {setShowAddCourse(true)}
+  const handleAddTrendingCourseClick = () => { setShowAddCourse(true) }
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -366,7 +371,7 @@ setTimeout(() => setErrorMessage(""), 6000);
     fetchCategory();
   }, []);
 
-  
+
   useEffect(() => {
     console.log("Updated course state:", course);
   }, [course]);
@@ -379,296 +384,402 @@ setTimeout(() => setErrorMessage(""), 6000);
   };
 
   const isFormValid =
-  courseData.category_name &&
-  courseData.course_name;
+    courseData.category_name &&
+    courseData.course_name;
+
+  // ADDED: Handle Select All checkbox
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allIds = displayedCourse.map(course => course.trendingcourse_id);
+      setSelectedIds(allIds);
+      setSelectAll(true);
+    } else {
+      setSelectedIds([]);
+      setSelectAll(false);
+    }
+  };
+
+  // ADDED: Handle individual checkbox
+  const handleSelectOne = (id) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+      setSelectAll(false);
+    } else {
+      const newSelectedIds = [...selectedIds, id];
+      setSelectedIds(newSelectedIds);
+      // Check if all items are selected
+      if (newSelectedIds.length === displayedCourse.length) {
+        setSelectAll(true);
+      }
+    }
+  };
+
+  // ADDED: Update selectAll state when page changes
+  useEffect(() => {
+    const allCurrentPageIds = displayedCourse.map(course => course.trendingcourse_id);
+    const allSelected = allCurrentPageIds.length > 0 && 
+                       allCurrentPageIds.every(id => selectedIds.includes(id));
+    setSelectAll(allSelected);
+  }, [currentPage, displayedCourse, selectedIds]);
+
+  // ADDED: Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      setErrorMessage("Please select at least one course to delete");
+      setTimeout(() => setErrorMessage(""), 3000);
+      return;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'course' : 'courses'}?`;
+    
+    if (window.confirm(confirmMessage)) {
+      try {
+        // Delete all selected courses
+        await Promise.all(
+          selectedIds.map(id =>
+            axios.delete(`https://api.test.hachion.co/trendingcourse/delete/${id}`)
+          )
+        );
+
+        // Update state
+        const updatedCourses = trendingCourse.filter(item => !selectedIds.includes(item.trendingcourse_id));
+        setTrendingCourse(updatedCourses);
+        setFilteredCourse(updatedCourses);
+        
+        setSelectedIds([]);
+        setSelectAll(false);
+        
+        setSuccessMessage(`${selectedIds.length} ${selectedIds.length === 1 ? 'course' : 'courses'} deleted successfully`);
+        setErrorMessage("");
+        
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 6000);
+      } catch (error) {
+        console.error("Error deleting courses:", error);
+        setSuccessMessage("");
+        setErrorMessage("Error deleting some courses. Please try again.");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 6000);
+      }
+    }
+  };
 
   return (
-    <>  
-     {showAddCourse ?  (
-      <div className='course-category'>
-        <h3>Trending Courses</h3>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
-              <a href="#!" onClick={() => setShowAddCourse(false)}>Trending Courses</a> <MdKeyboardArrowRight />
-            </li>
-            <li className="breadcrumb-item active" aria-current="page">
-              Add Trending Course
-            </li>
-          </ol>
-        </nav>
-
-        <div className="category">
-          <div className="category-header">
-            <p style={{ marginBottom: 0 }}>Add Trending Course</p>
-          </div>
-          <div className='course-details'>
-            <div className='course-row'>
-
-              <div className="col-md-3">
-                <label htmlFor="inputState" className="form-label">Category Name <span style={{ color: "red" }}>*</span></label>
-                <select id="inputState" className="form-select" name='category_name' value={courseData.category_name} onChange={handleChange}>
-                  <option value="" disabled>Select Category</option>
-                  {category.map((curr) => (
-                    <option key={curr.id} value={curr.name}>
-                      {curr.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="col-md-3">
-                <label htmlFor="inputState" className="form-label">Course Name <span style={{ color: "red" }}>*</span></label>
-                <select
-                  id="inputState"
-                  className="form-select"
-                  name="course_name"
-                  value={courseData.course_name}
-                  onChange={handleChange}
-                  disabled={!courseData.category_name}
-                >
-                  <option value="" disabled>Select Course</option>
-                  {filterCourse.map((curr) => (
-                    <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
-                  ))}
-                </select>
-              </div>
-
-            </div>
-
-            <div className="col" style={{ display: 'flex', gap: 20 }}> 
-              <label className="form-label">Status:</label>
-              <Switch
-                checked={courseData?.status ?? false}
-                onChange={handleStatusChange}
-                color="primary"
-              />
-              <span>{courseData?.status ? 'Enable' : 'Disable'}</span>
-            </div>
-
-            <div className="course-row">
-              {/* <button className='submit-btn' onClick={handleSubmit}>Submit</button> */}
-              <button
-  className='submit-btn'
-  onClick={handleSubmit}
-  disabled={!isFormValid}
-  style={{
-    cursor: !isFormValid ? "not-allowed" : "pointer",
-    opacity: !isFormValid ? 0.6 : 1
-  }}
->
-  Submit
-</button>
-
-              <button className='reset-btn' onClick={handleReset}>Reset</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    ):(<div>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <>
+      {showAddCourse ? (
         <div className='course-category'>
           <h3>Trending Courses</h3>
-          <div className='category'>
-            <div className='category-header'>
-              <p style={{ marginBottom: 0 }}>Trending Courses Details</p>
-            </div>
-            <div className='date-schedule'>
-              Start Date
-              <DatePicker 
-                selected={startDate} 
-                onChange={(date) => setStartDate(date)} 
-                isClearable 
-                sx={{'& .MuiIconButton-root':{color: '#00aeef'}}}
-              />
-              End Date
-              <DatePicker 
-                selected={endDate} 
-                onChange={(date) => setEndDate(date)} 
-                isClearable 
-                sx={{'& .MuiIconButton-root':{color: '#00aeef'}}}
-              />
-              <button className='filter' onClick={handleDateFilter} >Filter</button>
-              <button className='filter' onClick={handleDateReset} >Reset</button>
-            </div>
-            <div className='entries'>
-              <div className='entries-left'>
-                <p style={{ marginBottom: '0' }}>Show</p>
-                <div className="btn-group">
-                  <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    {rowsPerPage}
-                  </button>
-                  <ul className="dropdown-menu">
-                    <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
-                    <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
-                    <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
-                  </ul>
-                </div>
-                <p style={{ marginBottom: '0' }}>entries</p>
-              </div>
-              <div className='entries-right'>
-                <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
-                  <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}/>
-                  <button className="btn-search" type="submit"><IoSearch style={{ fontSize: '2rem' }} /></button>
-                </div>
-                <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick} >
-                  <FiPlus /> Add Trending Course
-                </button>
-              </div>
-            </div>
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb">
+              <li className="breadcrumb-item">
+                <a href="#!" onClick={() => setShowAddCourse(false)}>Trending Courses</a> <MdKeyboardArrowRight />
+              </li>
+              <li className="breadcrumb-item active" aria-current="page">
+                Add Trending Course
+              </li>
+            </ol>
+          </nav>
 
+          <div className="category">
+            <div className="category-header">
+              <p style={{ marginBottom: 0 }}>Add Trending Course</p>
+            </div>
+            <div className='course-details'>
+              <div className='course-row'>
+
+                <div className="col-md-3">
+                  <label htmlFor="inputState" className="form-label">Category Name <span style={{ color: "red" }}>*</span></label>
+                  <select id="inputState" className="form-select" name='category_name' value={courseData.category_name} onChange={handleChange}>
+                    <option value="" disabled>Select Category</option>
+                    {category.map((curr) => (
+                      <option key={curr.id} value={curr.name}>
+                        {curr.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="col-md-3">
+                  <label htmlFor="inputState" className="form-label">Course Name <span style={{ color: "red" }}>*</span></label>
+                  <select
+                    id="inputState"
+                    className="form-select"
+                    name="course_name"
+                    value={courseData.course_name}
+                    onChange={handleChange}
+                    disabled={!courseData.category_name}
+                  >
+                    <option value="" disabled>Select Course</option>
+                    {filterCourse.map((curr) => (
+                      <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+                    ))}
+                  </select>
+                </div>
+
+              </div>
+
+              <div className="col" style={{ display: 'flex', gap: 20 }}>
+                <label className="form-label">Status:</label>
+                <Switch
+                  checked={courseData?.status ?? false}
+                  onChange={handleStatusChange}
+                  color="primary"
+                />
+                <span>{courseData?.status ? 'Enable' : 'Disable'}</span>
+              </div>
+
+              <div className="course-row">
+                <button
+                  className='submit-btn'
+                  onClick={handleSubmit}
+                  disabled={!isFormValid}
+                  style={{
+                    cursor: !isFormValid ? "not-allowed" : "pointer",
+                    opacity: !isFormValid ? 0.6 : 1
+                  }}
+                >
+                  Submit
+                </button>
+
+                <button className='reset-btn' onClick={handleReset}>Reset</button>
+              </div>
+            </div>
           </div>
         </div>
-      </LocalizationProvider>
 
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell sx={{ width: 70 }} align="center">
-                <Checkbox />
-              </StyledTableCell>
-              <StyledTableCell sx={{ width: 80 }} align='center'>S.No.</StyledTableCell>
-              <StyledTableCell align='center'>Category Name</StyledTableCell>
-              <StyledTableCell align='center'>Course Name</StyledTableCell>
-              <StyledTableCell align="center">Status</StyledTableCell>
-              <StyledTableCell align="center">Created Date</StyledTableCell>
-              <StyledTableCell align="center">Action</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
+      ) : (<div>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <div className='course-category'>
+            <h3>Trending Courses</h3>
+            <div className='category'>
+              <div className='category-header'>
+                <p style={{ marginBottom: 0 }}>Trending Courses Details</p>
+              </div>
+              
+              {/* ADDED: Success and Error Messages */}
+              {successMessage && <p style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</p>}
+              {errorMessage && <p style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</p>}
+              
+              <div className='date-schedule'>
+                Start Date
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  isClearable
+                  sx={{ '& .MuiIconButton-root': { color: '#00aeef' } }}
+                />
+                End Date
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  isClearable
+                  sx={{ '& .MuiIconButton-root': { color: '#00aeef' } }}
+                />
+                <button className='filter' onClick={handleDateFilter} >Filter</button>
+                <button className='filter' onClick={handleDateReset} >Reset</button>
+              </div>
+              <div className='entries'>
+                <div className='entries-left'>
+                  <p style={{ marginBottom: '0' }}>Show</p>
+                  <div className="btn-group">
+                    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                      {rowsPerPage}
+                    </button>
+                    <ul className="dropdown-menu">
+                      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+                      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+                      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+                    </ul>
+                  </div>
+                  <p style={{ marginBottom: '0' }}>entries</p>
+                </div>
+                <div className='entries-right'>
+                  <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
+                    <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)} />
+                    <button className="btn-search" type="submit"><IoSearch style={{ fontSize: '2rem' }} /></button>
+                  </div>
+                  
+                  {/* ADDED: Bulk Delete Button */}
+                  {selectedIds.length > 0 && (
+                    <button 
+                      type="button" 
+                      className="btn-category" 
+                      onClick={handleBulkDelete}
+                      style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
+                    >
+                      <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+                    </button>
+                  )}
+                  
+                  <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick} >
+                    <FiPlus /> Add Trending Course
+                  </button>
+                </div>
+              </div>
 
-            {displayedCourse.length > 0
-              ? displayedCourse.map((row, index) => (
-                <StyledTableRow key={row.trendingcourse_id}>
-                  <StyledTableCell align="center">
-                    <Checkbox />
-                  </StyledTableCell>
-                  <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
-                  <StyledTableCell align="left">{row.category_name}</StyledTableCell>
-                  <StyledTableCell align="left">{row.course_name}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    {row.status ? "Enabled" : "Disabled"}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-  {row.date
-    ? dayjs(row.date).format("MMM-DD-YYYY").toUpperCase()
-    : "N/A"}
-</StyledTableCell>
+            </div>
+          </div>
+        </LocalizationProvider>
 
-                  <StyledTableCell align="center">
-                    <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
-                      <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
-                      <RiDeleteBin6Line
-                        className="delete"
-                        onClick={() => handleDeleteConfirmation(row.trendingcourse_id)}
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell sx={{ width: 70 }} align="center">
+                  {/* ADDED: Select All Checkbox */}
+                  <Checkbox 
+                    checked={selectAll}
+                    onChange={handleSelectAll}
+                    indeterminate={selectedIds.length > 0 && selectedIds.length < displayedCourse.length}
+                  />
+                </StyledTableCell>
+                <StyledTableCell sx={{ width: 80 }} align='center'>S.No.</StyledTableCell>
+                <StyledTableCell align='center'>Category Name</StyledTableCell>
+                <StyledTableCell align='center'>Course Name</StyledTableCell>
+                <StyledTableCell align="center">Status</StyledTableCell>
+                <StyledTableCell align="center">Created Date</StyledTableCell>
+                <StyledTableCell align="center">Action</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+
+              {displayedCourse.length > 0
+                ? displayedCourse.map((row, index) => (
+                  <StyledTableRow key={row.trendingcourse_id}>
+                    {/* ADDED: Individual Checkbox */}
+                    <StyledTableCell align="center">
+                      <Checkbox 
+                        checked={selectedIds.includes(row.trendingcourse_id)}
+                        onChange={() => handleSelectOne(row.trendingcourse_id)}
                       />
-                    </div>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))
-              : (
-                <StyledTableRow>
-                  <StyledTableCell colSpan={6} align="center">
-                    No data available.
-                  </StyledTableCell>
-                </StyledTableRow>
-              )}
-        
-          </TableBody>
-        </Table>
-      </TableContainer>
+                    </StyledTableCell>
+                    <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
+                    <StyledTableCell align="left">{row.category_name}</StyledTableCell>
+                    <StyledTableCell align="left">{row.course_name}</StyledTableCell>
+                    <StyledTableCell align="center">
+                      {row.status ? "Enabled" : "Disabled"}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {row.date
+                        ? dayjs(row.date).format("MMM-DD-YYYY").toUpperCase()
+                        : "N/A"}
+                    </StyledTableCell>
 
-{successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
-      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
+                    <StyledTableCell align="center">
+                      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+                        <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
+                        <RiDeleteBin6Line
+                          className="delete"
+                          onClick={() => handleDeleteConfirmation(row.trendingcourse_id)}
+                        />
+                      </div>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))
+                : (
+                  <StyledTableRow>
+                    {/* UPDATED: Changed colSpan from 6 to 7 to include checkbox column */}
+                    <StyledTableCell colSpan={7} align="center">
+                      No data available.
+                    </StyledTableCell>
+                  </StyledTableRow>
+                )}
 
-      <div className='pagination-container'>
-        <AdminPagination
-          currentPage={currentPage}
-          rowsPerPage={rowsPerPage}
-          totalRows={filteredCourse.length}
-          onPageChange={handlePageChange}
-        />
-      </div>
-      {/* {message && <div className="success-message">{message}</div>} */}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
-    </div>)}
+        {/* REMOVED: Duplicate success/error messages (already shown above) */}
+        {/* {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+        {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>} */}
 
-    <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
-      PaperProps={{ style: { borderRadius: 20 } }}>
-      <div >
-        <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Trending Course
-          <Button onClick={handleClose} className="close-btn">
-            <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
-          </Button>
-        </DialogTitle>
-      </div>
-      <DialogContent>
-  
-        <div className="col">
-          <label htmlFor="categoryName" className="form-label">Category Name</label>
-          <select
-            id="categoryName"
-            className="form-select"
-            name="category_name"
-            value={editedData.category_name || ""}
-            onChange={(e) => {
-              handleInputChange(e);        
-              setEditedData((prev) => ({   
-                ...prev,
-                course_name: ""
-              }));
-            }}
-          >
-            <option value="" disabled>Select Category</option>
-            {category.map((curr) => (
-              <option key={curr.id} value={curr.name}>
-                {curr.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="col">
-          <label htmlFor="courseName" className="form-label">Course Name</label>
-          <select
-            id="courseName"
-            className="form-select"
-            name="course_name"
-            value={editedData.course_name || ""}
-            onChange={handleInputChange}
-            disabled={!editedData.category_name}
-          >
-            <option value="" disabled>Select Course</option>
-            {editCourseOptions.length > 0 ? (
-              editCourseOptions.map((current) => (
-                <option key={current.id} value={current.courseName}>
-                  {current.courseName}
-                </option>
-              ))
-            ) : (
-              <option disabled>{editedData.category_name ? 'Loading...' : 'Select Category first'}</option>
-            )}
-          </select>
-        </div>
-
-        <div className="col" style={{ display: 'flex', gap: 20 }}> 
-          <label className="form-label">Status:</label>
-          <Switch
-            checked={editedData?.status ?? false}
-            onChange={handleInputStatusChange}
-            color="primary"
+        <div className='pagination-container'>
+          <AdminPagination
+            currentPage={currentPage}
+            rowsPerPage={rowsPerPage}
+            totalRows={filteredCourse.length}
+            onPageChange={handlePageChange}
           />
-          <span>{editedData?.status ? 'Enable' : 'Disable'}</span>
         </div>
 
-      </DialogContent>
-      <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
-        <Button onClick={handleSave} className="update-btn">Update</Button>
-      </DialogActions>
-    </Dialog>   
-  </> );
+      </div>)}
+
+      <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
+        PaperProps={{ style: { borderRadius: 20 } }}>
+        <div >
+          <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Trending Course
+            <Button onClick={handleClose} className="close-btn">
+              <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
+            </Button>
+          </DialogTitle>
+        </div>
+        <DialogContent>
+
+          <div className="col">
+            <label htmlFor="categoryName" className="form-label">Category Name</label>
+            <select
+              id="categoryName"
+              className="form-select"
+              name="category_name"
+              value={editedData.category_name || ""}
+              onChange={(e) => {
+                handleInputChange(e);
+                setEditedData((prev) => ({
+                  ...prev,
+                  course_name: ""
+                }));
+              }}
+            >
+              <option value="" disabled>Select Category</option>
+              {category.map((curr) => (
+                <option key={curr.id} value={curr.name}>
+                  {curr.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="col">
+            <label htmlFor="courseName" className="form-label">Course Name</label>
+            <select
+              id="courseName"
+              className="form-select"
+              name="course_name"
+              value={editedData.course_name || ""}
+              onChange={handleInputChange}
+              disabled={!editedData.category_name}
+            >
+              <option value="" disabled>Select Course</option>
+              {editCourseOptions.length > 0 ? (
+                editCourseOptions.map((current) => (
+                  <option key={current.id} value={current.courseName}>
+                    {current.courseName}
+                  </option>
+                ))
+              ) : (
+                <option disabled>{editedData.category_name ? 'Loading...' : 'Select Category first'}</option>
+              )}
+            </select>
+          </div>
+
+          <div className="col" style={{ display: 'flex', gap: 20 }}>
+            <label className="form-label">Status:</label>
+            <Switch
+              checked={editedData?.status ?? false}
+              onChange={handleInputStatusChange}
+              color="primary"
+            />
+            <span>{editedData?.status ? 'Enable' : 'Disable'}</span>
+          </div>
+
+        </DialogContent>
+        <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
+          <Button onClick={handleSave} className="update-btn">Update</Button>
+        </DialogActions>
+      </Dialog>
+    </>);
 }

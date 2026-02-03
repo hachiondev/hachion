@@ -93,13 +93,17 @@ export default function Trainer() {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
+  // ADDED: State for checkbox selection
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+
   // Mandatory fields
-  const mandatoryFields = ['trainer_name', 'course_name', 'category_name', 'experience', 'designation', 'experienceCredentials','trainerRating','summary', 'profileImage'];
+  const mandatoryFields = ['trainer_name', 'course_name', 'category_name', 'experience', 'designation', 'experienceCredentials', 'trainerRating', 'summary', 'profileImage'];
 
   // Check form validity without setting state
   const checkFormValidity = () => {
     const newErrors = {};
-    
+
     // Check each mandatory field
     mandatoryFields.forEach(field => {
       if (field === 'profileImage') {
@@ -123,7 +127,7 @@ export default function Trainer() {
         }
       }
     });
-    
+
     return { isValid: Object.keys(newErrors).length === 0, errors: newErrors };
   };
 
@@ -243,7 +247,7 @@ export default function Trainer() {
       }
 
       setFormData((prev) => ({ ...prev, trainerRating: num }));
-      
+
       // Clear error for this field
       if (errors[name]) {
         setErrors(prev => {
@@ -252,15 +256,15 @@ export default function Trainer() {
           return newErrors;
         });
       }
-      
+
       return;
     }
-    
+
     setFormData((prev) => ({
       ...prev,
       [name]: val,
     }));
-    
+
     // Clear error for this field
     if (errors[name]) {
       setErrors(prev => {
@@ -308,7 +312,7 @@ export default function Trainer() {
     // Validate form before submitting
     const { isValid, errors: validationErrors } = checkFormValidity();
     setErrors(validationErrors);
-    
+
     if (!isValid) {
       setErrorMessage("⚠️ Please fill in all required fields marked with *");
       return;
@@ -410,6 +414,10 @@ export default function Trainer() {
       setTrainers((prev) => prev.filter((t) => t.trainer_id !== id));
       setFilteredTrainers((prev) => prev.filter((t) => t.trainer_id !== id));
       setAllTrainers((prev) => prev.filter((t) => t.trainer_id !== id));
+      
+      // Remove from selectedIds if present
+      setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
+      
       setSuccessMessage('✅ Trainer deleted successfully.');
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error) {
@@ -461,7 +469,7 @@ export default function Trainer() {
       [e.target.name]: file,
       existingImageName: '',
     }));
-    
+
     // Clear error for this field
     if (errors[e.target.name]) {
       setErrors(prev => {
@@ -469,6 +477,86 @@ export default function Trainer() {
         delete newErrors[e.target.name];
         return newErrors;
       });
+    }
+  };
+
+  // ADDED: Handle Select All checkbox
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allIds = displayedCourse.map(trainer => trainer.trainer_id);
+      setSelectedIds(allIds);
+      setSelectAll(true);
+    } else {
+      setSelectedIds([]);
+      setSelectAll(false);
+    }
+  };
+
+  // ADDED: Handle individual checkbox
+  const handleSelectOne = (id) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+      setSelectAll(false);
+    } else {
+      const newSelectedIds = [...selectedIds, id];
+      setSelectedIds(newSelectedIds);
+      // Check if all items are selected
+      if (newSelectedIds.length === displayedCourse.length) {
+        setSelectAll(true);
+      }
+    }
+  };
+
+  // ADDED: Update selectAll state when page changes
+  useEffect(() => {
+    const allCurrentPageIds = displayedCourse.map(trainer => trainer.trainer_id);
+    const allSelected = allCurrentPageIds.length > 0 && 
+                       allCurrentPageIds.every(id => selectedIds.includes(id));
+    setSelectAll(allSelected);
+  }, [currentPage, displayedCourse, selectedIds]);
+
+  // ADDED: Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      setErrorMessage("Please select at least one trainer to delete");
+      setTimeout(() => setErrorMessage(""), 3000);
+      return;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'trainer' : 'trainers'}?`;
+    
+    if (window.confirm(confirmMessage)) {
+      try {
+        // Delete all selected trainers
+        await Promise.all(
+          selectedIds.map(id =>
+            axios.delete(`https://api.test.hachion.co/trainer/delete/${id}`)
+          )
+        );
+
+        // Update state
+        const updatedTrainers = trainers.filter(item => !selectedIds.includes(item.trainer_id));
+        setTrainers(updatedTrainers);
+        setFilteredTrainers(updatedTrainers);
+        setAllTrainers(updatedTrainers);
+        
+        setSelectedIds([]);
+        setSelectAll(false);
+        
+        setSuccessMessage(`${selectedIds.length} ${selectedIds.length === 1 ? 'trainer' : 'trainers'} deleted successfully`);
+        setErrorMessage("");
+        
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 6000);
+      } catch (error) {
+        console.error("Error deleting trainers:", error);
+        setSuccessMessage("");
+        setErrorMessage("Error deleting some trainers. Please try again.");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 6000);
+      }
     }
   };
 
@@ -763,8 +851,8 @@ export default function Trainer() {
 
                 {/* Submit and Reset Buttons */}
                 <div className="course-row">
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="submit-btn"
                     disabled={!submitEnabled}
                     style={{
@@ -792,6 +880,10 @@ export default function Trainer() {
               <div className="category-header">
                 <p style={{ marginBottom: 0 }}>View Trainer</p>
               </div>
+
+              {/* ADDED: Success and Error Messages */}
+              {successMessage && <p style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</p>}
+              {errorMessage && <p style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</p>}
 
               <div className="date-schedule">
                 Start Date
@@ -829,6 +921,19 @@ export default function Trainer() {
                     />
                     <button className="btn-search"><IoSearch style={{ fontSize: '2rem' }} /></button>
                   </div>
+                  
+                  {/* ADDED: Bulk Delete Button */}
+                  {selectedIds.length > 0 && (
+                    <button 
+                      type="button" 
+                      className="btn-category" 
+                      onClick={handleBulkDelete}
+                      style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
+                    >
+                      <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+                    </button>
+                  )}
+                  
                   <button className="btn-category" onClick={openAddForm}><FiPlus /> Add Trainer</button>
                 </div>
               </div>
@@ -838,7 +943,14 @@ export default function Trainer() {
               <Table sx={{ minWidth: 700 }} aria-label="customized table">
                 <TableHead>
                   <TableRow>
-                    <StyledTableCell sx={{ width: 50 }} align="center"><Checkbox /></StyledTableCell>
+                    {/* ADDED: Select All Checkbox */}
+                    <StyledTableCell sx={{ width: 50 }} align="center">
+                      <Checkbox 
+                        checked={selectAll}
+                        onChange={handleSelectAll}
+                        indeterminate={selectedIds.length > 0 && selectedIds.length < displayedCourse.length}
+                      />
+                    </StyledTableCell>
                     <StyledTableCell sx={{ width: 60 }}>S.No.</StyledTableCell>
                     <StyledTableCell align="center">Trainer Name</StyledTableCell>
                     <StyledTableCell align="center">Rating</StyledTableCell>
@@ -856,7 +968,13 @@ export default function Trainer() {
                   {displayedCourse.length > 0 ? (
                     displayedCourse.map((row, index) => (
                       <StyledTableRow key={row.trainer_id || index}>
-                        <StyledTableCell align="center"><Checkbox /></StyledTableCell>
+                        {/* ADDED: Individual Checkbox */}
+                        <StyledTableCell align="center">
+                          <Checkbox 
+                            checked={selectedIds.includes(row.trainer_id)}
+                            onChange={() => handleSelectOne(row.trainer_id)}
+                          />
+                        </StyledTableCell>
                         <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
                         <StyledTableCell align="left">{row.trainer_name}</StyledTableCell>
                         <StyledTableCell align="center">{row.trainerRating}</StyledTableCell>
@@ -879,15 +997,17 @@ export default function Trainer() {
                     ))
                   ) : (
                     <StyledTableRow>
-                      <StyledTableCell colSpan={11} align="center">No data available.</StyledTableCell>
+                      {/* UPDATED: Changed colSpan from 11 to 12 to include checkbox column */}
+                      <StyledTableCell colSpan={12} align="center">No data available.</StyledTableCell>
                     </StyledTableRow>
                   )}
                 </TableBody>
               </Table>
             </TableContainer>
 
-            {successMessage && <p style={{ color: 'green', fontWeight: 'bold', margin: 0 }}>{successMessage}</p>}
-            {errorMessage && <p style={{ color: 'red', fontWeight: 'bold', margin: 0 }}>{errorMessage}</p>}
+            {/* REMOVED: Duplicate success/error messages (already shown above) */}
+            {/* {successMessage && <p style={{ color: 'green', fontWeight: 'bold', margin: 0 }}>{successMessage}</p>}
+            {errorMessage && <p style={{ color: 'red', fontWeight: 'bold', margin: 0 }}>{errorMessage}</p>} */}
 
             <div className="pagination-container">
               <AdminPagination

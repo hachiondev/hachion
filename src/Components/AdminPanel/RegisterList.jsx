@@ -1,4 +1,4 @@
-import  React, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { duration, styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -48,13 +48,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
-    borderRight: '1px solid white', 
+    borderRight: '1px solid white',
     padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
     padding: '3px 4px',
-    borderRight: '1px solid #e0e0e0', 
+    borderRight: '1px solid #e0e0e0',
   },
 }));
 
@@ -68,89 +68,30 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function RegisterList() {
-  const [searchTerm,setSearchTerm]=useState("")
-    const [formMode, setFormMode] = useState("Add");
-    const [showAddCourse, setShowAddCourse] = useState(false);
-    const[registerStudent,setRegisterStudent]=useState([]);
-    const[filteredStudent,setFilteredStudent]=useState([])
-    const [open, setOpen] = React.useState(false);
-    const currentDate = new Date().toISOString().split('T')[0];
-    const[message,setMessage]=useState(false);
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
-    const [successMessage, setSuccessMessage] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-        
-    const [editedData, setEditedData] = useState({student_Id:"",userName:"",email:"",mobile:"",whatsapp:"",location:"",country:"",time_zone:"",analyst_name:"",source:"",remarks:"",comments:"",date:currentDate,visa_status:"",mode:""});
-    const [mobileError, setMobileError] = useState("");
-    const [whatsappError, setWhatsappError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("")
+  const [formMode, setFormMode] = useState("Add");
+  const [showAddCourse, setShowAddCourse] = useState(false);
+  const [registerStudent, setRegisterStudent] = useState([]);
+  const [filteredStudent, setFilteredStudent] = useState([])
+  const [open, setOpen] = React.useState(false);
+  const currentDate = new Date().toISOString().split('T')[0];
+  const [message, setMessage] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-const [anchorElCountry, setAnchorElCountry] = useState(null);
-const [selectedCountry, setSelectedCountry] = useState({
-  name: '',
-  code: '',
-  flag: ''
-});
-    const [studentData, setStudentData] = useState({
-        student_Id:"",
-        userName:"",
-        email:"",
-        mobile:"",
-        whatsapp:"",
-        country:"",
-        location:"",
-       time_zone:"",
-       analyst_name:"",
-       source:"",
-       remarks:"",
-       comments:"",
-       date:currentDate,
-            visa_status:"",
-            mode:"Offline",
-         });
-        
-         const [countries, setCountries] = useState([]);
+  const [editedData, setEditedData] = useState({ student_Id: "", userName: "", email: "", mobile: "", whatsapp: "", location: "", country: "", time_zone: "", analyst_name: "", source: "", remarks: "", comments: "", date: currentDate, visa_status: "", mode: "" });
+  const [mobileError, setMobileError] = useState("");
+  const [whatsappError, setWhatsappError] = useState("");
 
-const [currentPage, setCurrentPage] = useState(1);
-            const [rowsPerPage, setRowsPerPage] = useState(10);
-            
-            const handlePageChange = (page) => {
-             setCurrentPage(page);
-             window.scrollTo(0, window.scrollY);
-           };
-           
-         
-         const handleRowsPerPageChange = (rows) => {
-           setRowsPerPage(rows);
-           setCurrentPage(1); 
-         };
-
-         const displayedCourse = filteredStudent.slice(
-          (currentPage - 1) * rowsPerPage,
-          currentPage * rowsPerPage
-        );
-         const handleReset=()=>{
-            setStudentData({
-                student_Id:"",
-        userName:"",
-        email:"",
-        mobile:"",
-        whatsapp:"",
-        country:"",
-        location:"",
-       time_zone:"",
-       analyst_name:"",
-       source:"",
-       remarks:"",
-       comments:"",
-       date:currentDate,
-        visa_status:"",
-        mode: "offline"
-                 });
-        
-         }
-         const resetFormState = () => {
-  setStudentData({
+  const [anchorElCountry, setAnchorElCountry] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState({
+    name: '',
+    code: '',
+    flag: ''
+  });
+  const [studentData, setStudentData] = useState({
     student_Id: "",
     userName: "",
     email: "",
@@ -168,767 +109,909 @@ const [currentPage, setCurrentPage] = useState(1);
     mode: "Offline",
   });
 
-  setSelectedCountry({
-    value: "",
-    code: "",
-    flag: ""
-  });
+  const [countries, setCountries] = useState([]);
 
-  setMobileError("");
-  setWhatsappError("");
-  setSuccessMessage("");
-  setErrorMessage("");
-};
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-         const handleInputChange = (e) => {
-            const { name, value } = e.target;
-            setEditedData((prev) => ({
-              ...prev,
-              [name]: value,
-            }));
-          };
+  // ADDED: State for checkbox selection
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
 
-   
-    const handleClose = () => {
-      setOpen(false); 
-    };
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo(0, window.scrollY);
+  };
 
-useEffect(() => {
-  
-  const formattedCountries = staticCountries.filter(c => c.name && c.code);
-
-  setCountries(formattedCountries);
-}, []);
-    const handleCountrySelect = (country) => {
-  setSelectedCountry(country);
-
-  const currentMobile = studentData.mobile || "";
-  const numberPart = currentMobile.includes(" ") ? currentMobile.split(" ")[1] : currentMobile;
-
-  setStudentData(prev => ({
-    ...prev,
-    mobile: numberPart.trim(), 
-  }));
-};
-    useEffect(() => {
-      const fetchStudent = async () => {
-          try {
-              const response = await axios.get('https://api.test.hachion.co/registerstudent');
-              setRegisterStudent(response.data); 
-              setFilteredStudent(response.data);
-          } catch (error) {
-              console.error("Error fetching student list:", error.message);
-          }
-      };
-      fetchStudent();
-      setFilteredStudent(registerStudent)
-  }, []); 
-
-    
-  
-      const handleDateFilter = () => {
-        const filtered = registerStudent.filter((item) => {
-          const regDate = new Date(item.date);
-          const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
-          const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
-
-      const matchSearch =
-      (item.studentId || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (item.userName || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (item.email || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (item.mobile || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (item.country || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (item.location || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (item.analyst_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (item.source || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (item.mode || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (item.date || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (item.visa_status || "").toLowerCase().includes(searchTerm.toLowerCase());
-
-    const inRange =
-      (!start || regDate >= start) &&
-      (!end || regDate <= end)
-
-    return matchSearch && inRange;
-  });
-      setFilteredStudent(filtered);
-      setCurrentPage(1);
-      };
-    const handleDateReset = () => {
-    setStartDate(null);
-    setEndDate(null);
-     setSearchTerm('');
-    setFilteredStudent(registerStudent);
+  const handleRowsPerPageChange = (rows) => {
+    setRowsPerPage(rows);
     setCurrentPage(1);
   };
-      const handleSave = async () => {
-        try {
-            const response = await axios.put(
-                `https://api.test.hachion.co/registerstudent/update/${editedData.student_Id}`,editedData
-            );
-            setRegisterStudent((prev) =>
-                prev.map(curr =>
-                    curr.student_Id === editedData.student_Id ? response.data : curr
-                )
-            );
-            setMessage("Student details updated successfully!");
-            setTimeout(() => setMessage(""), 5000);
-            setOpen(false);
-        } catch (error) {
-            setMessage("Error updating student details.");
-        }
-    };
-           
-    const handleDeleteConfirmation = (id) => {
-        if (window.confirm("Are you sure you want to delete this Student?")) {
-          handleDelete(id);
-        }
-      };
-      const handleDelete = async (id) => {
-       
-         try { 
-          const response = await axios.delete(`https://api.test.hachion.co/registerstudent/delete/${id}`); 
-          console.log("Register Student deleted successfully:", response.data); 
-          setRegisterStudent((prev) => prev.filter((s) => s.id !== id));
-setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
-          setSuccessMessage("✅ Student deleted successfully.");
-    setErrorMessage("");
-        } catch (error) { 
-          console.error("Error deleting Student:", error); 
-           setErrorMessage("❌ Failed to delete student. Please try again.");
-    setSuccessMessage("");
-        } }; 
-       useEffect(() => {
-    const filtered = registerStudent.filter(registerStudent =>
-        registerStudent.studentId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        registerStudent.userName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        registerStudent.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        registerStudent.mobile?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        registerStudent.country?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        registerStudent.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        registerStudent.analyst_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        registerStudent.source?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        registerStudent.mode?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        registerStudent.date?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        registerStudent.visa_status?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredStudent(filtered);
-}, [searchTerm, registerStudent]);
 
-
-const handleClickOpen = (row) => {
-  setFormMode("Edit");
-
-  const [codePart, ...numberParts] = (row.mobile || "").split(" ");
-  const numberPart = numberParts.join(" ");
-
-  const [wCode, ...wNumberParts] = (row.whatsapp || "").split(" ");
-  const wNumberPart = wNumberParts.join(" ");
-
-  const matchedCountry = countries.find(
-    (c) => c.name.toLowerCase() === row.country?.toLowerCase()
+  const displayedCourse = filteredStudent.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
   );
 
-  if (matchedCountry) {
-    setSelectedCountry({
-      value: matchedCountry.name,
-      code: matchedCountry.code,
-      flag: matchedCountry.flag,
+  const handleReset = () => {
+    setStudentData({
+      student_Id: "",
+      userName: "",
+      email: "",
+      mobile: "",
+      whatsapp: "",
+      country: "",
+      location: "",
+      time_zone: "",
+      analyst_name: "",
+      source: "",
+      remarks: "",
+      comments: "",
+      date: currentDate,
+      visa_status: "",
+      mode: "offline"
     });
   }
 
-  setStudentData({
-  ...row,
-  userName: row.userName ?? "",
-  email: row.email ?? "",
-  mobile: numberPart ?? "",
-  whatsapp: wNumberPart ?? "",
-  country: row.country ?? "",
-  location: row.location ?? "",
-  time_zone: row.time_zone ?? "",
-  analyst_name: row.analyst_name ?? "",
-  source: row.source ?? "Select",
-  visa_status: row.visa_status ?? "Select Visa Status",
-  remarks: row.remarks ?? "",
-  comments: row.comments ?? "",
-});
+  const resetFormState = () => {
+    setStudentData({
+      student_Id: "",
+      userName: "",
+      email: "",
+      mobile: "",
+      whatsapp: "",
+      country: "",
+      location: "",
+      time_zone: "",
+      analyst_name: "",
+      source: "",
+      remarks: "",
+      comments: "",
+      date: currentDate,
+      visa_status: "",
+      mode: "Offline",
+    });
 
+    setSelectedCountry({
+      value: "",
+      code: "",
+      flag: ""
+    });
 
-  setShowAddCourse(true);
-};
+    setMobileError("");
+    setWhatsappError("");
+    setSuccessMessage("");
+    setErrorMessage("");
+  };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-    const handleUpdate = async () => {
-     
-       try {
-    const finalMobile = `${selectedCountry.code} ${studentData.mobile}`;
-    const finalWhatsapp = `${selectedCountry.code} ${studentData.whatsapp}`;
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-    const updatedData = {
+  useEffect(() => {
+    const formattedCountries = staticCountries.filter(c => c.name && c.code);
+    setCountries(formattedCountries);
+  }, []);
+
+  const handleCountrySelect = (country) => {
+    setSelectedCountry(country);
+    const currentMobile = studentData.mobile || "";
+    const numberPart = currentMobile.includes(" ") ? currentMobile.split(" ")[1] : currentMobile;
+    setStudentData(prev => ({
+      ...prev,
+      mobile: numberPart.trim(),
+    }));
+  };
+
+  useEffect(() => {
+    const fetchStudent = async () => {
+      try {
+        const response = await axios.get('https://api.test.hachion.co/registerstudent');
+        setRegisterStudent(response.data);
+        setFilteredStudent(response.data);
+      } catch (error) {
+        console.error("Error fetching student list:", error.message);
+      }
+    };
+    fetchStudent();
+    setFilteredStudent(registerStudent)
+  }, []);
+
+  const handleDateFilter = () => {
+    const filtered = registerStudent.filter((item) => {
+      const regDate = new Date(item.date);
+      const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+      const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+
+      const matchSearch =
+        (item.studentId || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.userName || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.email || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.mobile || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.country || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.location || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.analyst_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.source || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.mode || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.date || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.visa_status || "").toLowerCase().includes(searchTerm.toLowerCase());
+
+      const inRange =
+        (!start || regDate >= start) &&
+        (!end || regDate <= end)
+
+      return matchSearch && inRange;
+    });
+    setFilteredStudent(filtered);
+    setCurrentPage(1);
+  };
+
+  const handleDateReset = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setSearchTerm('');
+    setFilteredStudent(registerStudent);
+    setCurrentPage(1);
+  };
+
+  const handleSave = async () => {
+    try {
+      const response = await axios.put(
+        `https://api.test.hachion.co/registerstudent/update/${editedData.student_Id}`, editedData
+      );
+      setRegisterStudent((prev) =>
+        prev.map(curr =>
+          curr.student_Id === editedData.student_Id ? response.data : curr
+        )
+      );
+      setMessage("Student details updated successfully!");
+      setTimeout(() => setMessage(""), 5000);
+      setOpen(false);
+    } catch (error) {
+      setMessage("Error updating student details.");
+    }
+  };
+
+  const handleDeleteConfirmation = (id) => {
+    if (window.confirm("Are you sure you want to delete this Student?")) {
+      handleDelete(id);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(`https://api.test.hachion.co/registerstudent/delete/${id}`);
+      console.log("Register Student deleted successfully:", response.data);
+      setRegisterStudent((prev) => prev.filter((s) => s.id !== id));
+      setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
+      
+      // Remove from selectedIds if present
+      setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
+      
+      setSuccessMessage("✅ Student deleted successfully.");
+      setErrorMessage("");
+    } catch (error) {
+      console.error("Error deleting Student:", error);
+      setErrorMessage("❌ Failed to delete student. Please try again.");
+      setSuccessMessage("");
+    }
+  };
+
+  useEffect(() => {
+    const filtered = registerStudent.filter(registerStudent =>
+      registerStudent.studentId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      registerStudent.userName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      registerStudent.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      registerStudent.mobile?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      registerStudent.country?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      registerStudent.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      registerStudent.analyst_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      registerStudent.source?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      registerStudent.mode?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      registerStudent.date?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      registerStudent.visa_status?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredStudent(filtered);
+  }, [searchTerm, registerStudent]);
+
+  const handleClickOpen = (row) => {
+    setFormMode("Edit");
+
+    const [codePart, ...numberParts] = (row.mobile || "").split(" ");
+    const numberPart = numberParts.join(" ");
+
+    const [wCode, ...wNumberParts] = (row.whatsapp || "").split(" ");
+    const wNumberPart = wNumberParts.join(" ");
+
+    const matchedCountry = countries.find(
+      (c) => c.name.toLowerCase() === row.country?.toLowerCase()
+    );
+
+    if (matchedCountry) {
+      setSelectedCountry({
+        value: matchedCountry.name,
+        code: matchedCountry.code,
+        flag: matchedCountry.flag,
+      });
+    }
+
+    setStudentData({
+      ...row,
+      userName: row.userName ?? "",
+      email: row.email ?? "",
+      mobile: numberPart ?? "",
+      whatsapp: wNumberPart ?? "",
+      country: row.country ?? "",
+      location: row.location ?? "",
+      time_zone: row.time_zone ?? "",
+      analyst_name: row.analyst_name ?? "",
+      source: row.source ?? "Select",
+      visa_status: row.visa_status ?? "Select Visa Status",
+      remarks: row.remarks ?? "",
+      comments: row.comments ?? "",
+    });
+
+    setShowAddCourse(true);
+  };
+
+  const handleUpdate = async () => {
+    try {
+      const finalMobile = `${selectedCountry.code} ${studentData.mobile}`;
+      const finalWhatsapp = `${selectedCountry.code} ${studentData.whatsapp}`;
+
+      const updatedData = {
+        ...studentData,
+        mobile: finalMobile,
+        whatsapp: finalWhatsapp,
+      };
+
+      const response = await axios.put(
+        `https://api.test.hachion.co/registerstudent/update/${studentData.id}`,
+        updatedData
+      );
+
+      setRegisterStudent((prev) =>
+        prev.map((s) => s.id === studentData.id ? response.data : s)
+      );
+      setMessage("Student updated successfully!");
+      setShowAddCourse(false);
+      setFormMode("Add");
+      handleReset();
+    } catch (error) {
+      console.error("Error updating student:", error.message);
+      setMessage("Error updating student.");
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setStudentData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleMobileBlur = () => {
+    const mobile = studentData.mobile?.trim();
+
+    if (!mobile || mobile.length !== 10) {
+      setMobileError("❌ Mobile number must be exactly 10 digits.");
+    } else {
+      setMobileError("");
+    }
+  };
+
+  const handleWhatsappBlur = () => {
+    const whatsapp = studentData.whatsapp?.trim();
+
+    if (!whatsapp || whatsapp.length !== 10) {
+      setWhatsappError("❌ WhatsApp number must be exactly 10 digits.");
+    } else {
+      setWhatsappError("");
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const mobileNumber = studentData.mobile?.trim();
+    const countryCode = selectedCountry.code?.trim() || "";
+
+    if (!mobileNumber || mobileNumber.length !== 10) {
+      setErrorMessage("❌ Mobile number must be exactly 10 digits.");
+      setSuccessMessage("");
+      return;
+    }
+
+    const finalMobile = `${countryCode} ${mobileNumber}`;
+    const currentDate = new Date().toISOString().split("T")[0];
+    const finalWhatsapp = `${countryCode} ${studentData.whatsapp}`;
+
+    const dataToSubmit = {
       ...studentData,
       mobile: finalMobile,
       whatsapp: finalWhatsapp,
+      date: currentDate,
     };
+    console.log("Data being sent:", dataToSubmit);
 
-    const response = await axios.put(
-      `https://api.test.hachion.co/registerstudent/update/${studentData.id}`,
-      updatedData
-    );
-
-        setRegisterStudent((prev) =>
-          prev.map((s) => s.id === studentData.id ? response.data : s)
-        );
-        setMessage("Student updated successfully!");
-        setShowAddCourse(false);
-        setFormMode("Add");
+    try {
+      const response = await axios.post("https://api.test.hachion.co/registerstudent/add", dataToSubmit);
+      if (response.status === 200) {
+        setSuccessMessage("✅ Student added successfully.");
+        setErrorMessage("");
+        setStudentData(dataToSubmit);
         handleReset();
-      } catch (error) {
-        console.error("Error updating student:", error.message);
-        setMessage("Error updating student.");
       }
-    };
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.message) {
+        const message = error.response.data.message;
 
-    
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setStudentData((prevData) => ({
-          ...prevData,
-          [name]: value,
-        }));
-      };
-
-const handleMobileBlur = () => {
-  const mobile = studentData.mobile?.trim();
-
-  if (!mobile || mobile.length !== 10) {
-    setMobileError("❌ Mobile number must be exactly 10 digits.");
-  } else {
-    setMobileError("");
-  }
-};
-const handleWhatsappBlur = () => {
-  const whatsapp = studentData.whatsapp?.trim();
-
-  if (!whatsapp || whatsapp.length !== 10) {
-    setWhatsappError("❌ WhatsApp number must be exactly 10 digits.");
-  } else {
-    setWhatsappError("");
-  }
-};
-
-
-      const handleSubmit = async (e) => {
-  e.preventDefault();
-const mobileNumber = studentData.mobile?.trim();
-  const countryCode = selectedCountry.code?.trim() || "";
-
-  
-  if (!mobileNumber || mobileNumber.length !== 10) {
-    setErrorMessage("❌ Mobile number must be exactly 10 digits.");
-    setSuccessMessage("");
-    return;
-  }
-
-  const finalMobile = `${countryCode} ${mobileNumber}`;
-  const currentDate = new Date().toISOString().split("T")[0];
-  const finalWhatsapp = `${countryCode} ${studentData.whatsapp}`;
-
-  const dataToSubmit = {
-    ...studentData,
-    mobile: finalMobile,
-    whatsapp: finalWhatsapp, 
-    date: currentDate,
-  };
-  console.log("Data being sent:", dataToSubmit);
-
-  try {
-    const response = await axios.post("https://api.test.hachion.co/registerstudent/add", dataToSubmit);
-    if (response.status === 200) {
-      setSuccessMessage("✅ Student added successfully.");
-      setErrorMessage("");
-      setStudentData(dataToSubmit);
-      handleReset();
-    }
-  } catch (error) {
-    if (error.response && error.response.data && error.response.data.message) {
-      const message = error.response.data.message;
-
-      if (message.includes("Email already exists")) {
-        setErrorMessage("❌ Email already exists in the system.");
-      } else if (message.includes("Mobile number already exists")) {
-        setErrorMessage("❌ Mobile number already exists in the system.");
+        if (message.includes("Email already exists")) {
+          setErrorMessage("❌ Email already exists in the system.");
+        } else if (message.includes("Mobile number already exists")) {
+          setErrorMessage("❌ Mobile number already exists in the system.");
+        } else {
+          setErrorMessage("❌ Failed to add student: " + message);
+        }
       } else {
-        setErrorMessage("❌ Failed to add student: " + message);
+        console.error("Error adding student:", error.message);
+        setErrorMessage("❌ An unexpected error occurred.");
       }
-    } else {
-      console.error("Error adding student:", error.message);
-      setErrorMessage("❌ An unexpected error occurred.");
+      setSuccessMessage("");
     }
-    setSuccessMessage("");
-  }
-};
+  };
 
-    const handleAddTrendingCourseClick = () => {
-  setFormMode("Add");
-  resetFormState();      
-  setShowAddCourse(true);
-};
-
-   const isFormValid = () => {
-  const safeTrim = (val) => (val ?? "").trim();
-
-  return (
-    safeTrim(studentData.userName) !== "" &&
-    safeTrim(studentData.email) !== "" &&
-    safeTrim(studentData.mobile).length === 10 &&
-    safeTrim(studentData.whatsapp).length === 10 &&
-    safeTrim(studentData.country) !== "" &&
-    safeTrim(studentData.location) !== "" &&
-    safeTrim(studentData.time_zone) !== "" &&
-    safeTrim(studentData.analyst_name) !== "" &&
-    safeTrim(studentData.remarks).length >= 15 &&
-    safeTrim(studentData.comments) !== ""
-  );
-};
-
-
-  return (
-    
-    <>  
-     {showAddCourse ?  (      
-       <div className='course-category'>
-        <nav aria-label="breadcrumb">
-              <ol className="breadcrumb">
-          <li className="breadcrumb-item">
-                <a href="#!" onClick={() => {
-    setShowAddCourse(false);
+  const handleAddTrendingCourseClick = () => {
     setFormMode("Add");
-    resetFormState();   
-  }} >Register List</a> <MdKeyboardArrowRight />
-                </li>
-                <li className="breadcrumb-item active" aria-current="page">
+    resetFormState();
+    setShowAddCourse(true);
+  };
+
+  const isFormValid = () => {
+    const safeTrim = (val) => (val ?? "").trim();
+
+    return (
+      safeTrim(studentData.userName) !== "" &&
+      safeTrim(studentData.email) !== "" &&
+      safeTrim(studentData.mobile).length === 10 &&
+      safeTrim(studentData.whatsapp).length === 10 &&
+      safeTrim(studentData.country) !== "" &&
+      safeTrim(studentData.location) !== "" &&
+      safeTrim(studentData.time_zone) !== "" &&
+      safeTrim(studentData.analyst_name) !== "" &&
+      safeTrim(studentData.remarks).length >= 15 &&
+      safeTrim(studentData.comments) !== ""
+    );
+  };
+
+  // ADDED: Handle Select All checkbox
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allIds = displayedCourse.map(student => student.id);
+      setSelectedIds(allIds);
+      setSelectAll(true);
+    } else {
+      setSelectedIds([]);
+      setSelectAll(false);
+    }
+  };
+
+  // ADDED: Handle individual checkbox
+  const handleSelectOne = (id) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+      setSelectAll(false);
+    } else {
+      const newSelectedIds = [...selectedIds, id];
+      setSelectedIds(newSelectedIds);
+      // Check if all items are selected
+      if (newSelectedIds.length === displayedCourse.length) {
+        setSelectAll(true);
+      }
+    }
+  };
+
+  // ADDED: Update selectAll state when page changes
+  useEffect(() => {
+    const allCurrentPageIds = displayedCourse.map(student => student.id);
+    const allSelected = allCurrentPageIds.length > 0 && 
+                       allCurrentPageIds.every(id => selectedIds.includes(id));
+    setSelectAll(allSelected);
+  }, [currentPage, displayedCourse, selectedIds]);
+
+  // ADDED: Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      setErrorMessage("Please select at least one student to delete");
+      setSuccessMessage("");
+      setTimeout(() => setErrorMessage(""), 3000);
+      return;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'student' : 'students'}?`;
+    
+    if (window.confirm(confirmMessage)) {
+      try {
+        // Delete all selected students
+        await Promise.all(
+          selectedIds.map(id =>
+            axios.delete(`https://api.test.hachion.co/registerstudent/delete/${id}`)
+          )
+        );
+
+        // Update state
+        const updatedStudents = registerStudent.filter(item => !selectedIds.includes(item.id));
+        setRegisterStudent(updatedStudents);
+        setFilteredStudent(updatedStudents);
+        
+        setSelectedIds([]);
+        setSelectAll(false);
+        
+        setSuccessMessage(`${selectedIds.length} ${selectedIds.length === 1 ? 'student' : 'students'} deleted successfully`);
+        setErrorMessage("");
+        
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 6000);
+      } catch (error) {
+        console.error("Error deleting students:", error);
+        setSuccessMessage("");
+        setErrorMessage("Error deleting some students. Please try again.");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 6000);
+      }
+    }
+  };
+
+  return (
+    <>
+      {showAddCourse ? (
+        <div className='course-category'>
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb">
+              <li className="breadcrumb-item">
+                <a href="#!" onClick={() => {
+                  setShowAddCourse(false);
+                  setFormMode("Add");
+                  resetFormState();
+                }} >Register List</a> <MdKeyboardArrowRight />
+              </li>
+              <li className="breadcrumb-item active" aria-current="page">
                 {formMode === "Edit" ? "Edit Student" : "Add Student"}
               </li>
-              </ol>
-            </nav>
-    
-     <div className='category'>
-     <div className='category-header'>
-     <p style={{ marginBottom: 0 }}>{formMode === "Edit" ? "Edit Student" : "Add Student"}</p>
-     </div>
-     <div className="course-row">
-       <div class="col">
-         <label for="inputEmail4" class="form-label">Student Name <span className="star">*</span></label>
-         <input type="text" class="schedule-input" id="inputEmail4" name="userName"
-  value={studentData.userName}
-  onChange={handleChange}/>
-       </div>
-       <div class="col">
-         <label for="inputPassword4" class="form-label">Email <span className="star">*</span></label>
-         <input type="email" class="schedule-input" id="inputPassword4" placeholder='abc@gmail.com'
-         name="email"
-         value={studentData.email}
-         onChange={handleChange}/>
-       </div>
-       <div class="col">
-         <label for="inputPassword4" class="form-label">Location <span className="star">*</span></label>
-         <input type="text" class="schedule-input" id="inputPassword4"  name="location"
-         value={studentData.location}
-         onChange={handleChange}/>
-       </div>
-       </div>
-       <div className="course-row">
-       
-      <div className="col">
-  <label className="form-label">
-    Country <span className="star">*</span>
-  </label>
-  <Select
-    options={countries
-      .filter((country) => country.name && country.code) 
-      .map((country) => ({
-        value: country.name,
-        label: (
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Flag code={country.flag} style={{ width: '20px', marginRight: '10px' }} />
-            {country.name} ({country.code})
-          </div>
-        ),
-        flag: country.flag,
-        code: country.code
-      }))}
-    onChange={(selected) => {
-      setSelectedCountry(selected);
-      setStudentData((prev) => ({
-  ...prev,
-  country: selected.value,
-  mobile: "",
-  whatsapp: "" 
-}));
+            </ol>
+          </nav>
 
-    }}
-    value={
-      selectedCountry.value
-        ? {
-            value: selectedCountry.value,
-            label: (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Flag code={selectedCountry.flag} style={{ width: '20px', marginRight: '10px' }} />
-                {selectedCountry.value} ({selectedCountry.code})
+          <div className='category'>
+            <div className='category-header'>
+              <p style={{ marginBottom: 0 }}>{formMode === "Edit" ? "Edit Student" : "Add Student"}</p>
+            </div>
+            <div className="course-row">
+              <div class="col">
+                <label for="inputEmail4" class="form-label">Student Name <span className="star">*</span></label>
+                <input type="text" class="schedule-input" id="inputEmail4" name="userName"
+                  value={studentData.userName}
+                  onChange={handleChange} />
               </div>
-            )
-          }
-        : null
-    }
-    styles={{
-      control: (base) => ({
-        ...base,
-        minHeight: '50px',
-        height: '50px'
-      }),
-      valueContainer: (base) => ({
-        ...base,
-        height: '50px',
-        padding: '0 8px'
-      }),
-      indicatorsContainer: (base) => ({
-        ...base,
-        height: '50px'
-      })
-    }}
-  />
-</div>
-
-        <div className="col">
-        <label className="form-label">Mobile <span className="star">*</span></label>
-        <div style={{ position: 'relative' }}>
-          {/* Country code prefix */}
-          <span
-            style={{
-              position: 'absolute',
-              left: '12px',
-              top: '0',
-              bottom: '0',
-              display: 'flex',
-              alignItems: 'center',
-              fontSize: '16px',
-              fontFamily: 'inherit',
-              color: '#212529',
-              height: '50px',
-              pointerEvents: 'none',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {selectedCountry.code}
-          </span>
-
-          {/* Input box for mobile */}
-          <input
-            type="text"
-            className="schedule-input"
-            placeholder="Enter mobile number"
-            name="mobile"
-            value={studentData.mobile}
-            onChange={handleChange}
-            onBlur={handleMobileBlur}handleMobileBlur
-            style={{
-              paddingLeft: selectedCountry.code ? `${selectedCountry.code.length * 10 + 20}px` : '10px',
-              
-              fontSize: '16px',
-              fontFamily: 'inherit',
-            }}
-          />
-
-          {mobileError && (
-            <small style={{ color: 'red', marginTop: '4px', display: 'block' }}>{mobileError}</small>
-          )}
-        </div>
-      </div>
-       <div className="col">
-  <label className="form-label">WhatsApp Number <span className="star">*</span></label>
-
-  <div style={{ position: 'relative' }}>
-    {/* Country code prefix */}
-    <span
-      style={{
-        position: 'absolute',
-        left: '12px',
-        top: '0',
-        bottom: '0',
-        display: 'flex',
-        alignItems: 'center',
-        fontSize: '16px',
-        fontFamily: 'inherit',
-        color: '#212529',
-        height: '50px',
-        pointerEvents: 'none',
-        whiteSpace: 'nowrap',
-      }}
-    >
-      {selectedCountry.code}
-    </span>
-
-    <input
-  type="text"
-  className="schedule-input"
-  placeholder="Enter WhatsApp number"
-  name="whatsapp"
-  value={studentData.whatsapp}
-  onChange={handleChange}
-  onBlur={handleWhatsappBlur}
-  style={{
-    paddingLeft: selectedCountry.code
-      ? `${selectedCountry.code.length * 10 + 20}px`
-      : '10px',
-    fontSize: '16px',
-    fontFamily: 'inherit',
-  }}
-/>
-{whatsappError && (
-  <small style={{ color: 'red', marginTop: '4px', display: 'block' }}>
-    {whatsappError}
-  </small>
-)}
-
-  </div>
-</div>
-
-       </div>
-       <div className="course-row">
-        <div class="col">
-         <label for="inputState" class="form-label">Time Zone <span className="star">*</span></label>
-         <input type="text" class="schedule-input"
-         name="time_zone" value={studentData.time_zone} onChange={handleChange}/>
-       </div>
-         <div class="col">
-         <label for="inputState" class="form-label">Entered by <span className="star">*</span></label>
-         <input type="text" class="schedule-input"
-         name="analyst_name" value={studentData.analyst_name} onChange={handleChange}/>
-       </div>
-        <div class="col">
-         <label for="inputState" class="form-label">Visa Status</label>
-         <select id="inputState" class="form-select" name="visa_status" value={studentData.visa_status} onChange={handleChange}>
-           <option selected>Select Visa Status</option>
-           <option>H1B</option>
-           <option>GC</option>
-           <option>EAD</option>
-           <option>F1</option>
-           <option>Not Sure</option>
-         </select>
-       </div>
-       <div class="col">
-         <label for="inputState" class="form-label">Source of Enquiry </label>
-         <select id="inputState" class="form-select" name="source" value={studentData.source} onChange={handleChange}>
-           <option selected>Select</option>
-           <option>Linkedin</option>
-           <option>Instagram</option>
-           <option>Facebook</option>
-           <option>Twitter</option>
-           <option>Other</option>
-         </select>
-       </div>
-       {/* <div class="col">
-         <label for="inputState" class="form-label">Course Name</label>
-         <select id="inputState" class="form-select" name='course_name' value={studentData.course_name} onChange={handleChange}>
-         <option value="" disabled>
-          Select Course
-        </option>
-        {course.map((curr) => (
-          <option key={curr.id} value={curr.courseName}>
-            {curr.courseName}
-          </option>
-        ))}
-   
-         </select>
-       </div> */}
-       </div>
-       <div className='row'>
-       <div class="mb-3">
-       <label for="exampleFormControlTextarea1" class="form-label">Remarks <span className="star">*</span></label>
-       <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-       name='remarks' value={studentData.remarks} onChange={handleChange}></textarea>
-     </div>
-     {studentData.remarks.trim().length > 0 && studentData.remarks.trim().length < 15 && (
-    <p style={{ color: "red", fontSize: "0.9rem" }}>
-      Remarks must be at least 15 characters.
-    </p>
-  )}
-     <div class="mb-3">
-       <label for="exampleFormControlTextarea1" class="form-label">Comments <span className="star">*</span></label>
-       <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-       name='comments' value={studentData.comments} onChange={handleChange}></textarea>
-     </div>
-     </div>
-           {/* <RadioGroup
-             row
-             aria-labelledby="demo-row-radio-buttons-group-label"
-             name="row-radio-buttons-group"
-           >
-             <FormControlLabel value="female" control={<Radio />} label="Send details via only email" />
-             <FormControlLabel value="male" control={<Radio />} label="Send details via only whatsapp" />
-             <FormControlLabel value="male" control={<Radio />} label="Send details via email and whtsapp" />
-           
-           </RadioGroup> */}
-           {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
-      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
-        <div className="course-row">
-        {formMode === "Edit" ? (
-        <button className='submit-btn' onClick={handleUpdate} disabled={!isFormValid()}>
-          Update
-        </button>
-      ) : (
-        <button className='submit-btn' onClick={handleSubmit} disabled={!isFormValid()}>
-          Submit
-        </button>
-      )}
-      </div>
-     </div>
-        
-     </div>):(
-        <>
-<div>
-   <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className='course-category'>
-       
-        <div className='category'>
-          <div className='category-header'>
-            <p style={{ marginBottom: 0 }}>Register List</p>
-          </div>
-          <div className='date-schedule'>
-            Start Date
-            <DatePicker 
-    selected={startDate} 
-    onChange={(date) => setStartDate(date)} 
-    isClearable 
-    sx={{
-      '& .MuiIconButton-root':{color: '#00aeef'}
-   }}/>
-            End Date
-            <DatePicker 
-    selected={endDate} 
-    onChange={(date) => setEndDate(date)} 
-    isClearable 
-    sx={{
-      '& .MuiIconButton-root':{color: '#00aeef'}
-   }}
-  />
-            <button className='filter' onClick={handleDateFilter} >Filter</button>
-           <button className="filter" onClick={handleDateReset}>Reset</button>
-          </div>
-          <div className='entries'>
-            <div className='entries-left'>
-            <p style={{ marginBottom: '0' }}>Show</p>
-  <div className="btn-group">
-    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-      {rowsPerPage}
-    </button>
-    <ul className="dropdown-menu">
-      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
-      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
-      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
-    </ul>
-  </div>
-  <p style={{ marginBottom: '0' }}>entries</p>
-</div>
-            <div className='entries-right'>
-              <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
-                <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}/>
-                <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
+              <div class="col">
+                <label for="inputPassword4" class="form-label">Email <span className="star">*</span></label>
+                <input type="email" class="schedule-input" id="inputPassword4" placeholder='abc@gmail.com'
+                  name="email"
+                  value={studentData.email}
+                  onChange={handleChange} />
               </div>
-              <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick} >
-                <FiPlus /> Add Student
-              </button>
+              <div class="col">
+                <label for="inputPassword4" class="form-label">Location <span className="star">*</span></label>
+                <input type="text" class="schedule-input" id="inputPassword4" name="location"
+                  value={studentData.location}
+                  onChange={handleChange} />
+              </div>
+            </div>
+            <div className="course-row">
+
+              <div className="col">
+                <label className="form-label">
+                  Country <span className="star">*</span>
+                </label>
+                <Select
+                  options={countries
+                    .filter((country) => country.name && country.code)
+                    .map((country) => ({
+                      value: country.name,
+                      label: (
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <Flag code={country.flag} style={{ width: '20px', marginRight: '10px' }} />
+                          {country.name} ({country.code})
+                        </div>
+                      ),
+                      flag: country.flag,
+                      code: country.code
+                    }))}
+                  onChange={(selected) => {
+                    setSelectedCountry(selected);
+                    setStudentData((prev) => ({
+                      ...prev,
+                      country: selected.value,
+                      mobile: "",
+                      whatsapp: ""
+                    }));
+
+                  }}
+                  value={
+                    selectedCountry.value
+                      ? {
+                        value: selectedCountry.value,
+                        label: (
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <Flag code={selectedCountry.flag} style={{ width: '20px', marginRight: '10px' }} />
+                            {selectedCountry.value} ({selectedCountry.code})
+                          </div>
+                        )
+                      }
+                      : null
+                  }
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      minHeight: '50px',
+                      height: '50px'
+                    }),
+                    valueContainer: (base) => ({
+                      ...base,
+                      height: '50px',
+                      padding: '0 8px'
+                    }),
+                    indicatorsContainer: (base) => ({
+                      ...base,
+                      height: '50px'
+                    })
+                  }}
+                />
+              </div>
+
+              <div className="col">
+                <label className="form-label">Mobile <span className="star">*</span></label>
+                <div style={{ position: 'relative' }}>
+                  {/* Country code prefix */}
+                  <span
+                    style={{
+                      position: 'absolute',
+                      left: '12px',
+                      top: '0',
+                      bottom: '0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      fontSize: '16px',
+                      fontFamily: 'inherit',
+                      color: '#212529',
+                      height: '50px',
+                      pointerEvents: 'none',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {selectedCountry.code}
+                  </span>
+
+                  {/* Input box for mobile */}
+                  <input
+                    type="text"
+                    className="schedule-input"
+                    placeholder="Enter mobile number"
+                    name="mobile"
+                    value={studentData.mobile}
+                    onChange={handleChange}
+                    onBlur={handleMobileBlur} handleMobileBlur
+                    style={{
+                      paddingLeft: selectedCountry.code ? `${selectedCountry.code.length * 10 + 20}px` : '10px',
+                      fontSize: '16px',
+                      fontFamily: 'inherit',
+                    }}
+                  />
+
+                  {mobileError && (
+                    <small style={{ color: 'red', marginTop: '4px', display: 'block' }}>{mobileError}</small>
+                  )}
+                </div>
+              </div>
+              <div className="col">
+                <label className="form-label">WhatsApp Number <span className="star">*</span></label>
+
+                <div style={{ position: 'relative' }}>
+                  {/* Country code prefix */}
+                  <span
+                    style={{
+                      position: 'absolute',
+                      left: '12px',
+                      top: '0',
+                      bottom: '0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      fontSize: '16px',
+                      fontFamily: 'inherit',
+                      color: '#212529',
+                      height: '50px',
+                      pointerEvents: 'none',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {selectedCountry.code}
+                  </span>
+
+                  <input
+                    type="text"
+                    className="schedule-input"
+                    placeholder="Enter WhatsApp number"
+                    name="whatsapp"
+                    value={studentData.whatsapp}
+                    onChange={handleChange}
+                    onBlur={handleWhatsappBlur}
+                    style={{
+                      paddingLeft: selectedCountry.code
+                        ? `${selectedCountry.code.length * 10 + 20}px`
+                        : '10px',
+                      fontSize: '16px',
+                      fontFamily: 'inherit',
+                    }}
+                  />
+                  {whatsappError && (
+                    <small style={{ color: 'red', marginTop: '4px', display: 'block' }}>
+                      {whatsappError}
+                    </small>
+                  )}
+
+                </div>
+              </div>
+
+            </div>
+            <div className="course-row">
+              <div class="col">
+                <label for="inputState" class="form-label">Time Zone <span className="star">*</span></label>
+                <input type="text" class="schedule-input"
+                  name="time_zone" value={studentData.time_zone} onChange={handleChange} />
+              </div>
+              <div class="col">
+                <label for="inputState" class="form-label">Entered by <span className="star">*</span></label>
+                <input type="text" class="schedule-input"
+                  name="analyst_name" value={studentData.analyst_name} onChange={handleChange} />
+              </div>
+              <div class="col">
+                <label for="inputState" class="form-label">Visa Status</label>
+                <select id="inputState" class="form-select" name="visa_status" value={studentData.visa_status} onChange={handleChange}>
+                  <option selected>Select Visa Status</option>
+                  <option>H1B</option>
+                  <option>GC</option>
+                  <option>EAD</option>
+                  <option>F1</option>
+                  <option>Not Sure</option>
+                </select>
+              </div>
+              <div class="col">
+                <label for="inputState" class="form-label">Source of Enquiry </label>
+                <select id="inputState" class="form-select" name="source" value={studentData.source} onChange={handleChange}>
+                  <option selected>Select</option>
+                  <option>Linkedin</option>
+                  <option>Instagram</option>
+                  <option>Facebook</option>
+                  <option>Twitter</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+            <div className='row'>
+              <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Remarks <span className="star">*</span></label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                  name='remarks' value={studentData.remarks} onChange={handleChange}></textarea>
+              </div>
+              {studentData.remarks.trim().length > 0 && studentData.remarks.trim().length < 15 && (
+                <p style={{ color: "red", fontSize: "0.9rem" }}>
+                  Remarks must be at least 15 characters.
+                </p>
+              )}
+              <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Comments <span className="star">*</span></label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                  name='comments' value={studentData.comments} onChange={handleChange}></textarea>
+              </div>
+            </div>
+            {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+            {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
+            <div className="course-row">
+              {formMode === "Edit" ? (
+                <button className='submit-btn' onClick={handleUpdate} disabled={!isFormValid()}>
+                  Update
+                </button>
+              ) : (
+                <button className='submit-btn' onClick={handleSubmit} disabled={!isFormValid()}>
+                  Submit
+                </button>
+              )}
             </div>
           </div>
 
-        </div>
-      </div>
-    </LocalizationProvider>
-  <TableContainer component={Paper} >
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell align='center'>
-              <Checkbox />
-            </StyledTableCell>
-            <StyledTableCell align='center'>S.No.</StyledTableCell>
-            <StyledTableCell align="center">Date of Registration</StyledTableCell>
-            <StyledTableCell align='center'>Mode</StyledTableCell>
-            <StyledTableCell align='center'>Student ID</StyledTableCell>
-            <StyledTableCell align='center'>Student Name</StyledTableCell>
-            <StyledTableCell align='center'>Email</StyledTableCell>
-            <StyledTableCell align="center">Mobile</StyledTableCell>
-            <StyledTableCell align="center">WhatsApp</StyledTableCell>
-            <StyledTableCell align="center">Country</StyledTableCell>
-            <StyledTableCell align="center">Location</StyledTableCell>
-            <StyledTableCell align="center">Time Zone</StyledTableCell>
-            <StyledTableCell align="center">Visa Status</StyledTableCell>
-            <StyledTableCell align='center'>Entered By</StyledTableCell>
-            <StyledTableCell align='center'>Source</StyledTableCell>
-            <StyledTableCell align='center'>Remark</StyledTableCell>
-            <StyledTableCell align='center'>Comment</StyledTableCell>
-            <StyledTableCell align="center">Action</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-        {displayedCourse.length > 0
-    ? displayedCourse.map((row, index) => (
-    <StyledTableRow key={row.student_Id}>
-      <StyledTableCell align='center'>
-        <Checkbox />
-      </StyledTableCell>
-      <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
-        </StyledTableCell> {/* S.No. */}
-         <StyledTableCell align="center">{row.date ? dayjs(row.date).format('MMM-DD-YYYY').toUpperCase() : ""}</StyledTableCell>
+        </div>) : (
+        <>
+          <div>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <div className='course-category'>
 
-         <StyledTableCell align="center">{row.mode}</StyledTableCell>        
-        <StyledTableCell align="center">{row.studentId}</StyledTableCell>
-      <StyledTableCell align="left">{row.userName}</StyledTableCell>
-      <StyledTableCell align="left">{row.email}</StyledTableCell>
-      <StyledTableCell align="center">{row.mobile}</StyledTableCell>
-      <StyledTableCell align="center">{row.whatsapp}</StyledTableCell>
-      <StyledTableCell align="center">{row.country}</StyledTableCell>
-        <StyledTableCell align="center">{row.location}</StyledTableCell>
-        <StyledTableCell align="center">{row.time_zone}</StyledTableCell>
-        <StyledTableCell align="center">{row.visa_status}</StyledTableCell>
-        <StyledTableCell align="center">{row.analyst_name}</StyledTableCell>
-        <StyledTableCell align="center">{row.source}</StyledTableCell>
-        <StyledTableCell align="left" style={{ whiteSpace: 'wrap' }}>{row.remarks}</StyledTableCell>
-        <StyledTableCell align="left" style={{ whiteSpace: 'wrap' }}>{row.comments}</StyledTableCell> 
-      <StyledTableCell align="center">
-      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
-        <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
-        <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.id)} />
-        </div>
-      </StyledTableCell>
-    </StyledTableRow>
-  ))
-  : (
-    <StyledTableRow>
-      <StyledTableCell colSpan={17} align="center">
-        No data available.
-      </StyledTableCell>
-    </StyledTableRow>
-  )}
-</TableBody>
-    </Table>
-    </TableContainer>
-    {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
-      {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
-    <div className='pagination-container'>
-                  <AdminPagination
-              currentPage={currentPage}
-              rowsPerPage={rowsPerPage}
-              totalRows={filteredStudent.length} 
-              onPageChange={handlePageChange}
-            />
+                <div className='category'>
+                  <div className='category-header'>
+                    <p style={{ marginBottom: 0 }}>Register List</p>
+                  </div>
+                  
+                  {/* ADDED: Success and Error Messages */}
+                  {successMessage && <p style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</p>}
+                  {errorMessage && <p style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</p>}
+                  
+                  <div className='date-schedule'>
+                    Start Date
+                    <DatePicker
+                      selected={startDate}
+                      onChange={(date) => setStartDate(date)}
+                      isClearable
+                      sx={{
+                        '& .MuiIconButton-root': { color: '#00aeef' }
+                      }} />
+                    End Date
+                    <DatePicker
+                      selected={endDate}
+                      onChange={(date) => setEndDate(date)}
+                      isClearable
+                      sx={{
+                        '& .MuiIconButton-root': { color: '#00aeef' }
+                      }}
+                    />
+                    <button className='filter' onClick={handleDateFilter} >Filter</button>
+                    <button className="filter" onClick={handleDateReset}>Reset</button>
+                  </div>
+                  <div className='entries'>
+                    <div className='entries-left'>
+                      <p style={{ marginBottom: '0' }}>Show</p>
+                      <div className="btn-group">
+                        <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                          {rowsPerPage}
+                        </button>
+                        <ul className="dropdown-menu">
+                          <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+                          <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+                          <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+                        </ul>
                       </div>
-    {message && <div className="success-message">{message}</div>}
+                      <p style={{ marginBottom: '0' }}>entries</p>
+                    </div>
+                    <div className='entries-right'>
+                      <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
+                        <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)} />
+                        <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
+                      </div>
+                      
+                      {/* ADDED: Bulk Delete Button */}
+                      {selectedIds.length > 0 && (
+                        <button 
+                          type="button" 
+                          className="btn-category" 
+                          onClick={handleBulkDelete}
+                          style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
+                        >
+                          <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+                        </button>
+                      )}
+                      
+                      <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick} >
+                        <FiPlus /> Add Student
+                      </button>
+                    </div>
+                  </div>
 
-    </div>
-    </>)}
+                </div>
+              </div>
+            </LocalizationProvider>
+            <TableContainer component={Paper} >
+              <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                <TableHead>
+                  <TableRow>
+                    {/* ADDED: Select All Checkbox */}
+                    <StyledTableCell align='center'>
+                      <Checkbox 
+                        checked={selectAll}
+                        onChange={handleSelectAll}
+                        indeterminate={selectedIds.length > 0 && selectedIds.length < displayedCourse.length}
+                      />
+                    </StyledTableCell>
+                    <StyledTableCell align='center'>S.No.</StyledTableCell>
+                    <StyledTableCell align="center">Date of Registration</StyledTableCell>
+                    <StyledTableCell align='center'>Mode</StyledTableCell>
+                    <StyledTableCell align='center'>Student ID</StyledTableCell>
+                    <StyledTableCell align='center'>Student Name</StyledTableCell>
+                    <StyledTableCell align='center'>Email</StyledTableCell>
+                    <StyledTableCell align="center">Mobile</StyledTableCell>
+                    <StyledTableCell align="center">WhatsApp</StyledTableCell>
+                    <StyledTableCell align="center">Country</StyledTableCell>
+                    <StyledTableCell align="center">Location</StyledTableCell>
+                    <StyledTableCell align="center">Time Zone</StyledTableCell>
+                    <StyledTableCell align="center">Visa Status</StyledTableCell>
+                    <StyledTableCell align='center'>Entered By</StyledTableCell>
+                    <StyledTableCell align='center'>Source</StyledTableCell>
+                    <StyledTableCell align='center'>Remark</StyledTableCell>
+                    <StyledTableCell align='center'>Comment</StyledTableCell>
+                    <StyledTableCell align="center">Action</StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {displayedCourse.length > 0
+                    ? displayedCourse.map((row, index) => (
+                      <StyledTableRow key={row.student_Id}>
+                        {/* ADDED: Individual Checkbox */}
+                        <StyledTableCell align='center'>
+                          <Checkbox 
+                            checked={selectedIds.includes(row.id)}
+                            onChange={() => handleSelectOne(row.id)}
+                          />
+                        </StyledTableCell>
+                        <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
+                        </StyledTableCell> {/* S.No. */}
+                        <StyledTableCell align="center">{row.date ? dayjs(row.date).format('MMM-DD-YYYY').toUpperCase() : ""}</StyledTableCell>
+                        <StyledTableCell align="center">{row.mode}</StyledTableCell>
+                        <StyledTableCell align="center">{row.studentId}</StyledTableCell>
+                        <StyledTableCell align="left">{row.userName}</StyledTableCell>
+                        <StyledTableCell align="left">{row.email}</StyledTableCell>
+                        <StyledTableCell align="center">{row.mobile}</StyledTableCell>
+                        <StyledTableCell align="center">{row.whatsapp}</StyledTableCell>
+                        <StyledTableCell align="center">{row.country}</StyledTableCell>
+                        <StyledTableCell align="center">{row.location}</StyledTableCell>
+                        <StyledTableCell align="center">{row.time_zone}</StyledTableCell>
+                        <StyledTableCell align="center">{row.visa_status}</StyledTableCell>
+                        <StyledTableCell align="center">{row.analyst_name}</StyledTableCell>
+                        <StyledTableCell align="center">{row.source}</StyledTableCell>
+                        <StyledTableCell align="left" style={{ whiteSpace: 'wrap' }}>{row.remarks}</StyledTableCell>
+                        <StyledTableCell align="left" style={{ whiteSpace: 'wrap' }}>{row.comments}</StyledTableCell>
+                        <StyledTableCell align="center">
+                          <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+                            <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
+                            <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.id)} />
+                          </div>
+                        </StyledTableCell>
+                      </StyledTableRow>
+                    ))
+                    : (
+                      <StyledTableRow>
+                        {/* UPDATED: Changed colSpan from 17 to 18 to include checkbox column */}
+                        <StyledTableCell colSpan={18} align="center">
+                          No data available.
+                        </StyledTableCell>
+                      </StyledTableRow>
+                    )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            
+            {/* REMOVED: Duplicate messages (already shown above) */}
+            {/* {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+            {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>} */}
+            
+            <div className='pagination-container'>
+              <AdminPagination
+                currentPage={currentPage}
+                rowsPerPage={rowsPerPage}
+                totalRows={filteredStudent.length}
+                onPageChange={handlePageChange}
+              />
+            </div>
+            {message && <div className="success-message">{message}</div>}
 
- </> );
+          </div>
+        </>)}
+    </>);
 }

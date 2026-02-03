@@ -1,4 +1,4 @@
-import  React, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { duration, styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -33,13 +33,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
     color: theme.palette.common.white,
-    borderRight: '1px solid white', 
+    borderRight: '1px solid white',
     padding: '3px 5px',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
     padding: '3px 4px',
-    borderRight: '1px solid #e0e0e0', 
+    borderRight: '1px solid #e0e0e0',
   },
 }));
 
@@ -54,33 +54,38 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 export default function AdminSummerEvents() {
-  const [category,setCategory]=useState([]);
-  const [course,setCourse]=useState([]); 
-  const [searchTerm,setSearchTerm]=useState("")
+  const [category, setCategory] = useState([]);
+  const [course, setCourse] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("")
   const [showAddCourse, setShowAddCourse] = useState(false);
-  const[summerCourse,setSummerCourse]=useState([]);
-  const[filteredCourse,setFilteredCourse]=useState([])
-  const[filterCourse,setFilterCourse]=useState([]); 
+  const [summerCourse, setSummerCourse] = useState([]);
+  const [filteredCourse, setFilteredCourse] = useState([])
+  const [filterCourse, setFilterCourse] = useState([]);
   const [open, setOpen] = React.useState(false);
   const currentDate = new Date().toISOString().split('T')[0];
-  const[message,setMessage]=useState(false);
+  const [message, setMessage] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [editedData, setEditedData] = useState({title:"",category_name:"",course_name:"",status:false, titleStatus:true, summerevents_id:""});
+  const [editedData, setEditedData] = useState({ title: "", category_name: "", course_name: "", status: false, titleStatus: true, summerevents_id: "" });
   const [courseData, setCourseData] = useState({
-      summerevents_id:"",
-      title:"",
-      category_name:"",
-      course_name: "",
-      date:currentDate,
-      status:false,
-      titleStatus:true
+    summerevents_id: "",
+    title: "",
+    category_name: "",
+    course_name: "",
+    date: currentDate,
+    status: false,
+    titleStatus: true
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [status, setStatus] = useState(false);
 
-  
+  // ADDED: State for checkbox selection and bulk delete
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   const [editCourseOptions, setEditCourseOptions] = useState([]);
 
   const handlePageChange = (page) => {
@@ -88,13 +93,13 @@ export default function AdminSummerEvents() {
     window.scrollTo(0, window.scrollY);
   };
 
-  
+
   const fetchCourseNamesByCategory = async (categoryName) => {
     if (!categoryName) return [];
     const url = `https://api.test.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(categoryName)}`;
     try {
       const { data } = await axios.get(url);
-      
+
       if (Array.isArray(data)) {
         return data.map((n) => ({ id: n, courseName: n }));
       }
@@ -105,7 +110,7 @@ export default function AdminSummerEvents() {
     }
   };
 
-  
+
   useEffect(() => {
     let ignore = false;
     (async () => {
@@ -121,11 +126,11 @@ export default function AdminSummerEvents() {
 
   const handleRowsPerPageChange = (rows) => {
     setRowsPerPage(rows);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   const handleSwitchToggle = () => {
-    setStatus(!status); 
+    setStatus(!status);
   };
 
   const handleStatusChange = (e) => {
@@ -144,21 +149,21 @@ export default function AdminSummerEvents() {
     }));
   };
 
-  
+
   const displayedCourse = filteredCourse.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
 
-  const handleReset=()=>{
+  const handleReset = () => {
     setCourseData({
-      summerevents_id:"",
-      title:"",
-      category_name:"",
+      summerevents_id: "",
+      title: "",
+      category_name: "",
       course_name: "",
-      date:currentDate,
-      status:false,
-      titleStatus:true
+      date: currentDate,
+      status: false,
+      titleStatus: true
     });
     setFilterCourse([]);
   }
@@ -172,7 +177,7 @@ export default function AdminSummerEvents() {
   };
 
   const handleClose = () => {
-    setOpen(false); 
+    setOpen(false);
     setEditCourseOptions([]);
   };
 
@@ -180,14 +185,14 @@ export default function AdminSummerEvents() {
     const fetchCourse = async () => {
       try {
         const response = await axios.get('https://api.test.hachion.co/summerevents');
-        setSummerCourse(response.data); 
+        setSummerCourse(response.data);
         setFilteredCourse(response.data || []);
       } catch (error) {
         console.error("Error fetching video:", error.message);
       }
     };
     fetchCourse();
-  }, []); 
+  }, []);
 
   const handleDeleteConfirmation = (summerevents_id) => {
     if (window.confirm("Are you sure you want to delete this Course?")) {
@@ -197,16 +202,16 @@ export default function AdminSummerEvents() {
 
   const handleDateFilter = () => {
     const filtered = summerCourse.filter((item) => {
-      const videoDate = new Date(item.date); 
+      const videoDate = new Date(item.date);
       const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
       const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
-  
+
       return (
         (!start || videoDate >= start) &&
         (!end || videoDate <= end)
       );
     });
-  
+
     setFilteredCourse(filtered);
     setCurrentPage(1);
   };
@@ -214,7 +219,7 @@ export default function AdminSummerEvents() {
   const handleSave = async () => {
     try {
       const response = await axios.put(
-        `https://api.test.hachion.co/summerevents/update/${editedData.summerevents_id}`,editedData
+        `https://api.test.hachion.co/summerevents/update/${editedData.summerevents_id}`, editedData
       );
       setSummerCourse((prev) =>
         prev.map(curr =>
@@ -229,26 +234,33 @@ export default function AdminSummerEvents() {
       setMessage("Error updating Courses.");
     }
   };
-          
-  const handleDelete = async (summerevents_id) => {
-    try { 
-      const response = await axios.delete(`https://api.test.hachion.co/summerevents/delete/${summerevents_id}`); 
-      console.log("Summer Courses deleted successfully:", response.data); 
-    } catch (error) { 
-      console.error("Error deleting Courses:", error); 
-    } };
 
-  
+  const handleDelete = async (summerevents_id) => {
+    try {
+      const response = await axios.delete(`https://api.test.hachion.co/summerevents/delete/${summerevents_id}`);
+      console.log("Summer Courses deleted successfully:", response.data);
+      // Refresh the course list
+      const updatedResponse = await axios.get('https://api.test.hachion.co/summerevents');
+      setSummerCourse(updatedResponse.data);
+      setFilteredCourse(updatedResponse.data || []);
+      
+      // Remove from selectedIds if present
+      setSelectedIds(prev => prev.filter(id => id !== summerevents_id));
+    } catch (error) {
+      console.error("Error deleting Courses:", error);
+    }
+  };
+
   useEffect(() => {
     const filtered = summerCourse.filter(summerCourse =>
       summerCourse.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      summerCourse.category_name.toLowerCase().includes(searchTerm.toLowerCase()) 
+      summerCourse.category_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredCourse(filtered);
     setCurrentPage(1);
   }, [searchTerm, summerCourse]);
-        
-  
+
+
   const handleClickOpen = async (row) => {
     setEditedData({
       summerevents_id: row.summerevents_id,
@@ -264,10 +276,10 @@ export default function AdminSummerEvents() {
     } else {
       setEditCourseOptions([]);
     }
-    setOpen(true); 
+    setOpen(true);
   };
 
-  
+
   useEffect(() => {
     let ignore = false;
     (async () => {
@@ -287,35 +299,35 @@ export default function AdminSummerEvents() {
       [e.target.name]: e.target.value,
     });
   };
-            
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    const currentDate = new Date().toISOString().split("T")[0]; 
-    const dataToSubmit = { 
-      ...courseData, 
-      date: currentDate, 
+
+    const currentDate = new Date().toISOString().split("T")[0];
+    const dataToSubmit = {
+      ...courseData,
+      date: currentDate,
     };
-  
+
     try {
       const response = await axios.post("https://api.test.hachion.co/summerevents/add", dataToSubmit);
       if (response.status === 201) {
         alert(response.data);
-        setCourseData([...courseData, dataToSubmit]); 
-        handleReset(); 
+        setCourseData([...courseData, dataToSubmit]);
+        handleReset();
       }
     } catch (error) {
       console.error("Error adding courses:", error.message);
     }
   };
 
-  const handleAddSummerCourseClick = () => {setShowAddCourse(true)}
+  const handleAddSummerCourseClick = () => { setShowAddCourse(true) }
 
   useEffect(() => {
     const fetchCategory = async () => {
       try {
         const response = await axios.get("https://api.test.hachion.co/course-categories/all");
-        setCategory(response.data); 
+        setCategory(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error.message);
       }
@@ -323,47 +335,125 @@ export default function AdminSummerEvents() {
     fetchCategory();
   }, []);
 
-  
+
 
   useEffect(() => {
-    console.log("Updated course state:", course); 
+    console.log("Updated course state:", course);
   }, [course]);
-const handleDateReset = () => {
-  setStartDate(null);
-  setEndDate(null);
-  setFilteredCourse(summerCourse);
-  setCurrentPage(1);
-};
-const isCreateFormValid =
-  courseData.title.trim() !== "" &&
-  courseData.category_name.trim() !== "" &&
-  courseData.course_name.trim() !== "";
+  const handleDateReset = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setFilteredCourse(summerCourse);
+    setCurrentPage(1);
+  };
+  const isCreateFormValid =
+    courseData.title.trim() !== "" &&
+    courseData.category_name.trim() !== "" &&
+    courseData.course_name.trim() !== "";
 
+  // ADDED: Handle Select All checkbox
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allIds = displayedCourse.map(course => course.summerevents_id);
+      setSelectedIds(allIds);
+      setSelectAll(true);
+    } else {
+      setSelectedIds([]);
+      setSelectAll(false);
+    }
+  };
+
+  // ADDED: Handle individual checkbox
+  const handleSelectOne = (id) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+      setSelectAll(false);
+    } else {
+      const newSelectedIds = [...selectedIds, id];
+      setSelectedIds(newSelectedIds);
+      // Check if all items are selected
+      if (newSelectedIds.length === displayedCourse.length) {
+        setSelectAll(true);
+      }
+    }
+  };
+
+  // ADDED: Update selectAll state when page changes
+  useEffect(() => {
+    const allCurrentPageIds = displayedCourse.map(course => course.summerevents_id);
+    const allSelected = allCurrentPageIds.length > 0 && 
+                       allCurrentPageIds.every(id => selectedIds.includes(id));
+    setSelectAll(allSelected);
+  }, [currentPage, displayedCourse, selectedIds]);
+
+  // ADDED: Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      setErrorMessage("Please select at least one course to delete");
+      setTimeout(() => setErrorMessage(""), 3000);
+      return;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'course' : 'courses'}?`;
+    
+    if (window.confirm(confirmMessage)) {
+      try {
+        // Delete all selected courses
+        await Promise.all(
+          selectedIds.map(id =>
+            axios.delete(`https://api.test.hachion.co/summerevents/delete/${id}`)
+          )
+        );
+
+        // Update state
+        const updatedResponse = await axios.get('https://api.test.hachion.co/summerevents');
+        setSummerCourse(updatedResponse.data);
+        setFilteredCourse(updatedResponse.data || []);
+        
+        setSelectedIds([]);
+        setSelectAll(false);
+        
+        setSuccessMessage(`${selectedIds.length} ${selectedIds.length === 1 ? 'course' : 'courses'} deleted successfully`);
+        setErrorMessage("");
+        
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 6000);
+      } catch (error) {
+        console.error("Error deleting courses:", error);
+        setSuccessMessage("");
+        setErrorMessage("Error deleting some courses. Please try again.");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 6000);
+      }
+    }
+  };
 
   return (
-    
-    <>  
-     {showAddCourse ?  (
-      <div className='course-category'>
-        <h3>Kids Courses</h3>
-        <nav aria-label="breadcrumb">
-                      <ol className="breadcrumb">
-                        <li className="breadcrumb-item">
-                        <a href="#!" onClick={() => setShowAddCourse(false)}>Kids Courses</a> <MdKeyboardArrowRight />
-                        </li>
-                        <li className="breadcrumb-item active" aria-current="page">
-                        Add Kids Course
-                        </li>
-                      </ol>
-                    </nav>
 
-              <div className="category">
-                  <div className="category-header">
-                    <p style={{ marginBottom: 0 }}>Enable/Disable Kids Component</p>
-                  </div>
+    <>
+      {showAddCourse ? (
+        <div className='course-category'>
+          <h3>Kids Courses</h3>
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb">
+              <li className="breadcrumb-item">
+                <a href="#!" onClick={() => setShowAddCourse(false)}>Kids Courses</a> <MdKeyboardArrowRight />
+              </li>
+              <li className="breadcrumb-item active" aria-current="page">
+                Add Kids Course
+              </li>
+            </ol>
+          </nav>
+
+          <div className="category">
+            <div className="category-header">
+              <p style={{ marginBottom: 0 }}>Enable/Disable Kids Component</p>
+            </div>
             <div className='course-details'>
-            <div className='course-row'>
-            <div className="col-md-3">
+              <div className='course-row'>
+                <div className="col-md-3">
                   <label className="form-label">Kids Title <span style={{ color: "red" }}>*</span></label>
                   <input
                     type="text"
@@ -374,7 +464,7 @@ const isCreateFormValid =
                     onChange={handleInputChange}
                   />
                 </div>
-                <div className="col" style={{ display: 'flex', gap: 20 }}> 
+                <div className="col" style={{ display: 'flex', gap: 20 }}>
                   <label className="form-label">Title Status: <span style={{ color: "red" }}>*</span></label>
                   <Switch
                     checked={courseData?.titleStatus ?? true}
@@ -386,15 +476,239 @@ const isCreateFormValid =
               </div>
             </div>
           </div>
-    <div className="category">
-      <div className="category-header">
-        <p style={{ marginBottom: 0 }}>Add Kids Course</p>
-      </div>
-      <div className='course-details'>
-        <div className='course-row'>
-          <div className="col-md-3">
-            <label htmlFor="inputState" className="form-label">Category Name</label>
-            <select id="inputState" className="form-select" name='category_name' value={courseData.category_name} onChange={handleChange}>
+          <div className="category">
+            <div className="category-header">
+              <p style={{ marginBottom: 0 }}>Add Kids Course</p>
+            </div>
+            <div className='course-details'>
+              <div className='course-row'>
+                <div className="col-md-3">
+                  <label htmlFor="inputState" className="form-label">Category Name</label>
+                  <select id="inputState" className="form-select" name='category_name' value={courseData.category_name} onChange={handleChange}>
+                    <option value="" disabled>
+                      Select Category
+                    </option>
+                    {category.map((curr) => (
+                      <option key={curr.id} value={curr.name}>
+                        {curr.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="col-md-3">
+                  <label htmlFor="inputState" className="form-label">Course Name</label>
+                  <select
+                    id="inputState"
+                    className="form-select"
+                    name="course_name"
+                    value={courseData.course_name}
+                    onChange={handleChange}
+                    disabled={!courseData.category_name}
+                  >
+                    <option value="" disabled>Select Course</option>
+                    {filterCourse.map((curr) => (
+                      <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="col" style={{ display: 'flex', gap: 20 }}>
+                <label className="form-label">Status:</label>
+                <Switch
+                  checked={courseData?.status ?? false}
+                  onChange={handleStatusChange}
+                  color="primary"
+                />
+                <span>{courseData?.status ? 'Enable' : 'Disable'}</span>
+              </div>
+
+              <div className="course-row">
+                <button className='submit-btn' data-bs-toggle='modal'
+                  data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
+                <button className='reset-btn' onClick={handleReset}>Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      ) : (<div>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <div className='course-category'>
+            <h3>Kids Courses</h3>
+            <div className='category'>
+              <div className='category-header'>
+                <p style={{ marginBottom: 0 }}>Kids Course Details</p>
+              </div>
+              
+              {/* ADDED: Success and Error Messages */}
+              {successMessage && <p style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</p>}
+              {errorMessage && <p style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</p>}
+              
+              <div className='date-schedule'>
+                Start Date
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  isClearable
+                  sx={{ '& .MuiIconButton-root': { color: '#00aeef' } }}
+                />
+                End Date
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  isClearable
+                  sx={{ '& .MuiIconButton-root': { color: '#00aeef' } }}
+                />
+                <button className='filter' onClick={handleDateFilter} >Filter</button>
+                <button className='filter' onClick={handleDateReset} >Reset</button>
+              </div>
+              <div className='entries'>
+                <div className='entries-left'>
+                  <p style={{ marginBottom: '0' }}>Show</p>
+                  <div className="btn-group">
+                    <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                      {rowsPerPage}
+                    </button>
+                    <ul className="dropdown-menu">
+                      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+                      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+                      <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+                    </ul>
+                  </div>
+                  <p style={{ marginBottom: '0' }}>entries</p>
+                </div>
+                <div className='entries-right'>
+                  <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
+                    <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)} />
+                    <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
+                  </div>
+                  
+                  {/* ADDED: Bulk Delete Button */}
+                  {selectedIds.length > 0 && (
+                    <button 
+                      type="button" 
+                      className="btn-category" 
+                      onClick={handleBulkDelete}
+                      style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
+                    >
+                      <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+                    </button>
+                  )}
+                  
+                  <button type="button" className="btn-category" onClick={handleAddSummerCourseClick} >
+                    <FiPlus /> Add Kids Course
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </LocalizationProvider>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell sx={{ width: 70 }} align="center">
+                  {/* ADDED: Select All Checkbox */}
+                  <Checkbox 
+                    checked={selectAll}
+                    onChange={handleSelectAll}
+                    indeterminate={selectedIds.length > 0 && selectedIds.length < displayedCourse.length}
+                  />
+                </StyledTableCell>
+                <StyledTableCell sx={{ width: 80 }} align='center'>S.No.</StyledTableCell>
+                <StyledTableCell align='center'>Category Name</StyledTableCell>
+                <StyledTableCell align='center'>Course Name</StyledTableCell>
+                <StyledTableCell align="center">Status</StyledTableCell>
+                <StyledTableCell align="center">Created Date</StyledTableCell>
+                <StyledTableCell align="center">Action</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+
+              {displayedCourse.length > 0
+                ? displayedCourse.map((row, index) => (
+                  <StyledTableRow key={row.summerevents_id}>
+                    {/* ADDED: Individual Checkbox */}
+                    <StyledTableCell align="center">
+                      <Checkbox 
+                        checked={selectedIds.includes(row.summerevents_id)}
+                        onChange={() => handleSelectOne(row.summerevents_id)}
+                      />
+                    </StyledTableCell>
+                    <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
+                    </StyledTableCell>
+                    <StyledTableCell align="left">{row.category_name}</StyledTableCell>
+                    <StyledTableCell align="left">{row.course_name}</StyledTableCell>
+                    <StyledTableCell align="center">
+                      {row.status ? "Enabled" : "Disabled"}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {row.date
+                        ? dayjs(row.date).format("MMM-DD-YYYY").toUpperCase()
+                        : "N/A"}
+                    </StyledTableCell>
+
+                    <StyledTableCell align="center">
+                      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+                        <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
+                        <RiDeleteBin6Line
+                          className="delete"
+                          onClick={() => handleDeleteConfirmation(row.summerevents_id)}
+                        />
+                      </div>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))
+                : (
+                  <StyledTableRow>
+                    <StyledTableCell colSpan={7} align="center">
+                      No data available.
+                    </StyledTableCell>
+                  </StyledTableRow>
+                )}
+
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <div className='pagination-container'>
+          <AdminPagination
+            currentPage={currentPage}
+            rowsPerPage={rowsPerPage}
+            totalRows={filteredCourse.length}
+            onPageChange={handlePageChange}
+          />
+        </div>
+        {message && <div className="success-message">{message}</div>}
+
+      </div>)}
+
+      <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
+        PaperProps={{
+          style: { borderRadius: 20 },
+        }}>
+        <div >
+          <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Kids Course
+            <Button onClick={handleClose} className="close-btn">
+              <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
+            </Button>
+          </DialogTitle>
+        </div>
+        <DialogContent>
+          <div className="col">
+            <label htmlFor="categoryName" className="form-label">Category Name</label>
+            <select
+              id="categoryName"
+              className="form-select"
+              name="category_name"
+              value={editedData.category_name || ""}
+              onChange={(e) => {
+                handleInputChange(e);
+                setEditedData((prev) => ({ ...prev, course_name: "" }));
+              }}
+            >
               <option value="" disabled>
                 Select Category
               </option>
@@ -405,247 +719,49 @@ const isCreateFormValid =
               ))}
             </select>
           </div>
-          <div className="col-md-3">
-            <label htmlFor="inputState" className="form-label">Course Name</label>
+
+          <div className="col">
+            <label htmlFor="courseName" className="form-label">Course Name</label>
             <select
-              id="inputState"
+              id="courseName"
               className="form-select"
               name="course_name"
-              value={courseData.course_name}
-              onChange={handleChange}
-              disabled={!courseData.category_name}
+              value={editedData.course_name || ""}
+              onChange={handleInputChange}
+              disabled={!editedData.category_name}
             >
-              <option value="" disabled>Select Course</option>
-              {filterCourse.map((curr) => (
-                <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
-              ))}
+              <option value="" disabled>
+                {editedData.category_name ? 'Select Course' : 'Select Category first'}
+              </option>
+              {editCourseOptions.length > 0 ? (
+                editCourseOptions.map((current) => (
+                  <option key={current.id} value={current.courseName}>
+                    {current.courseName}
+                  </option>
+                ))
+              ) : (
+                editedData.category_name ? <option disabled>Loading...</option> : null
+              )}
             </select>
           </div>
-        </div>
 
-        <div className="col" style={{ display: 'flex', gap: 20 }}> 
-          <label className="form-label">Status:</label>
-          <Switch
-            checked={courseData?.status ?? false}
-            onChange={handleStatusChange}
-            color="primary"
-          />
-          <span>{courseData?.status ? 'Enable' : 'Disable'}</span>
-        </div>
-
-        <div className="course-row">
-          <button className='submit-btn' data-bs-toggle='modal'
-            data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
-          <button className='reset-btn' onClick={handleReset}>Reset</button>
-        </div>
-      </div>
-    </div>
-</div>
-
-):(<div>
-   <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className='course-category'>
-      <h3>Kids Courses</h3>
-        <div className='category'>
-          <div className='category-header'>
-            <p style={{ marginBottom: 0 }}>Kids Course Details</p>
-          </div>
-          <div className='date-schedule'>
-            Start Date
-            <DatePicker 
-              selected={startDate} 
-              onChange={(date) => setStartDate(date)} 
-              isClearable 
-              sx={{'& .MuiIconButton-root':{color: '#00aeef'}}}
+          <div className="col" style={{ display: 'flex', gap: 20 }}>
+            <label className="form-label">Status:</label>
+            <Switch
+              checked={editedData?.status ?? false}
+              onChange={handleInputStatusChange}
+              color="primary"
             />
-            End Date
-            <DatePicker 
-              selected={endDate} 
-              onChange={(date) => setEndDate(date)} 
-              isClearable 
-              sx={{'& .MuiIconButton-root':{color: '#00aeef'}}}
-            />
-            <button className='filter' onClick={handleDateFilter} >Filter</button>
-            <button className='filter' onClick={handleDateReset} >Reset</button>
+            <span>{editedData?.status ? 'Enable' : 'Disable'}</span>
           </div>
-          <div className='entries'>
-            <div className='entries-left'>
-              <p style={{ marginBottom: '0' }}>Show</p>
-              <div className="btn-group">
-                <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                  {rowsPerPage}
-                </button>
-                <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
-                  <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
-                  <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
-                </ul>
-              </div>
-              <p style={{ marginBottom: '0' }}>entries</p>
-            </div>
-            <div className='entries-right'>
-              <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
-                <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}/>
-                <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
-              </div>
-              <button type="button" className="btn-category" onClick={handleAddSummerCourseClick} >
-                <FiPlus /> Add Kids Course
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </LocalizationProvider>
-  <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell sx={{ width: 70 }} align="center">
-            <Checkbox
-              />
-            </StyledTableCell>
-            <StyledTableCell sx={{ width: 80 }} align='center'>S.No.</StyledTableCell>
-            <StyledTableCell align='center'>Category Name</StyledTableCell>
-            <StyledTableCell align='center'>Course Name</StyledTableCell>
-            <StyledTableCell align="center">Status</StyledTableCell>
-            <StyledTableCell align="center">Created Date</StyledTableCell>
-            <StyledTableCell align="center">Action</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
 
-    {displayedCourse.length > 0
-    ? displayedCourse.map((row, index) => (
-            <StyledTableRow key={row.summerevents_id}>
-              <StyledTableCell align="center">
-                          <Checkbox />
-                        </StyledTableCell>
-              <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
-              </StyledTableCell>
-              <StyledTableCell align="left">{row.category_name}</StyledTableCell>
-              <StyledTableCell align="left">{row.course_name}</StyledTableCell>
-              <StyledTableCell align="center">
-                {row.status ? "Enabled" : "Disabled"}
-              </StyledTableCell>
-              <StyledTableCell align="center">
-  {row.date
-    ? dayjs(row.date).format("MMM-DD-YYYY").toUpperCase()
-    : "N/A"}
-</StyledTableCell>
+        </DialogContent>
+        <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
+          <Button onClick={handleSave} className="update-btn">Update</Button>
+        </DialogActions>
+      </Dialog>
 
-              <StyledTableCell align="center">
-              <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
-                <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
-                <RiDeleteBin6Line
-                  className="delete"
-                  onClick={() => handleDeleteConfirmation(row.summerevents_id)}
-                />
-                </div>
-              </StyledTableCell>
-            </StyledTableRow>
-          ))
-          : (
-            <StyledTableRow>
-              <StyledTableCell colSpan={6} align="center">
-                No data available.
-              </StyledTableCell>
-            </StyledTableRow>
-          )}
-        
-</TableBody>
-    </Table>
-    </TableContainer>
-    <div className='pagination-container'>
-          <AdminPagination
-      currentPage={currentPage}
-      rowsPerPage={rowsPerPage}
-      totalRows={filteredCourse.length} 
-      onPageChange={handlePageChange}
-    />
-              </div>
-    {message && <div className="success-message">{message}</div>}
 
-    </div>)}
 
-    <Dialog className="dialog-box" open={open} onClose={handleClose} aria-labelledby="edit-schedule-dialog"
-    PaperProps={{
-      style: { borderRadius: 20 },
-    }}>
-  <div >
-    <DialogTitle className="dialog-title" id="edit-schedule-dialog">Edit Kids Course
-    <Button onClick={handleClose} className="close-btn">
-      <IoMdCloseCircleOutline style={{ color: "white", fontSize: "2rem" }} />
-    </Button>
-    </DialogTitle>
-  </div>
-  <DialogContent>
-    <div className="col">
-      <label htmlFor="categoryName" className="form-label">Category Name</label>
-      <select
-        id="categoryName"
-        className="form-select"
-        name="category_name"
-        value={editedData.category_name || ""}
-        onChange={(e) => {
-          handleInputChange(e);
-          setEditedData((prev) => ({ ...prev, course_name: "" })); 
-        }}
-      >
-         <option value="" disabled>
-          Select Category
-        </option>
-        {category.map((curr) => (
-          <option key={curr.id} value={curr.name}>
-            {curr.name}
-          </option>
-        ))}
-      </select>
-    </div>
-
-    <div className="col">
-      <label htmlFor="courseName" className="form-label">Course Name</label>
-      <select
-        id="courseName"
-        className="form-select"
-        name="course_name"
-        value={editedData.course_name || ""}
-        onChange={handleInputChange}
-        disabled={!editedData.category_name}
-      >
-        <option value="" disabled>
-          {editedData.category_name ? 'Select Course' : 'Select Category first'}
-        </option>
-        {editCourseOptions.length > 0 ? (
-          editCourseOptions.map((current) => (
-            <option key={current.id} value={current.courseName}>
-              {current.courseName}
-            </option>
-          ))
-        ) : (
-          editedData.category_name ? <option disabled>Loading...</option> : null
-        )}
-      </select>
-    </div>
-
-    <div className="col" style={{ display: 'flex', gap: 20 }}> 
-    <label className="form-label">Status:</label>
-    <Switch
-      checked={editedData?.status ?? false}
-      onChange={handleInputStatusChange}
-      color="primary"
-    />
-    <span>{editedData?.status ? 'Enable' : 'Disable'}</span>
-      </div>
-
-  </DialogContent>
- <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
-    <Button onClick={handleSave} className="update-btn">Update</Button>
-  </DialogActions>
-</Dialog>
-
-   
-   
- </> );
+    </>);
 }

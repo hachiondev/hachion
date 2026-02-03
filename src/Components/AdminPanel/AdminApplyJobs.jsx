@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { tableCellClasses } from '@mui/material/TableCell';
@@ -48,8 +48,12 @@ export default function AdminApplyJobs() {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filteredData, setFilteredData] = useState([]);
-const [deleteMessage, setDeleteMessage] = useState("");
-const [deleteError, setDeleteError] = useState("");
+  const [deleteMessage, setDeleteMessage] = useState("");
+  const [deleteError, setDeleteError] = useState("");
+
+  // ADDED: State for checkbox selection
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
 
   useEffect(() => {
     axios.get('https://api.test.hachion.co/apply-job/getAll')
@@ -79,47 +83,148 @@ const [deleteError, setDeleteError] = useState("");
       return (!start || date >= start) && (!end || date <= end);
     });
     setFilteredData(filtered);
+    setCurrentPage(1); // Reset to first page
   };
 
   const handleDateReset = () => {
     setStartDate(null);
     setEndDate(null);
     setFilteredData(jobData);
+    setCurrentPage(1); // Reset to first page
+  };
+
+  const handleRowsPerPageChange = (rows) => {
+    setRowsPerPage(rows);
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo(0, 0);
   };
 
   const displayedData = searchedData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
+
   const handleDelete = async (id) => {
-  const confirmed = window.confirm("Are you sure you want to delete this application?");
-  if (!confirmed) return;
+    const confirmed = window.confirm("Are you sure you want to delete this application?");
+    if (!confirmed) return;
 
-  try {
-    await axios.delete(`https://api.test.hachion.co/apply-job/delete/${id}`);
-    const updatedData = jobData.filter(item => item.applyJobDetailsId !== id);
-    setJobData(updatedData);
-    setFilteredData(updatedData);
-    setDeleteMessage("Application deleted successfully.");
-    setDeleteError("");
-  } catch (error) {
-    console.error("Error deleting application:", error);
-    setDeleteError("Failed to delete the application. Please try again.");
-    setDeleteMessage("");
-  }
+    try {
+      await axios.delete(`https://api.test.hachion.co/apply-job/delete/${id}`);
+      const updatedData = jobData.filter(item => item.applyJobDetailsId !== id);
+      setJobData(updatedData);
+      setFilteredData(updatedData);
+      
+      // Remove from selectedIds if present
+      setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
+      
+      setDeleteMessage("Application deleted successfully.");
+      setDeleteError("");
+    } catch (error) {
+      console.error("Error deleting application:", error);
+      setDeleteError("Failed to delete the application. Please try again.");
+      setDeleteMessage("");
+    }
 
-  setTimeout(() => {
-    setDeleteMessage("");
-    setDeleteError("");
-  }, 3000);
-};
+    setTimeout(() => {
+      setDeleteMessage("");
+      setDeleteError("");
+    }, 3000);
+  };
 
+  // ADDED: Handle Select All checkbox
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allIds = displayedData.map(job => job.applyJobDetailsId);
+      setSelectedIds(allIds);
+      setSelectAll(true);
+    } else {
+      setSelectedIds([]);
+      setSelectAll(false);
+    }
+  };
+
+  // ADDED: Handle individual checkbox
+  const handleSelectOne = (id) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+      setSelectAll(false);
+    } else {
+      const newSelectedIds = [...selectedIds, id];
+      setSelectedIds(newSelectedIds);
+      // Check if all items are selected
+      if (newSelectedIds.length === displayedData.length) {
+        setSelectAll(true);
+      }
+    }
+  };
+
+  // ADDED: Update selectAll state when page changes
+  useEffect(() => {
+    const allCurrentPageIds = displayedData.map(job => job.applyJobDetailsId);
+    const allSelected = allCurrentPageIds.length > 0 && 
+                       allCurrentPageIds.every(id => selectedIds.includes(id));
+    setSelectAll(allSelected);
+  }, [currentPage, displayedData, selectedIds]);
+
+  // ADDED: Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      setDeleteError("Please select at least one application to delete");
+      setDeleteMessage("");
+      setTimeout(() => setDeleteError(""), 3000);
+      return;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'application' : 'applications'}?`;
+    
+    if (window.confirm(confirmMessage)) {
+      try {
+        // Delete all selected applications
+        await Promise.all(
+          selectedIds.map(id =>
+            axios.delete(`https://api.test.hachion.co/apply-job/delete/${id}`)
+          )
+        );
+
+        // Update state
+        const updatedData = jobData.filter(item => !selectedIds.includes(item.applyJobDetailsId));
+        setJobData(updatedData);
+        setFilteredData(updatedData);
+        
+        setSelectedIds([]);
+        setSelectAll(false);
+        
+        setDeleteMessage(`${selectedIds.length} ${selectedIds.length === 1 ? 'application' : 'applications'} deleted successfully`);
+        setDeleteError("");
+        
+        setTimeout(() => {
+          setDeleteMessage("");
+        }, 6000);
+      } catch (error) {
+        console.error("Error deleting applications:", error);
+        setDeleteMessage("");
+        setDeleteError("Error deleting some applications. Please try again.");
+        setTimeout(() => {
+          setDeleteError("");
+        }, 6000);
+      }
+    }
+  };
 
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <div className='course-category'>
           <div className='category-header'><p style={{ marginBottom: 0 }}>Applied Jobs List</p></div>
+          
+          {/* ADDED: Success and Error Messages */}
+          {deleteMessage && <div style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{deleteMessage}</div>}
+          {deleteError && <div style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{deleteError}</div>}
+          
           <div className='date-schedule'>
             Start Date
             <DatePicker value={startDate} onChange={(date) => setStartDate(date)} sx={{ '& .MuiIconButton-root': { color: '#00aeef' } }} />
@@ -136,9 +241,9 @@ const [deleteError, setDeleteError] = useState("");
                   {rowsPerPage}
                 </button>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#" onClick={() => setRowsPerPage(10)}>10</a></li>
-                  <li><a className="dropdown-item" href="#" onClick={() => setRowsPerPage(25)}>25</a></li>
-                  <li><a className="dropdown-item" href="#" onClick={() => setRowsPerPage(50)}>50</a></li>
+                  <li><a className="dropdown-item" href="#" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+                  <li><a className="dropdown-item" href="#" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+                  <li><a className="dropdown-item" href="#" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
                 </ul>
               </div>
               <p style={{ marginBottom: '0' }}>entries</p>
@@ -150,6 +255,18 @@ const [deleteError, setDeleteError] = useState("");
                   <IoSearch style={{ fontSize: '2rem' }} />
                 </button>
               </div>
+              
+              {/* ADDED: Bulk Delete Button */}
+              {selectedIds.length > 0 && (
+                <button 
+                  type="button" 
+                  className="btn-category" 
+                  onClick={handleBulkDelete}
+                  style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
+                >
+                  <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -159,6 +276,14 @@ const [deleteError, setDeleteError] = useState("");
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow>
+              {/* ADDED: Select All Checkbox */}
+              <StyledTableCell align="center" sx={{ width: '50px' }}>
+                <Checkbox 
+                  checked={selectAll}
+                  onChange={handleSelectAll}
+                  indeterminate={selectedIds.length > 0 && selectedIds.length < displayedData.length}
+                />
+              </StyledTableCell>
               <StyledTableCell align="center">S.No.</StyledTableCell>
               <StyledTableCell align="center">Job ID</StyledTableCell>
               <StyledTableCell align="center">Student Name</StyledTableCell>
@@ -176,6 +301,13 @@ const [deleteError, setDeleteError] = useState("");
             {displayedData.length > 0 ? (
               displayedData.map((row, index) => (
                 <StyledTableRow key={row.applyJobDetailsId || index}>
+                  {/* ADDED: Individual Checkbox */}
+                  <StyledTableCell align="center">
+                    <Checkbox 
+                      checked={selectedIds.includes(row.applyJobDetailsId)}
+                      onChange={() => handleSelectOne(row.applyJobDetailsId)}
+                    />
+                  </StyledTableCell>
                   <StyledTableCell align="center">{(currentPage - 1) * rowsPerPage + index + 1}</StyledTableCell>
                   <StyledTableCell align="center">{row.jobId}</StyledTableCell>
                   <StyledTableCell align="left">{row.studentName}</StyledTableCell>
@@ -191,43 +323,44 @@ const [deleteError, setDeleteError] = useState("");
                   <StyledTableCell align="left">
                     {row.resume ? (
                       <a
-    href={`https://api.test.hachion.co/apply-job/downloadResume?jobId=${encodeURIComponent(row.jobId)}&email=${encodeURIComponent(row.email)}&resumeFileName=${encodeURIComponent(row.resume)}`}
-      target="_blank"
-      rel="noopener noreferrer"
->
-  View Resume
-</a>
+                        href={`https://api.test.hachion.co/apply-job/downloadResume?jobId=${encodeURIComponent(row.jobId)}&email=${encodeURIComponent(row.email)}&resumeFileName=${encodeURIComponent(row.resume)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View Resume
+                      </a>
                     ) : 'No Resume'}
                   </StyledTableCell>
                   <StyledTableCell align="center">{dayjs(row.date).format('MM-DD-YYYY')}</StyledTableCell>
                   <StyledTableCell align="center">
-                    {/* <RiDeleteBin6Line className="delete" /> */}
-
                     <RiDeleteBin6Line
-  className="delete"
-  style={{ cursor: 'pointer', color: 'red' }}
-  onClick={() => handleDelete(row.applyJobDetailsId)}
-/>
+                      className="delete"
+                      style={{ cursor: 'pointer', color: 'red' }}
+                      onClick={() => handleDelete(row.applyJobDetailsId)}
+                    />
                   </StyledTableCell>
                 </StyledTableRow>
               ))
             ) : (
               <StyledTableRow>
-                <StyledTableCell colSpan={11} align="center">No data available</StyledTableCell>
+                {/* UPDATED: Changed colSpan from 11 to 12 to include checkbox column */}
+                <StyledTableCell colSpan={12} align="center">No data available</StyledTableCell>
               </StyledTableRow>
             )}
           </TableBody>
         </Table>
       </TableContainer>
-      {deleteMessage && <div style={{ color: "green", marginBottom: "10px" }}>{deleteMessage}</div>}
-{deleteError && <div style={{ color: "red", marginBottom: "10px" }}>{deleteError}</div>}
+      
+      {/* REMOVED: Duplicate messages (already shown above) */}
+      {/* {deleteMessage && <div style={{ color: "green", marginBottom: "10px" }}>{deleteMessage}</div>}
+      {deleteError && <div style={{ color: "red", marginBottom: "10px" }}>{deleteError}</div>} */}
 
       <div className='pagination-container'>
         <AdminPagination
           currentPage={currentPage}
           rowsPerPage={rowsPerPage}
-          totalRows={filteredData.length}
-          onPageChange={setCurrentPage}
+          totalRows={searchedData.length}
+          onPageChange={handlePageChange}
         />
       </div>
     </>

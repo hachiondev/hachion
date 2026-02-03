@@ -56,7 +56,12 @@ export default function CorporateCourses() {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  
+  // New state for checkbox selection
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   const [addCourseOptions, setAddCourseOptions] = useState([]);   
   const [editCourseOptions, setEditCourseOptions] = useState([]); 
 
@@ -72,13 +77,11 @@ export default function CorporateCourses() {
     setCourseData({ corporatecourse_id: "", category_name: "", course_name: "", date: currentDate, status: false });
   };
 
-  
   const fetchCourseNamesByCategory = async (categoryName) => {
     if (!categoryName) return [];
     const url = `https://api.test.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(categoryName)}`;
     try {
       const { data } = await axios.get(url);
-      
       return Array.isArray(data) ? data.map(n => ({ id: n, courseName: n })) : [];
     } catch (e) {
       console.error("Error fetching course names by category:", e?.message || e);
@@ -111,7 +114,6 @@ export default function CorporateCourses() {
     setFilteredCourse(filtered);
   }, [searchTerm, trendingCourse]);
 
-  
   useEffect(() => {
     let ignore = false;
     (async () => {
@@ -170,17 +172,96 @@ export default function CorporateCourses() {
     if (window.confirm("Are you sure you want to delete this Course?")) {
       await axios.delete(`https://api.test.hachion.co/corporatecourse/delete/${id}`);
       fetchCourses();
+      // Remove from selectedIds if present
+      setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
+    }
+  };
+    const displayedCourse = filteredCourse.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
+  // Handle Select All checkbox
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allIds = displayedCourse.map(course => course.corporatecourse_id);
+      setSelectedIds(allIds);
+      setSelectAll(true);
+    } else {
+      setSelectedIds([]);
+      setSelectAll(false);
     }
   };
 
-  
+  // Handle individual checkbox
+  const handleSelectOne = (id) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+      setSelectAll(false);
+    } else {
+      const newSelectedIds = [...selectedIds, id];
+      setSelectedIds(newSelectedIds);
+      // Check if all items are selected
+      if (newSelectedIds.length === displayedCourse.length) {
+        setSelectAll(true);
+      }
+    }
+  };
+
+  // Update selectAll state when page changes
+  useEffect(() => {
+    const allCurrentPageIds = displayedCourse.map(course => course.corporatecourse_id);
+    const allSelected = allCurrentPageIds.length > 0 && 
+                       allCurrentPageIds.every(id => selectedIds.includes(id));
+    setSelectAll(allSelected);
+  }, [currentPage, displayedCourse, selectedIds]);
+
+  // Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      setErrorMessage("Please select at least one course to delete");
+      setTimeout(() => setErrorMessage(""), 3000);
+      return;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'course' : 'courses'}?`;
+    
+    if (window.confirm(confirmMessage)) {
+      try {
+        // Delete all selected courses
+        await Promise.all(
+          selectedIds.map(id =>
+            axios.delete(`https://api.test.hachion.co/corporatecourse/delete/${id}`)
+          )
+        );
+
+        // Update state
+        const updatedCourses = trendingCourse.filter(item => !selectedIds.includes(item.corporatecourse_id));
+        setTrendingCourse(updatedCourses);
+        setFilteredCourse(updatedCourses);
+        
+        setSelectedIds([]);
+        setSelectAll(false);
+        
+        setSuccessMessage(`${selectedIds.length} ${selectedIds.length === 1 ? 'course' : 'courses'} deleted successfully`);
+        setErrorMessage("");
+        
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 6000);
+      } catch (error) {
+        console.error("Error deleting courses:", error);
+        setSuccessMessage("");
+        setErrorMessage("Error deleting some courses. Please try again.");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 6000);
+      }
+    }
+  };
+
   const filteredCourseOptions = course.filter(
     (c) => c.courseCategory === courseData.category_name
-  );
-
-  const displayedCourse = filteredCourse.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
   );
 
   return (
@@ -257,6 +338,11 @@ export default function CorporateCourses() {
             <>
               <div className="category">
                 <div className="category-header"><p style={{ marginBottom: 0 }}>View Corporate Training Courses</p></div>
+                
+                {/* Success and Error Messages */}
+                {successMessage && <p style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</p>}
+                {errorMessage && <p style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</p>}
+                
                 <div className="date-schedule">
                   Start Date
                   <DatePicker value={startDate} onChange={setStartDate} sx={{ '& .MuiIconButton-root': { color: '#00aeef' } }} />
@@ -283,6 +369,16 @@ export default function CorporateCourses() {
                       <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                       <button className="btn-search"><IoSearch /></button>
                     </div>
+                    {selectedIds.length > 0 && (
+                      <button 
+                        type="button" 
+                        className="btn-category" 
+                        onClick={handleBulkDelete}
+                        style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
+                      >
+                        <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+                      </button>
+                    )}
                     <button className="btn-category" onClick={() => setShowAddCourse(true)}><FiPlus /> Add Corporate Course</button>
                   </div>
                 </div>
@@ -291,7 +387,13 @@ export default function CorporateCourses() {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <StyledTableCell align="center"><Checkbox /></StyledTableCell>
+                      <StyledTableCell align="center" sx={{ width: '50px' }}>
+                        <Checkbox 
+                          checked={selectAll}
+                          onChange={handleSelectAll}
+                          indeterminate={selectedIds.length > 0 && selectedIds.length < displayedCourse.length}
+                        />
+                      </StyledTableCell>
                       <StyledTableCell align="center">S.No.</StyledTableCell>
                       <StyledTableCell align="center">Category Name</StyledTableCell>
                       <StyledTableCell align="center">Course Name</StyledTableCell>
@@ -303,17 +405,21 @@ export default function CorporateCourses() {
                   <TableBody>
                     {displayedCourse.length > 0 ? displayedCourse.map((row, index) => (
                       <StyledTableRow key={row.corporatecourse_id}>
-                        <StyledTableCell align="center"><Checkbox /></StyledTableCell>
+                        <StyledTableCell align="center">
+                          <Checkbox 
+                            checked={selectedIds.includes(row.corporatecourse_id)}
+                            onChange={() => handleSelectOne(row.corporatecourse_id)}
+                          />
+                        </StyledTableCell>
                         <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
                         <StyledTableCell align="center">{row.category_name}</StyledTableCell>
                         <StyledTableCell align="center">{row.course_name}</StyledTableCell>
                         <StyledTableCell align="center">{row.status ? "Enabled" : "Disabled"}</StyledTableCell>
                         <StyledTableCell align="center">
-  {row.date
-    ? dayjs(row.date).format("MMM-DD-YYYY").toUpperCase()
-    : "N/A"}
-</StyledTableCell>
-
+                          {row.date
+                            ? dayjs(row.date).format("MMM-DD-YYYY").toUpperCase()
+                            : "N/A"}
+                        </StyledTableCell>
                         <StyledTableCell align="center">
                           <FaEdit
                             onClick={async () => {

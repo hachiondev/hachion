@@ -78,6 +78,13 @@ export default function InstructorSection({
 
   const cleanTrainerBio = trainerBio?.replace(/<\/?p>/g, "");
 
+  const trainerImagePath = selectedTrainer?.trainerImage;
+
+const trainerImageSrc = trainerImagePath
+  ? `https://api.test.hachion.co/${trainerImagePath}`
+  : "/InstructorDefaultImage.webp";
+
+
   return (
     <section className={styles.iswrap}>
       <div className="container">
@@ -148,13 +155,16 @@ export default function InstructorSection({
   </div>
   {/* RIGHT: PHOTO */}
   <div className={styles.isphoto}>
-    <img
-      src="/instructordefault.png"
-      alt={`${trainerName || name} headshot`}
-      onError={(e) => {
-        e.currentTarget.src = "/InstructorDefaultImage.webp";
-      }}
-    />
+   <img
+  src={trainerImageSrc}
+  alt={`${trainerName || name} headshot`}
+  loading="lazy"
+  onError={(e) => {
+    console.error("Trainer image failed:", trainerImageSrc);
+    e.currentTarget.src = "/InstructorDefaultImage.webp";
+  }}
+/>
+
   </div>
 </div>
 

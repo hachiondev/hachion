@@ -68,7 +68,7 @@ export default function AdminUploadImage() {
   const [course, setCourse] = useState([]); 
   const [courseCategory, setCourseCategory] = useState([]); 
   const [filterCourse, setFilterCourse] = useState([]); 
-const [courseNames, setCourseNames] = useState([]);
+  const [courseNames, setCourseNames] = useState([]);
 
   const [rows, setRows] = useState([{ id: Date.now(), tool_image: null, preview: null }]);
 
@@ -83,20 +83,17 @@ const [courseNames, setCourseNames] = useState([]);
   
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
   
-  // const dataSource = filteredImages.length ? filteredImages : images;
-  // const displayedCategories = dataSource.slice(
-  //   (currentPage - 1) * rowsPerPage,
-  //   currentPage * rowsPerPage
-  // );
+  // ADD: State for checkbox selection
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
 
   const baseData = filteredImages.length ? filteredImages : images;
-const dataSource = sortImages(baseData); // <-- enforce order here
-const displayedCategories = dataSource.slice(
-  (currentPage - 1) * rowsPerPage,
-  currentPage * rowsPerPage
-);
+  const dataSource = sortImages(baseData);
+  const displayedCategories = dataSource.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -107,6 +104,41 @@ const displayedCategories = dataSource.slice(
     setRowsPerPage(rowsCount);
     setCurrentPage(1); 
   };
+
+  // ADD: Handle Select All checkbox
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allIds = displayedCategories.map(item => item.fileName);
+      setSelectedIds(allIds);
+      setSelectAll(true);
+    } else {
+      setSelectedIds([]);
+      setSelectAll(false);
+    }
+  };
+
+  // ADD: Handle individual checkbox
+  const handleSelectOne = (fileName) => {
+    if (selectedIds.includes(fileName)) {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== fileName));
+      setSelectAll(false);
+    } else {
+      const newSelectedIds = [...selectedIds, fileName];
+      setSelectedIds(newSelectedIds);
+      // Check if all items are selected
+      if (newSelectedIds.length === displayedCategories.length) {
+        setSelectAll(true);
+      }
+    }
+  };
+
+  // ADD: Update selectAll state when page changes
+  useEffect(() => {
+    const allCurrentPageIds = displayedCategories.map(item => item.fileName);
+    const allSelected = allCurrentPageIds.length > 0 &&
+      allCurrentPageIds.every(id => selectedIds.includes(id));
+    setSelectAll(allSelected);
+  }, [currentPage, displayedCategories, selectedIds]);
 
   
   const addRow = () => setRows(prev => [...prev, { id: Date.now(), tool_image: null, preview: null }]);
@@ -131,9 +163,7 @@ const displayedCategories = dataSource.slice(
     setImageData(prev => ({ ...prev, [name]: value }));
 
     if (name === "category_name") {
-      
       const filtered = courseCategory.filter(c => {
-        
         return (
           c.category_name === value ||
           c.category === value ||
@@ -145,44 +175,24 @@ const displayedCategories = dataSource.slice(
     }
   };
 
-  
-  // const handleDateFilter = () => {
-  //   const filtered = images.filter((item) => {
-  //     const imageDate = item.date ? new Date(item.date) : null;
-  //     const start = startDate ? dayjs(startDate).startOf('day').toDate() : null;
-  //     const end = endDate ? dayjs(endDate).endOf('day').toDate() : null;
-
-  //     const matchSearch =
-  //       (item.image_name || "").toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //       (item.image_url || "").toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //       (item.date ? dayjs(item.date).format('YYYY-MM-DD') : "").toLowerCase().includes(searchTerm.toLowerCase());
-
-  //     const inRange =
-  //       (!start || (imageDate && imageDate >= start)) &&
-  //       (!end || (imageDate && imageDate <= end));
-
-  //     return matchSearch && inRange;
-  //   });
-
-  //   setFilteredImages(filtered);
-  //   setCurrentPage(1);
-  // };
-
   const handleDateFilter = () => {
-  const start = startDate ? dayjs(startDate).startOf('day') : null;
-  const end   = endDate   ? dayjs(endDate).endOf('day')   : null;
+    const start = startDate ? dayjs(startDate).startOf('day') : null;
+    const end   = endDate   ? dayjs(endDate).endOf('day')   : null;
 
-  const filtered = images.filter((item) => {
-    const d = item.createdDate ? dayjs(item.createdDate) : null;
-    const inRange =
-      (!start || (d && d.isAfter(start.subtract(1, 'millisecond')))) &&
-      (!end   || (d && d.isBefore(end.add(1, 'millisecond'))));
-    return inRange;
-  });
+    const filtered = images.filter((item) => {
+      const d = item.createdDate ? dayjs(item.createdDate) : null;
+      const inRange =
+        (!start || (d && d.isAfter(start.subtract(1, 'millisecond')))) &&
+        (!end   || (d && d.isBefore(end.add(1, 'millisecond'))));
+      return inRange;
+    });
 
-  setFilteredImages(sortImages(filtered));
-  setCurrentPage(1);
-};
+    setFilteredImages(sortImages(filtered));
+    setCurrentPage(1);
+    // Reset selection on filter
+    setSelectedIds([]);
+    setSelectAll(false);
+  };
 
   const handleDateReset = () => {
     setStartDate(null);
@@ -190,6 +200,9 @@ const displayedCategories = dataSource.slice(
     setSearchTerm('');
     setFilteredImages([]);
     setCurrentPage(1);
+    // Reset selection on reset
+    setSelectedIds([]);
+    setSelectAll(false);
   };
 
   const handleAddTrendingCourseClick = () => {
@@ -197,6 +210,78 @@ const displayedCategories = dataSource.slice(
     setSuccessMessage("");
     setErrorMessage("");
   };  
+
+  // ADD: Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      setErrorMessage("❌ Please select at least one image to delete");
+      setSuccessMessage("");
+      setTimeout(() => setErrorMessage(""), 3000);
+      return;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'image' : 'images'}?`;
+
+    if (window.confirm(confirmMessage)) {
+      try {
+        // Delete all selected images
+        const deletePromises = selectedIds.map(fileName =>
+          axios.delete(`https://api.test.hachion.co/upload_images/delete/${fileName}`)
+        );
+
+        await Promise.all(deletePromises);
+
+        // Update state
+        const updatedImages = images.filter(item => !selectedIds.includes(item.fileName));
+        setImages(updatedImages);
+        setFilteredImages(updatedImages);
+
+        setSelectedIds([]);
+        setSelectAll(false);
+
+        setSuccessMessage(`✅ ${selectedIds.length} ${selectedIds.length === 1 ? 'image' : 'images'} deleted successfully`);
+        setErrorMessage("");
+
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 6000);
+      } catch (error) {
+        console.error("Error deleting images:", error);
+        setSuccessMessage("");
+        setErrorMessage("❌ Error deleting some images. Please try again.");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 6000);
+      }
+    }
+  };
+
+  // UPDATED: handleDelete function to remove from selectedIds
+  const handleDelete = async (fileName) => {
+    if (!window.confirm("Are you sure you want to delete this image?")) return;
+
+    try {
+      await axios.delete(`https://api.test.hachion.co/upload_images/delete/${fileName}`);
+
+      // Update both images and filteredImages
+      const updatedImages = images.filter(item => item.fileName !== fileName);
+      setImages(updatedImages);
+      setFilteredImages(updatedImages);
+
+      // Remove from selectedIds if present
+      setSelectedIds(prev => prev.filter(selectedId => selectedId !== fileName));
+
+      setSuccessMessage("✅ Image deleted successfully");
+      setErrorMessage("");
+      setTimeout(() => setSuccessMessage(""), 5000);
+    } catch (error) {
+      console.error("Error deleting:", error);
+      setSuccessMessage("");
+      setErrorMessage("❌ Failed to delete image");
+      setTimeout(() => setErrorMessage(""), 5000);
+    }
+  };
+
   useEffect(() => {
     const fetchCategory = async () => {
       try {
@@ -210,28 +295,28 @@ const displayedCategories = dataSource.slice(
   }, []);
 
   useEffect(() => {
-  if (imageData.category_name) {   
-    const fetchCourses = async () => {
-      try {
-        const response = await axios.get(
-          `https://api.test.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(imageData.category_name)}`
-        );
-        setCourseNames(response.data || []);
-      } catch (error) {
-        console.error("Error fetching course names:", error.message);
-      }
-    };
-    fetchCourses();
-  }
-}, [imageData.category_name]);
-
+    if (imageData.category_name) {   
+      const fetchCourses = async () => {
+        try {
+          const response = await axios.get(
+            `https://api.test.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(imageData.category_name)}`
+          );
+          setCourseNames(response.data || []);
+        } catch (error) {
+          console.error("Error fetching course names:", error.message);
+        }
+      };
+      fetchCourses();
+    }
+  }, [imageData.category_name]);
 
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const resp = await axios.get("https://api.test.hachion.co/upload_images/all"); // adjust endpoint if different
+        const resp = await axios.get("https://api.test.hachion.co/upload_images/all");
         if (resp && resp.data) setImages(resp.data);
       } catch (err) {
+        console.error("Error fetching images:", err);
       }
     };
     fetchImages();
@@ -246,26 +331,6 @@ const displayedCategories = dataSource.slice(
       setRows(updated);
     }
   };
-const handleDelete = async (fileName) => {
-  if (!window.confirm("Are you sure you want to delete this image?")) return;
-
-  try {
-    const response = await axios.delete(`https://api.test.hachion.co/upload_images/delete/${fileName}`);
-    
-
-    // setImages(prev =>
-    //   prev.filter(courseRow => courseRow.fileName !== fileName)
-    // );
-setImages(prev => prev.filter(row => row.fileName !== fileName));
-setFilteredImages(prev => prev.filter(row => row.fileName !== fileName));
-
-    alert(response.data); 
-  } catch (error) {
-    console.error("Error deleting:", error);
-    alert(error.response?.data || "Failed to delete");
-  }
-};
-
 
   return (
     <>  
@@ -307,23 +372,23 @@ setFilteredImages(prev => prev.filter(row => row.fileName !== fileName));
                   </select>
                 </div>
                 <div className="col-md-3">
-  <label htmlFor="course" className="form-label">Course Name</label>
-  <select
-    id="course"
-    className="form-select"
-    name="courseName"
-    value={imageData.courseName}
-    onChange={handleChange}
-    disabled={!imageData.category_name}
-  >
-    <option value="">Select Course</option>
-    {courseNames.map((course, idx) => (
-      <option key={idx} value={course}>
-        {course}
-      </option>
-    ))}
-  </select>
-</div>
+                  <label htmlFor="course" className="form-label">Course Name</label>
+                  <select
+                    id="course"
+                    className="form-select"
+                    name="courseName"
+                    value={imageData.courseName}
+                    onChange={handleChange}
+                    disabled={!imageData.category_name}
+                  >
+                    <option value="">Select Course</option>
+                    {courseNames.map((course, idx) => (
+                      <option key={idx} value={course}>
+                        {course}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               <div className='course-details'>
@@ -391,71 +456,57 @@ setFilteredImages(prev => prev.filter(row => row.fileName !== fileName));
                 </TableContainer>
 
                 <div className="course-row" style={{ gap: 12, marginTop: 12 }}>
-                 <button
-  className='submit-btn'
-  onClick={async () => {
-    
+                  <button
+                    className='submit-btn'
+                    onClick={async () => {
+                      setErrorMessage("");
+                      setSuccessMessage("");
 
-    
-    setErrorMessage("");
-    setSuccessMessage("");
+                      try {
+                        if (!imageData.category_name || !imageData.courseName) {
+                          setErrorMessage("Please select category and course");
+                          setTimeout(() => setErrorMessage(""), 3000);
+                          return;
+                        }
+                        
+                        const hasFiles = rows.some(r => r.tool_image);
+                        if (!hasFiles) {
+                          setErrorMessage("Please upload at least one image");
+                          setTimeout(() => setErrorMessage(""), 3000);
+                          return;
+                        }
+                        
+                        const fd = new FormData();
+                        fd.append('categoryName', imageData.category_name);
+                        fd.append('courseName', imageData.courseName);
+                        rows.forEach((r, index) => {
+                          if (r.tool_image) {
+                            fd.append('files', r.tool_image);
+                          }
+                        });
 
-    try {
-      
-      if (!imageData.category_name || !imageData.courseName) {
-      
-        setErrorMessage("Please select category and course");
-         setTimeout(() => setErrorMessage(""), 3000);
-        return;
-      }
-      
+                        const response = await axios.post(
+                          'https://api.test.hachion.co/upload_images/upload',
+                          fd,
+                          { headers: { 'Content-Type': 'multipart/form-data' } }
+                        );
 
-      const hasFiles = rows.some(r => r.tool_image);
-      if (!hasFiles) {
-        
-        setErrorMessage("Please upload at least one image");
-         setTimeout(() => setErrorMessage(""), 3000);
-        return;
-      }
-      
-      const fd = new FormData();
-      fd.append('categoryName', imageData.category_name);
-      fd.append('courseName', imageData.courseName);
-      rows.forEach((r, index) => {
-        if (r.tool_image) {
-          
-          fd.append('files', r.tool_image);
-        }
-      });
+                        setSuccessMessage(response.data || "Images uploaded successfully");
 
-      
-      const response = await axios.post(
-        'https://api.test.hachion.co/upload_images/upload',
-        fd,
-        { headers: { 'Content-Type': 'multipart/form-data' } }
-      );
+                        // Refresh images list
+                        const resp = await axios.get("https://api.test.hachion.co/upload_images/all");
+                        setImages(resp.data || []);
 
-      
-      setSuccessMessage(response.data || "Images uploaded successfully");
+                      } catch (err) {
+                        setErrorMessage(err.response?.data || "Error uploading images");
+                      }
+                    }}
+                  >
+                    Submit
+                  </button>
 
-      // handleReset(); 
-
-      const resp = await axios.get("https://api.test.hachion.co/upload_images/all");
-      
-      setImages(resp.data || []);
-
-    } catch (err) {
-      
-      setErrorMessage(err.response?.data || "Error uploading images");
-    }
-  }}
->
-  Submit
-</button>
-
-{successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
-{errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
-
+                  {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+                  {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
 
                   <button className='reset-btn' onClick={handleReset}>Reset</button>
                 </div>
@@ -471,6 +522,10 @@ setFilteredImages(prev => prev.filter(row => row.fileName !== fileName));
                 <div className='category-header'>
                   <p style={{ marginBottom: 0 }}>Uploaded Images</p>
                 </div>
+
+                {/* ADD: Success and Error Messages */}
+                {successMessage && <div style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</div>}
+                {errorMessage && <div style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</div>}
 
                 <div className='date-schedule' style={{ alignItems: 'center' }}>
                   <span style={{ marginRight: 8 }}>Start Date</span>
@@ -520,31 +575,42 @@ setFilteredImages(prev => prev.filter(row => row.fileName !== fileName));
                       <button
                         className="btn-search"
                         type="button"
-                        // onClick={() => {
-                          
-                        //   const filtered = images.filter(item =>
-                        //     (item.image_name || '').toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        //     (item.image_url || '').toString().toLowerCase().includes(searchTerm.toLowerCase())
-                        //   );
-                        //   setFilteredImages(filtered);
-                        //   setCurrentPage(1);
-                        // }}
                         onClick={() => {
-  const q = searchTerm.toLowerCase();
-  const filtered = images.filter(item =>
-    (item.originalFileName || '').toLowerCase().includes(q) ||
-    (item.fileUrl || '').toLowerCase().includes(q) ||
-    (item.categoryName || '').toLowerCase().includes(q) ||
-    (item.courseName || '').toLowerCase().includes(q)
-  );
-  setFilteredImages(sortImages(filtered)); // keep it sorted
-  setCurrentPage(1);
-}}
-
+                          const q = searchTerm.toLowerCase();
+                          const filtered = images.filter(item =>
+                            (item.originalFileName || '').toLowerCase().includes(q) ||
+                            (item.fileUrl || '').toLowerCase().includes(q) ||
+                            (item.categoryName || '').toLowerCase().includes(q) ||
+                            (item.courseName || '').toLowerCase().includes(q)
+                          );
+                          setFilteredImages(sortImages(filtered));
+                          setCurrentPage(1);
+                          // Reset selection on search
+                          setSelectedIds([]);
+                          setSelectAll(false);
+                        }}
                       >
                         <IoSearch style={{ fontSize: '2rem' }} />
                       </button>
                     </div>
+
+                    {/* ADD: Bulk Delete Button */}
+                    {selectedIds.length > 0 && (
+                      <button
+                        type="button"
+                        className="btn-category"
+                        onClick={handleBulkDelete}
+                        style={{ 
+                          backgroundColor: '#dc3545', 
+                          marginRight: '10px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '5px'
+                        }}
+                      >
+                        <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+                      </button>
+                    )}
 
                     <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick} >
                       <FiPlus /> Upload Image
@@ -559,8 +625,13 @@ setFilteredImages(prev => prev.filter(row => row.fileName !== fileName));
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
+                  {/* ADD: Select All Checkbox */}
                   <StyledTableCell align='center' sx={{ width: '50px' }}>
-                    <Checkbox />
+                    <Checkbox
+                      checked={selectAll}
+                      onChange={handleSelectAll}
+                      indeterminate={selectedIds.length > 0 && selectedIds.length < displayedCategories.length}
+                    />
                   </StyledTableCell>
                   <StyledTableCell align='center' sx={{ width: '80px' }}>S.No.</StyledTableCell>
                   <StyledTableCell align="center">Category Name</StyledTableCell>
@@ -574,68 +645,70 @@ setFilteredImages(prev => prev.filter(row => row.fileName !== fileName));
               </TableHead>
 
               <TableBody>
-  {displayedCategories.length > 0 ? (
-    displayedCategories.map((courseRow, index) => (
-      // <StyledTableRow key={courseRow.uploadImagesCategoryId || index}>
-      <StyledTableRow key={courseRow.fileUrl || `${courseRow.uploadImagesCategoryId}-${courseRow.fileName}`}>
+                {displayedCategories.length > 0 ? (
+                  displayedCategories.map((courseRow, index) => (
+                    <StyledTableRow key={courseRow.fileUrl || `${courseRow.uploadImagesCategoryId}-${courseRow.fileName}`}>
+                      {/* ADD: Individual Checkbox */}
+                      <StyledTableCell align="center">
+                        <Checkbox
+                          checked={selectedIds.includes(courseRow.fileName)}
+                          onChange={() => handleSelectOne(courseRow.fileName)}
+                        />
+                      </StyledTableCell>
+                      <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
+                      <StyledTableCell align="left">{courseRow.categoryName}</StyledTableCell>
+                      <StyledTableCell align="left">{courseRow.courseName}</StyledTableCell>
 
-        <StyledTableCell align="center"><Checkbox /></StyledTableCell>
-        <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
-        <StyledTableCell align="left">{courseRow.categoryName}</StyledTableCell>
-        <StyledTableCell align="left">{courseRow.courseName}</StyledTableCell>
+                      <StyledTableCell align="left">
+                        {courseRow.fileUrl ? (
+                          <img
+                            src={courseRow.fileUrl}  
+                            alt={courseRow.originalFileName} 
+                            style={{
+                              width: 40,
+                              height: 28,
+                              objectFit: 'cover',
+                              borderRadius: 4,
+                              border: '1px solid #ddd'
+                            }}
+                          />
+                        ) : (
+                          ""
+                        )}
+                      </StyledTableCell>
 
-        <StyledTableCell align="left">
-  {courseRow.fileUrl ? (
-    <img
-      src={courseRow.fileUrl}  
-      alt={courseRow.originalFileName} 
-      style={{
-        width: 40,
-        height: 28,
-        objectFit: 'cover',
-        borderRadius: 4,
-        border: '1px solid #ddd'
-      }}
-    />
-  ) : (
-    ""
-  )}
-</StyledTableCell>
+                      <StyledTableCell align="left">
+                        {courseRow.originalFileName}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {courseRow.fileUrl}
+                      </StyledTableCell>
 
+                      <StyledTableCell align="center">
+                        {courseRow.createdDate ? dayjs(courseRow.createdDate).format('MMM-DD-YYYY').toUpperCase() : 'N/A'}
+                      </StyledTableCell>
 
-        <StyledTableCell align="left">
-          {courseRow.originalFileName}
-        </StyledTableCell>
-        <StyledTableCell align="left">
-          {courseRow.fileUrl}
-        </StyledTableCell>
-
-        <StyledTableCell align="center">
-          {courseRow.createdDate ? dayjs(courseRow.createdDate).format('MMM-DD-YYYY').toUpperCase() : 'N/A'}
-        </StyledTableCell>
-
-        <StyledTableCell align="center">
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-             <RiDeleteBin6Line
-    className="delete"
-    style={{ cursor: 'pointer', color: 'red', fontSize: '1.2rem' }}
-     onClick={() => handleDelete(courseRow.fileName)}
-  />           
-          </div>
-        </StyledTableCell>
-      </StyledTableRow>
-    ))
-  ) : (
-    <StyledTableRow>
-      <StyledTableCell colSpan={9} align="center">No data available.</StyledTableCell>
-    </StyledTableRow>
-  )}
-</TableBody>
-
+                      <StyledTableCell align="center">
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                          <RiDeleteBin6Line
+                            className="delete"
+                            style={{ cursor: 'pointer', color: 'red', fontSize: '1.2rem' }}
+                            onClick={() => handleDelete(courseRow.fileName)}
+                          />           
+                        </div>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))
+                ) : (
+                  <StyledTableRow>
+                    {/* UPDATED: Changed colSpan from 9 to 10 to include checkbox column */}
+                    <StyledTableCell colSpan={10} align="center">No data available.</StyledTableCell>
+                  </StyledTableRow>
+                )}
+              </TableBody>
             </Table>
           </TableContainer>
 
-         
           {dataSource.length > 0 && (
             <div className='pagination-container' style={{ marginTop: 12 }}>
               <AdminPagination

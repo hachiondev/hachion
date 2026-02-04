@@ -37,7 +37,7 @@ function DemoClassSectionSelfTab({
   selectedGroupKey,
   setSelectedGroupKey,
   selectedGroup,
-    userProfile,
+  userProfile,
   courseName,
   isRequestBatchLoading,
   isProfileLoading,
@@ -45,8 +45,8 @@ function DemoClassSectionSelfTab({
   isRequestBatchSuccess,
   requestBatchError,
   onRequestClick,
-onCloseRegisterPrompt,
-onEnrollClick,
+  onCloseRegisterPrompt,
+  onEnrollClick,
   selfPacedLearning,
   isCourseLoading,
   courseError,
@@ -69,19 +69,19 @@ What's Included:
   const [selectedDays, setSelectedDays] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sendingBatchId, setSendingBatchId] = React.useState(null);
-    const [resendMessage, setResendMessage] = React.useState("");
-    const [resendError, setResendError] = React.useState("");
-      const [notifyViaMap, setNotifyViaMap] = useState({});
-      const [isSelfEnrolled, setIsSelfEnrolled] = useState(false);
-const [checkingSelfEnroll, setCheckingSelfEnroll] = useState(false);
-const [selfEnrollError, setSelfEnrollError] = useState("");
+  const [resendMessage, setResendMessage] = React.useState("");
+  const [resendError, setResendError] = React.useState("");
+  const [notifyViaMap, setNotifyViaMap] = useState({});
+  const [isSelfEnrolled, setIsSelfEnrolled] = useState(false);
+  const [checkingSelfEnroll, setCheckingSelfEnroll] = useState(false);
+  const [selfEnrollError, setSelfEnrollError] = useState("");
 
-    const { data: checkedSessions = [] } = useCheckEnrollmentForSessions(
-      selectedGroup?.sessions || [],
-      userProfile?.studentId || "",
-      courseName || ""
-    );
-      const { mutate: resendEmail } = useResendEnrollEmail();
+  const { data: checkedSessions = [] } = useCheckEnrollmentForSessions(
+    selectedGroup?.sessions || [],
+    userProfile?.studentId || "",
+    courseName || ""
+  );
+  const { mutate: resendEmail } = useResendEnrollEmail();
 
   const isSelfFormValid =
     selectedDays.length > 0 &&
@@ -101,11 +101,39 @@ const [selfEnrollError, setSelfEnrollError] = useState("");
   }, [notification, setNotification]);
 
   useEffect(() => {
-  if (!userProfile?.studentId || !courseName) return;
+    if (!userProfile?.studentId || !courseName) return;
 
-  const checkOnLoad = async () => {
+    const checkOnLoad = async () => {
+      try {
+        setCheckingSelfEnroll(true);
+
+        const res = await axios.get(
+          `${API_BASE}/enroll/is-self-paced-enrolled`,
+          {
+            params: {
+              studentId: userProfile.studentId,
+              courseName: courseName,
+            },
+          }
+        );
+
+        setIsSelfEnrolled(res?.data?.enrolled === true);
+      } catch (err) {
+        console.error("Self-paced enrollment check failed", err);
+      } finally {
+        setCheckingSelfEnroll(false);
+      }
+    };
+
+    checkOnLoad();
+  }, [userProfile?.studentId, courseName]);
+
+  const checkSelfPacedEnrollment = async () => {
+    if (!userProfile?.studentId || !courseName) return false;
+
     try {
       setCheckingSelfEnroll(true);
+      setSelfEnrollError("");
 
       const res = await axios.get(
         `${API_BASE}/enroll/is-self-paced-enrolled`,
@@ -117,44 +145,16 @@ const [selfEnrollError, setSelfEnrollError] = useState("");
         }
       );
 
-      setIsSelfEnrolled(res?.data?.enrolled === true);
+      const enrolled = res?.data?.enrolled === true;
+      setIsSelfEnrolled(enrolled);
+      return enrolled;
     } catch (err) {
-      console.error("Self-paced enrollment check failed", err);
+      setSelfEnrollError("Unable to verify enrollment status");
+      return false;
     } finally {
       setCheckingSelfEnroll(false);
     }
   };
-
-  checkOnLoad();
-}, [userProfile?.studentId, courseName]);
-
-  const checkSelfPacedEnrollment = async () => {
-  if (!userProfile?.studentId || !courseName) return false;
-
-  try {
-    setCheckingSelfEnroll(true);
-    setSelfEnrollError("");
-
-    const res = await axios.get(
-      `${API_BASE}/enroll/is-self-paced-enrolled`,
-      {
-        params: {
-          studentId: userProfile.studentId,
-          courseName: courseName,
-        },
-      }
-    );
-
-    const enrolled = res?.data?.enrolled === true;
-    setIsSelfEnrolled(enrolled);
-    return enrolled;
-  } catch (err) {
-    setSelfEnrollError("Unable to verify enrollment status");
-    return false;
-  } finally {
-    setCheckingSelfEnroll(false);
-  }
-};
 
   return (
     <div className={styles.dcgrid}>
@@ -162,61 +162,61 @@ const [selfEnrollError, setSelfEnrollError] = useState("");
       <div className={styles.dcrequestSection}>
         <div className={styles.dcrequestCard}>
           <div className={styles.dcrequestImage}>
-            <img src="/request_batch_banner.png" alt="Student" />
+            <img src="/self-paced.png" alt="Student" />
           </div>
 
           <div className={styles.dcrequestOverlay}>
             <div className={styles.dcrequestForm}>
-            <div className={styles.enrollActionsCard}>
- {checkingSelfEnroll ? (
-  <button className={styles.dcbtnDisabled} disabled>
-    Checking...
-  </button>
-) : isSelfEnrolled ? (
-  <button className={styles.dcbtnDisabled} disabled>
-    Enrolled
-  </button>
-) : (
-  <button
-    className={styles.enrollPrimaryBtn}
-    onClick={() => {
-      if (isProfileLoading) return;
+              <div className={styles.enrollActionsCard}>
+                {checkingSelfEnroll ? (
+                  <button className={styles.dcbtnDisabled} disabled>
+                    Checking...
+                  </button>
+                ) : isSelfEnrolled ? (
+                  <button className={styles.dcbtnDisabled} disabled>
+                    Enrolled
+                  </button>
+                ) : (
+                  <button
+                    className={styles.enrollPrimaryBtn}
+                    onClick={() => {
+                      if (isProfileLoading) return;
 
-      if (!userProfile || !userProfile.studentId) {
-        onCloseRegisterPrompt && onCloseRegisterPrompt();
-        onRequestClick?.("LOGIN_REQUIRED");
-        return;
-      }
+                      if (!userProfile || !userProfile.studentId) {
+                        onCloseRegisterPrompt && onCloseRegisterPrompt();
+                        onRequestClick?.("LOGIN_REQUIRED");
+                        return;
+                      }
 
-      onRequestClick?.("ENROLL_SELF");
-    }}
-  >
-    Enroll Now
-  </button>
-)}
+                      onRequestClick?.("ENROLL_SELF");
+                    }}
+                  >
+                    Enroll Now
+                  </button>
+                )}
 
 
-{!isSelfEnrolled && (
-  <div className={styles.notificationCard}>
-    <div className={styles.notificationHeader}>
-      <span className={styles.notificationTitle}>Notify me via:</span>
-    </div>
+                {!isSelfEnrolled && (
+                  <div className={styles.notificationCard}>
+                    <div className={styles.notificationHeader}>
+                      <span className={styles.notificationTitle}>Notify me via:</span>
+                    </div>
 
-    <div className={styles.checkboxContainer}>
-      <label className={styles.customCheckbox}>
-        <input type="checkbox" defaultChecked />
-        <span className={styles.checkboxLabel}>Email</span>
-      </label>
+                    <div className={styles.checkboxContainer}>
+                      <label className={styles.customCheckbox}>
+                        <input type="checkbox" defaultChecked />
+                        <span className={styles.checkboxLabel}>Email</span>
+                      </label>
 
-      <label className={styles.customCheckbox}>
-        <input type="checkbox" />
-        <span className={styles.checkboxLabel}>WhatsApp</span>
-      </label>
-    </div>
-  </div>
-)}
+                      <label className={styles.customCheckbox}>
+                        <input type="checkbox" />
+                        <span className={styles.checkboxLabel}>WhatsApp</span>
+                      </label>
+                    </div>
+                  </div>
+                )}
 
-</div>
+              </div>
 
               {showMessage && isRequestBatchSuccess && (
                 <p
@@ -271,7 +271,7 @@ const [selfEnrollError, setSelfEnrollError] = useState("");
         {isCourseLoading ? (
           <div
             className={styles.dcinfotext}
-          
+
           >
             Loading self-paced learning details...
           </div>

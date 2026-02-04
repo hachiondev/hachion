@@ -21,6 +21,7 @@ const EnrollmentForm = ({onClose}) => {
     email: '',
     course: null,
     feedback: '',
+    remark: '',
     countryCode: '+91',
   });
 
@@ -190,6 +191,9 @@ const EnrollmentForm = ({onClose}) => {
     
     if (!formData.course) newErrors.course = 'Please select a course';
     if (!formData.feedback) newErrors.feedback = 'Please select how you heard about us';
+      if (!formData.remark.trim()) {
+    newErrors.remark = 'Remark is required'; // 👈 NEW
+  }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -211,6 +215,7 @@ const EnrollmentForm = ({onClose}) => {
           courseId: formData.course.originalData?.id || formData.course.originalData?._id,
           courseName: formData.course.label,
           feedback: formData.feedback,
+          remark: formData.remark,
           timestamp: new Date().toISOString()
         };
         
@@ -384,6 +389,27 @@ const EnrollmentForm = ({onClose}) => {
               </div>
               {errors.course && <span className={styles.errorMessage}>{errors.course}</span>}
             </div>
+                  {/* Remark Section */}
+<div className={styles.formGroup}>
+  <div className={styles.inputWithIcon}>
+    <input
+      type="text"
+      name="remark"
+      value={formData.remark}
+      onChange={handleChange}
+      className={`${styles.formInput} ${styles.remarkInput} ${
+        errors.remark ? styles.error : ''
+      }`}
+      placeholder="Enter your remarks *"
+      rows={3}
+      required
+    />
+  </div>
+  {errors.remark && (
+    <span className={styles.errorMessage}>{errors.remark}</span>
+  )}
+</div>
+
 
             {/* Submit Button */}
             <button

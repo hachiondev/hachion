@@ -19,6 +19,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
 dayjs.extend(customParseFormat);
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -35,10 +36,12 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     borderRight: '1px solid #e0e0e0',
   },
 }));
+
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': { backgroundColor: theme.palette.action.hover },
   '&:last-child td, &:last-child th': { border: 0 },
 }));
+
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -46,7 +49,8 @@ const Blogs = () => {
     id: "", category_name: "", title: "", author: "", authorImage: "",
     blog_image: "", blog_pdf: "", description: "",
     date: new Date().toISOString().split('T')[0],
-    meta_title: "", meta_keyword: "", meta_description: "" });
+    meta_title: "", meta_keyword: "", meta_description: ""
+  });
   const [formMode, setFormMode] = useState('Add');
   const [showForm, setShowForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -57,19 +61,28 @@ const Blogs = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [allBlogs, setAllBlogs] = useState([]);
 
+  // ADDED: State for checkbox selection
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   useEffect(() => {
     axios.get("https://api.test.hachion.co/course-categories/all")
       .then(res => setCategories(res.data))
       .catch(console.error);
   }, []);
+
   useEffect(() => {
-  axios.get("https://api.test.hachion.co/blog")
-    .then(res => {
-      setAllBlogs(res.data);
-      setBlogs(res.data);
-    })
-    .catch(console.error);
-}, []);
+    axios.get("https://api.test.hachion.co/blog")
+      .then(res => {
+        setAllBlogs(res.data);
+        setBlogs(res.data);
+        setFilteredBlogs(res.data);
+      })
+      .catch(console.error);
+  }, []);
+
   useEffect(() => {
     const filtered = blogs.filter(blog =>
       blog.category_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -77,24 +90,115 @@ const Blogs = () => {
       blog.author?.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredBlogs(filtered);
+    setCurrentPage(1); // Reset to first page when searching
   }, [blogs, searchTerm]);
+
+  const displayedBlogs = filteredBlogs.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
+  // ADDED: Handle Select All checkbox
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allIds = displayedBlogs.map(blog => blog.id);
+      setSelectedIds(allIds);
+      setSelectAll(true);
+    } else {
+      setSelectedIds([]);
+      setSelectAll(false);
+    }
+  };
+
+  // ADDED: Handle individual checkbox
+  const handleSelectOne = (id) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+      setSelectAll(false);
+    } else {
+      const newSelectedIds = [...selectedIds, id];
+      setSelectedIds(newSelectedIds);
+      // Check if all items are selected
+      if (newSelectedIds.length === displayedBlogs.length) {
+        setSelectAll(true);
+      }
+    }
+  };
+
+  // ADDED: Update selectAll state when page changes
+  useEffect(() => {
+    const allCurrentPageIds = displayedBlogs.map(blog => blog.id);
+    const allSelected = allCurrentPageIds.length > 0 &&
+      allCurrentPageIds.every(id => selectedIds.includes(id));
+    setSelectAll(allSelected);
+  }, [currentPage, displayedBlogs, selectedIds]);
+
+  // ADDED: Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      setErrorMessage("❌ Please select at least one blog to delete");
+      setSuccessMessage("");
+      setTimeout(() => setErrorMessage(""), 3000);
+      return;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'blog' : 'blogs'}?`;
+
+    if (window.confirm(confirmMessage)) {
+      try {
+        // Delete all selected blogs
+        const deletePromises = selectedIds.map(id =>
+          axios.delete(`https://api.test.hachion.co/blog/delete/${id}`)
+        );
+
+        await Promise.all(deletePromises);
+
+        // Update state
+        const updatedBlogs = blogs.filter(item => !selectedIds.includes(item.id));
+        setBlogs(updatedBlogs);
+        setAllBlogs(updatedBlogs);
+        setFilteredBlogs(updatedBlogs);
+
+        setSelectedIds([]);
+        setSelectAll(false);
+
+        setSuccessMessage(`✅ ${selectedIds.length} ${selectedIds.length === 1 ? 'blog' : 'blogs'} deleted successfully`);
+        setErrorMessage("");
+
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 6000);
+      } catch (error) {
+        console.error("Error deleting blogs:", error);
+        setSuccessMessage("");
+        setErrorMessage("❌ Error deleting some blogs. Please try again.");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 6000);
+      }
+    }
+  };
+
   const handleInputChange = (e, field = null, value = null) => {
     const name = field || e.target.name;
     const val = field ? value : e.target.value;
     setFormData(prev => ({ ...prev, [name]: val }));
   };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setFormData(prev => ({ ...prev, [e.target.name]: file }));
   };
+
   const handleReset = () => {
     setFormData({
-      id: "", category_name: "", title: "", author: "",authorImage: "",
+      id: "", category_name: "", title: "", author: "", authorImage: "",
       blog_image: "", blog_pdf: "", description: "",
       date: new Date().toISOString().split('T')[0],
       meta_title: "", meta_keyword: "", meta_description: ""
     });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const blogPayload = JSON.stringify({
@@ -123,30 +227,54 @@ const Blogs = () => {
         timeout: 60000,
       });
       if (response.status === 200 || response.status === 201) {
-        alert(`Blog ${formData.id ? "updated" : "added"} successfully`);
+        setSuccessMessage(`✅ Blog ${formData.id ? "updated" : "added"} successfully`);
+        setErrorMessage("");
         setBlogs(prev =>
+          formData.id
+            ? prev.map(blog => (blog.id === formData.id ? { ...blog, ...response.data } : blog))
+            : [...prev, response.data]
+        );
+        setAllBlogs(prev =>
           formData.id
             ? prev.map(blog => (blog.id === formData.id ? { ...blog, ...response.data } : blog))
             : [...prev, response.data]
         );
         handleReset();
         setShowForm(false);
+
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 5000);
       }
     } catch (error) {
       const backendMessage = error.response?.data || error.message;
       console.error("Error submitting blog:", error);
-      alert("You are getting error please contact our support team");
+      setSuccessMessage("");
+      setErrorMessage("❌ Error submitting blog. Please try again.");
     }
   };
+
+  // UPDATED: handleDelete function to remove from selectedIds
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this Blog?")) return;
     try {
       await axios.delete(`https://api.test.hachion.co/blog/delete/${id}`);
       setBlogs(prev => prev.filter(blog => blog.id !== id));
+      setAllBlogs(prev => prev.filter(blog => blog.id !== id));
+      setFilteredBlogs(prev => prev.filter(blog => blog.id !== id));
+
+      // Remove from selectedIds if present
+      setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
+
+      setSuccessMessage("✅ Blog deleted successfully");
+      setErrorMessage("");
+      setTimeout(() => setSuccessMessage(""), 5000);
     } catch (error) {
-      alert("Failed to delete blog");
+      setSuccessMessage("");
+      setErrorMessage("❌ Failed to delete blog");
     }
   };
+
   const handleEdit = async (id) => {
     setFormMode('Edit');
     setShowForm(true);
@@ -167,42 +295,52 @@ const Blogs = () => {
         meta_description: blog.meta_description || ''
       });
     } catch (error) {
-      alert("Failed to fetch blog details");
+      setSuccessMessage("");
+      setErrorMessage("❌ Failed to fetch blog details");
     }
   };
-  const displayedBlogs = filteredBlogs.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-  );
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo(0, 0);
   };
+
   const handleRowsPerPageChange = (rows) => {
     setRowsPerPage(rows);
     setCurrentPage(1);
   };
+
   const handleAddClick = () => {
     setFormMode('Add');
     setShowForm(true);
     handleReset();
   };
-   const handleDateFilter = () => {
-      const filtered = allBlogs.filter((item) => {
-        const itemDate = dayjs(item.date);
-        return (
-          (!startDate || itemDate.isAfter(dayjs(startDate).subtract(1, 'day'))) &&
-          (!endDate || itemDate.isBefore(dayjs(endDate).add(1, 'day')))
-        );
-      });
-      setBlogs(filtered);
-    };
-  
-    const handleDateReset = () => {
-      setStartDate(null);
-      setEndDate(null);
-      setBlogs(allBlogs);
-    };
+
+  const handleDateFilter = () => {
+    const filtered = allBlogs.filter((item) => {
+      const itemDate = dayjs(item.date);
+      return (
+        (!startDate || itemDate.isAfter(dayjs(startDate).subtract(1, 'day'))) &&
+        (!endDate || itemDate.isBefore(dayjs(endDate).add(1, 'day')))
+      );
+    });
+    setBlogs(filtered);
+    setFilteredBlogs(filtered);
+    setSelectedIds([]); // Reset selection on filter
+    setSelectAll(false);
+    setCurrentPage(1);
+  };
+
+  const handleDateReset = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setBlogs(allBlogs);
+    setFilteredBlogs(allBlogs);
+    setSelectedIds([]); // Reset selection on reset
+    setSelectAll(false);
+    setCurrentPage(1);
+  };
+
   return (
     <>
       {showForm ? (
@@ -224,137 +362,134 @@ const Blogs = () => {
             <div className="category-header">
               <p style={{ marginBottom: 0 }}>{formMode === 'Add' ? 'Add Blog' : 'Edit Blog'}</p>
             </div>
-          <form onSubmit={handleSubmit} encType="multipart/form-data">
-            <div className="course-details">
-              <div className="course-row">
-                <div className="col-md-3">
-                  <label className="form-label">Category Name</label>
-                  <select
-                    name="category_name"
-                    className="form-select"
-                    value={formData.category_name}
-                    onChange={handleInputChange}
-                  >
-                    <option value="" disabled>Select Category</option>
-                    {categories.map((cat) => (
-                      <option key={cat.id} value={cat.name}>{cat.name}</option>
-                    ))}
-                  </select>
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
+              <div className="course-details">
+                <div className="course-row">
+                  <div className="col-md-3">
+                    <label className="form-label">Category Name</label>
+                    <select
+                      name="category_name"
+                      className="form-select"
+                      value={formData.category_name}
+                      onChange={handleInputChange}
+                    >
+                      <option value="" disabled>Select Category</option>
+                      {categories.map((cat) => (
+                        <option key={cat.id} value={cat.name}>{cat.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="col-md-3">
+                    <label className="form-label">Blog Title</label>
+                    <input
+                      type="text"
+                      name="title"
+                      className="form-control"
+                      placeholder="Enter Title"
+                      value={formData.title}
+                      onChange={handleInputChange}
+                    />
+                  </div>
                 </div>
-                <div className="col-md-3">
-                  <label className="form-label">Blog Title</label>
-                  <input
-                    type="text"
-                    name="title"
-                    className="form-control"
-                    placeholder="Enter Title"
-                    value={formData.title}
-                    onChange={handleInputChange}
+                <div className="course-row">
+                  <div className="col-md-4">
+                    <label className="form-label">Author Image</label>
+                    <input
+                      type="file"
+                      name="authorImage"
+                      accept="image/*"
+                      className="form-control"
+                      onChange={handleFileChange}
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <label className="form-label">Author</label>
+                    <input
+                      type="text"
+                      name="author"
+                      className="form-control"
+                      placeholder="Enter Author"
+                      value={formData.author}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <label className="form-label">Blog Image (w-360 x h-160px)</label>
+                    <input
+                      type="file"
+                      name="blog_image"
+                      accept="image/*"
+                      className="form-control"
+                      onChange={handleFileChange}
+                    />
+                  </div>
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Description</label>
+                  <ReactQuill
+                    theme="snow"
+                    value={formData.description}
+                    onChange={(content) => handleInputChange(null, "description", content)}
+                    style={{ height: "300px", marginBottom: "40px" }}
                   />
+                </div>
+                <div className="course-row">
+                  <div className="col-md-4">
+                    <label className="form-label">Meta Title</label>
+                    <input
+                      type="text"
+                      name="meta_title"
+                      className="form-control"
+                      value={formData.meta_title}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <label className="form-label">Meta Keywords</label>
+                    <input
+                      type="text"
+                      name="meta_keyword"
+                      className="form-control"
+                      value={formData.meta_keyword}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <label className="form-label">Meta Description</label>
+                    <input
+                      type="text"
+                      name="meta_description"
+                      className="form-control"
+                      value={formData.meta_description}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                </div>
+                <div className="course-row">
+                  <button type="submit" className="submit-btn">
+                    {formMode === 'Add' ? 'Submit' : 'Update'}
+                  </button>
+                  <button type="button" className="reset-btn" onClick={handleReset}>
+                    Reset
+                  </button>
                 </div>
               </div>
-              <div className="course-row">
-                <div className="col-md-4">
-                  <label className="form-label">Author Image</label>
-                  <input
-                    type="file"
-                    name="authorImage"
-                    accept="image/*"
-                    className="form-control"
-                    onChange={handleFileChange}
-                  />
-                </div>
-                <div className="col-md-4">
-                  <label className="form-label">Author</label>
-                  <input
-                    type="text"
-                    name="author"
-                    className="form-control"
-                    placeholder="Enter Author"
-                    value={formData.author}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="col-md-4">
-                  <label className="form-label">Blog Image (w-360 x h-160px)</label>
-                  <input
-                    type="file"
-                    name="blog_image"
-                    accept="image/*"
-                    className="form-control"
-                    onChange={handleFileChange}
-                  />
-                </div>
-                {/* <div className="col-md-4">
-                  <label className="form-label">Blog PDF</label>
-                  <input
-                    type="file"
-                    name="blog_pdf"
-                    accept="application/pdf"
-                    className="form-control"
-                    onChange={handleFileChange}
-                  />
-                </div> */}
-              </div>
-              <div className="mb-3">
-                <label className="form-label">Description</label>
-                <ReactQuill
-                  theme="snow"
-                  value={formData.description}
-                  onChange={(content) => handleInputChange(null, "description", content)}
-                  style={{ height: "300px", marginBottom: "40px" }}
-                />
-              </div>
-              <div className="course-row">
-                <div className="col-md-4">
-                  <label className="form-label">Meta Title</label>
-                  <input
-                    type="text"
-                    name="meta_title"
-                    className="form-control"
-                    value={formData.meta_title}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="col-md-4">
-                  <label className="form-label">Meta Keywords</label>
-                  <input
-                    type="text"
-                    name="meta_keyword"
-                    className="form-control"
-                    value={formData.meta_keyword}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="col-md-4">
-                  <label className="form-label">Meta Description</label>
-                  <input
-                    type="text"
-                    name="meta_description"
-                    className="form-control"
-                    value={formData.meta_description}
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </div>
-              <div className="course-row">
-                <button type="submit" className="submit-btn">
-                  {formMode === 'Add' ? 'Submit' : 'Update'}
-                </button>
-                <button type="button" className="reset-btn" onClick={handleReset}>
-                  Reset
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
+            </form>
+          </div>
         </div>
       ) : (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <div className="course-category">
             <h3>Blog</h3>
             <div className="category">
-              <div className="category-header"><p style={{ marginBottom: 0 }}>Blog Details</p></div>
+              <div className="category-header">
+                <p style={{ marginBottom: 0 }}>Blog Details</p>
+              </div>
+
+              {/* ADDED: Success and Error Messages */}
+              {successMessage && <div style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</div>}
+              {errorMessage && <div style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</div>}
+
               <div className="date-schedule">
                 Start Date
                 <DatePicker value={startDate} onChange={setStartDate} />
@@ -393,6 +528,19 @@ const Blogs = () => {
                     />
                     <button className="btn-search"><IoSearch /></button>
                   </div>
+
+                  {/* ADDED: Bulk Delete Button */}
+                  {selectedIds.length > 0 && (
+                    <button
+                      type="button"
+                      className="btn-category"
+                      onClick={handleBulkDelete}
+                      style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
+                    >
+                      <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+                    </button>
+                  )}
+
                   <button className="btn-category" onClick={handleAddClick}>
                     <FiPlus /> Add Blog
                   </button>
@@ -403,7 +551,14 @@ const Blogs = () => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <StyledTableCell align="center"><Checkbox /></StyledTableCell>
+                    {/* ADDED: Select All Checkbox */}
+                    <StyledTableCell align="center">
+                      <Checkbox
+                        checked={selectAll}
+                        onChange={handleSelectAll}
+                        indeterminate={selectedIds.length > 0 && selectedIds.length < displayedBlogs.length}
+                      />
+                    </StyledTableCell>
                     <StyledTableCell align="center">S.No.</StyledTableCell>
                     <StyledTableCell align="center">Category</StyledTableCell>
                     <StyledTableCell align="center">Image</StyledTableCell>
@@ -419,7 +574,13 @@ const Blogs = () => {
                 <TableBody>
                   {displayedBlogs.length > 0 ? displayedBlogs.map((blog, index) => (
                     <StyledTableRow key={blog.id}>
-                      <StyledTableCell align="center"><Checkbox /></StyledTableCell>
+                      {/* ADDED: Individual Checkbox */}
+                      <StyledTableCell align="center">
+                        <Checkbox
+                          checked={selectedIds.includes(blog.id)}
+                          onChange={() => handleSelectOne(blog.id)}
+                        />
+                      </StyledTableCell>
                       <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
                       <StyledTableCell align="center">{blog.category_name}</StyledTableCell>
                       <StyledTableCell align="center">
@@ -428,8 +589,7 @@ const Blogs = () => {
                         ) : 'No Image'}
                       </StyledTableCell>
                       <StyledTableCell align="left"
-                      style={{ maxHeight: '100px', maxWidth: '200px', whiteSpace: 'wrap' }}>{blog.title}</StyledTableCell>
-                      {/* <StyledTableCell align="center">{blog.author}</StyledTableCell> */}
+                        style={{ maxHeight: '100px', maxWidth: '200px', whiteSpace: 'wrap' }}>{blog.title}</StyledTableCell>
                       <StyledTableCell align="left" style={{ width: '100px' }}>
                         {blog.blog_pdf ? (
                           blog.blog_pdf.split('/').pop()
@@ -457,7 +617,8 @@ const Blogs = () => {
                     </StyledTableRow>
                   )) : (
                     <StyledTableRow>
-                      <StyledTableCell colSpan={10} align="center">No blogs found</StyledTableCell>
+                      {/* UPDATED: Changed colSpan from 10 to 11 to include checkbox column */}
+                      <StyledTableCell colSpan={11} align="center">No blogs found</StyledTableCell>
                     </StyledTableRow>
                   )}
                 </TableBody>
@@ -477,4 +638,5 @@ const Blogs = () => {
     </>
   );
 };
+
 export default Blogs;

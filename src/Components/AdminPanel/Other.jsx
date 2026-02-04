@@ -83,16 +83,21 @@ export default function Other() {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  
+  // ADD: State for checkbox selection
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo(0, window.scrollY);
   };
-  // Inside your CourseCategory component
 
   const handleRowsPerPageChange = (rows) => {
     setRowsPerPage(rows);
-    setCurrentPage(1); // Reset to the first page whenever rows per page changes
+    setCurrentPage(1);
   };
 
   const displayedCourse = filteredBanner.slice(
@@ -104,15 +109,50 @@ export default function Other() {
     setCurrentPage(1);
   }, [searchTerm]);
 
+  // ADD: Handle Select All checkbox
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allIds = displayedCourse.map(item => item.banner_id);
+      setSelectedIds(allIds);
+      setSelectAll(true);
+    } else {
+      setSelectedIds([]);
+      setSelectAll(false);
+    }
+  };
+
+  // ADD: Handle individual checkbox
+  const handleSelectOne = (banner_id) => {
+    if (selectedIds.includes(banner_id)) {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== banner_id));
+      setSelectAll(false);
+    } else {
+      const newSelectedIds = [...selectedIds, banner_id];
+      setSelectedIds(newSelectedIds);
+      // Check if all items are selected
+      if (newSelectedIds.length === displayedCourse.length) {
+        setSelectAll(true);
+      }
+    }
+  };
+
+  // ADD: Update selectAll state when page changes
+  useEffect(() => {
+    const allCurrentPageIds = displayedCourse.map(item => item.banner_id);
+    const allSelected = allCurrentPageIds.length > 0 &&
+      allCurrentPageIds.every(id => selectedIds.includes(id));
+    setSelectAll(allSelected);
+  }, [currentPage, displayedCourse, selectedIds]);
+
   const handleFileChange = (e, imageType) => {
     setBannerData((prev) => ({
       ...prev,
       [imageType]: e.target.files[0],
     }));
   };
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
     setEditedData((prev) => ({
       ...prev,
       [name]: value,
@@ -137,7 +177,7 @@ export default function Other() {
   }, [searchTerm, banner]);
 
   const handleClose = () => {
-    setOpen(false); // Close the modal
+    setOpen(false);
   };
 
   useEffect(() => {
@@ -145,7 +185,7 @@ export default function Other() {
       try {
         const response = await axios.get("https://api.test.hachion.co/banner");
         console.log(response.data);
-        setBanner(response.data); // Use the curriculum state
+        setBanner(response.data);
         setFilteredBanner(response.data);
       } catch (error) {
         console.error("Error fetching resume:", error.message);
@@ -154,9 +194,104 @@ export default function Other() {
     fetchBanner();
   }, []);
 
+  // ADD: Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      setErrorMessage("❌ Please select at least one banner to delete");
+      setSuccessMessage("");
+      setTimeout(() => setErrorMessage(""), 3000);
+      return;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'banner' : 'banners'}?`;
+
+    if (window.confirm(confirmMessage)) {
+      try {
+        // Delete all selected banners
+        const deletePromises = selectedIds.map(banner_id =>
+          axios.delete(`https://api.test.hachion.co/banner/delete/${banner_id}`)
+        );
+
+        await Promise.all(deletePromises);
+
+        // Update state
+        const updatedBanner = banner.filter(item => !selectedIds.includes(item.banner_id));
+        setBanner(updatedBanner);
+        setFilteredBanner(updatedBanner);
+
+        setSelectedIds([]);
+        setSelectAll(false);
+
+        setSuccessMessage(`✅ ${selectedIds.length} ${selectedIds.length === 1 ? 'banner' : 'banners'} deleted successfully`);
+        setErrorMessage("");
+
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 6000);
+      } catch (error) {
+        console.error("Error deleting banners:", error);
+        setSuccessMessage("");
+        setErrorMessage("❌ Error deleting some banners. Please try again.");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 6000);
+      }
+    }
+  };
+
+  // UPDATED: handleDeleteConfirmation function
   const handleDeleteConfirmation = (banner_id) => {
-    if (window.confirm("Are you sure you want to delete this banner")) {
-      handleDelete(banner_id);
+    let idsToDelete = selectedIds;
+
+    // If a specific banner_id is provided (single delete), use that
+    if (banner_id) {
+      idsToDelete = [banner_id];
+    }
+
+    // If no banner_id provided and nothing selected, show alert
+    if (!banner_id && (!idsToDelete || idsToDelete.length === 0)) {
+      alert("Please select at least one banner to delete.");
+      return;
+    }
+
+    const confirmMessage = banner_id 
+      ? "Are you sure you want to delete this banner?"
+      : `Are you sure you want to delete ${idsToDelete.length} selected ${idsToDelete.length === 1 ? 'banner' : 'banners'}?`;
+
+    if (window.confirm(confirmMessage)) {
+      handleDelete(idsToDelete);
+    }
+  };
+
+  // UPDATED: handleDelete function to handle both single and bulk delete
+  const handleDelete = async (ids) => {
+    try {
+      const deletePromises = ids.map(banner_id =>
+        axios.delete(`https://api.test.hachion.co/banner/delete/${banner_id}`)
+      );
+
+      await Promise.all(deletePromises);
+
+      // Update state
+      const updatedBanner = banner.filter(item => !ids.includes(item.banner_id));
+      setBanner(updatedBanner);
+      setFilteredBanner(updatedBanner);
+
+      // Remove from selectedIds
+      setSelectedIds(prev => prev.filter(id => !ids.includes(id)));
+      setSelectAll(false);
+
+      setSuccessMessage(`✅ ${ids.length} ${ids.length === 1 ? 'banner' : 'banners'} deleted successfully`);
+      setErrorMessage("");
+
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 5000);
+    } catch (error) {
+      console.error("Error deleting banner(s):", error);
+      setSuccessMessage("");
+      setErrorMessage("❌ Failed to delete banner(s)");
+      setTimeout(() => setErrorMessage(""), 5000);
     }
   };
 
@@ -174,17 +309,16 @@ export default function Other() {
         new Blob([JSON.stringify(jsonData)], { type: "application/json" })
       );
       console.log(editedData);
-      // Ensure banner_image is sent only if updated
+      
       if (
         editedData.banner_image instanceof File &&
         editedData.banner_image !== ""
       ) {
         formDataToSend.append("banner_image", editedData.banner_image);
       } else {
-        formDataToSend.append("banner_image", ""); // Prevent missing key issue
+        formDataToSend.append("banner_image", "");
       }
 
-      // Ensure home_banner_image is sent only if updated
       if (
         editedData.home_banner_image instanceof File &&
         editedData.home_banner_image !== ""
@@ -199,10 +333,9 @@ export default function Other() {
 
       console.log("FormData Entries:");
       for (let pair of formDataToSend.entries()) {
-        console.log(pair[0], pair[1]); // Debugging output
+        console.log(pair[0], pair[1]);
       }
 
-      // Send the update request
       const response = await axios.put(
         `https://api.test.hachion.co/banner/update/${editedData.banner_id}`,
         formDataToSend,
@@ -213,7 +346,7 @@ export default function Other() {
         }
       );
       console.log(response.data);
-      // Update banner list state
+      
       setFilteredBanner((prev) =>
         prev.map((curr) =>
           curr.banner_id === editedData.banner_id
@@ -234,34 +367,17 @@ export default function Other() {
     }
   };
 
-  const handleDelete = async (banner_id) => {
-    try {
-      const response = await axios.delete(
-        `https://api.test.hachion.co/banner/delete/${banner_id}`
-      );
-      console.log("Banner deleted successfully:", response.data);
-      setFilteredBanner((prev) =>
-        prev.filter((banner) => banner.banner_id !== banner_id)
-      );
-
-      setMessage("Banner deleted successfully.");
-    } catch (error) {
-      console.error("Error deleting banner:", error);
-    }
-  };
-
   const handleClickOpen = (row) => {
-  setEditedData({
-    ...row,
-    home_status: row.home_status?.toLowerCase() === "disabled" ? "Disabled" : "Enabled",
-    status: row.status?.toLowerCase() === "disabled" ? "Disabled" : "Enabled"
-  });
-  setOpen(true);
-};
+    setEditedData({
+      ...row,
+      home_status: row.home_status?.toLowerCase() === "disabled" ? "Disabled" : "Enabled",
+      status: row.status?.toLowerCase() === "disabled" ? "Disabled" : "Enabled"
+    });
+    setOpen(true);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    //  console.log(value);
     setBannerData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -272,6 +388,8 @@ export default function Other() {
     try {
       const response = await axios.get("https://api.test.hachion.co/banner");
       setFilteredBanner(response.data);
+      setSelectedIds([]); // Reset selection when refreshing
+      setSelectAll(false);
     } catch (error) {
       console.error("Error fetching banners:", error);
     }
@@ -288,12 +406,9 @@ export default function Other() {
       return;
     }
 
-    console.log("Action Type:", actionType);
-    console.log("Banner Data:", bannerData);
-    console.log("Banner Image:", bannerData?.home_banner_image);
     if (
       actionType === "homeBanner" &&
-      (!bannerData || // Ensure the object exists
+      (!bannerData ||
         !bannerData.home_banner_image ||
         bannerData.home_banner_image === undefined ||
         bannerData.home_banner_image === null)
@@ -310,7 +425,7 @@ export default function Other() {
     );
     console.log("Banner Image Value:", bannerData?.home_banner_image);
     const formDataToSend = new FormData();
-    const currentDate = new Date().toISOString().split("T")[0]; // Get today's date
+    const currentDate = new Date().toISOString().split("T")[0];
     const jsonData = {
       date: currentDate,
       path: bannerData.path,
@@ -319,10 +434,10 @@ export default function Other() {
       formDataToSend.append("banner_image", bannerData.banner_image);
       jsonData.status = "Enabled";
     } else if (actionType === "homeBanner" && bannerData.home_banner_image) {
-  formDataToSend.append("home_banner_image", bannerData.home_banner_image);
-  jsonData.home_status = "Enabled";
-}
-    // Append JSON data as a Blob
+      formDataToSend.append("home_banner_image", bannerData.home_banner_image);
+      jsonData.home_status = "Enabled";
+    }
+    
     formDataToSend.append(
       "banner",
       new Blob([JSON.stringify(jsonData)], { type: "application/json" })
@@ -336,7 +451,7 @@ export default function Other() {
       console.log(response.data);
       if (response.status === 201) {
         alert("Banner added successfully!");
-        await fetchBanners(); // Refresh banner list from API
+        await fetchBanners();
         setShowAddCourse(false);
       }
     } catch (error) {
@@ -353,6 +468,7 @@ export default function Other() {
   const handleAddTrendingCourseClick = () => {
     setShowAddCourse(true);
   };
+  
   const capitalize = (s) => s && s.charAt(0).toUpperCase() + s.slice(1);
 
   return (
@@ -450,6 +566,11 @@ export default function Other() {
                 <div className="category-header">
                   <p style={{ marginBottom: 0 }}>Banner</p>
                 </div>
+                
+                {/* ADD: Success and Error Messages */}
+                {successMessage && <div style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</div>}
+                {errorMessage && <div style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</div>}
+                
                 <div className="date-schedule">
                   Start Date
                   <DatePicker
@@ -533,6 +654,25 @@ export default function Other() {
                         <IoSearch style={{ fontSize: "2rem" }} />
                       </button>
                     </div>
+                    
+                    {/* ADD: Bulk Delete Button */}
+                    {selectedIds.length > 0 && (
+                      <button
+                        type="button"
+                        className="btn-category"
+                        onClick={() => handleDeleteConfirmation()}
+                        style={{ 
+                          backgroundColor: '#dc3545', 
+                          marginRight: '10px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '5px'
+                        }}
+                      >
+                        <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+                      </button>
+                    )}
+                    
                     <button
                       type="button"
                       className="btn-category"
@@ -549,8 +689,13 @@ export default function Other() {
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
+                  {/* ADD: Select All Checkbox */}
                   <StyledTableCell sx={{ width: 70 }} align="center">
-                    <Checkbox />
+                    <Checkbox
+                      checked={selectAll}
+                      onChange={handleSelectAll}
+                      indeterminate={selectedIds.length > 0 && selectedIds.length < displayedCourse.length}
+                    />
                   </StyledTableCell>
                   <StyledTableCell sx={{ width: 80 }} align="center">
                     S.No.
@@ -576,13 +721,16 @@ export default function Other() {
                 {displayedCourse.length > 0 ? (
                   displayedCourse.map((curr, index) => (
                     <StyledTableRow key={curr.banner_id}>
+                      {/* ADD: Individual Checkbox */}
                       <StyledTableCell align="center">
-                        <Checkbox />
+                        <Checkbox
+                          checked={selectedIds.includes(curr.banner_id)}
+                          onChange={() => handleSelectOne(curr.banner_id)}
+                        />
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {index + 1}
-                      </StyledTableCell>{" "}
-                      {/* S.No. */}
+                        {index + 1 + (currentPage - 1) * rowsPerPage}
+                      </StyledTableCell>
                       <StyledTableCell align="center">
                         {curr.banner_image ? (
                           <img
@@ -594,11 +742,11 @@ export default function Other() {
                           "No Image"
                         )}
                       </StyledTableCell>
-                     <StyledTableCell align="center">
-                    {curr.banner_image
-                      ? (curr.status ? capitalize(curr.status) : "Enabled")
-                      : ""}
-                  </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {curr.banner_image
+                          ? (curr.status ? capitalize(curr.status) : "Enabled")
+                          : ""}
+                      </StyledTableCell>
                       <StyledTableCell align="center">
                         {curr.home_banner_image ? (
                           <img
@@ -611,19 +759,18 @@ export default function Other() {
                         )}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                      {curr.home_banner_image
-                        ? (curr.home_status ? capitalize(curr.home_status) : "Enabled")
-                        : ""}
-                    </StyledTableCell>
+                        {curr.home_banner_image
+                          ? (curr.home_status ? capitalize(curr.home_status) : "Enabled")
+                          : ""}
+                      </StyledTableCell>
                       <StyledTableCell align="center">
                         {curr.path}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-  {curr.date
-    ? dayjs(curr.date).format("MMM-DD-YYYY").toUpperCase()
-    : "N/A"}
-</StyledTableCell>
-
+                        {curr.date
+                          ? dayjs(curr.date).format("MMM-DD-YYYY").toUpperCase()
+                          : "N/A"}
+                      </StyledTableCell>
                       <StyledTableCell align="center">
                         <div
                           style={{
@@ -648,7 +795,8 @@ export default function Other() {
                   ))
                 ) : (
                   <StyledTableRow>
-                    <StyledTableCell colSpan={6} align="center">
+                    {/* UPDATED: Changed colSpan from 6 to 10 to include checkbox column and other columns */}
+                    <StyledTableCell colSpan={10} align="center">
                       No data available.
                     </StyledTableCell>
                   </StyledTableRow>
@@ -660,7 +808,7 @@ export default function Other() {
             <AdminPagination
               currentPage={currentPage}
               rowsPerPage={rowsPerPage}
-              totalRows={filteredBanner.length} // Use the full list for pagination
+              totalRows={filteredBanner.length}
               onPageChange={handlePageChange}
             />
           </div>
@@ -688,85 +836,83 @@ export default function Other() {
           </DialogTitle>
         </div>
         <DialogContent>
-  <div className="col">
-    <label className="form-label">Banner Image</label>
-    <input
-      type="file"
-      className="form-control"
-      name="banner_image"
-      onChange={(e) => handleEditFileChange(e, "banner_image")}
-    />
-    {/* Show selected or existing banner image name */}
-    {editedData.banner_image && (
-      <p style={{ fontSize: '0.9rem', color: '#555' }}>
-        {editedData.banner_image instanceof File
-          ? `Selected: ${editedData.banner_image.name}`
-          : `Existing: ${editedData.banner_image.split('/').pop()}`}
-      </p>
-    )}
-    <label>Status (Banner):</label>
-    <FormControlLabel
-      control={
-        <Switch
-          checked={editedData?.status === "Enabled"}
-          onChange={(e) =>
-            setEditedData((prev) => ({
-              ...prev,
-              status: e.target.checked ? "Enabled" : "Disabled",
-            }))
-          }
-          disabled={!editedData.banner_image}
-        />
-      }
-    />
-    <span>{editedData?.banner_image ? editedData?.status : ""}</span>
-  </div>
+          <div className="col">
+            <label className="form-label">Banner Image</label>
+            <input
+              type="file"
+              className="form-control"
+              name="banner_image"
+              onChange={(e) => handleEditFileChange(e, "banner_image")}
+            />
+            {editedData.banner_image && (
+              <p style={{ fontSize: '0.9rem', color: '#555' }}>
+                {editedData.banner_image instanceof File
+                  ? `Selected: ${editedData.banner_image.name}`
+                  : `Existing: ${editedData.banner_image.split('/').pop()}`}
+              </p>
+            )}
+            <label>Status (Banner):</label>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={editedData?.status === "Enabled"}
+                  onChange={(e) =>
+                    setEditedData((prev) => ({
+                      ...prev,
+                      status: e.target.checked ? "Enabled" : "Disabled",
+                    }))
+                  }
+                  disabled={!editedData.banner_image}
+                />
+              }
+            />
+            <span>{editedData?.banner_image ? editedData?.status : ""}</span>
+          </div>
 
-  <div className="col">
-    <label className="form-label">Home Banner Image</label>
-    <input
-      type="file"
-      className="form-control"
-      name="home_banner_image"
-      onChange={(e) => handleEditFileChange(e, "home_banner_image")}
-    />
-    {/* Show selected or existing home banner image name */}
-    {editedData.home_banner_image && (
-      <p style={{ fontSize: '0.9rem', color: '#555' }}>
-        {editedData.home_banner_image instanceof File
-          ? `Selected: ${editedData.home_banner_image.name}`
-          : `Existing: ${editedData.home_banner_image.split('/').pop()}`}
-      </p>
-    )}
-    <label>Status (Home):</label>
-    <FormControlLabel
-      control={
-        <Switch
-          checked={editedData?.home_status === "Enabled"}
-          onChange={(e) =>
-            setEditedData((prev) => ({
-              ...prev,
-              home_status: e.target.checked ? "Enabled" : "Disabled",
-            }))
-          }
-          disabled={!editedData.home_banner_image}
-        />
-      }
-    />
-    <span>{editedData?.home_banner_image ? editedData?.home_status : ""}</span>
-  </div>
+          <div className="col">
+            <label className="form-label">Home Banner Image</label>
+            <input
+              type="file"
+              className="form-control"
+              name="home_banner_image"
+              onChange={(e) => handleEditFileChange(e, "home_banner_image")}
+            />
+            {editedData.home_banner_image && (
+              <p style={{ fontSize: '0.9rem', color: '#555' }}>
+                {editedData.home_banner_image instanceof File
+                  ? `Selected: ${editedData.home_banner_image.name}`
+                  : `Existing: ${editedData.home_banner_image.split('/').pop()}`}
+              </p>
+            )}
+            <label>Status (Home):</label>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={editedData?.home_status === "Enabled"}
+                  onChange={(e) =>
+                    setEditedData((prev) => ({
+                      ...prev,
+                      home_status: e.target.checked ? "Enabled" : "Disabled",
+                    }))
+                  }
+                  disabled={!editedData.home_banner_image}
+                />
+              }
+            />
+            <span>{editedData?.home_banner_image ? editedData?.home_status : ""}</span>
+          </div>
 
-  <div className="col">
-    <label className="form-label">Path (URL)</label>
-    <input
-      type="text"
-      className="form-control"
-      name="path"
-      value={editedData?.path || ""}
-      onChange={handleInputChange}
-    />
-  </div>
-</DialogContent>
+          <div className="col">
+            <label className="form-label">Path (URL)</label>
+            <input
+              type="text"
+              className="form-control"
+              name="path"
+              value={editedData?.path || ""}
+              onChange={handleInputChange}
+            />
+          </div>
+        </DialogContent>
         <DialogActions
           className="update"
           style={{ display: "flex", justifyContent: "center" }}

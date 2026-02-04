@@ -54,6 +54,9 @@ What's Included:
   return (
     <div className={styles.dcgrid}>
       <div>
+        <div className={styles.dcrequestImage}>
+                              <img src="/crash-course.png" alt="Student" />
+                            </div>
         <div className={styles.dcslots}>
           {scheduleLoading && (
             <div className={styles.dcslot}>

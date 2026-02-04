@@ -287,6 +287,11 @@
   border-left: none !important;
 }
 
+/* Remark Textarea */
+.remarkInput {
+  padding: 12px 16px;
+}
+
 /* Select with Icon */
 .selectWithIcon {
   position: relative;
@@ -319,7 +324,7 @@
   color: white;
   border: none;
   border-radius: 25px;
-  padding: 14px 24px;
+  padding: 9px 24px;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
@@ -328,7 +333,7 @@
   justify-content: center;
   gap: 10px;
   transition: all 0.3s ease;
-  margin-top: 20px;
+  margin-top: 5px;
 }
 
 .submitBtn:hover:not(:disabled) {
@@ -407,10 +412,14 @@
 
   .countrySelect {
     font-size: 13px;
-    padding: 13px 24px 13px 44px;
+    padding: 9px 24px 13px 44px;
   }
 
   .formInput {
+    font-size: 13px;
+  }
+    .remarkInput {
+    /* min-height: 70px; */
     font-size: 13px;
   }
 }

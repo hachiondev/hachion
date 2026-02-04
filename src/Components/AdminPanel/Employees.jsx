@@ -71,6 +71,10 @@ const Employees = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  // ADD: State for checkbox selection
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+
   const [imageDisplayName, setImageDisplayName] = useState("");
   const [existingImagePath, setExistingImagePath] = useState("");
 
@@ -80,16 +84,16 @@ const Employees = () => {
 
   const extractFileName = (path) => (path ? path.split("/").pop() : "");
 
-                 useEffect(() => {
-  if (successMessage) {
-    const timer = setTimeout(() => {
-      setSuccessMessage("");
-    }, 4000);  
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => {
+        setSuccessMessage("");
+      }, 4000);
 
-    return () => clearTimeout(timer);
-  }
-}, [successMessage]);
-  
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
+
   useEffect(() => {
     axios
       .get(`${API_BASE}/employees`)
@@ -104,7 +108,6 @@ const Employees = () => {
       });
   }, []);
 
-  
   useEffect(() => {
     const term = searchTerm.toLowerCase();
     const filtered = employees.filter(
@@ -115,9 +118,11 @@ const Employees = () => {
         emp.role?.toLowerCase().includes(term)
     );
     setFilteredEmployees(filtered);
+    // Reset selection on search
+    setSelectedIds([]);
+    setSelectAll(false);
   }, [searchTerm, employees]);
 
-  
   useEffect(() => {
     fetch("https://api.country.is")
       .then((res) => res.json())
@@ -127,8 +132,48 @@ const Employees = () => {
         );
         if (match) setSelectedCountry(match);
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
+
+    const displayedEmployees = filteredEmployees.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
+  // ADD: Handle Select All checkbox
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allIds = displayedEmployees.map(emp => emp.employeeId ?? emp.id);
+      setSelectedIds(allIds);
+      setSelectAll(true);
+    } else {
+      setSelectedIds([]);
+      setSelectAll(false);
+    }
+  };
+
+  // ADD: Handle individual checkbox
+  const handleSelectOne = (employeeId) => {
+    if (selectedIds.includes(employeeId)) {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== employeeId));
+      setSelectAll(false);
+    } else {
+      const newSelectedIds = [...selectedIds, employeeId];
+      setSelectedIds(newSelectedIds);
+      // Check if all items are selected
+      if (newSelectedIds.length === displayedEmployees.length) {
+        setSelectAll(true);
+      }
+    }
+  };
+
+  // ADD: Update selectAll state when page changes
+  useEffect(() => {
+    const allCurrentPageIds = displayedEmployees.map(emp => emp.employeeId ?? emp.id);
+    const allSelected = allCurrentPageIds.length > 0 &&
+      allCurrentPageIds.every(id => selectedIds.includes(id));
+    setSelectAll(allSelected);
+  }, [currentPage, displayedEmployees, selectedIds]);
 
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
@@ -161,6 +206,51 @@ const Employees = () => {
     });
     setImageDisplayName("");
     setExistingImagePath("");
+  };
+
+  // ADD: Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      setErrorMessage("❌ Please select at least one employee to delete");
+      setSuccessMessage("");
+      setTimeout(() => setErrorMessage(""), 3000);
+      return;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'employee' : 'employees'}?`;
+
+    if (window.confirm(confirmMessage)) {
+      try {
+        // Delete all selected employees
+        const deletePromises = selectedIds.map(employeeId =>
+          axios.delete(`${API_BASE}/employees/delete/${employeeId}`)
+        );
+
+        await Promise.all(deletePromises);
+
+        // Update state
+        const updatedEmployees = employees.filter(item => !selectedIds.includes(item.employeeId ?? item.id));
+        setEmployees(updatedEmployees);
+        setFilteredEmployees(updatedEmployees);
+
+        setSelectedIds([]);
+        setSelectAll(false);
+
+        setSuccessMessage(`✅ ${selectedIds.length} ${selectedIds.length === 1 ? 'employee' : 'employees'} deleted successfully`);
+        setErrorMessage("");
+
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 6000);
+      } catch (error) {
+        console.error("Error deleting employees:", error);
+        setSuccessMessage("");
+        setErrorMessage("❌ Error deleting some employees. Please try again.");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 6000);
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -205,11 +295,13 @@ const Employees = () => {
         setEmployees((prev) =>
           prev.map((emp) =>
             (emp.employeeId ?? emp.id) ===
-            (formData.id || updatedRecord.employeeId)
+              (formData.id || updatedRecord.employeeId)
               ? { ...emp, ...updatedRecord }
               : emp
           )
         );
+        // Remove from selectedIds if present
+        setSelectedIds(prev => prev.filter(id => id !== formData.id));
       } else {
         setEmployees((prev) => [...prev, response.data]);
       }
@@ -245,6 +337,7 @@ const Employees = () => {
     }
   };
 
+  // UPDATED: handleDelete function to remove from selectedIds
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this Employee?"))
       return;
@@ -253,19 +346,26 @@ const Employees = () => {
       setEmployees((prev) =>
         prev.filter((emp) => (emp.employeeId ?? emp.id) !== id)
       );
+      setFilteredEmployees((prev) =>
+        prev.filter((emp) => (emp.employeeId ?? emp.id) !== id)
+      );
+
+      // Remove from selectedIds if present
+      setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
+
       setSuccessMessage("Employee details deleted successfully");
       setErrorMessage("");
+      setTimeout(() => setSuccessMessage(""), 5000);
     } catch (err) {
       console.error(err);
       setErrorMessage("Failed to delete employee");
       setSuccessMessage("");
+      setTimeout(() => setErrorMessage(""), 5000);
     }
   };
 
-  const displayedEmployees = filteredEmployees.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-  );
+
+
   const handlePageChange = (page) => setCurrentPage(page);
   const handleRowsPerPageChange = (rows) => {
     setRowsPerPage(rows);
@@ -512,13 +612,16 @@ const Employees = () => {
           </div>
         </div>
       ) : (
-        
         <div className="course-category">
           <h3>Employees</h3>
           <div className="category">
             <div className="category-header">
               <p style={{ marginBottom: 0 }}>Employee Details</p>
             </div>
+
+            {/* ADD: Success and Error Messages */}
+            {successMessage && <div style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</div>}
+            {errorMessage && <div style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</div>}
 
             <div className="entries">
               <div className="entries-left">
@@ -564,6 +667,25 @@ const Employees = () => {
                     <IoSearch />
                   </button>
                 </div>
+
+                {/* ADD: Bulk Delete Button */}
+                {selectedIds.length > 0 && (
+                  <button
+                    type="button"
+                    className="btn-category"
+                    onClick={handleBulkDelete}
+                    style={{
+                      backgroundColor: '#dc3545',
+                      marginRight: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '5px'
+                    }}
+                  >
+                    <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+                  </button>
+                )}
+
                 <button className="btn-category" onClick={handleAddClick}>
                   <FiPlus /> Add Employee
                 </button>
@@ -575,8 +697,13 @@ const Employees = () => {
             <Table>
               <TableHead>
                 <TableRow>
+                  {/* ADD: Select All Checkbox */}
                   <StyledTableCell align="center">
-                    <Checkbox />
+                    <Checkbox
+                      checked={selectAll}
+                      onChange={handleSelectAll}
+                      indeterminate={selectedIds.length > 0 && selectedIds.length < displayedEmployees.length}
+                    />
                   </StyledTableCell>
                   <StyledTableCell align="center">S.No.</StyledTableCell>
                   <StyledTableCell align="center">Image</StyledTableCell>
@@ -596,32 +723,36 @@ const Employees = () => {
                 {displayedEmployees.length > 0 ? (
                   displayedEmployees.map((emp, index) => (
                     <StyledTableRow key={emp.employeeId ?? emp.id}>
+                      {/* ADD: Individual Checkbox */}
                       <StyledTableCell align="center">
-                        <Checkbox />
+                        <Checkbox
+                          checked={selectedIds.includes(emp.employeeId ?? emp.id)}
+                          onChange={() => handleSelectOne(emp.employeeId ?? emp.id)}
+                        />
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {index + 1 + (currentPage - 1) * rowsPerPage}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-  {emp.companyImage ? (
-    <img
-      src={
-        emp.companyImage.startsWith("http")
-          ? emp.companyImage
-          : `https://api.test.hachion.co/uploads/test/employee_company_logo/${emp.companyImage.startsWith("/") ? emp.companyImage.substring(1) : emp.companyImage}`
-      }
-      alt="Employee"
-      width="50"
-      height="50"
-      style={{ borderRadius: "50%" }}
-      onError={(e) => {
-        e.currentTarget.style.display = "none";
-      }}
-    />
-  ) : (
-    "No Image"
-  )}
-</StyledTableCell>
+                        {emp.companyImage ? (
+                          <img
+                            src={
+                              emp.companyImage.startsWith("http")
+                                ? emp.companyImage
+                                : `https://api.test.hachion.co/uploads/test/employee_company_logo/${emp.companyImage.startsWith("/") ? emp.companyImage.substring(1) : emp.companyImage}`
+                            }
+                            alt="Employee"
+                            width="50"
+                            height="50"
+                            style={{ borderRadius: "50%" }}
+                            onError={(e) => {
+                              e.currentTarget.style.display = "none";
+                            }}
+                          />
+                        ) : (
+                          "No Image"
+                        )}
+                      </StyledTableCell>
 
                       <StyledTableCell align="center">{emp.name}</StyledTableCell>
                       <StyledTableCell align="center">{emp.phone}</StyledTableCell>
@@ -655,7 +786,8 @@ const Employees = () => {
                   ))
                 ) : (
                   <StyledTableRow>
-                    <StyledTableCell colSpan={11} align="center">
+                    {/* UPDATED: Changed colSpan from 11 to 12 to include checkbox column */}
+                    <StyledTableCell colSpan={12} align="center">
                       No employees found
                     </StyledTableCell>
                   </StyledTableRow>
@@ -663,15 +795,6 @@ const Employees = () => {
               </TableBody>
             </Table>
           </TableContainer>
-
-          {successMessage && (
-            <p style={{ color: "green", fontWeight: "bold" }}>
-              {successMessage}
-            </p>
-          )}
-          {errorMessage && (
-            <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>
-          )}
 
           <div className="pagination-container">
             <AdminPagination

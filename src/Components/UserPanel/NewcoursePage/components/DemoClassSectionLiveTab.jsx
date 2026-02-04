@@ -60,12 +60,12 @@ What's Included:
   );
 
   const sessionsToRender =
-  userProfile?.studentId && checkedSessions.length > 0
-    ? checkedSessions
-    : selectedGroup?.sessions || [];
+    userProfile?.studentId && checkedSessions.length > 0
+      ? checkedSessions
+      : selectedGroup?.sessions || [];
 
-    const { data: installmentStatusData, isLoading: installmentStatusLoading } =
-  useInstallmentStatus(userProfile?.studentId, courseName);
+  const { data: installmentStatusData, isLoading: installmentStatusLoading } =
+    useInstallmentStatus(userProfile?.studentId, courseName);
 
   const navigate = useNavigate();
   const { mutate: resendDemoEmail } = useResendEnrollEmail();
@@ -107,63 +107,66 @@ What's Included:
       },
     }));
   };
-const handleEnrollWithLoginCheck = async (sess) => {
-  if (isProfileLoading) return;
+  const handleEnrollWithLoginCheck = async (sess) => {
+    if (isProfileLoading) return;
 
-  if (!userProfile || !userProfile.studentId) {
-    onCloseRegisterPrompt && onCloseRegisterPrompt();
-    setIsSubmitting(false);
+    if (!userProfile || !userProfile.studentId) {
+      onCloseRegisterPrompt && onCloseRegisterPrompt();
+      setIsSubmitting(false);
 
-    saveRedirectUrl();
-    setShowRegisterPrompt(true);
-    return;
-  }
+      saveRedirectUrl();
+      setShowRegisterPrompt(true);
+      return;
+    }
 
-  // ✅ If LIVE DEMO → keep existing behavior (NO installment check)
-  if (sess.mode === "Live Demo") {
+    // ✅ If LIVE DEMO → keep existing behavior (NO installment check)
+    if (sess.mode === "Live Demo") {
+      onEnrollClick(sess, {
+        email: notifyViaMap[sess.id]?.email ?? true,
+        whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
+        requestInstallment: true,
+      });
+      return;
+    }
+
+    // ⏳ If installment status still loading, avoid double action
+    if (installmentStatusLoading) return;
+
+    // ✅ If APPROVED → go directly to /installments
+    if (installmentStatusData?.requestStatus === "approved") {
+      const slug = courseName
+        ?.toLowerCase()
+        .replace(/\s+/g, "-");
+
+      navigate(`/installments/${slug}`, {
+        state: {
+          selectedBatchData: {
+            ...sess,
+            schedule_course_name: courseName,
+            courseName: courseName,
+          },
+          numSelectedInstallments: installmentStatusData.numSelectedInstallments,
+        },
+      });
+
+      return; // ⛔ stop normal enroll flow
+    }
+
+    // ✅ Else → continue EXISTING flow (NewEnrollNow)
     onEnrollClick(sess, {
       email: notifyViaMap[sess.id]?.email ?? true,
       whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
       requestInstallment: true,
     });
-    return;
-  }
-
-  // ⏳ If installment status still loading, avoid double action
-  if (installmentStatusLoading) return;
-
-  // ✅ If APPROVED → go directly to /installments
-  if (installmentStatusData?.requestStatus === "approved") {
-    const slug = courseName
-      ?.toLowerCase()
-      .replace(/\s+/g, "-");
-
-    navigate(`/installments/${slug}`, {
-      state: {
-        selectedBatchData: {
-          ...sess,
-          schedule_course_name: courseName,
-          courseName: courseName,
-        },
-        numSelectedInstallments: installmentStatusData.numSelectedInstallments,
-      },
-    });
-
-    return; // ⛔ stop normal enroll flow
-  }
-
-  // ✅ Else → continue EXISTING flow (NewEnrollNow)
-  onEnrollClick(sess, {
-    email: notifyViaMap[sess.id]?.email ?? true,
-    whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
-    requestInstallment: true,
-  });
-};
+  };
 
 
   return (
     <div className={styles.dcgrid}>
       <div>
+        <div className={styles.dcrequestImage}>
+                      <img src="/live-training.jpg" alt="Student" />
+                    </div>
         <div
           className={
             liveGroups && liveGroups.length > 0
@@ -171,6 +174,7 @@ const handleEnrollWithLoginCheck = async (sess) => {
               : ""
           }
         >
+          
           {scheduleLoading && (
             <div className={styles.dcslot}>
               <div className={styles.dcslotdate}>Loading slots...</div>
@@ -249,26 +253,26 @@ const handleEnrollWithLoginCheck = async (sess) => {
                   </p>
 
                   <button
-  className={styles.dclink}
-  disabled={isSubmitting || isRequestBatchLoading || isProfileLoading}
-  onClick={() => {
-    if (isSubmitting || isRequestBatchLoading) return;
+                    className={styles.dclink}
+                    disabled={isSubmitting || isRequestBatchLoading || isProfileLoading}
+                    onClick={() => {
+                      if (isSubmitting || isRequestBatchLoading) return;
 
-    
-    if (!userProfile || !userProfile.studentId) {
-      
-      saveRedirectUrl();
-    
-      setShowRegisterPrompt(true);
-      return;
-    }
 
-    setIsSubmitting(true);
-    onRequestClick();
-  }}
->
-  {isSubmitting || isRequestBatchLoading ? "Submitting..." : "Request Batch"}
-</button>
+                      if (!userProfile || !userProfile.studentId) {
+
+                        saveRedirectUrl();
+
+                        setShowRegisterPrompt(true);
+                        return;
+                      }
+
+                      setIsSubmitting(true);
+                      onRequestClick();
+                    }}
+                  >
+                    {isSubmitting || isRequestBatchLoading ? "Submitting..." : "Request Batch"}
+                  </button>
                   {enrollSuccessMessage && (
                     <p style={{ color: "green", fontSize: "14px", marginTop: "6px" }}>
                       {enrollSuccessMessage}
@@ -343,185 +347,185 @@ const handleEnrollWithLoginCheck = async (sess) => {
                 }}
               >
                 {sessionsToRender.map((sess) => {
-  const isEnrolled = sess._isEnrolled ?? false;
+                  const isEnrolled = sess._isEnrolled ?? false;
 
-  return (
+                  return (
 
-                  <div key={sess.id} className={styles.dcdetailrow}>
-                    <div>
-                      <div className={styles.dcmuted}>
-                        {sess.mode === "Live Demo" ? "Demo Session" : "Live Class"}
-                      </div>
-
-
-                      <div className={styles.dcdetailtime}>{sess.time}</div>
-
-                      <div className={styles.dcdetailmeta}>
-                        {sess.duration || "60 min"}
-
-                      </div>
-                    </div>
-                    {sess.mode === "Live Demo" && isEnrolled ? (
-                      /* =========================
-                         LIVE DEMO → OLD BEHAVIOR
-                         ========================= */
-                      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-
-                        <button
-                          className={styles.dcbtnDisabled}
-                          disabled
-                        >
-                          Enrolled
-                        </button>
-
-                        <button
-                          className={styles.dclink}
-                          disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
-                          onClick={() => {
-                            setSendingBatchId(sess.batchId);
-const isLiveClass = sess.mode === "Live Class";
-
-const resendFn = isLiveClass
-  ? resendLiveClassEmail   
-  : resendDemoEmail;      
-
-resendFn(
-  {
-    email: userProfile.email,
-    batchId: sess.batchId,
-  },
-  {
-    onSuccess: (msg) => {
-      setSendingBatchId(null);
-      setResendError("");
-      setResendMessage(typeof msg === "string" ? msg : msg?.message);
-    },
-    onError: (err) => {
-      setSendingBatchId(null);
-      const backendMsg =
-        typeof err?.response?.data === "string"
-          ? err.response.data
-          : err?.response?.data?.message;
-
-      setResendMessage("");
-      setResendError(backendMsg || "Failed to resend email");
-    },
-  }
-);
-
-                          }}
-                        >
-                          {sess.resendCount >= 3
-                            ? "Limit Reached"
-                            : sendingBatchId === sess.batchId
-                              ? "Sending..."
-                              : "Resend"}
-                        </button>
-                      </div>
-                    ) : sess.mode === "Live Class" && isEnrolled && Number(sess.amount) > 0
- ? (
-                      /* =========================
-                         LIVE CLASS → PAID → ENROLLED
-                         ========================= */
-                      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                        <button className={styles.dcbtnDisabled} disabled>
-                          Enrolled
-                        </button>
-                        <button
-                          className={styles.dclink}
-                          disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
-                          onClick={() => {
-                            setSendingBatchId(sess.batchId);
-const isLiveClass = sess.mode === "Live Class";
-
-const resendFn = isLiveClass
-  ? resendLiveClassEmail   
-  : resendDemoEmail;       
-
-resendFn(
-  {
-    email: userProfile.email,
-    batchId: sess.batchId,
-  },
-  {
-    onSuccess: (msg) => {
-      setSendingBatchId(null);
-      setResendError("");
-      setResendMessage(typeof msg === "string" ? msg : msg?.message);
-    },
-    onError: (err) => {
-      setSendingBatchId(null);
-      const backendMsg =
-        typeof err?.response?.data === "string"
-          ? err.response.data
-          : err?.response?.data?.message;
-
-      setResendMessage("");
-      setResendError(backendMsg || "Failed to resend email");
-    },
-  }
-);
-
-                          }}
-                        >
-                          {sess.resendCount >= 3
-                            ? "Limit Reached"
-                            : sendingBatchId === sess.batchId
-                              ? "Sending..."
-                              : "Resend"}
-                        </button>
-
-                      </div>
-                    ) : (
-
-                      /* =========================
-                         LIVE CLASS → NOT PAID → ENROLL
-                         ========================= */
-                      <div className={styles.enrollActions}>
-                        <button
-                          className={styles.dcbtn}
-                          onClick={() => handleEnrollWithLoginCheck(sess)}
-                        >
-                          Enroll
-                        </button>
+                    <div key={sess.id} className={styles.dcdetailrow}>
+                      <div>
+                        <div className={styles.dcmuted}>
+                          {sess.mode === "Live Demo" ? "Demo Session" : "Live Class"}
+                        </div>
 
 
-                        {/* 🔔 Email / WhatsApp */}
-                        <div className={styles.notifyOptions}>
+                        <div className={styles.dcdetailtime}>{sess.time}</div>
 
-                          <div className={styles.checkboxGroup}>
-                            <label className={styles.notifyLabel}>
-                              <input
-                                type="checkbox"
-                                checked={notifyViaMap[sess.id]?.email ?? true}
-                                onChange={(e) =>
-                                  handleNotifyChange(sess.id, "email", e.target.checked)
-                                }
-                                className={styles.checkboxInput}
-                              />
-                              <span className={styles.checkboxText}>Email</span>
-                            </label>
+                        <div className={styles.dcdetailmeta}>
+                          {sess.duration || "60 min"}
 
-                            <label className={styles.notifyLabel}>
-                              <input
-                                type="checkbox"
-                                checked={notifyViaMap[sess.id]?.whatsapp ?? false}
-                                onChange={(e) =>
-                                  handleNotifyChange(sess.id, "whatsapp", e.target.checked)
-                                }
-                                className={styles.checkboxInput}
-                              />
-                              <span className={styles.checkboxText}>WhatsApp</span>
-                            </label>
-                          </div>
                         </div>
                       </div>
-                    )}
+                      {sess.mode === "Live Demo" && isEnrolled ? (
+                        /* =========================
+                           LIVE DEMO → OLD BEHAVIOR
+                           ========================= */
+                        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+
+                          <button
+                            className={styles.dcbtnDisabled}
+                            disabled
+                          >
+                            Enrolled
+                          </button>
+
+                          <button
+                            className={styles.dclink}
+                            disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
+                            onClick={() => {
+                              setSendingBatchId(sess.batchId);
+                              const isLiveClass = sess.mode === "Live Class";
+
+                              const resendFn = isLiveClass
+                                ? resendLiveClassEmail
+                                : resendDemoEmail;
+
+                              resendFn(
+                                {
+                                  email: userProfile.email,
+                                  batchId: sess.batchId,
+                                },
+                                {
+                                  onSuccess: (msg) => {
+                                    setSendingBatchId(null);
+                                    setResendError("");
+                                    setResendMessage(typeof msg === "string" ? msg : msg?.message);
+                                  },
+                                  onError: (err) => {
+                                    setSendingBatchId(null);
+                                    const backendMsg =
+                                      typeof err?.response?.data === "string"
+                                        ? err.response.data
+                                        : err?.response?.data?.message;
+
+                                    setResendMessage("");
+                                    setResendError(backendMsg || "Failed to resend email");
+                                  },
+                                }
+                              );
+
+                            }}
+                          >
+                            {sess.resendCount >= 3
+                              ? "Limit Reached"
+                              : sendingBatchId === sess.batchId
+                                ? "Sending..."
+                                : "Resend"}
+                          </button>
+                        </div>
+                      ) : sess.mode === "Live Class" && isEnrolled && Number(sess.amount) > 0
+                        ? (
+                          /* =========================
+                             LIVE CLASS → PAID → ENROLLED
+                             ========================= */
+                          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                            <button className={styles.dcbtnDisabled} disabled>
+                              Enrolled
+                            </button>
+                            <button
+                              className={styles.dclink}
+                              disabled={sess.resendCount >= 3 || sendingBatchId === sess.batchId}
+                              onClick={() => {
+                                setSendingBatchId(sess.batchId);
+                                const isLiveClass = sess.mode === "Live Class";
+
+                                const resendFn = isLiveClass
+                                  ? resendLiveClassEmail
+                                  : resendDemoEmail;
+
+                                resendFn(
+                                  {
+                                    email: userProfile.email,
+                                    batchId: sess.batchId,
+                                  },
+                                  {
+                                    onSuccess: (msg) => {
+                                      setSendingBatchId(null);
+                                      setResendError("");
+                                      setResendMessage(typeof msg === "string" ? msg : msg?.message);
+                                    },
+                                    onError: (err) => {
+                                      setSendingBatchId(null);
+                                      const backendMsg =
+                                        typeof err?.response?.data === "string"
+                                          ? err.response.data
+                                          : err?.response?.data?.message;
+
+                                      setResendMessage("");
+                                      setResendError(backendMsg || "Failed to resend email");
+                                    },
+                                  }
+                                );
+
+                              }}
+                            >
+                              {sess.resendCount >= 3
+                                ? "Limit Reached"
+                                : sendingBatchId === sess.batchId
+                                  ? "Sending..."
+                                  : "Resend"}
+                            </button>
+
+                          </div>
+                        ) : (
+
+                          /* =========================
+                             LIVE CLASS → NOT PAID → ENROLL
+                             ========================= */
+                          <div className={styles.enrollActions}>
+                            <button
+                              className={styles.dcbtn}
+                              onClick={() => handleEnrollWithLoginCheck(sess)}
+                            >
+                              Enroll
+                            </button>
 
 
-                  </div>
+                            {/* 🔔 Email / WhatsApp */}
+                            <div className={styles.notifyOptions}>
+
+                              <div className={styles.checkboxGroup}>
+                                <label className={styles.notifyLabel}>
+                                  <input
+                                    type="checkbox"
+                                    checked={notifyViaMap[sess.id]?.email ?? true}
+                                    onChange={(e) =>
+                                      handleNotifyChange(sess.id, "email", e.target.checked)
+                                    }
+                                    className={styles.checkboxInput}
+                                  />
+                                  <span className={styles.checkboxText}>Email</span>
+                                </label>
+
+                                <label className={styles.notifyLabel}>
+                                  <input
+                                    type="checkbox"
+                                    checked={notifyViaMap[sess.id]?.whatsapp ?? false}
+                                    onChange={(e) =>
+                                      handleNotifyChange(sess.id, "whatsapp", e.target.checked)
+                                    }
+                                    className={styles.checkboxInput}
+                                  />
+                                  <span className={styles.checkboxText}>WhatsApp</span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+
+                    </div>
                   );
-})}
+                })}
 
 
 
@@ -613,7 +617,7 @@ resendFn(
 
       {showRegisterPrompt && (
         <>
-        {/* <div
+          {/* <div
           style={{
             position: "fixed",
             top: 0,
@@ -726,15 +730,15 @@ resendFn(
             </div>
           </div>
         </div> */}
-        <LoginModal
-        isOpen={showRegisterPrompt}
-        description="Before proceeding, please login into our Hachion."
-        onClose={() => onCloseRegisterPrompt && onCloseRegisterPrompt()}
-        onLogin={() => {
-                    navigate("/login");
-                    onCloseRegisterPrompt && onCloseRegisterPrompt();
-                  }}
-      />
+          <LoginModal
+            isOpen={showRegisterPrompt}
+            description="Before proceeding, please login into our Hachion."
+            onClose={() => onCloseRegisterPrompt && onCloseRegisterPrompt()}
+            onLogin={() => {
+              navigate("/login");
+              onCloseRegisterPrompt && onCloseRegisterPrompt();
+            }}
+          />
         </>
       )}
 

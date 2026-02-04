@@ -1282,9 +1282,9 @@ const CourseDetail = ({
                         </option>
 
                         {/* Static default option */}
-                        <option value="Hachion Certified Trainer">
+                        {/* <option value="Hachion Certified Trainer">
                           Hachion Certified Trainer
-                        </option>
+                        </option> */}
 
                         {/* API trainers */}
                         {trainers.map((trainerName, index) => (

@@ -2,6 +2,13 @@
 .lswrap {
   padding-top: 40px;
   padding-bottom: 40px;
+    background: linear-gradient(
+    180deg,
+    rgba(31, 182, 255, 0.08) 0%,
+    rgba(31, 182, 255, 0.03) 100%
+  );
+  position: relative;
+  overflow: hidden;
 }
 
 /* Tabbed Navigation Styles */

@@ -66,25 +66,25 @@ What's Included:
   //   notification;
 
   const [selectedDays, setSelectedDays] = useState([]);
-const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-const isMentoringFormValid =
-  selectedDays.length > 0 &&
-  Boolean(preferredTime) &&
-  Boolean(notification);
+  const isMentoringFormValid =
+    selectedDays.length > 0 &&
+    Boolean(preferredTime) &&
+    Boolean(notification);
 
   useEffect(() => {
-  if (isRequestBatchSuccess || requestBatchError) {
-    setIsSubmitting(false);
-    setSelectedDays([]);
-     setPreferredTime("");
-  }
-}, [isRequestBatchSuccess, requestBatchError]);
-useEffect(() => {
-  if (!notification) {
-    setNotification("Email Only");
-  }
-}, [notification, setNotification]);
+    if (isRequestBatchSuccess || requestBatchError) {
+      setIsSubmitting(false);
+      setSelectedDays([]);
+      setPreferredTime("");
+    }
+  }, [isRequestBatchSuccess, requestBatchError]);
+  useEffect(() => {
+    if (!notification) {
+      setNotification("Email Only");
+    }
+  }, [notification, setNotification]);
 
 
   return (
@@ -93,7 +93,7 @@ useEffect(() => {
       <div className={styles.dcrequestSection}>
         <div className={styles.dcrequestCard}>
           <div className={styles.dcrequestImage}>
-            <img src="/request_batch_banner.png" alt="Student" />
+            <img src="/mentoring-mode.png" alt="Student" />
           </div>
 
           <div className={styles.dcrequestOverlay}>
@@ -103,34 +103,34 @@ useEffect(() => {
                 <label className={styles.dcrequestLabel}>Preferred Day: <span style={{ color: "red" }}>*</span></label>
 
                 {/* SELECT / DESELECT ALL */}
-               <button
-  type="button"
-  className={styles.selectAllBtn}
-  onClick={() => {
-    const allDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    setSelectedDays((prev) =>
-      prev.length === allDays.length ? [] : allDays
-    );
-  }}
->
-  {selectedDays.length === 7 ? "Deselect All" : "Select All"}
-</button>
+                <button
+                  type="button"
+                  className={styles.selectAllBtn}
+                  onClick={() => {
+                    const allDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+                    setSelectedDays((prev) =>
+                      prev.length === allDays.length ? [] : allDays
+                    );
+                  }}
+                >
+                  {selectedDays.length === 7 ? "Deselect All" : "Select All"}
+                </button>
 
                 <div className={styles.dcrequestCheckboxes}>
                   {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
                     (day) => (
                       <label key={day} className={styles.dcrequestCheckbox}>
-                       <input
-  type="checkbox"
-  checked={selectedDays.includes(day)}
-  onChange={(e) => {
-    setSelectedDays((prev) =>
-      e.target.checked
-        ? [...prev, day]
-        : prev.filter((d) => d !== day)
-    );
-  }}
-/>
+                        <input
+                          type="checkbox"
+                          checked={selectedDays.includes(day)}
+                          onChange={(e) => {
+                            setSelectedDays((prev) =>
+                              e.target.checked
+                                ? [...prev, day]
+                                : prev.filter((d) => d !== day)
+                            );
+                          }}
+                        />
 
                         <span className={styles.checkmark}></span>
                         <span>{day}</span>
@@ -318,7 +318,7 @@ useEffect(() => {
                 style={{
                   width: "100%",
                   padding: "12px",
-                  marginBottom:"14px",
+                  marginBottom: "14px",
                   borderRadius: "8px",
                   border: "none",
                   fontSize: "15px",
@@ -370,21 +370,21 @@ useEffect(() => {
             <div className={styles.dcinfosubdescription}>Self-Paced + Expert Q&A Support</div>
           </div>
         </div>
-{isCourseLoading ? (
-  <div
-    className={styles.dcinfotext}
-    // style={{
-    //   fontSize: "14px",
-    //   color: "#374151",
-    //   lineHeight: "1.5",
-    // }}
-  >
-    Loading mentoring details...
-  </div>
-) : (
- <div className={styles.dcinfotext}>
-  <style>
-    {`
+        {isCourseLoading ? (
+          <div
+            className={styles.dcinfotext}
+          // style={{
+          //   fontSize: "14px",
+          //   color: "#374151",
+          //   lineHeight: "1.5",
+          // }}
+          >
+            Loading mentoring details...
+          </div>
+        ) : (
+          <div className={styles.dcinfotext}>
+            <style>
+              {`
       .mentoringHtml h1,
       .mentoringHtml h2,
       .mentoringHtml h3,
@@ -424,22 +424,22 @@ useEffect(() => {
         font-weight: 700 !important;
       }
     `}
-  </style>
+            </style>
 
-  {mentoringMode && mentoringMode.trim() ? (
-    <div
-      className="mentoringHtml"
-      dangerouslySetInnerHTML={{ __html: mentoringMode }}
-    />
-  ) : (
-    <p style={{ margin: 0 }}>
-      Get personalized one-on-one guidance from industry experts with flexible
-      scheduling and customized learning paths.
-    </p>
-  )}
-</div>
+            {mentoringMode && mentoringMode.trim() ? (
+              <div
+                className="mentoringHtml"
+                dangerouslySetInnerHTML={{ __html: mentoringMode }}
+              />
+            ) : (
+              <p style={{ margin: 0 }}>
+                Get personalized one-on-one guidance from industry experts with flexible
+                scheduling and customized learning paths.
+              </p>
+            )}
+          </div>
 
-)}
+        )}
 
       </aside>
     </div>

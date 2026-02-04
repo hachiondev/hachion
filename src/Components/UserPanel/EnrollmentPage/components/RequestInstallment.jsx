@@ -40,7 +40,8 @@ const RequestInstallment = ({
   studentId,
   studentName,
   courseData,
-  mobile
+  mobile,
+  currencyLabel
 }) => {
   const { courseName } = useParams();
   const [showModal, setShowModal] = useState(false);
@@ -166,7 +167,7 @@ const RequestInstallment = ({
       onInstallmentChange(value);
     }
   };
-  const currency = "₹";
+  // const currency = "₹";
 
   const perInstallment = selectedInstallments > 0 ? courseData.iamount / selectedInstallments : 0;
   const countChosen = paidInstallment.length;
@@ -269,11 +270,15 @@ const RequestInstallment = ({
                                 <StyledTableRow key={index}>
                                   <StyledTableCell align="center">{index + 1}</StyledTableCell>
                                   <StyledTableCell align="center">
-                                    {currency} {Math.round(baseInstallment)}
+                                    {/* {currency} {Math.round(baseInstallment)} */}
+                                    {currencyLabel} {Math.round(baseInstallment)}
+
                                   </StyledTableCell>
 
                                   <StyledTableCell align="center">
-                                    <strong>{currency} {Math.round(totalWithCharge)}</strong>
+                                    {/* <strong>{currency} {Math.round(totalWithCharge)}</strong> */}
+                                    <strong>{currencyLabel} {Math.round(totalWithCharge)}</strong>
+
                                   </StyledTableCell>
 
                                 </StyledTableRow>

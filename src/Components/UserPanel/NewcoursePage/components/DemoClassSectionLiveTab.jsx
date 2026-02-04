@@ -7,6 +7,8 @@ import { useResendEnrollEmail } from "../../../../Api/hooks/CourseApi/useResendE
 import { saveRedirectUrl } from "../../../../redirectAfterLogin";
 import { useResendLiveClassEnrollEmail } from "../../../../Api/hooks/CourseApi/useResendLiveClassEnrollEmail";
 import LoginModal from "../../Common/Loginmodal";
+import { useInstallmentStatus } from "../../../../Api/hooks/CourseApi/useInstallmentStatus";
+
 
 function DemoClassSectionLiveTab({
   scheduleLoading,
@@ -62,6 +64,9 @@ What's Included:
     ? checkedSessions
     : selectedGroup?.sessions || [];
 
+    const { data: installmentStatusData, isLoading: installmentStatusLoading } =
+  useInstallmentStatus(userProfile?.studentId, courseName);
+
   const navigate = useNavigate();
   const { mutate: resendDemoEmail } = useResendEnrollEmail();
   const { mutate: resendLiveClassEmail } = useResendLiveClassEnrollEmail();
@@ -102,27 +107,59 @@ What's Included:
       },
     }));
   };
-const handleEnrollWithLoginCheck = (sess) => {
+const handleEnrollWithLoginCheck = async (sess) => {
   if (isProfileLoading) return;
 
   if (!userProfile || !userProfile.studentId) {
     onCloseRegisterPrompt && onCloseRegisterPrompt();
     setIsSubmitting(false);
-    
-    
+
     saveRedirectUrl();
-    
-  
     setShowRegisterPrompt(true);
     return;
   }
 
+  // ✅ If LIVE DEMO → keep existing behavior (NO installment check)
+  if (sess.mode === "Live Demo") {
+    onEnrollClick(sess, {
+      email: notifyViaMap[sess.id]?.email ?? true,
+      whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
+      requestInstallment: true,
+    });
+    return;
+  }
+
+  // ⏳ If installment status still loading, avoid double action
+  if (installmentStatusLoading) return;
+
+  // ✅ If APPROVED → go directly to /installments
+  if (installmentStatusData?.requestStatus === "approved") {
+    const slug = courseName
+      ?.toLowerCase()
+      .replace(/\s+/g, "-");
+
+    navigate(`/installments/${slug}`, {
+      state: {
+        selectedBatchData: {
+          ...sess,
+          schedule_course_name: courseName,
+          courseName: courseName,
+        },
+        numSelectedInstallments: installmentStatusData.numSelectedInstallments,
+      },
+    });
+
+    return; // ⛔ stop normal enroll flow
+  }
+
+  // ✅ Else → continue EXISTING flow (NewEnrollNow)
   onEnrollClick(sess, {
     email: notifyViaMap[sess.id]?.email ?? true,
     whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
-    requestInstallment: true,   // 👈 ADD THIS
+    requestInstallment: true,
   });
 };
+
 
   return (
     <div className={styles.dcgrid}>

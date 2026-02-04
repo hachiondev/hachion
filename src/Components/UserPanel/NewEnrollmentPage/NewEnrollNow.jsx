@@ -18,6 +18,7 @@ import { useInstallmentStatus } from "../../../Api/hooks/CourseApi/useInstallmen
 
 import { useCheckEnrollmentForSessions } 
   from "../../../Api/hooks/CourseApi/useCheckEnrollmentForSessions";
+import { useNavigate } from "react-router-dom";
 
 
 export default function NewEnrollNow() {
@@ -55,6 +56,7 @@ export default function NewEnrollNow() {
   const email = user?.email;
   const { data: studentData, isLoading, error } = useStudentDetails(email);
   
+const navigate = useNavigate();
 
 
   const [lockButtonsUntilBatchChange, setLockButtonsUntilBatchChange] = useState(false);
@@ -139,7 +141,47 @@ const isInstallmentDisabled =
 
   const { currency } = useCurrency();
   const { data: discountRule } = useCourseDiscountRule(courseSlug);
-  
+  useEffect(() => {
+  if (
+    installmentStatusLoading ||
+    !installmentStatusData ||
+    installmentStatusData.requestStatus !== "approved"
+  ) {
+    return;
+  }
+
+  const slug = course?.courseName
+    ?.toLowerCase()
+    .replace(/\s+/g, "-");
+
+  if (!slug || !selectedBatch?.sessions?.[0] || !course) return;
+
+  navigate(`/installments/${slug}`, {
+    state: {
+      // 🔑 IMPORTANT: send what OnlineInstallments EXPECTS
+      selectedBatchData: {
+        ...selectedBatch.sessions[0],
+
+        // required for pricing fetch
+        schedule_course_name: course.courseName,
+
+        // optional but safe
+        courseName: course.courseName,
+      },
+
+      // already approved value (2 or 3)
+      numSelectedInstallments:
+        installmentStatusData.numSelectedInstallments,
+    },
+  });
+}, [
+  installmentStatusLoading,
+  installmentStatusData,
+  selectedBatch,
+  course,
+  navigate,
+]);
+
 
   useEffect(() => {
     if (!couponSuccess) return;
@@ -406,6 +448,19 @@ const isInstallmentDisabled =
 
   }, [discountRule]);
 
+  const isPayLaterDisabled =
+  !selectedBatch ||
+  !isTermsAccepted ||
+  isEnrollmentBlocked ||
+  lockButtonsUntilBatchChange ||
+  isAlreadyEnrolledForBatch;
+const isInstallmentEnabled =
+  isTermsAccepted &&          // ✅ condition 1: checkbox checked
+  isPayLaterDisabled &&       // ✅ condition 2: pay-later button is disabled
+  currentRequestStatus === "none" &&
+  !installmentStatusLoading;
+
+
   /* ===============================
      Early Return (NOW SAFE)
   =============================== */
@@ -571,32 +626,6 @@ const isInstallmentDisabled =
                 >
                   Pay Now
                 </button>
-
-                {/* <button
-                  className={`${styles.enPayBtn} ${!selectedBatch ||
-                    !isTermsAccepted ||
-                    isEnrollmentBlocked ||
-                    lockButtonsUntilBatchChange
-                    ? styles.disabledBtn
-                    : ""
-                    }`}
-                  disabled={
-                    !selectedBatch ||
-                    !isTermsAccepted ||
-                    isEnrollmentBlocked ||
-                    lockButtonsUntilBatchChange
-                  }
-                  onClick={() => {
-                    setLastAction("PAY_LATER");
-                    selectedBatch &&
-                      handleEnrollPayLater({
-                        ...selectedBatch.sessions[0],
-                        notifyVia,
-                      });
-                  }}
-                >
-                  Enroll Now, Pay Later
-                </button> */}
              <button
   className={`${styles.enPayBtn} ${!selectedBatch ||
     !isTermsAccepted ||
@@ -628,20 +657,17 @@ const isInstallmentDisabled =
 
 
                 <div className={styles.installmentBtnContainer}>
-                 
-
-<button
+            <button
   className={styles.paymentBtn}
   onClick={() => setOpenInstallmentPopup(true)}
-  disabled={isInstallmentDisabled}
+  disabled={!isInstallmentEnabled}
   style={{
-    opacity: isInstallmentDisabled ? 0.6 : 1,
-    cursor: isInstallmentDisabled ? "not-allowed" : "pointer",
+    opacity: !isInstallmentEnabled ? 0.6 : 1,
+    cursor: !isInstallmentEnabled ? "not-allowed" : "pointer",
   }}
 >
   Request for Installments
 </button>
-
 
                   {currentRequestStatus === "pending" && (
                     <p className={styles.pendingStatus}>
@@ -683,6 +709,7 @@ const isInstallmentDisabled =
             studentName={studentData?.userName || ''}
             courseData={course}
             mobile={mobileNumber}
+            currencyLabel={displayCurrency}
           />
         </DialogContent>
       </Dialog>

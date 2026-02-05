@@ -6,6 +6,7 @@ import { cn } from "../../../../utils";
 function DemoClassSectionCrashTab({
   scheduleLoading,
   scheduleError,
+  liveGroups,
   crashGroups,
   selectedCrashDay,
   setSelectedCrashDay,
@@ -57,7 +58,13 @@ What's Included:
         <div className={styles.dcrequestImage}>
           <img src="/crash-course.png" alt="Student" />
         </div>
-        <div className={styles.dcslots}>
+        <div
+                  className={
+                    liveGroups && liveGroups.length > 0
+                      ? styles.dcslots
+                      : ""
+                  }
+                >
           {scheduleLoading && (
             <div className={styles.dcslot}>
               <div className={styles.dcslotdate}>Loading slots...</div>

@@ -575,6 +575,7 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
             scheduleLoading={scheduleLoading}
             scheduleError={scheduleError}
             crashGroups={crashGroups}
+            liveGroups={liveGroups}
             selectedCrashDay={selectedCrashDay}
             setSelectedCrashDay={setSelectedCrashDay}
             selectedCrashGroup={selectedCrashGroup}

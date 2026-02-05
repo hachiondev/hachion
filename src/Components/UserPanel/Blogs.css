@@ -3816,7 +3816,7 @@
   }
 
   .coupon {
-    flex-direction: row;
+    flex-direction: column;
     gap: 20px;
   }
 
@@ -3840,7 +3840,7 @@
 
   .col-md-5 {
     width: 310px !important;
-    margin: 5px !important;
+    margin: -5px !important;
     padding: 5px;
   }
 
@@ -3891,6 +3891,998 @@
     width: fit-content;
     min-width: 350px;
     max-width: 480px;
+    white-space: nowrap;
+    border-collapse: collapse;
+    overflow-x: auto;
+    margin-left: 0 !important;
+  }
+
+  .table-cell-left,
+  .table-cell-right {
+    padding: 6px;
+    font-size: 12px !important;
+    white-space: nowrap;
+  }
+
+  .net-amount {
+    padding: 10px;
+    text-align: center;
+  }
+
+  .net-amount .net-amount-left {
+    font-size: 16px !important;
+  }
+
+  .net-amount .net-amount-right {
+    font-size: 16px !important;
+  }
+
+  .radio-group {
+    margin: 20px !important;
+  }
+
+  .radio-group img {
+    height: 30px;
+    width: auto;
+  }
+
+  .payment-btn,
+  .enroll-now-btn {
+    width: 95%;
+    border-radius: 5px !important;
+    background-color: #00AEEF;
+    border: none;
+    color: white;
+    /* font-size: 14px !important; */
+    padding: 5px;
+    font-weight: 700;
+    margin-left: 10px !important;
+    margin-bottom: 10px;
+    margin-top: 10px !important;
+  }
+
+  .paylater p {
+    max-width: 95% !important;
+  }
+
+  .paylater {
+    margin-top: 5px !important;
+  }
+
+    .title_allcourse {
+    padding-top: 20px;
+  }
+
+    .privacy-main-title {
+    font-size: 1.7rem;
+  }
+
+  .privacy-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+  }
+
+  .privacy-section {
+    padding: 15px;
+  }
+
+  .contact-email {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  .closing-message {
+    padding: 20px;
+  }
+
+  .closing-message p {
+    font-size: 1rem;
+  }
+
+    .terms-main-title {
+    font-size: 1.7rem;
+  }
+
+  .terms-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+  }
+
+  .terms-section {
+    padding: 15px;
+  }
+
+  .contact-email {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+    .refund-main-title {
+    font-size: 1.7rem;
+  }
+
+  .refund-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+  }
+
+  .refund-section {
+    padding: 15px;
+  }
+
+  .refund-item {
+    flex-direction: column;
+  }
+
+  .refund-icon {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .closing-message {
+    padding: 20px;
+  }
+
+  .closing-message p {
+    font-size: 1rem;
+  }
+}
+@media (max-width:375px) {
+  .about-us {
+    padding: 25px;
+    padding-top: 5px;
+  }
+
+  .breadcrumb-item svg {
+    font-size: 16px;
+    margin: 0;
+  }
+
+  .breadcrumb-item.active {
+    flex-wrap: nowrap;
+    overflow-x: hidden;
+  }
+
+  .about-us-heading {
+    font-size: 16px;
+    padding: 20px 5px 5px 5px;
+  }
+
+  .about-us-top {
+    flex-direction: column;
+  }
+
+  .about-us-left-content {
+    padding: 0 25px 0 25px;
+    line-height: normal;
+    text-align: justify;
+  }
+
+  .about-us-top img {
+    max-width: 320px;
+    height: auto;
+    margin: 10px;
+  }
+
+  .workshop-content {
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+
+  .workshop-heading {
+    padding: 5px;
+  }
+
+  .workshop-reg {
+    padding: 5px;
+  }
+
+  .workshop-reg-img {
+    width: 90%;
+    margin: 0 4%;
+  }
+
+  .workshop-top,
+  .workshop-top-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 5px;
+    margin-right: 5px;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .workshop-top-img {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 10px;
+  }
+
+  .workshop-text {
+    color: #000;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .workshop-text-details {
+    color: #000;
+    font-weight: 600;
+    text-align: left;
+    font-size: 16px;
+  }
+
+  .workshop-left-content {
+    font-size: 12px;
+    font-weight: 400;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 3%;
+    padding-right: 3%;
+    text-align: justify;
+    width: 85%;
+    margin: 0 2%;
+  }
+
+  .workshop-banner {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px 5%;
+    margin-bottom: 30px;
+  }
+
+  .workshop-banner-content {
+    color: #fff;
+    font-weight: 600;
+    text-align: left;
+    font-size: 14px;
+    margin-bottom: 0;
+  }
+
+  .workshop-img {
+    width: 90px;
+    height: auto;
+    border-radius: 10px;
+  }
+
+  .join {
+    font-size: 12px;
+    padding: 3px 8px;
+  }
+
+  .workfaq-content {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    align-content: center;
+    text-align: left;
+    background-color: #006489;
+    font-size: 12px;
+    font-weight: 600;
+    color: #FFF;
+    cursor: pointer;
+    margin: 0 20px;
+
+  }
+
+  .workfaq-topic-details {
+    background-color: #FFF;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #000;
+  }
+
+  .workshopfaq {
+    background-color: #D9F3FD;
+    margin: 30px 0px;
+  }
+
+  .workshopform {
+    background-color: #FFE69D;
+    margin-bottom: 30px;
+  }
+
+  .studentform {
+    margin-bottom: 30px;
+  }
+
+  .student-img {
+    display: none;
+  }
+
+  .student-reg-form {
+    max-width: 350px;
+  }
+
+  #studentreg.form-control-student {
+    width: 300px;
+    height: 30px;
+    font-size: 12px;
+    margin: 5px 5%;
+  }
+
+  .student-register-button {
+    width: 300px;
+    height: 30px;
+    font-size: 16px;
+    margin: 5px 5%;
+    margin-top: 15px;
+  }
+
+  .example {
+    margin: 1px 5%;
+  }
+
+  .register-button {
+    width: 320px;
+    height: 35px;
+    font-size: 16;
+    margin: 5px 10%;
+    margin-top: 20px;
+  }
+
+  .summer-register-button {
+    width: 320px;
+    height: 35px;
+    font-size: 16;
+    margin: 5px 5%;
+    margin-top: 20px;
+  }
+
+  .course-row {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0px;
+  }
+
+  .work-details {
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .workshop-button {
+    width: 100%;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  .form-select,
+  .form-control {
+    height: 35px !important;
+    font-size: small;
+    padding: 5px;
+  }
+
+  #workshop.mobile-workshop {
+    width: 260px;
+    height: 35px;
+    padding: 10px;
+  }
+
+  .join-form {
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    align-items: center;
+    justify-items: center;
+  }
+
+    .our-story {
+    justify-content: flex-start;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 10px;
+    gap: 10px;
+    font-size: 12px;
+    width: 100%;
+  }
+
+  .story-div {
+    align-items: center;
+  }
+
+  .story-content {
+    font-size: 12px;
+    font-weight: 400;
+    white-space: wrap;
+    line-height: 12px;
+    text-align: center;
+    margin-bottom: 5px;
+  }
+
+  .number {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+
+  .story-icon {
+    font-size: 30px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+  }
+
+  .detail-blog {
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    /* padding-left: 0; */
+    margin: 0px;
+  }
+
+  .detail-blog-right,
+  .detail-blog-left {
+    width: 100%;
+    padding: 10px;
+    height: auto;
+  }
+
+  .detail-right {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: 5px;
+    gap: 20px;
+  }
+
+  .detail-right-icon {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 5px;
+  }
+
+  .detail-right p {
+    margin-bottom: 5px;
+  }
+
+  .detail-right img {
+    height: 25px;
+    width: 25px;
+  }
+
+  .detail-middle {
+    margin: 10px 0;
+  }
+
+  .user-icon {
+    font-size: 12px;
+    margin-right: 3px;
+  }
+
+  .topics {
+    padding-left: 0px;
+  }
+
+  .topics p,
+  .topics li {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+
+  .topics h2 {
+    font-size: 20px;
+  }
+
+  .topic-content {
+    font-size: 12px;
+    font-weight: 400;
+    padding: 5px;
+  }
+
+  .topic-content-span {
+    font-size: 16px;
+    font-weight: 700;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .detail-blog-bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+  }
+
+  .detail-blog-bottom h3 {
+    font-size: 12px;
+    margin-top: 3px;
+    flex-wrap: wrap;
+    font-weight: 400;
+    color: #006489;
+  }
+
+  .recent-entries {
+    background-color: #EEEEEE;
+    cursor: pointer;
+  }
+
+  .detail-entries-heading {
+    font-size: 16px;
+  }
+
+  .detail-entries {
+    width: 100%;
+    margin-left: 10px;
+  }
+
+  .discount-img {
+    width: 300px;
+  }
+
+  .reg-img {
+    display: none;
+  }
+
+  .reg-form {
+    max-width: 400px;
+  }
+
+  .kids-course-card {
+    width: 152px;
+    aspect-ratio: 6/5;
+    margin: 5px;
+    padding: 10px;
+  }
+
+  .kids-course-card img {
+    width: 50px;
+    aspect-ratio: 1/1;
+    padding: 10px;
+  }
+
+  .kids-course-card-content {
+    font-size: medium;
+  }
+
+  .info-boxes {
+    position: absolute;
+    top: 26%;
+    left: 35%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 6px;
+    z-index: 2;
+  }
+
+  /* Each info box */
+  .info-box {
+    padding: 3px 5px;
+    min-width: 80px;
+    max-width: 100px;
+    text-align: center;
+    font-size: 12px;
+  }
+
+  .daily-icon {
+    font-size: 16px;
+    padding-right: 10px;
+  }
+
+  #registration.form-control-registration {
+    width: 320px !important;
+    height: 35px;
+    margin-bottom: 10px !important;
+    padding: 5px;
+    font-size: 12px;
+  }
+
+  .hire-banner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    align-items: center;
+    padding: 5px;
+  }
+
+  .hire-banner-img,
+  .hire-img,
+  .hire-collab,
+  .hire-logo {
+    max-width: 450px;
+    width: 100%;
+  }
+
+  .hire-part,
+  .career-part {
+    display: flex;
+    width: 95%;
+    margin: 10px 2%;
+    gap: 10px;
+  }
+
+  .points {
+    width: 90%;
+  }
+
+  .post-job-button {
+    padding: 5px 40px;
+    width: 90%;
+    margin: 10px 20px 5px;
+  }
+
+  .hire-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  #hire.form-control-hire {
+    height: 80px;
+    width: 320px;
+    font-size: 12px;
+    border-color: #b3b3b3;
+    margin: 5px 5%;
+  }
+
+  .aboutlead-img {
+    max-width: 90%;
+    aspect-ratio: 5/3;
+  }
+
+  .about-lead-text,
+  .career-job-text {
+    font-size: 12px;
+    line-height: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    max-width: 90%;
+  }
+
+  .lead-benefits {
+    max-width: 40%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+
+  .Job-card {
+    width: 100%;
+  }
+
+  .job-part {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .Details-part {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .Details-card img {
+    height: 70px;
+    max-width: 120px;
+    padding: 5px;
+  }
+
+  .Details-title {
+    gap: 20px;
+  }
+
+  .Details-card-text {
+    font-size: 12px;
+  }
+
+  .Job-row {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .Job-column {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .Job-icon-text {
+    font-size: medium;
+    width: 100%;
+  }
+
+   .about-us-div-content {
+    flex-basis: 100%;
+    /* One item per row for mobile screens */
+  }
+
+  .workshop-div-content h6 {
+    font-size: 12px;
+  }
+
+  .about-us-div-content img {
+    width: 300px;
+  }
+
+  .contact-us-box {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .contact-us-all {
+    background-color: #EEEEEE;
+    padding: 10px;
+    margin-bottom: 0;
+  }
+
+  .contact-us {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .contact-mail-data {
+    display: block;
+  }
+
+  .contact-title-text {
+    font-size: medium;
+  }
+
+  .contact-address {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .contact-form {
+    padding: 10px;
+  }
+
+  .contact-form-image {
+    max-width: 70%;
+    height: auto;
+  }
+
+  #contact1.form-control-contact {
+    width: 300px;
+    height: 35px;
+    font-size: 12px;
+    padding: 5px;
+  }
+
+  .country-code-dropdown {
+    font-size: 12px;
+    height: 35px !important;
+    padding: 0 3px;
+    width: 90px !important;
+  }
+
+  .country-flag {
+    width: 18px;
+    margin-right: 3px;
+  }
+
+  #contact2.mobile-number {
+    width: 210px !important;
+    height: 35px;
+    padding: 5px;
+    border-radius: 0px 5px 5px 0px;
+    border-color: #b3b3b3;
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
+  #contact3.form-control-contact {
+    width: 300px;
+    height: 80px;
+    font-size: 12px;
+    padding: 5px;
+  }
+
+  .form-check {
+    margin-bottom: 10px;
+  }
+
+  .form-check-input {
+    font-size: 16px !important;
+  }
+
+  .form-check-label {
+    font-size: 10px !important;
+    padding-top: 0;
+    margin-top: 0;
+  }
+
+  /* Enrollment page */
+  .enrollment {
+    height: 70px !important;
+    padding: 10px;
+    font-size: 16px !important;
+    padding-left: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .enrollment p {
+    margin-bottom: 0;
+    padding: 10px;
+  }
+
+  .enrollment-details {
+    width: 90% !important;
+    margin-left: 5% !important;
+    margin-right: 5% !important;
+  }
+
+  .enrollpayment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 70px;
+    padding: 0 10px;
+    font-size: 20px !important;
+  }
+
+  .enrollpayment-logo {
+    position: absolute;
+    left: 5px;
+    padding: 2px;
+    height: 30px !important;
+  }
+
+  .enrollpayment p {
+    margin: 0;
+  }
+
+  .personal-details {
+    width: auto !important;
+    padding: 0 !important;
+    margin-left: 0 !important;
+    margin: 20px 10px !important;
+  }
+
+  .personal-details-header {
+    height: 50px !important;
+    font-size: 14px !important;
+    font-weight: 700;
+    padding-left: 30px;
+    align-content: center;
+    margin-bottom: 10px !important;
+    width: 100%;
+  }
+
+  .personal-details-header p {
+    margin-bottom: 0;
+  }
+
+  .details-row {
+    flex-direction: column;
+    align-items: center;
+    margin: 0 !important;
+  }
+
+  .Pay-details {
+    width: 95%;
+  }
+
+  .enroll-table {
+    margin: 0 10px;
+  }
+
+  .table-details thead th {
+    font-size: 12px !important;
+  }
+
+  .table-details tbody td {
+    font-size: 12px !important;
+  }
+
+  .coupon-div {
+    display: flex;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    margin-left: 0;
+    margin-bottom: 20px;
+    justify-content: center;
+    gap: 0 !important;
+  }
+
+  .coupon {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .coupon-div p {
+    margin-bottom: 5px;
+    font-size: 11px !important;
+  }
+
+  /* Targets the inner input field styling */
+  .coupon-field .MuiFilledInput-input {
+    font-size: 12px !important;
+    padding: 5px 10px !important;
+  }
+
+  .details {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    padding: 5px;
+  }
+
+  .col-md-5 {
+    width: 290px !important;
+    margin: -5px !important;
+    padding: 5px;
+  }
+
+  .input-group {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 310px !important;
+    margin: 5px 5px 5px 3px !important;
+  }
+
+  #enroll1.form-control-contact {
+    height: 35px !important;
+    width: 310px !important;
+    border-color: #b3b3b3;
+    font-size: 12px;
+    margin: 5px !important;
+    padding: 5px;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: column;
+    /* Stack the form fields vertically */
+    gap: 0px;
+    /* Reduce gap between elements for mobile */
+  }
+
+
+  .enroll-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+  }
+
+  #enroll2.mobile-number {
+    width: 220px !important;
+    height: 35px;
+    border-radius: 0px 5px 5px 0px;
+    border-color: #b3b3b3;
+    font-size: 12px;
+    margin-bottom: 0px !important;
+  }
+
+  .table-container {
+    display: block;
+    width: fit-content;
+    min-width: 260px;
     white-space: nowrap;
     border-collapse: collapse;
     overflow-x: auto;

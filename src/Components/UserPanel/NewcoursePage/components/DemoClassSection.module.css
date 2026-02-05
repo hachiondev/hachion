@@ -374,7 +374,6 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
   margin-bottom: 16px;
-  margin-top: 10px;
 }
 
 .dcslot {
@@ -472,10 +471,9 @@
   font-size: 20px;
 }
 
-/* .noLiveSlotsContainer {
-  display: flex;
-  gap: 20px;
-} */
+.noLiveSlotsContainer {
+  margin-top: 10px;
+}
 
 .noLiveClass {
   background: #fff;

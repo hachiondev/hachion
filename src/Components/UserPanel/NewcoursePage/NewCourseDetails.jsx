@@ -16,6 +16,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAllCourses } from '../../../Api/hooks/SitemapPageApi/useAllCourses';
 import { Link } from 'react-router-dom';
 import { MdKeyboardArrowRight } from 'react-icons/md';
+import { Helmet } from 'react-helmet-async';
 import EnrollmentPopup from './Enrollmentpopup';
 
 const slugify = (text = "") =>
@@ -30,6 +31,7 @@ const POPUP_DELAY = 5000; // ⏱️ 30 seconds
 const NewCourseDetails = () => {
   const { courseName } = useParams();
   const navigate = useNavigate();
+  const [helmetKey, setHelmetKey] = useState(0);
 
   const { data: allCourses = [], isLoading } =
     useAllCourses("courseDetailsPage");
@@ -37,6 +39,13 @@ const NewCourseDetails = () => {
   const courseData = allCourses.find(
     (c) => slugify(c.courseName) === slugify(courseName)
   );
+
+  /* ---------------- HELMET FORCE UPDATE ---------------- */
+  useEffect(() => {
+    if (courseData) {
+      setHelmetKey((prev) => prev + 1);
+    }
+  }, [courseData]);
 
   // Popup state
   const [showPopup, setShowPopup] = useState(false);
@@ -102,6 +111,16 @@ const NewCourseDetails = () => {
 
   return (
     <div>
+      <Helmet key={helmetKey}>
+        <title>{courseData?.metaTitle || "Hachion Courses"}</title>
+        <meta name="description" content={courseData?.metaDescription || "Default description"} />
+        <meta name="keywords" content={courseData?.metaKeyword || "default, keywords"} />
+        <meta property="og:title" content={courseData?.metaTitle || "Best Online IT Certification Courses"} />
+        <meta property="og:description" content={courseData?.metaDescription || "Transform your career with Hachion's Online IT Courses."} />
+        <meta property="og:image" content={courseData?.metaImage || "https://hachion.co/images/course-banner.jpg"} />
+        <meta property="og:url" content={`https://hachion.co/coursedetails/${courseName}`} />
+        <meta name="robots" content="index, follow" />
+      </Helmet>
       <div className="blogs-header" style={{ marginLeft: "6vw" }}>
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">

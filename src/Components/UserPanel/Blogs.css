@@ -443,7 +443,7 @@
   font-size: small;
   padding-left: 0;
   white-space: nowrap;
-  overflow: hidden;
+  /* overflow: hidden; */
   text-overflow: ellipsis;
   max-width: 145px;
   display: inline-block;
@@ -543,7 +543,7 @@
 .section-content {
   font-size: 1rem;
   line-height: 1.7;
-  color: #4a5568;
+  color: #000000;
   margin-bottom: 15px;
 }
 
@@ -562,7 +562,7 @@
 .point-content {
   font-size: 1rem;
   line-height: 1.7;
-  color: #718096;
+  color: #000000;
   padding-left: 15px;
   border-left: 3px solid #e2e8f0;
 }
@@ -643,7 +643,7 @@
   position: relative;
   font-size: 1rem;
   line-height: 1.6;
-  color: #4a5568;
+  color: #000000;
 }
 
 .liability-list li:before {
@@ -694,7 +694,7 @@
   position: relative;
   font-size: 1rem;
   line-height: 1.6;
-  color: #4a5568;
+  color: #000000;
 }
 
 .rights-list li:before,
@@ -2992,7 +2992,7 @@
   }
 
   .breadcrumb-item {
-    font-size: 13px;
+    font-size: 13px !important;
   }
 
   .breadcrumb-icon {
@@ -3006,6 +3006,40 @@
 
   .liability-list li {
     font-size: 0.95rem;
+  }
+
+    .refund-container {
+    padding: 0 15px;
+  }
+
+  .refund-main-title {
+    font-size: 2rem;
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+  }
+
+  .refund-section {
+    padding: 20px;
+    margin-bottom: 30px;
+  }
+
+  .refund-policy-card {
+    padding: 15px;
+  }
+
+  .refund-item {
+    padding: 12px;
+    margin-bottom: 20px;
+  }
+
+  .refund-text {
+    font-size: 0.95rem;
+  }
+
+  .refund-sublist li {
+    font-size: 0.9rem;
   }
 }
 
@@ -3967,5 +4001,38 @@
   .contact-email {
     padding: 8px 16px;
     font-size: 0.9rem;
+  }
+
+    .refund-main-title {
+    font-size: 1.7rem;
+  }
+
+  .refund-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+  }
+
+  .refund-section {
+    padding: 15px;
+  }
+
+  .refund-item {
+    flex-direction: column;
+  }
+
+  .refund-icon {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .closing-message {
+    padding: 20px;
+  }
+
+  .closing-message p {
+    font-size: 1rem;
   }
 }

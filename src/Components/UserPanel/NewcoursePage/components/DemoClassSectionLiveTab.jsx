@@ -165,8 +165,8 @@ What's Included:
     <div className={styles.dcgrid}>
       <div>
         <div className={styles.dcrequestImage}>
-                      <img src="/live-training.jpg" alt="Student" />
-                    </div>
+          <img src="/live-training.jpg" alt="Student" />
+        </div>
         <div
           className={
             liveGroups && liveGroups.length > 0
@@ -174,7 +174,7 @@ What's Included:
               : ""
           }
         >
-          
+
           {scheduleLoading && (
             <div className={styles.dcslot}>
               <div className={styles.dcslotdate}>Loading slots...</div>
@@ -340,9 +340,9 @@ What's Included:
                 style={{
                   maxHeight: "240px",
                   overflowY:
-                    selectedGroup.sessions.length > 2 ? "auto" : "hidden",
+                    selectedGroup.sessions.length > 1 ? "auto" : "hidden",
                   paddingRight:
-                    selectedGroup.sessions.length > 2 ? "8px" : "0",
+                    selectedGroup.sessions.length > 1 ? "8px" : "0",
                   boxSizing: "border-box",
                 }}
               >

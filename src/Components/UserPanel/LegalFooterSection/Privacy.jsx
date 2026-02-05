@@ -27,7 +27,7 @@ const Privacy = () => {
         {/* Main Content */}
         <div className='privacy-content container'>
           <header className='privacy-title-section'>
-            <h1 className='privacy-main-title'>Legal and Privacy Policy</h1>
+            <h1 className='privacy-main-title'>Legal and Privacy Policy for Hachion</h1>
           </header>
 
           {/* Introduction */}
@@ -45,28 +45,28 @@ const Privacy = () => {
             <div className='policy-point'>
               <h3 className='point-title'>a. Service Agreement</h3>
               <p className='point-content'>
-                Hachion offers online certification courses for students, providing an easier, flexible, and convenient learning experience. When enrolling for courses, you agree to provide accurate and truthful information. All courses and materials are intended for personal, non-commercial use only.
+                Hachion online certification courses for students. This gives a student an easier, flexible, and convenient time for learning. From our website, one enrolls for courses and has to adhere to some guidelines. Such include accurate truthful information while registering for the process to go smooth and secure. Courses and materials are intended only for personal, non-commercial use. That means that sharing, reproducing, or distributing the courses and materials without explicit written permission from Hachion is strictly prohibited. This ensures the integrity of our educational offerings and respects the rights of content creators.
               </p>
             </div>
 
             <div className='policy-point'>
               <h3 className='point-title'>b. Intellectual Property</h3>
               <p className='point-content'>
-                All videos, texts, quizzes, logos, trademarks, and other materials published under Hachion's courses are Hachion's exclusive intellectual properties. You may not use, copy, modify, distribute, or reproduce these materials without explicit permission from Hachion.
+                All videos, texts, quizzes, logos, trademarks, and other copyrightable materials published under Hachion's course are Hachion's exclusive intellectual properties, and by virtue of copyright, trademark, and other intellectual property laws, you may not use, copy, modify, distribute, or reproduce parts of these materials without explicit permission from Hachion. Unauthorized use or duplication of these resources is strictly prohibited and may result in legal action. We rely on these protections to maintain the quality and integrity of our courses and ensure a fair and respectful learning environment.
               </p>
             </div>
 
             <div className='policy-point'>
               <h3 className='point-title'>c. Limitation of Liability</h3>
               <p className='point-content'>
-                While we strive to provide a seamless learning experience, we cannot be held responsible for technical difficulties beyond our control or for results obtained from course information. Hachion does not endorse or accept responsibility for third-party links accessed through our site.
+                We cannot hold ourselves responsible for the things that may not work properly, but we do strive to provide a seamless learning experience. This includes technical glitches or technical difficulties beyond our control that may cause service interruptions. We also are not responsible for your choices or the results you may get from the information in the courses. Hachion does not endorse or accept responsibility for third-party links or tools that you may access through our site. It is always important to use your best judgment and discretion when accessing.
               </p>
             </div>
 
             <div className='policy-point'>
               <h3 className='point-title'>d. Termination of Service</h3>
               <p className='point-content'>
-                Hachion reserves the right to withdraw access to the site for violations of this policy or misuse of our services. Upon termination, you will lose access to courses and content without refund.
+                 Hachion has the right to withdraw access to the site at any time and for any reason in case of a violation of this policy or misusing our services. This includes but is not limited to, sharing of course materials without authorization, being disruptive, or engaging in any activities that will compromise the integrity of our learning environment. You will lose access to courses, content, and other associated benefits upon termination of your access without any refund. We care about a respectful and fair learning experience for all users and take necessary actions to maintain a safe and productive platform.
               </p>
             </div>
           </section>
@@ -78,55 +78,55 @@ const Privacy = () => {
             <div className='policy-point'>
               <h3 className='point-title'>a. Data We Collect</h3>
               <p className='point-content'>
-                We collect personal information (name, email, contact details), account data (login credentials, progress), and payment information through trusted third-party gateways to provide and improve your learning experience.
+                To deliver the best possible learning experience, Hachion collects different types of data from users. These include Personal Information such as your name, email address, and contact details to communicate and facilitate account management. Account Data that involves login credentials and how one progresses is collected to enable managing access to courses and to track one's learning journey. Details regarding payments are collected at the time of purchase of a course, and this information is processed through trusted third-party gateways to protect the financial data of the learner. Data security and transparency are emphasized so that a safe and effective learning environment is maintained.
               </p>
             </div>
 
             <div className='policy-point'>
               <h3 className='point-title'>b. How We Use Your Data</h3>
               <p className='point-content'>
-                Your data is used to grant course access, track progress, inform you about new courses and updates, and provide support. We ensure timely assistance for course content, technical issues, and general queries.
+                 At Hachion, we use your data to enrich your learning experience. We employ it in granting access to classes and tracking how you are progressing, ensuring that you can track your performance easily and remain engaged with the content. We use your data also to inform you of new courses and updates to our services so that you are always up to date with the latest opportunities and improvements. And besides that, your data helps us respond to your queries and provide support, ensuring timely assistance whenever you need it-in connection with course content, technical issues, or more general questions.
               </p>
             </div>
 
             <div className='policy-point'>
               <h3 className='point-title'>c. Data Sharing</h3>
               <p className='point-content'>
-                Hachion does not sell your data. We only share information with trusted partners for payment processing, service improvement, or when required by law. All partners adhere to strict confidentiality agreements.
+                Hachion does not sell or transfer individual data to third parties, except where necessary for secure payment processing or as required by law and legal processes. We may share data with trusted partners to analyze and improve our services, ensuring a better learning experience. These partners adhere to strict confidentiality agreements and are bound by privacy standards similar to those of Hachion. This approach helps us to refine our offerings and provide enhanced support while maintaining your privacy and security. We are committed to safeguarding your information and only share data when it aligns with our policy and enhances the overall user experience.
               </p>
             </div>
 
             <div className='policy-point'>
               <h3 className='point-title'>d. Data Security</h3>
               <p className='point-content'>
-                We employ industry-standard security practices including encryption and secure servers. While we take extensive measures, we recommend using strong, unique passwords and keeping your login credentials private.
+                At Hachion, we employ best-in-industry security practices for securing data, such as encrypting information and placing it on secure servers for the protection of personal data. These steps are made for the prevention of unauthorized access, but ensuring data confidentiality. Not to forget the fact that no system can be considered unbreakable. We advise our members to take extra care about your login credentials by choosing some strong, unique password with keeping them private. In this way, you are contributing to keeping your data safe and us creating a safe learning environment.
               </p>
             </div>
 
             <div className='policy-point'>
               <h3 className='point-title'>e. Cookies and Tracking</h3>
               <p className='point-content'>
-                We use cookies to enhance your browsing experience, track traffic, remember preferences, and personalize content. You can manage cookies through your browser settings while still enjoying our services.
+                Hachion uses cookies to provide you with a better surfing experience by tracking traffic, remembering your preferences, and offering content that is tailored closer to your needs. We use these small data files to understand how you interact with our website, which enables us to better improve it and provide you with a more personalized learning experience. You can enable cookie control from your browser settings, where you may opt to disable or manage cookies if you so wish. This way, you can still enjoy our services while being in control of your privacy.
               </p>
             </div>
 
             <div className='policy-point'>
-              <h3 className='point-title'>f. Your Rights</h3>
+              <h3 className='point-title'>f. Your Rights </h3><span>As a user of Hachion, you have the right to:</span>
               <ul className='rights-list'>
-                <li><strong>Access:</strong> View and update your personal information at any time</li>
-                <li><strong>Deletion:</strong> Request data deletion, subject to legal restrictions</li>
-                <li><strong>Marketing:</strong> Opt-out of direct marketing communications anytime</li>
+                <li>Access and update your own personal information at your convenience, so that you are able to keep your information fresh and accurate.</li>
+            <li>Wipe all your data cleanly, if necessary, but subject to any legal or operational restrictions that may prevent its complete elimination. This ensures your data is handled responsibly and respects privacy regulations.</li>
+            <li>You may withdraw your consent for receiving direct marketing communications at any time. You will have control over how we may contact you, either by managing your preferences in your account settings or by contacting our support team. We respect your choices and are committed to protecting your privacy.</li>
               </ul>
             </div>
           </section>
 
           {/* User Obligations */}
           <section className='privacy-section'>
-            <h2 className='section-title'>4. User Obligations</h2>
+            <h2 className='section-title'>4. User Obligations</h2> <span>As a user of Hachion, it is your responsibility to:</span>
             <ul className='obligations-list'>
-              <li><strong>Protect Credentials:</strong> Never share login details with others</li>
-              <li><strong>Responsible Use:</strong> Use courses only for personal learning and growth</li>
-              <li><strong>Respect:</strong> Treat all users and instructors with respect</li>
+              <li><span style={{fontWeight: '600'}}>Protect your access credentials: </span>Never share your login and access details with others as a precaution to maintain confidentiality regarding personal information and prevent compromises of learning integrity.</li>
+            <li>Use our courses responsibly, only for the purposes of learning and personal growth. Avoid any form of misuse of course content or commencing any activities that may disrupt the learning environment.</li>
+            <li>Treat other users and instructors respectfully. Be respectful of differences of opinion and maintain a constructive, positive, and welcoming environment throughout all interactions. This will ensure a healthy learning process for all.</li>
             </ul>
           </section>
 
@@ -134,7 +134,7 @@ const Privacy = () => {
           <section className='privacy-section'>
             <h2 className='section-title'>5. Updates to the Policy</h2>
             <p className='section-content'>
-              Hachion may update this policy periodically. Updates will be communicated via our website or email. Continued use of our services constitutes acceptance of the updated policy.
+              Hachion reserves the right to update this Legal and Privacy Policy periodically to reflect changes in our services, legal requirements, or best practices. Any updates will be communicated to you through our website or via email, ensuring you are informed of any modifications. It is crucial for you to go through these updates because you will know what information is being dealt with as well as how this handling might impact your utilization of our services. Accepting the new policy shall mean that you have consented to the new updates from the date of such uses of Hachion's services. We ask that you remain engaged and better informed of any updates towards a safe and compliant experience.
             </p>
           </section>
 
@@ -142,12 +142,14 @@ const Privacy = () => {
           <section className='privacy-section'>
             <h2 className='section-title'>6. Contact Us</h2>
             <p className='section-content'>
-              For questions or concerns about this policy:
+              If you have any questions or concerns regarding this policy, please do not hesitate to contact us:
             </p>
             <div className='contact-info'>
-              <a href="mailto:trainings@hachion.co" className='contact-email'>
-                trainings@hachion.co
-              </a>
+              
+    <a href="https://mail.google.com/mail/?view=cm&to=trainings@hachion.co" 
+              className='contact-email'
+    target="_blank" 
+    rel="noopener noreferrer">trainings@hachion.co</a>
             </div>
           </section>
 
@@ -155,16 +157,16 @@ const Privacy = () => {
           <section className='privacy-section disclaimer-section'>
             <h2 className='section-title'>Disclaimer</h2>
             <p className='disclaimer-content'>
-              Mobile information will not be shared with third parties for marketing or promotional purposes. Text messaging originator opt-in data and consent will not be shared with any third parties.
+              Mobile information will not be shared with third parties/affiliates marketing/promotional purposes. All the above categories exclude text messaging originator opt-in data and consent; this information will not be shared with any third parties.
             </p>
             <p className='disclaimer-content'>
-              To unsubscribe from communications, please contact us at the email above.
+              If you wish to be removed from receiving future communications, you can opt out by Unsubscribe from Hachion.
             </p>
           </section>
 
           {/* Closing Message */}
           <div className='closing-message'>
-            <p>Thanks for choosing Hachion as your learning partner. We're here to empower your educational journey!</p>
+            <p>Thanks for choosing Hachion as your learning buddy. We are here to empower your education journey!</p>
           </div>
         </div>
       </div>

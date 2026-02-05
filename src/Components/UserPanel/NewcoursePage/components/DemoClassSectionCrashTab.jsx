@@ -20,9 +20,9 @@ function DemoClassSectionCrashTab({
   resendError,
   requestBatchError,
   onRequestClick,
-  crashCourse,      
-  isCourseLoading,  
-  courseError,      
+  crashCourse,
+  isCourseLoading,
+  courseError,
   resetLiveSubmitting,
 }) {
   // No parsing — direct backend content with fallback
@@ -55,8 +55,8 @@ What's Included:
     <div className={styles.dcgrid}>
       <div>
         <div className={styles.dcrequestImage}>
-                              <img src="/crash-course.png" alt="Student" />
-                            </div>
+          <img src="/crash-course.png" alt="Student" />
+        </div>
         <div className={styles.dcslots}>
           {scheduleLoading && (
             <div className={styles.dcslot}>
@@ -125,20 +125,20 @@ What's Included:
                     time
                   </p>
 
-                 <button
-  className={styles.dclink}
-  disabled={isSubmitting || isRequestBatchLoading || isProfileLoading}
-  onClick={() => {
-    if (isSubmitting || isRequestBatchLoading) return;
+                  <button
+                    className={styles.dclink}
+                    disabled={isSubmitting || isRequestBatchLoading || isProfileLoading}
+                    onClick={() => {
+                      if (isSubmitting || isRequestBatchLoading) return;
 
-    setIsSubmitting(true);
-    onRequestClick();
-  }}
->
-  {isSubmitting || isRequestBatchLoading
-    ? "Submitting..."
-    : "Request Batch"}
-</button>
+                      setIsSubmitting(true);
+                      onRequestClick();
+                    }}
+                  >
+                    {isSubmitting || isRequestBatchLoading
+                      ? "Submitting..."
+                      : "Request Batch"}
+                  </button>
 
                   {enrollSuccessMessage && (
                     <p style={{ color: "green", fontSize: "14px", marginTop: "6px" }}>
@@ -294,21 +294,21 @@ What's Included:
             <div className={styles.dcinfosubdescription}>Fast Track Batch</div>
           </div>
         </div>
-{isCourseLoading ? (
-  <div
-    className={styles.dcinfotext}
-    // style={{
-    //   fontSize: "14px",
-    //   color: "#374151",
-    //   lineHeight: "1.5",
-    // }}
-  >
-    Loading crash course details...
-  </div>
-) : (
- <div className={styles.dcinfotext}>
-  <style>
-    {`
+        {isCourseLoading ? (
+          <div
+            className={styles.dcinfotext}
+          // style={{
+          //   fontSize: "14px",
+          //   color: "#374151",
+          //   lineHeight: "1.5",
+          // }}
+          >
+            Loading crash course details...
+          </div>
+        ) : (
+          <div className={styles.dcinfotext}>
+            <style>
+              {`
       .crashHtml h1,
       .crashHtml h2,
       .crashHtml h3,
@@ -348,23 +348,23 @@ What's Included:
         font-weight: 700 !important;
       }
     `}
-  </style>
+            </style>
 
-  {crashCourse && crashCourse.trim() ? (
-    <div
-      className="crashHtml"
-      dangerouslySetInnerHTML={{ __html: crashCourse }}
-    />
-  ) : (
-    <p style={{ margin: 0 }}>
-      Join real-time instructor-led sessions from anywhere. This mode includes
-      interactive classes, hands-on exercises, and live Q&amp;A to ensure
-      in-depth learning.
-    </p>
-  )}
-</div>
+            {crashCourse && crashCourse.trim() ? (
+              <div
+                className="crashHtml"
+                dangerouslySetInnerHTML={{ __html: crashCourse }}
+              />
+            ) : (
+              <p style={{ margin: 0 }}>
+                Join real-time instructor-led sessions from anywhere. This mode includes
+                interactive classes, hands-on exercises, and live Q&amp;A to ensure
+                in-depth learning.
+              </p>
+            )}
+          </div>
 
-)}
+        )}
 
       </aside>
     </div>

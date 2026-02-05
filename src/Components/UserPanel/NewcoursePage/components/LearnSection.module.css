@@ -720,10 +720,14 @@
   }
 
   .tabContainer {
-    flex-direction: column;
     border-radius: 16px;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
   }
-
+.tabContainer::-webkit-scrollbar {
+  display: none;
+}
   .tab {
     padding: 16px 24px;
     font-size: 16px;
@@ -803,8 +807,8 @@
 
   /* Tabs */
   .tabContainer {
-    background: none;
-    box-shadow: none;
+    background: none !important;
+    box-shadow: none !important;
     gap: 10px;
   }
 
@@ -816,7 +820,7 @@
     border-radius: 14px;
     color: #000;
     flex: 0 0 auto;
-    width: 100%;
+    width: 250px;
     border: 2px solid transparent;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
   }

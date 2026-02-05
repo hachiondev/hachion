@@ -27,7 +27,7 @@ const RefundPolicy = () => {
                 {/* Main Content */}
                 <div className='refund-content container'>
                     <header className='refund-title-section'>
-                        <h1 className='refund-main-title'>Refund Policy</h1>
+                        <h1 className='refund-main-title'> Refund Policy</h1>
                     </header>
 
                     {/* Main Refund Content */}
@@ -90,16 +90,6 @@ const RefundPolicy = () => {
                                     </ul>
                                 </div>
                             </div>
-                        </div>
-
-                        {/* Important Notes */}
-                        <div className='important-notes'>
-                            <h3 className='notes-title'>Important Notes:</h3>
-                            <ul className='notes-list'>
-                                <li>All refund requests must be submitted in writing to <a href="mailto:support@hachion.co">support@hachion.co</a></li>
-                                <li>Refund eligibility is determined based on the date the written request is received</li>
-                                <li>Processing times may vary depending on your payment method and financial institution</li>
-                            </ul>
                         </div>
                     </section>
 

@@ -8,6 +8,7 @@ import { saveRedirectUrl } from "../../../../redirectAfterLogin";
 import { useResendLiveClassEnrollEmail } from "../../../../Api/hooks/CourseApi/useResendLiveClassEnrollEmail";
 import LoginModal from "../../Common/Loginmodal";
 import { useInstallmentStatus } from "../../../../Api/hooks/CourseApi/useInstallmentStatus";
+import axios from "axios";
 
 
 function DemoClassSectionLiveTab({
@@ -64,8 +65,16 @@ What's Included:
       ? checkedSessions
       : selectedGroup?.sessions || [];
 
+  // const { data: installmentStatusData, isLoading: installmentStatusLoading } =
+  //   useInstallmentStatus(userProfile?.studentId, courseName);
+
+
   const { data: installmentStatusData, isLoading: installmentStatusLoading } =
-    useInstallmentStatus(userProfile?.studentId, courseName);
+  useInstallmentStatus(
+    userProfile?.studentId,
+    courseName,
+    selectedGroup?.batchId
+  );
 
   const navigate = useNavigate();
   const { mutate: resendDemoEmail } = useResendEnrollEmail();
@@ -108,35 +117,47 @@ What's Included:
     }));
   };
   const handleEnrollWithLoginCheck = async (sess) => {
-    if (isProfileLoading) return;
+  console.log("CLICK Enroll for sess:", sess);
 
-    if (!userProfile || !userProfile.studentId) {
-      onCloseRegisterPrompt && onCloseRegisterPrompt();
-      setIsSubmitting(false);
+  if (isProfileLoading) return;
 
-      saveRedirectUrl();
-      setShowRegisterPrompt(true);
-      return;
-    }
+  if (!userProfile || !userProfile.studentId) {
+    onCloseRegisterPrompt && onCloseRegisterPrompt();
+    setIsSubmitting(false);
 
-    // ✅ If LIVE DEMO → keep existing behavior (NO installment check)
-    if (sess.mode === "Live Demo") {
-      onEnrollClick(sess, {
-        email: notifyViaMap[sess.id]?.email ?? true,
-        whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
-        requestInstallment: true,
-      });
-      return;
-    }
+    saveRedirectUrl();
+    setShowRegisterPrompt(true);
+    return;
+  }
 
-    // ⏳ If installment status still loading, avoid double action
-    if (installmentStatusLoading) return;
+  try {
+    console.log("Calling checkInstallment API with:", {
+      studentId: userProfile.studentId,
+      courseName,
+      batchId: sess.batchId,
+    });
 
-    // ✅ If APPROVED → go directly to /installments
-    if (installmentStatusData?.requestStatus === "approved") {
-      const slug = courseName
-        ?.toLowerCase()
-        .replace(/\s+/g, "-");
+    const res = await axios.get(
+      "https://api.test.hachion.co/razorpay/checkInstallment",
+      {
+        params: {
+          studentId: userProfile.studentId,
+          courseName: courseName,
+          batchId: sess.batchId, // ✅ IMPORTANT: pass batchId
+        },
+      }
+    );
+
+    const installmentStatusData = res.data;
+
+    console.log("Installment API response:", installmentStatusData);
+    console.log("Clicked sess.batchId:", sess.batchId);
+
+    if (
+      installmentStatusData?.requestStatus === "approved" &&
+      installmentStatusData?.batchId === sess.batchId
+    ) {
+      const slug = courseName?.toLowerCase().replace(/\s+/g, "-");
 
       navigate(`/installments/${slug}`, {
         state: {
@@ -145,20 +166,26 @@ What's Included:
             schedule_course_name: courseName,
             courseName: courseName,
           },
-          numSelectedInstallments: installmentStatusData.numSelectedInstallments,
+          numSelectedInstallments:
+            installmentStatusData.numSelectedInstallments,
         },
       });
 
       return; // ⛔ stop normal enroll flow
     }
+  } catch (err) {
+    console.error("Error checking installment status:", err);
+    // If API fails, just continue normal enroll flow
+  }
 
-    // ✅ Else → continue EXISTING flow (NewEnrollNow)
-    onEnrollClick(sess, {
-      email: notifyViaMap[sess.id]?.email ?? true,
-      whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
-      requestInstallment: true,
-    });
-  };
+  // ✅ Else → continue EXISTING flow (NewEnrollNow)
+  onEnrollClick(sess, {
+    email: notifyViaMap[sess.id]?.email ?? true,
+    whatsapp: notifyViaMap[sess.id]?.whatsapp ?? false,
+    requestInstallment: true,
+  });
+};
+
 
 
   return (

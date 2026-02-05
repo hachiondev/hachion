@@ -105,6 +105,7 @@ const CourseDetails = () => {
   /* ---------------- LOAD STATES ---------------- */
   if (isError) return <div>Something went wrong.</div>;
   // if (isLoading || !courseData) return <Loader />;
+  
 
   return (
     <>

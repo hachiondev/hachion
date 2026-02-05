@@ -47,7 +47,7 @@ const OnlineInstallments = () => {
   const [courseData, setCourseData] = useState({
     ...(selectedBatchData || { courseName })
   });
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
 
   console.log("installments initial:", courseData);
@@ -204,27 +204,27 @@ const navigate = useNavigate();
   };
 
   useEffect(() => {
-  const user = JSON.parse(localStorage.getItem("loginuserData"));
-  const studentId = user?.studentId || localStorage.getItem("studentId"); 
+    const user = JSON.parse(localStorage.getItem("loginuserData"));
+    const studentId = user?.studentId || localStorage.getItem("studentId");
 
-  const courseName = selectedBatchData?.schedule_course_name;
-  const batchId = selectedBatchData?.batchId;
+    const courseName = selectedBatchData?.schedule_course_name;
+    const batchId = selectedBatchData?.batchId;
 
-  if (!studentId || !courseName || !batchId) return;
+    if (!studentId || !courseName || !batchId) return;
 
-  axios
-    .get("https://api.test.hachion.co/razorpay/checkbox-status", {
-      params: { studentId, courseName, batchId },
-    })
-    .then((res) => {
-      const disabledArray = Array.from({ length: res.data }, (_, i) => i + 1);
-      setPaidCheckBoxInstallment(disabledArray);
-    })
-    .catch((err) => {
-      console.error("Error fetching checkbox status:", err);
-      setPaidCheckBoxInstallment([]); 
-    });
-}, [selectedBatchData?.batchId, selectedBatchData?.schedule_course_name]);
+    axios
+      .get("https://api.test.hachion.co/razorpay/checkbox-status", {
+        params: { studentId, courseName, batchId },
+      })
+      .then((res) => {
+        const disabledArray = Array.from({ length: res.data }, (_, i) => i + 1);
+        setPaidCheckBoxInstallment(disabledArray);
+      })
+      .catch((err) => {
+        console.error("Error fetching checkbox status:", err);
+        setPaidCheckBoxInstallment([]);
+      });
+  }, [selectedBatchData?.batchId, selectedBatchData?.schedule_course_name]);
 
   const handlePayment = (installmentNo) => {
     setPaidInstallment((prev) => {
@@ -257,6 +257,11 @@ const navigate = useNavigate();
   const taxAmount = Number(courseData.tax ?? 0);
   const netPayable = discounted + 500 + taxAmount;
 
+  {/* Always top on load */ }
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [courseName]);
+
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -268,7 +273,7 @@ const navigate = useNavigate();
   }, []);
   const handlePaymentForRazorPay = async () => {
     try {
-      
+
       const amount = 1.00;
       const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
 
@@ -306,17 +311,17 @@ const navigate = useNavigate();
       if (mobile.startsWith('+91')) {
 
         const orderRes = await axios.post(
-  "https://api.test.hachion.co/razorpay/create-razorpay-order",
-  null,
-  {
-    params: {
-      amount,
-      studentId,
-      courseName,
-      batchId
-    }
-  }
-);
+          "https://api.test.hachion.co/razorpay/create-razorpay-order",
+          null,
+          {
+            params: {
+              amount,
+              studentId,
+              courseName,
+              batchId
+            }
+          }
+        );
 
         const razorpayOrder = orderRes.data;
         const razorpayOrderId = razorpayOrder.id;
@@ -350,17 +355,17 @@ const navigate = useNavigate();
               setErrorMessage("");
 
               setSuccessMessage("✅ " + captureRes.data);
-setErrorMessage("");
-navigate(`/payment/${slug}`, {
-  state: {
-    selectedBatchData: {
-      schedule_course_name: courseName,
-      batchId: batchId,
-    },
-    modeType: "installments",
-    email: user.email,
-  },
-});
+              setErrorMessage("");
+              navigate(`/payment/${slug}`, {
+                state: {
+                  selectedBatchData: {
+                    schedule_course_name: courseName,
+                    batchId: batchId,
+                  },
+                  modeType: "installments",
+                  email: user.email,
+                },
+              });
 
             } catch (error) {
               console.error("❌ Error capturing Razorpay payment:", error);
@@ -716,24 +721,24 @@ navigate(`/payment/${slug}`, {
                               <strong>{currency} {totalWithCharge.toFixed(2)}</strong>
                             </StyledTableCell>
 
-                          <StyledTableCell align="center">
-  <button
-    className="apply-btn"
-    onClick={() => handlePayment(index + 1)}
-    disabled={paidCheckBoxInstallment.includes(index + 1)}
-    style={{
-      backgroundColor: paidCheckBoxInstallment.includes(index + 1) ? "#b0b0b0" : "#0d6efd", 
-      color: "#fff",
-      border: "none",
-      padding: "6px 14px",
-      borderRadius: "20px",
-      opacity: paidCheckBoxInstallment.includes(index + 1) ? 0.7 : 1,
-      cursor: paidCheckBoxInstallment.includes(index + 1) ? "not-allowed" : "pointer",
-    }}
-  >
-    {paidCheckBoxInstallment.includes(index + 1) ? "Completed" : "Pay"}
-  </button>
-</StyledTableCell>
+                            <StyledTableCell align="center">
+                              <button
+                                className="apply-btn"
+                                onClick={() => handlePayment(index + 1)}
+                                disabled={paidCheckBoxInstallment.includes(index + 1)}
+                                style={{
+                                  backgroundColor: paidCheckBoxInstallment.includes(index + 1) ? "#b0b0b0" : "#0d6efd",
+                                  color: "#fff",
+                                  border: "none",
+                                  padding: "6px 14px",
+                                  borderRadius: "20px",
+                                  opacity: paidCheckBoxInstallment.includes(index + 1) ? 0.7 : 1,
+                                  cursor: paidCheckBoxInstallment.includes(index + 1) ? "not-allowed" : "pointer",
+                                }}
+                              >
+                                {paidCheckBoxInstallment.includes(index + 1) ? "Completed" : "Pay"}
+                              </button>
+                            </StyledTableCell>
 
                           </StyledTableRow>
                         );
@@ -820,34 +825,34 @@ navigate(`/payment/${slug}`, {
                     </TableRow>
 
                     {/* Total before discount */}
-                <TableRow>
-  <TableCell className="table-cell-left">Total</TableCell>
-  <TableCell align="right" className="table-cell-right">
-    {(() => {
-      
-      const discountAmount =
-        (Number(courseData.iamount) * Number(courseData.idiscount)) / 100;
+                    <TableRow>
+                      <TableCell className="table-cell-left">Total</TableCell>
+                      <TableCell align="right" className="table-cell-right">
+                        {(() => {
 
-      const netCourseAmount =
-        Number(courseData.iamount) - discountAmount;
+                          const discountAmount =
+                            (Number(courseData.iamount) * Number(courseData.idiscount)) / 100;
 
-      const perInstallment =
-        selectedInstallments > 0
-          ? netCourseAmount / selectedInstallments
-          : 0;
+                          const netCourseAmount =
+                            Number(courseData.iamount) - discountAmount;
 
-      
-      const installmentsTotal = perInstallment * paidInstallment.length;
+                          const perInstallment =
+                            selectedInstallments > 0
+                              ? netCourseAmount / selectedInstallments
+                              : 0;
 
-  
-      const processingFee = paidInstallment.length > 0 ? 500 : 0;
 
-      const total = installmentsTotal + processingFee;
+                          const installmentsTotal = perInstallment * paidInstallment.length;
 
-      return `${currency} ${total.toFixed(2)}`;
-    })()}
-  </TableCell>
-</TableRow>
+
+                          const processingFee = paidInstallment.length > 0 ? 500 : 0;
+
+                          const total = installmentsTotal + processingFee;
+
+                          return `${currency} ${total.toFixed(2)}`;
+                        })()}
+                      </TableCell>
+                    </TableRow>
 
 
                     {appliedDiscount && !errorMessageForCoupon && (

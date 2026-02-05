@@ -108,19 +108,42 @@ const NewCourseDetails = () => {
   const addSectionRef = (index) => (el) => {
     sectionRefs.current[index] = el;
   };
+  console.log("Course Data:", courseData); // Debug log for course data
 
   return (
-    <div>
-      <Helmet key={helmetKey}>
-        <title>{courseData?.metaTitle || "Hachion Courses"}</title>
-        <meta name="description" content={courseData?.metaDescription || "Default description"} />
-        <meta name="keywords" content={courseData?.metaKeyword || "default, keywords"} />
-        <meta property="og:title" content={courseData?.metaTitle || "Best Online IT Certification Courses"} />
-        <meta property="og:description" content={courseData?.metaDescription || "Transform your career with Hachion's Online IT Courses."} />
-        <meta property="og:image" content={courseData?.metaImage || "https://hachion.co/images/course-banner.jpg"} />
-        <meta property="og:url" content={`https://hachion.co/coursedetails/${courseName}`} />
-        <meta name="robots" content="index, follow" />
-      </Helmet>
+    <>
+      {courseData && (
+  <Helmet>
+    <title>{courseData.metaTitle}</title>
+
+    <meta
+      name="description"
+      content={courseData.metaDescription}
+    />
+
+    <meta
+      name="keywords"
+      content={courseData.metaKeyword}
+    />
+
+    <meta property="og:title" content={courseData.metaTitle} />
+    <meta
+      property="og:description"
+      content={courseData.metaDescription}
+    />
+    <meta
+      property="og:image"
+      content={courseData.metaImage}
+    />
+    <meta
+      property="og:url"
+      content={`https://hachion.co/coursedetails/${courseName}`}
+    />
+
+    <meta name="robots" content="index, follow" />
+  </Helmet>
+)}
+
       <div className="blogs-header" style={{ marginLeft: "6vw" }}>
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
@@ -182,7 +205,7 @@ const NewCourseDetails = () => {
         isOpen={showPopup}
         onClose={handleClosePopup}
       />
-    </div>
+    </>
   );
 };
 

@@ -31,13 +31,17 @@ export default function LearnSection() {
         career: false,
     });
 
-    const courseName = courseNameSlug
-        ? decodeURIComponent(courseNameSlug)
-            .replace(/[-_]+/g, " ")
-            .replace(/\s+/g, " ")
-            .trim()
-            .toLowerCase()
-        : "";
+   const courseName = courseNameSlug
+  ? decodeURIComponent(courseNameSlug)
+      .replace(/---+/g, " - ")
+      .replace(/\b([a-zA-Z]{2,3})-(\d{3})\b/g, "$1@@$2")
+      .replace(/[-_]+/g, " ")
+      .replace(/@@/g, "-")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase()
+  : "";
+
 
     const { data: course } = useCourseByName(courseName);
     const { data: allTools = [], isLoading } = useToolsByCourse(courseName);

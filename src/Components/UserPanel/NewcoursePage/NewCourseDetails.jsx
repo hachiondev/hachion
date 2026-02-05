@@ -113,36 +113,36 @@ const NewCourseDetails = () => {
   return (
     <>
       {courseData && (
-  <Helmet>
-    <title>{courseData.metaTitle}</title>
+        <Helmet>
+          <title>{courseData.metaTitle}</title>
 
-    <meta
-      name="description"
-      content={courseData.metaDescription}
-    />
+          <meta
+            name="description"
+            content={courseData.metaDescription}
+          />
 
-    <meta
-      name="keywords"
-      content={courseData.metaKeyword}
-    />
+          <meta
+            name="keywords"
+            content={courseData.metaKeyword}
+          />
 
-    <meta property="og:title" content={courseData.metaTitle} />
-    <meta
-      property="og:description"
-      content={courseData.metaDescription}
-    />
-    <meta
-      property="og:image"
-      content={courseData.metaImage}
-    />
-    <meta
-      property="og:url"
-      content={`https://hachion.co/coursedetails/${courseName}`}
-    />
+          <meta property="og:title" content={courseData.metaTitle} />
+          <meta
+            property="og:description"
+            content={courseData.metaDescription}
+          />
+          <meta
+            property="og:image"
+            content={courseData.metaImage}
+          />
+          <meta
+            property="og:url"
+            content={`https://hachion.co/coursedetails/${courseName}`}
+          />
 
-    <meta name="robots" content="index, follow" />
-  </Helmet>
-)}
+          <meta name="robots" content="index, follow" />
+        </Helmet>
+      )}
 
       <div className="blogs-header" style={{ marginLeft: "6vw" }}>
         <nav aria-label="breadcrumb">

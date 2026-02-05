@@ -96,18 +96,31 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
     navigate(`/enroll-now/${courseName}`);
   };
 
-  const rawSlug = courseName ? decodeURIComponent(courseName) : "";
+  // const rawSlug = courseName ? decodeURIComponent(courseName) : "";
 
-  const normalizeCourseSlug = (slug) =>
-    slug
+  // const normalizeCourseSlug = (slug) =>
+  //   slug
+  //     .replace(/[-_]+/g, " ")
+  //     .replace(/\s+/g, " ")
+  //     .trim()
+  //     .toLowerCase();
+
+  const courseNameForApi = courseName
+  ? decodeURIComponent(courseName)
+      .replace(/---+/g, " - ")
+      .replace(/\b([a-zA-Z]{2,3})-(\d{3})\b/g, "$1@@$2")
       .replace(/[-_]+/g, " ")
+      .replace(/@@/g, "-")
       .replace(/\s+/g, " ")
       .trim()
-      .toLowerCase();
+      .toLowerCase()
+  : "";
 
-  const courseNameForApi = rawSlug ? normalizeCourseSlug(rawSlug) : "";
+  // const courseNameForApi = rawSlug ? normalizeCourseSlug(rawSlug) : "";
 
-  const courseSlug = rawSlug ? rawSlug.toLowerCase() : "";
+  // const courseSlug = rawSlug ? rawSlug.toLowerCase() : "";
+  const courseSlug = courseNameForApi || "";
+
   const displayCourseName = courseNameForApi
     ? courseNameForApi.replace(/\w\S*/g, (txt) =>
       txt.charAt(0).toUpperCase() + txt.slice(1)

@@ -27,16 +27,27 @@ export default function FAQSection({
 }) {
   const { courseName } = useParams();
 
-  const rawSlug = courseName ? decodeURIComponent(courseName) : "";
+  // const rawSlug = courseName ? decodeURIComponent(courseName) : "";
 
-  const normalizeCourseSlug = (slug) =>
-    slug
+  // const normalizeCourseSlug = (slug) =>
+  //   slug
+  //     .replace(/[-_]+/g, " ")
+  //     .replace(/\s+/g, " ")
+  //     .trim()
+  //     .toLowerCase();
+
+  // const courseNameForApi = rawSlug ? normalizeCourseSlug(rawSlug) : "";
+
+  const courseNameForApi = courseName
+  ? decodeURIComponent(courseName)
+      .replace(/---+/g, " - ")
+      .replace(/\b([a-zA-Z]{2,3})-(\d{3})\b/g, "$1@@$2")
       .replace(/[-_]+/g, " ")
+      .replace(/@@/g, "-")
       .replace(/\s+/g, " ")
       .trim()
-      .toLowerCase();
-
-  const courseNameForApi = rawSlug ? normalizeCourseSlug(rawSlug) : "";
+      .toLowerCase()
+  : "";
 
   const {
     data: course,
@@ -47,12 +58,12 @@ export default function FAQSection({
   const [expandedTopics, setExpandedTopics] = useState({});
   const [showAll, setShowAll] = useState(false);
   const firstFaqRef = useRef(null);
+const {
+  data: faqs = [],
+  isLoading: loading,
+  isError: error,
+} = useFaqsByCourse(course?.courseName || courseNameForApi);
 
-  const {
-    data: faqs = [],
-    isLoading: loading,
-    isError: error,
-  } = useFaqsByCourse(course?.courseName);
 
   if (courseLoading || loading) {
     return (

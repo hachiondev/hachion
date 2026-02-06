@@ -8,6 +8,7 @@ import VideoModal from "./VideoModal";
 import { useNavigate, useParams } from "react-router-dom";
 import NewEnrollNow from "../../NewEnrollmentPage/NewEnrollNow";
 import { useCourseByName } from "../../../../Api/hooks/CourseApi/useCourseByName";
+import { Helmet } from "react-helmet-async";
 
 
 import { useCurrency } from "../../../../Api/hooks/CourseApi/useCurrency";
@@ -186,7 +187,21 @@ const hasYoutubeDemo = youtubeInfo.type !== null;
   const subtitle =
     stripHtml(course.aboutCourse) ||
     "Course overview coming soon.";
+const seoTitle =
+  course.metaTitle ||
+  `${course.courseName} Training Course & Certification | Hachion`;
 
+const seoDescription =
+  course.metaDescription ||
+  stripHtml(course.aboutCourse || "").slice(0, 160);
+
+const seoKeywords = course.metaKeyword || "";
+
+const canonicalUrl = `https://hachion.co/course/${encodeURIComponent(courseName)}`;
+
+const ogImage = course.courseImage
+  ? `https://api.test.hachion.co/${course.courseImage}`
+  : heroImage;
 
   const author =
     course?.defaultTrainer?.trim() || "Hachion Certified Trainer";
@@ -367,13 +382,39 @@ const price = hasValidPrice
       ? `${currency} ${Math.round(convertedTotalFee)}`
       : "Price on request";
 
+
+      
   return (
+
+    <>
+     <Helmet>
+    <title>{seoTitle}</title>
+    <meta name="description" content={seoDescription} />
+    {seoKeywords && <meta name="keywords" content={seoKeywords} />}
+
+    {/* Canonical */}
+    <link rel="canonical" href={canonicalUrl} />
+
+    {/* Open Graph */}
+    <meta property="og:title" content={seoTitle} />
+    <meta property="og:description" content={seoDescription} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+
+    {/* Twitter */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={seoTitle} />
+    <meta name="twitter:description" content={seoDescription} />
+    <meta name="twitter:image" content={ogImage} />
+  </Helmet>
     <section className={styles.bnwrap}>
       {showOfferStrip && (
         <OfferStrip
           leftText={offerLeftText}
           rightText={offerRightText}
         />
+        
       )}
 
       <div className={styles.bncardmain}>
@@ -666,5 +707,6 @@ const price = hasValidPrice
       )}
 
     </section>
+     </>
   );
 }

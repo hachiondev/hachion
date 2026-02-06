@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import RequestInstallment from "../EnrollmentPage/components/RequestInstallment";
 import { Dialog, DialogContent } from "@mui/material";
 
+
 import { useStudentDetails } from "../../../Api/hooks/CourseApi/useStudentDetails";
 import { useInstallmentStatus } from "../../../Api/hooks/CourseApi/useInstallmentStatus";
 
@@ -111,14 +112,20 @@ const isAlreadyEnrolledForBatch = enrollmentCheckResults.some(
 );
 const studentId = studentData?.studentId;
 const courseNameForInstallment = course?.courseName;
+const selectedBatchIdForEnroll =
+  selectedBatch?.sessions?.[0]?.batchId || "";
 
 const {
   data: installmentStatusData,
   isLoading: installmentStatusLoading,
-} = useInstallmentStatus(studentId, courseNameForInstallment);
+} = useInstallmentStatus(
+  studentId,
+  courseNameForInstallment,
+  selectedBatchIdForEnroll
+);
 
-    const selectedBatchIdForEnroll =
-  selectedBatch?.sessions?.[0]?.batchId || "";
+  //   const selectedBatchIdForEnroll =
+  // selectedBatch?.sessions?.[0]?.batchId || "";
 
 
   const hasInstallmentRequest =

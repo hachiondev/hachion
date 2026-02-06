@@ -3,14 +3,19 @@ import Select from 'react-select';
 import styles from './Enrollmentform.module.css';
 import { FaUser, FaPhone, FaEnvelope, FaChevronDown } from 'react-icons/fa';
 import { HiOutlineAcademicCap } from 'react-icons/hi';
-import { useAllCourses } from '../../../../Api/hooks/SitemapPageApi/useAllCourses';
+
+import { useCourses } from '../../../../Api/hooks/HomePageApi/NavbarApi/useCourses';
+
 import { useUserProfile } from "../../../../Api/hooks/CourseApi/useUserProfile";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useCourseByName } from "../../../../Api/hooks/CourseApi/useCourseByName";
 
+import { countries, getDefaultCountry } from "../../../../countryUtils";
 
-const EnrollmentForm = ({onClose}) => {
+
+
+const EnrollmentForm = ({onClose, onSuccess}) => {
 
    const { courseName: courseNameSlug } = useParams();
 
@@ -41,7 +46,8 @@ const EnrollmentForm = ({onClose}) => {
     course: null,
     feedback: '',
     remark: '',
-    countryCode: '+91',
+    countryCode: '',
+
   });
 
   const [errors, setErrors] = useState({});
@@ -49,7 +55,9 @@ const EnrollmentForm = ({onClose}) => {
   const [successMessage, setSuccessMessage] = useState("");
 
   
-  const { data: coursesData = [], isLoading: loadingCourses, error: coursesError } = useAllCourses() 
+  
+  const { data: coursesData = [], isLoading: loadingCourses, error: coursesError } = useCourses();
+
 const { data: profileData, isLoading: profileLoading, error: profileError } = useUserProfile();
 useEffect(() => {
   if (!profileData) return;
@@ -79,6 +87,41 @@ useEffect(() => {
     countryCode: countryCode ?? prev.countryCode,
   }));
 }, [profileData]);
+
+useEffect(() => {
+  
+  if (formData.countryCode && formData.countryCode !== "") return;
+
+  const detectCountry = async () => {
+    try {
+      const res = await fetch("https://api.country.is");
+      const data = await res.json();
+
+      const flag = (data?.country || "US").toUpperCase(); 
+
+      const matched = getDefaultCountry(flag) || getDefaultCountry("US");
+
+      if (matched?.code) {
+        setFormData((prev) => ({
+          ...prev,
+          countryCode: matched.code,
+        }));
+      }
+    } catch (err) {
+      console.error("Country detect failed, using default US", err);
+
+      const fallback = getDefaultCountry("US");
+      if (fallback?.code) {
+        setFormData((prev) => ({
+          ...prev,
+          countryCode: fallback.code,
+        }));
+      }
+    }
+  };
+
+  detectCountry();
+}, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -155,10 +198,11 @@ useEffect(() => {
     }
     
     return coursesData.map(course => ({
-      value: course.id || course._id || course.courseId || course.name,
-      label: course.name || course.title || course.courseName,
-      originalData: course
-    }));
+  value: course.courseName,                 
+  label: course.courseName,                 
+  originalData: course
+}));
+
   }, [coursesData]);
 
   const feedbackOptions = [
@@ -298,31 +342,12 @@ const handleSubmit = async (e) => {
   timestamp: new Date().toISOString()
 };
       await axios.post("https://api.test.hachion.co/api/webhook/enrollment", submissionData);
+setSuccessMessage("✅ Thank you! Your enquiry has been submitted. We will contact you shortly.");
 
-      setSuccessMessage("✅ Thank you! Your enquiry has been submitted. We will contact you shortly.");
+setTimeout(() => {
+  onClose();
+}, 3000);
 
-      setTimeout(() => {
-  setFormData({
-    name: "",
-    phone: "",
-    email: "",
-    course: null,
-    feedback: "",
-    remark: "",
-    countryCode: "+91",
-  });
-  setSuccessMessage("");
-}, 4000);
-
-      setFormData({
-        name: "",
-        phone: "",
-        email: "",
-        course: null,
-        feedback: "",
-        remark: "",
-        countryCode: "+91",
-      });
 
     } catch (error) {
       
@@ -500,11 +525,12 @@ const handleSubmit = async (e) => {
 
 
             {/* Submit Button */}
-           <button
+      <button
   type="submit"
-  disabled={isSubmitting || loadingCourses}
+  disabled={isSubmitting || loadingCourses || !!successMessage}
   className={styles.submitBtn}
 >
+
   {isSubmitting ? (
     <>
       <span className={styles.spinner}></span>

@@ -4,9 +4,29 @@ import styles from './Enrollmentform.module.css';
 import { FaUser, FaPhone, FaEnvelope, FaChevronDown } from 'react-icons/fa';
 import { HiOutlineAcademicCap } from 'react-icons/hi';
 import { useAllCourses } from '../../../../Api/hooks/SitemapPageApi/useAllCourses';
+import { useUserProfile } from "../../../../Api/hooks/CourseApi/useUserProfile";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { useCourseByName } from "../../../../Api/hooks/CourseApi/useCourseByName";
+
 
 const EnrollmentForm = ({onClose}) => {
-  // Countdown Timer State
+
+   const { courseName: courseNameSlug } = useParams();
+
+  const courseName = courseNameSlug
+    ? decodeURIComponent(courseNameSlug)
+        .replace(/---+/g, " - ")
+        .replace(/\b([a-zA-Z]{2,3})-(\d{3})\b/g, "$1@@$2")
+        .replace(/[-_]+/g, " ")
+        .replace(/@@/g, "-")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase()
+    : "";
+
+  const { data: course } = useCourseByName(courseName);
+  
   const [timeLeft, setTimeLeft] = useState({
     days: 4,
     hours: 23,
@@ -14,7 +34,6 @@ const EnrollmentForm = ({onClose}) => {
     seconds: 17
   });
 
-  // Form State
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -27,11 +46,40 @@ const EnrollmentForm = ({onClose}) => {
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
-  // Use course API hook if provided
+  
   const { data: coursesData = [], isLoading: loadingCourses, error: coursesError } = useAllCourses() 
+const { data: profileData, isLoading: profileLoading, error: profileError } = useUserProfile();
+useEffect(() => {
+  if (!profileData) return;
 
-  // Countdown Timer Effect
+  const profile = profileData?.data || profileData?.user || profileData || {};
+
+  let countryCode = "+91";
+  let phoneNumber = "";
+
+  const fullPhone = profile.phone || profile.mobile || profile.mobileNumber;
+
+  if (fullPhone) {
+    const match = fullPhone.match(/^(\+\d+)\s*(.*)$/);
+    if (match) {
+      countryCode = match[1];
+      phoneNumber = match[2];
+    } else {
+      phoneNumber = fullPhone;
+    }
+  }
+
+  setFormData((prev) => ({
+    ...prev,
+    name: profile.name ?? prev.name,
+    email: profile.email ?? prev.email,
+    phone: phoneNumber ?? prev.phone,
+    countryCode: countryCode ?? prev.countryCode,
+  }));
+}, [profileData]);
+
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft(prev => {
@@ -60,10 +108,43 @@ const EnrollmentForm = ({onClose}) => {
     return () => clearInterval(timer);
   }, []);
 
-  // Transform API data to react-select format
+  useEffect(() => {
+  if (!course || !coursesData || !Array.isArray(coursesData)) return;
+
+  const courseData = course?.data || course;
+
+  const apiCourseName = (
+    courseData.name ||
+    courseData.courseName ||
+    courseData.title ||
+    ""
+  ).toLowerCase().trim();
+
+  if (!apiCourseName) return;
+
+  const matchedOption = coursesData
+    .map((c) => ({
+      value: c.id || c._id || c.courseId || c.name,
+      label: c.name || c.title || c.courseName,
+      originalData: c,
+    }))
+    .find(
+      (opt) =>
+        opt.label &&
+        opt.label.toLowerCase().trim() === apiCourseName
+    );
+
+  if (matchedOption) {
+    setFormData((prev) => ({
+      ...prev,
+      course: matchedOption, 
+    }));
+  }
+}, [course, coursesData]);
+
   const courseOptions = React.useMemo(() => {
     if (!coursesData || !Array.isArray(coursesData)) {
-      // Default courses if API is not available
+      
       return [
         { value: 'web-dev', label: 'Web Development' },
         { value: 'data-science', label: 'Data Science' },
@@ -100,7 +181,6 @@ const EnrollmentForm = ({onClose}) => {
     { code: '+65', country: 'Singapore', flag: '🇸🇬' },
   ];
 
-  // Custom styles for react-select
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -117,7 +197,7 @@ const EnrollmentForm = ({onClose}) => {
     }),
       menuPortal: (base) => ({
     ...base,
-    zIndex: 99999, // 🚀 VERY IMPORTANT
+    zIndex: 99999, 
   }),
     placeholder: (provided) => ({
       ...provided,
@@ -173,77 +253,85 @@ const EnrollmentForm = ({onClose}) => {
   };
 
   const validateForm = () => {
-    const newErrors = {};
-    
-    if (!formData.name.trim()) newErrors.name = 'Name is required';
-    
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
-    }
-    
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required';
-    } else if (formData.phone.replace(/\D/g, '').length < 10) {
-      newErrors.phone = 'Phone number must be at least 10 digits';
-    }
-    
-    if (!formData.course) newErrors.course = 'Please select a course';
-    if (!formData.feedback) newErrors.feedback = 'Please select how you heard about us';
-      if (!formData.remark.trim()) {
-    newErrors.remark = 'Remark is required'; // 👈 NEW
+  const newErrors = {};
+  
+  if (!formData.name.trim()) newErrors.name = 'Name is required';
+  
+  if (!formData.email.trim()) {
+    newErrors.email = 'Email is required';
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    newErrors.email = 'Please enter a valid email';
   }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  
+  if (!formData.phone.trim()) {
+    newErrors.phone = 'Phone number is required';
+  } else if (formData.phone.replace(/\D/g, '').length < 10) {
+    newErrors.phone = 'Phone number must be at least 10 digits';
+  }
+  
+  if (!formData.course) newErrors.course = 'Please select a course';
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (validateForm()) {
-      setIsSubmitting(true);
+  if (!formData.remark.trim()) {
+    newErrors.remark = 'Remark is required'; 
+  }
+
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (validateForm()) {
+    setIsSubmitting(true);
+
+    try {
+      const fullPhone = `${formData.countryCode}${formData.phone}`;
+      const submissionData = {
+  name: formData.name,
+  email: formData.email,
+  phone: fullPhone,
+  course: formData.course.value,
+  courseId: formData.course.originalData?.id || formData.course.originalData?._id,
+  courseName: formData.course.label,
+  remark: formData.remark,
+  timestamp: new Date().toISOString()
+};
+      await axios.post("https://api.test.hachion.co/api/webhook/enrollment", submissionData);
+
+      setSuccessMessage("✅ Thank you! Your enquiry has been submitted. We will contact you shortly.");
+
+      setTimeout(() => {
+  setFormData({
+    name: "",
+    phone: "",
+    email: "",
+    course: null,
+    feedback: "",
+    remark: "",
+    countryCode: "+91",
+  });
+  setSuccessMessage("");
+}, 4000);
+
+      setFormData({
+        name: "",
+        phone: "",
+        email: "",
+        course: null,
+        feedback: "",
+        remark: "",
+        countryCode: "+91",
+      });
+
+    } catch (error) {
       
-      try {
-        const fullPhone = `${formData.countryCode}${formData.phone}`;
-        const submissionData = {
-          name: formData.name,
-          email: formData.email,
-          phone: fullPhone,
-          course: formData.course.value,
-          courseId: formData.course.originalData?.id || formData.course.originalData?._id,
-          courseName: formData.course.label,
-          feedback: formData.feedback,
-          remark: formData.remark,
-          timestamp: new Date().toISOString()
-        };
-        
-        console.log('Form submitted:', submissionData);
-        
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        alert('Thank you! Your enquiry has been submitted. We will contact you shortly.');
-        
-        // Reset form
-        setFormData({
-          name: '',
-          phone: '',
-          email: '',
-          course: null,
-          feedback: '',
-          countryCode: '+91',
-        });
-        
-      } catch (error) {
-        console.error('Form submission error:', error);
-        alert('There was an error submitting the form. Please try again.');
-      } finally {
-        setIsSubmitting(false);
-      }
+      alert("There was an error submitting the form. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
-  };
+  }
+};
 
   return (
     <div className={styles.pageContainer}>
@@ -412,30 +500,31 @@ const EnrollmentForm = ({onClose}) => {
 
 
             {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isSubmitting || loadingCourses}
-              className={styles.submitBtn}
-            >
-              {isSubmitting ? (
-                <>
-                  <span className={styles.spinner}></span>
-                  Processing...
-                </>
-              ) : (
-                <>
-                  <FaPhone className={styles.phoneIcon} />
-                  Get A Call Back
-                </>
-              )}
-            </button>
+           <button
+  type="submit"
+  disabled={isSubmitting || loadingCourses}
+  className={styles.submitBtn}
+>
+  {isSubmitting ? (
+    <>
+      <span className={styles.spinner}></span>
+      Processing...
+    </>
+  ) : (
+    <>
+      <FaPhone className={styles.phoneIcon} />
+      Get A Call Back
+    </>
+  )}
+</button>
 
-            {/* Privacy Note */}
-            {/* <div className={styles.privacyNote}>
-              <small>
-                By submitting this form, you agree to our Privacy Policy and Terms of Service.
-              </small>
-            </div> */}
+{/* ✅ Success Message */}
+{successMessage && (
+  <div style={{ marginTop: "10px", color: "green", fontWeight: "600", textAlign: "center" }}>
+    {successMessage}
+  </div>
+)}
+
           </form>
         </div>
       </div>

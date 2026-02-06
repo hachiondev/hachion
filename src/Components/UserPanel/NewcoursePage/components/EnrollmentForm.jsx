@@ -216,14 +216,14 @@ useEffect(() => {
     { value: 'Webinar or Online Event', label: 'Webinar or Online Event' }
   ];
 
-  const countryCodes = [
-    { code: '+91', country: 'India', flag: '🇮🇳' },
-    { code: '+1', country: 'USA', flag: '🇺🇸' },
-    { code: '+44', country: 'UK', flag: '🇬🇧' },
-    { code: '+61', country: 'Australia', flag: '🇦🇺' },
-    { code: '+971', country: 'UAE', flag: '🇦🇪' },
-    { code: '+65', country: 'Singapore', flag: '🇸🇬' },
-  ];
+  // const countryCodes = [
+  //   { code: '+91', country: 'India', flag: '🇮🇳' },
+  //   { code: '+1', country: 'USA', flag: '🇺🇸' },
+  //   { code: '+44', country: 'UK', flag: '🇬🇧' },
+  //   { code: '+61', country: 'Australia', flag: '🇦🇺' },
+  //   { code: '+971', country: 'UAE', flag: '🇦🇪' },
+  //   { code: '+65', country: 'Singapore', flag: '🇸🇬' },
+  // ];
 
   const customStyles = {
     control: (provided, state) => ({
@@ -433,11 +433,15 @@ setTimeout(() => {
                     onChange={(e) => setFormData({...formData, countryCode: e.target.value})}
                     className={styles.countrySelect}
                   >
-                    {countryCodes.map((country) => (
-                      <option key={country.code} value={country.code}>
-                        {country.flag} {country.code}
-                      </option>
-                    ))}
+     {countries
+  .filter((c) => c.code && c.flag)
+  .map((country) => (
+    <option key={country.flag + country.code} value={country.code}>
+      {country.flag} {country.code}
+    </option>
+  ))}
+
+
                   </select>
                   <FaChevronDown className={styles.selectArrow} />
                 </div>

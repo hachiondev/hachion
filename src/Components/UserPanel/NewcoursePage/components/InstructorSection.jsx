@@ -177,7 +177,7 @@ export default function InstructorSection({
               </p>
             </div>
             {/* ================= BOTTOM ROW ================= */}
-            <div className={styles.isbottomrow}>
+            {/* <div className={styles.isbottomrow}>
               <div className={styles.issubhead}>Experience & Credentials:</div>
               <ul className={styles.islist}>
                 {(experienceCredentialsArray.length > 0
@@ -187,7 +187,7 @@ export default function InstructorSection({
                   <li key={index}>{c}</li>
                 ))}
               </ul>
-            </div>
+            </div> */}
             {/* <div className={styles.isactions}>
             <button
                 className={cn(styles.isbtn, styles.isbtnoutline)}

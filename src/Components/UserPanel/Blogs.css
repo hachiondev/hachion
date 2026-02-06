@@ -2231,7 +2231,7 @@
 }
 
 .summary-label {
-  flex: 0 0 250px;
+  flex: 0 0 150px;
   font-weight: 500;
 }
 
@@ -3169,6 +3169,10 @@
   .join {
     font-size: 12px;
     padding: 3px 8px;
+  }
+
+  .go-home{
+    margin-bottom: 10px;
   }
 
   .workfaq-content {

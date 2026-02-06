@@ -371,6 +371,7 @@ export default function RequestInstallment() {
               </StyledTableCell>
               <StyledTableCell align='center'>S.No.</StyledTableCell>
               <StyledTableCell align='center'>Student ID</StyledTableCell>
+              <StyledTableCell align='center'>Batch ID</StyledTableCell>
               <StyledTableCell align='center'>Student Name</StyledTableCell>
               <StyledTableCell align='center'>Email</StyledTableCell>
               <StyledTableCell align="center">Mobile</StyledTableCell>
@@ -396,6 +397,7 @@ export default function RequestInstallment() {
                     {(currentPage - 1) * rowsPerPage + index + 1}
                   </StyledTableCell>
                   <StyledTableCell align="left">{row.student_ID}</StyledTableCell>
+                  <StyledTableCell align="left">{row.batch_ID}</StyledTableCell>
                   <StyledTableCell align="left">{row.userName}</StyledTableCell>
                   <StyledTableCell align="left">{row.email}</StyledTableCell>
                   <StyledTableCell align="center">{row.mobile}</StyledTableCell>

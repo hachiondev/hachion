@@ -674,7 +674,7 @@ export default function CandidateCertificate() {
                 <div className="col">
                   <label htmlFor="inputEmail4" className="form-label">Completed Date</label>
                   <input
-                    type="text"
+                    type="date"
                     id="inputState"
                     className="form-control"
                     name="completed_date"

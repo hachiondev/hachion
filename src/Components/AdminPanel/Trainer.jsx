@@ -98,7 +98,9 @@ export default function Trainer() {
   const [selectAll, setSelectAll] = useState(false);
 
   // Mandatory fields
-  const mandatoryFields = ['trainer_name', 'course_name', 'category_name', 'experience', 'designation', 'experienceCredentials', 'trainerRating', 'summary', 'profileImage'];
+  const mandatoryFields = ['trainer_name', 'course_name', 'category_name', 'experience', 'designation', 
+    // 'experienceCredentials', 
+    'trainerRating', 'summary', 'profileImage'];
 
   // Check form validity without setting state
   const checkFormValidity = () => {
@@ -728,7 +730,8 @@ export default function Trainer() {
                   </div>
                   <div className="col-md-3">
                     <label className="form-label">
-                      Experience & Credentials <span style={{ color: 'red' }}>*</span>
+                      Experience & Credentials 
+                      {/* <span style={{ color: 'red' }}>*</span> */}
                     </label>
                     <textarea
                       className="form-control"

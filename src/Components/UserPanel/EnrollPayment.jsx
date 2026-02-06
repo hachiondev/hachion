@@ -21,7 +21,7 @@ const initialValues = {
 
 const EnrollPayment = () => {
   const location = useLocation();
-  
+
 
   const {
     selectedBatchData: rawBatchData,
@@ -39,7 +39,7 @@ const EnrollPayment = () => {
     loggedUser?.email ||
     "";
 
-  
+
   const selectedBatchData = rawBatchData || {};
 
 
@@ -75,24 +75,24 @@ const EnrollPayment = () => {
     flag: 'US',
     name: 'United States',
   });
-const generateInvoiceNumber = () => {
-  if (!paymentData?.id || !paymentData?.paymentDate) return "";
+  const generateInvoiceNumber = () => {
+    if (!paymentData?.id || !paymentData?.paymentDate) return "";
 
-  
-  const courseCode = selectedBatchData.schedule_course_name
-    ?.replace(/[^A-Za-z]/g, "")
-    .toUpperCase()
-    .substring(0, 5);
 
-  
-  const date = new Date(paymentData.paymentDate);
-  const datePart =
-    String(date.getMonth() + 1).padStart(2, "0") +
-    String(date.getDate()).padStart(2, "0") +
-    date.getFullYear();
+    const courseCode = selectedBatchData.schedule_course_name
+      ?.replace(/[^A-Za-z]/g, "")
+      .toUpperCase()
+      .substring(0, 5);
 
-  return `HACH${courseCode}${datePart}-${paymentData.id}`;
-};
+
+    const date = new Date(paymentData.paymentDate);
+    const datePart =
+      String(date.getMonth() + 1).padStart(2, "0") +
+      String(date.getDate()).padStart(2, "0") +
+      date.getFullYear();
+
+    return `HACH${courseCode}${datePart}-${paymentData.id}`;
+  };
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -455,8 +455,8 @@ const generateInvoiceNumber = () => {
         studentName: studentData?.userName,
         email: studentData?.email,
         mobile: mobileNumber,
-       
-  currencyCode: currency, 
+
+        currencyCode: currency,
 
         courseName: selectedBatchData.schedule_course_name,
         courseFee: courseData?.iamount,
@@ -470,7 +470,7 @@ const generateInvoiceNumber = () => {
         balancePay: 0,
         status: "PAID",
 
-        invoiceNumber, 
+        invoiceNumber,
 
         installments: [
           {
@@ -492,20 +492,20 @@ const generateInvoiceNumber = () => {
         payload
       );
 
-      
+
     } catch (error) {
       console.error(error);
       alert("Failed to download invoice.");
     }
   };
   const handleGenerateInvoice = async () => {
-    if (isGeneratingInvoice) return; 
+    if (isGeneratingInvoice) return;
 
     try {
       setIsGeneratingInvoice(true);
       setInvoiceMessage("");
 
-     const invoiceNumber = generateInvoiceNumber();
+      const invoiceNumber = generateInvoiceNumber();
 
 
       const netAmount =
@@ -517,7 +517,7 @@ const generateInvoiceNumber = () => {
         studentName: studentData?.userName,
         email: studentData?.email,
         mobile: mobileNumber,
-currencyCode: currency, 
+        currencyCode: currency,
 
         courseName: selectedBatchData.schedule_course_name,
         courseFee: courseData?.iamount,
@@ -540,13 +540,13 @@ currencyCode: currency,
         ],
       };
 
-      
+
       await axios.post(
         "https://api.test.hachion.co/payments/generateInvoiceForOnline",
         payload
       );
 
-      
+
       setInvoiceMessage("✅ Invoice has been sent to your email.");
     } catch (err) {
       console.error(err);
@@ -735,7 +735,7 @@ currencyCode: currency,
           </p>
         </div>
         <div className="input-row">
-          <div>
+          <div className='go-home'>
             <Link to="/" className="EnrollPay-outline-btn">
               Go to Home
             </Link>

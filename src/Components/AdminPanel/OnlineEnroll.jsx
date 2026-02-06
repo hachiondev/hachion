@@ -9,11 +9,12 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { IoSearch } from "react-icons/io5";
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { RiDeleteBin6Line } from 'react-icons/ri';
+import { RiCloseCircleLine, RiDeleteBin6Line } from 'react-icons/ri';
 import AdminPagination from './AdminPagination';
 import './Admin.css';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { FaCheckCircle } from 'react-icons/fa';
 
 dayjs.extend(customParseFormat);
 
@@ -49,7 +50,7 @@ export default function OnlineEnroll() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [filteredData, setFilteredData] = useState([]);
-  
+
   // ADDED: State for checkbox selection
   const [selectedIds, setSelectedIds] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
@@ -79,10 +80,10 @@ export default function OnlineEnroll() {
       await axios.delete(`https://api.test.hachion.co/enroll/delete/${id}`);
       setEnrollData((prev) => prev.filter((item) => item.id !== id));
       setFilteredData((prev) => prev.filter((item) => item.id !== id));
-      
+
       // Remove from selectedIds if present
       setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
-      
+
       setSuccessMessage("✅ Enrollment deleted successfully.");
       setErrorMessage("");
     } catch (error) {
@@ -114,24 +115,24 @@ export default function OnlineEnroll() {
     setFilteredData(filtered);
     setCurrentPage(1); // Reset to first page
   };
-  
+
   const handleDateReset = () => {
     setStartDate(null);
     setEndDate(null);
     setFilteredData(enrollData);
     setCurrentPage(1); // Reset to first page
   };
-  
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo(0, window.scrollY);
   };
-  
+
   const handleRowsPerPageChange = (rows) => {
     setRowsPerPage(rows);
     setCurrentPage(1);
   };
-  
+
   const displayedCategories = searchedData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
@@ -167,8 +168,8 @@ export default function OnlineEnroll() {
   // ADDED: Update selectAll state when page changes
   useEffect(() => {
     const allCurrentPageIds = displayedCategories.map(enrollment => enrollment.id);
-    const allSelected = allCurrentPageIds.length > 0 && 
-                       allCurrentPageIds.every(id => selectedIds.includes(id));
+    const allSelected = allCurrentPageIds.length > 0 &&
+      allCurrentPageIds.every(id => selectedIds.includes(id));
     setSelectAll(allSelected);
   }, [currentPage, displayedCategories, selectedIds]);
 
@@ -182,7 +183,7 @@ export default function OnlineEnroll() {
     }
 
     const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'enrollment' : 'enrollments'}?`;
-    
+
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected enrollments
@@ -196,13 +197,13 @@ export default function OnlineEnroll() {
         const updatedEnrollments = enrollData.filter(item => !selectedIds.includes(item.id));
         setEnrollData(updatedEnrollments);
         setFilteredData(updatedEnrollments);
-        
+
         setSelectedIds([]);
         setSelectAll(false);
-        
+
         setSuccessMessage(`${selectedIds.length} ${selectedIds.length === 1 ? 'enrollment' : 'enrollments'} deleted successfully`);
         setErrorMessage("");
-        
+
         setTimeout(() => {
           setSuccessMessage("");
         }, 6000);
@@ -226,11 +227,11 @@ export default function OnlineEnroll() {
               <div className='category-header'>
                 <p style={{ marginBottom: 0 }}>View Online Enrollment List</p>
               </div>
-              
+
               {/* ADDED: Success and Error Messages */}
               {successMessage && <div style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</div>}
               {errorMessage && <div style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</div>}
-              
+
               <div className='date-schedule'>
                 Start Date
                 <DatePicker
@@ -253,7 +254,7 @@ export default function OnlineEnroll() {
                 <button className='filter' onClick={handleDateFilter}>Filter</button>
                 <button className="filter" onClick={handleDateReset}>Reset</button>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'row', justifyContent:'left', padding:'1.5vh', gap: '30' }}>
+              <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'left', padding: '1.5vh', gap: '30' }}>
                 <div className='entries-left'>
                   <p style={{ marginBottom: '0' }}>Show</p>
                   <div className="btn-group">
@@ -268,7 +269,7 @@ export default function OnlineEnroll() {
                   </div>
                   <p style={{ marginBottom: '0' }}>entries</p>
                 </div>
-                <div style={{ display: 'flex', justifyContent:'center', gap: '2vh' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '2vh' }}>
                   <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
                     <input
                       className="search-input"
@@ -280,12 +281,12 @@ export default function OnlineEnroll() {
                     />
                     <button className="btn-search" type="submit"><IoSearch style={{ fontSize: '2rem' }} /></button>
                   </div>
-                  
+
                   {/* ADDED: Bulk Delete Button */}
                   {selectedIds.length > 0 && (
-                    <button 
-                      type="button" 
-                      className="btn-category" 
+                    <button
+                      type="button"
+                      className="btn-category"
                       onClick={handleBulkDelete}
                       style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
                     >
@@ -297,14 +298,14 @@ export default function OnlineEnroll() {
             </div>
           </div>
         </LocalizationProvider>
-        
+
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
               <TableRow>
                 {/* ADDED: Select All Checkbox */}
                 <StyledTableCell align='center'>
-                  <Checkbox 
+                  <Checkbox
                     checked={selectAll}
                     onChange={handleSelectAll}
                     indeterminate={selectedIds.length > 0 && selectedIds.length < displayedCategories.length}
@@ -321,7 +322,7 @@ export default function OnlineEnroll() {
                 <StyledTableCell align="center">Week</StyledTableCell>
                 <StyledTableCell align="center">Time</StyledTableCell>
                 <StyledTableCell align="center">Mode</StyledTableCell>
-                <StyledTableCell align="center">Type</StyledTableCell>
+                <StyledTableCell align="center">Status</StyledTableCell>
                 <StyledTableCell align="center">Trainer</StyledTableCell>
                 <StyledTableCell align="center">Completed Date</StyledTableCell>
                 <StyledTableCell align="center">Resend email count</StyledTableCell>
@@ -334,7 +335,7 @@ export default function OnlineEnroll() {
                   <StyledTableRow key={row.id}>
                     {/* ADDED: Individual Checkbox */}
                     <StyledTableCell align="center">
-                      <Checkbox 
+                      <Checkbox
                         checked={selectedIds.includes(row.id)}
                         onChange={() => handleSelectOne(row.id)}
                       />
@@ -352,9 +353,96 @@ export default function OnlineEnroll() {
                     <StyledTableCell align="center">{row.week}</StyledTableCell>
                     <StyledTableCell align="center">{row.time}</StyledTableCell>
                     <StyledTableCell align="center">{row.mode}</StyledTableCell>
-                    <StyledTableCell align="center">{row.type}</StyledTableCell>
+                    <StyledTableCell align="center">
+                      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+                        {row.type === 'completed' || row.type === 'approved' ? (
+                          <span className="approved" style={{
+                            color: 'green',
+                            fontWeight: 'bold',
+                            padding: '4px 8px',
+                            borderRadius: '4px',
+                            backgroundColor: '#e6ffe6'
+                          }}>
+                            {row.type === 'completed' ? 'Completed' : 'Completed'} {/* Display 'Completed' for both 'completed' and 'approved' */}
+                          </span>
+                        ) : row.type === 'rejected' ? (
+                          <span className="rejected" style={{
+                            color: 'red',
+                            fontWeight: 'bold',
+                            padding: '4px 8px',
+                            borderRadius: '4px',
+                            backgroundColor: '#ffe6e6'
+                          }}>
+                            Pending
+                          </span>
+                        ) : (
+                          <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                            <span
+                              className="approve"
+                              style={{
+                                cursor: 'pointer',
+                                color: 'green',
+                                fontSize: '1.5rem',
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                              onClick={() => {
+                                const confirmed = window.confirm("Are you sure you want to approve this enrollment?");
+                                if (confirmed) {
+                                  // Update local state only (no API call as requested)
+                                  const updatedData = enrollData.map((item) =>
+                                    item.id === row.id ? { ...item, type: "approved" } : item
+                                  );
+                                  setEnrollData(updatedData);
+                                  setFilteredData(updatedData);
+
+                                  // Remove from selectedIds if present
+                                  setSelectedIds(prev => prev.filter(id => id !== row.id));
+
+                                  setSuccessMessage("✅ Enrollment approved successfully.");
+                                  setErrorMessage("");
+                                  setTimeout(() => setSuccessMessage(""), 3000);
+                                }
+                              }}
+                            >
+                              <FaCheckCircle />
+                            </span>
+                            <span
+                              className="reject"
+                              style={{
+                                cursor: 'pointer',
+                                color: 'red',
+                                fontSize: '1.5rem',
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                              onClick={() => {
+                                const confirmed = window.confirm("Are you sure you want to reject this enrollment?");
+                                if (confirmed) {
+                                  // Update local state only (no API call as requested)
+                                  const updatedData = enrollData.map((item) =>
+                                    item.id === row.id ? { ...item, type: "rejected" } : item
+                                  );
+                                  setEnrollData(updatedData);
+                                  setFilteredData(updatedData);
+
+                                  // Remove from selectedIds if present
+                                  setSelectedIds(prev => prev.filter(id => id !== row.id));
+
+                                  setSuccessMessage("❌ Enrollment rejected.");
+                                  setErrorMessage("");
+                                  setTimeout(() => setSuccessMessage(""), 3000);
+                                }
+                              }}
+                            >
+                              <RiCloseCircleLine />
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </StyledTableCell>
                     <StyledTableCell align="center">{row.trainer}</StyledTableCell>
-                    <StyledTableCell align="center">{row.completion_date ? dayjs(row.completion_date).format('MMM-DD-YYYY').toUpperCase(): ''}</StyledTableCell>
+                    <StyledTableCell align="center">{row.completion_date ? dayjs(row.completion_date).format('MMM-DD-YYYY').toUpperCase() : ''}</StyledTableCell>
                     <StyledTableCell align="center">{row.resendCount}</StyledTableCell>
                     <StyledTableCell align="center">
                       <RiDeleteBin6Line
@@ -374,10 +462,10 @@ export default function OnlineEnroll() {
             </TableBody>
           </Table>
         </TableContainer>
-        
+
         {/* REMOVED: Duplicate messages (already shown above) */}
         {/* {successMessage && <div style={{ color: "green" }}>{successMessage}</div>} */}
-        
+
         <div className='pagination-container'>
           <AdminPagination
             currentPage={currentPage}

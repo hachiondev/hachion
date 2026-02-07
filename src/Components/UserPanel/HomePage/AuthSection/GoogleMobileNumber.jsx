@@ -8,6 +8,7 @@ import { countries, getDefaultCountry } from "../../../../countryUtils";
 import LoginBanner from "../../../../Assets/loginbackground.webp";
 import { MdKeyboardArrowRight } from "react-icons/md";
 
+
 const GoogleMobileNumber = () => {
   const [mobile, setMobile] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
@@ -19,12 +20,6 @@ const GoogleMobileNumber = () => {
   const mobileInputRef = useRef(null);
   const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
 
-  function getCookie(name) {
-    const m = document.cookie.match(
-      new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()[\]\\/+^])/g, '\\$1') + '=([^;]*)')
-    );
-    return m ? decodeURIComponent(m[1]) : null;
-  }
 
   useEffect(() => {
     fetch("https://api.country.is")
@@ -66,24 +61,53 @@ const GoogleMobileNumber = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleClick = async () => {
-    if (!validateForm()) return;
-    setIsLoading(true);
+const handleClick = async () => {
+  if (isLoading) return;           
+  if (!validateForm()) return;
+  setIsLoading(true);
 
-    const sanitizedMobile = mobile.trim().replace(/^(\+)?/, "");
-    const fullMobileNumber = `${selectedCountry.code} ${sanitizedMobile}`;
+  const sanitizedMobile = mobile.trim().replace(/^(\+)?/, "");
+  const fullMobileNumber = `${selectedCountry.code} ${sanitizedMobile}`;
 
-    const userData = {
-      mobile: fullMobileNumber,
-      whatsapp: whatsapp === mobile ? fullMobileNumber : `${selectedCountry.code} ${whatsapp.trim().replace(/^(\+)?/, "")}`,
-      country: selectedCountry.name,
-    };
-
-    localStorage.setItem("registerStepFinal", JSON.stringify(userData));
-    navigate("/");
-
-    setIsLoading(false);
+  const payload = {
+    mobile: fullMobileNumber,
+    whatsapp:
+      whatsapp === mobile
+        ? fullMobileNumber
+        : `${selectedCountry.code} ${whatsapp.trim().replace(/^(\+)?/, "")}`,
+    country: selectedCountry.name,
   };
+
+  try {
+    const res = await fetch("https://api.test.hachion.co/api/v1/user/complete-signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include", 
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      let msg = "Failed to complete signup";
+      try {
+        const err = await res.json();
+        msg = err?.error || msg;
+      } catch (_) {}
+      alert(msg);
+      return;
+    }
+
+    
+    navigate("/");
+  } catch (err) {
+    console.error(err);
+    alert("Something went wrong while saving phone number");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const handleCheckboxChange = (e) => {
     setIsChecked(e.target.checked);

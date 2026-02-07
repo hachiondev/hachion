@@ -32,6 +32,7 @@ const NewCourseDetails = () => {
   const { courseName } = useParams();
   const navigate = useNavigate();
   const [helmetKey, setHelmetKey] = useState(0);
+  const isLoggedIn = !!localStorage.getItem("loginuserData");
 
   const { data: allCourses = [], isLoading } =
     useAllCourses("courseDetailsPage");
@@ -71,7 +72,11 @@ const NewCourseDetails = () => {
 
   /** ⏱️ TIME-BASED POPUP LOGIC */
   useEffect(() => {
-    if (hasShownPopup) return;
+    // ❌ Do NOT show popup if user is logged in
+    if (
+      // isLoggedIn
+      //  ||
+       hasShownPopup) return;
 
     const timer = setTimeout(() => {
       setShowPopup(true);
@@ -79,13 +84,14 @@ const NewCourseDetails = () => {
     }, POPUP_DELAY);
 
     return () => clearTimeout(timer);
-  }, [hasShownPopup]);
+  }, [isLoggedIn, hasShownPopup]);
 
   useEffect(() => {
-    // Reset popup when course changes
-    setShowPopup(false);
-    setHasShownPopup(false);
-  }, [courseName]);
+    if (!isLoggedIn) {
+      setShowPopup(false);
+      setHasShownPopup(false);
+    }
+  }, [courseName, isLoggedIn]);
 
   /** Lock body scroll */
   useEffect(() => {
@@ -108,7 +114,6 @@ const NewCourseDetails = () => {
   const addSectionRef = (index) => (el) => {
     sectionRefs.current[index] = el;
   };
-  console.log("Course Data:", courseData); // Debug log for course data
 
   return (
     <>

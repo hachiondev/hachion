@@ -213,7 +213,7 @@
   padding: 13px 16px 13px 48px;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
-  height: 40px;
+  height: 30px;
   font-size: 14px;
   color: #333;
   transition: all 0.3s ease;
@@ -254,8 +254,8 @@
   border: 2px solid #e0e0e0;
   border-right: none;
   border-radius: 8px 0 0 8px;
-  height: 40px;
-  font-size: 14px;
+  height: 30px;
+  font-size: 10px;
   background: white;
   cursor: pointer;
   appearance: none;
@@ -374,6 +374,39 @@
   font-size: 12px;
   line-height: 1.5;
 }
+
+/* Add these styles to your Enrollmentform.module.css file */
+
+.phoneInputContainer {
+  position: relative;
+  flex: 1;
+}
+
+.phoneValidationIcon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.validIcon {
+  color: #28a745; /* Green color for valid */
+  font-size: 16px;
+}
+
+.invalidIcon {
+  color: #dc3545; /* Red color for invalid */
+  font-size: 16px;
+}
+
+/* Update the phone input to have padding on the right for the icon */
+.phoneInput {
+  padding-right: 40px !important;
+}
+
 
 /* Responsive adjustments */
 @media (max-width: 480px) {

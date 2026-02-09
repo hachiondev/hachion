@@ -364,38 +364,97 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
 
   //   return `${currency} ${Math.round(safeAmount)}`;
   // };
+
+  const areAllPricesZero = () => {
+  if (!courseData) return false;
+
+  const amounts = [
+    currency === "INR" ? (courseData.itotal ?? courseData.iamount) : (courseData.total ?? courseData.amount),
+    currency === "INR" ? (courseData.ictotal ?? courseData.icamount) : (courseData.ctotal ?? courseData.camount),
+    currency === "INR" ? (courseData.isqtotal ?? courseData.isqmamount) : (courseData.sqtotal ?? courseData.sqamount),
+    currency === "INR" ? (courseData.istotal ?? courseData.isamount) : (courseData.stotal ?? courseData.samount),
+  ];
+
+  return amounts.every((a) => !a || Number(a) <= 0);
+};
+
+  // const getTabPrice = (tabKey) => {
+  //   if (!courseData) {
+  //     return { text: "Not Available", disabled: true };
+  //   }
+
+  //   let baseAmount = 0;
+
+  //   if (currency === "INR") {
+  //     if (tabKey === "live") baseAmount = courseData.itotal ?? courseData.iamount;
+  //     if (tabKey === "crash") baseAmount = courseData.ictotal ?? courseData.icamount;
+  //     if (tabKey === "mentoring") baseAmount = courseData.isqtotal ?? courseData.isqmamount;
+  //     if (tabKey === "self") baseAmount = courseData.istotal ?? courseData.isamount;
+  //   } else {
+  //     if (tabKey === "live") baseAmount = courseData.total ?? courseData.amount;
+  //     if (tabKey === "crash") baseAmount = courseData.ctotal ?? courseData.camount;
+  //     if (tabKey === "mentoring") baseAmount = courseData.sqtotal ?? courseData.sqamount;
+  //     if (tabKey === "self") baseAmount = courseData.stotal ?? courseData.samount;
+
+  //     baseAmount = baseAmount * exchangeRate;
+  //   }
+
+  //   const safeAmount = Number(baseAmount) || 0;
+
+  //   if (safeAmount <= 0) {
+  //     return { text: "Not Available", disabled: true };
+  //   }
+
+  //   return {
+  //     text: `${currency} ${Math.round(safeAmount)}`,
+  //     disabled: false,
+  //   };
+  // };
+
   const getTabPrice = (tabKey) => {
-    if (!courseData) {
-      return { text: "Not Available", disabled: true };
-    }
+  if (!courseData) {
+    return { text: "Not Available", disabled: true };
+  }
 
-    let baseAmount = 0;
+  let baseAmount = 0;
 
-    if (currency === "INR") {
-      if (tabKey === "live") baseAmount = courseData.itotal ?? courseData.iamount;
-      if (tabKey === "crash") baseAmount = courseData.ictotal ?? courseData.icamount;
-      if (tabKey === "mentoring") baseAmount = courseData.isqtotal ?? courseData.isqmamount;
-      if (tabKey === "self") baseAmount = courseData.istotal ?? courseData.isamount;
-    } else {
-      if (tabKey === "live") baseAmount = courseData.total ?? courseData.amount;
-      if (tabKey === "crash") baseAmount = courseData.ctotal ?? courseData.camount;
-      if (tabKey === "mentoring") baseAmount = courseData.sqtotal ?? courseData.sqamount;
-      if (tabKey === "self") baseAmount = courseData.stotal ?? courseData.samount;
+  if (currency === "INR") {
+    if (tabKey === "live") baseAmount = courseData.itotal ?? courseData.iamount;
+    if (tabKey === "crash") baseAmount = courseData.ictotal ?? courseData.icamount;
+    if (tabKey === "mentoring") baseAmount = courseData.isqtotal ?? courseData.isqmamount;
+    if (tabKey === "self") baseAmount = courseData.istotal ?? courseData.isamount;
+  } else {
+    if (tabKey === "live") baseAmount = courseData.total ?? courseData.amount;
+    if (tabKey === "crash") baseAmount = courseData.ctotal ?? courseData.camount;
+    if (tabKey === "mentoring") baseAmount = courseData.sqtotal ?? courseData.sqamount;
+    if (tabKey === "self") baseAmount = courseData.stotal ?? courseData.samount;
 
-      baseAmount = baseAmount * exchangeRate;
-    }
+    baseAmount = baseAmount * exchangeRate;
+  }
 
-    const safeAmount = Number(baseAmount) || 0;
+  const safeAmount = Number(baseAmount) || 0;
 
-    if (safeAmount <= 0) {
-      return { text: "Not Available", disabled: true };
-    }
+  const allZero = areAllPricesZero();
 
+  // ✅ SPECIAL RULE:
+  // If all prices are zero → enable LIVE tab only
+  if (allZero && tabKey === "live") {
     return {
-      text: `${currency} ${Math.round(safeAmount)}`,
+      text: "Not Available",
       disabled: false,
     };
+  }
+
+  if (safeAmount <= 0) {
+    return { text: "Not Available", disabled: true };
+  }
+
+  return {
+    text: `${currency} ${Math.round(safeAmount)}`,
+    disabled: false,
   };
+};
+
   useEffect(() => {
     if (!courseData || activeTab) return;
 

@@ -12,6 +12,8 @@ import { FaTwitter } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { IoIosMail } from "react-icons/io";
+import { FaYoutube } from "react-icons/fa";
+
 
 const BlogDetails = () => {
   const { category_name } = useParams();
@@ -109,13 +111,16 @@ const BlogDetails = () => {
 
   const shareLinks = {
     facebook: () =>
-      window.open(`https://www.facebook.com/sharer/sharer.php?u=${blogUrl}`, "_blank"),
+      window.open(`https://www.facebook.com/hachion.co`, "_blank"),
     twitter: () =>
-      window.open(`https://twitter.com/intent/tweet?url=${blogUrl}`, "_blank"),
+      window.open(`https://x.com/hachion_co`, "_blank"),
     linkedin: () =>
-      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${blogUrl}`, "_blank"),
+      window.open(`https://www.linkedin.com/company/hachion`, "_blank"),
     whatsapp: () =>
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(blogUrl)}`, "_blank"),
+      window.open(`https://whatsapp.com/channel/0029VbBClUlKbYMFEaRnjp28`, "_blank"),
+    youtube: () =>
+  window.open("https://www.youtube.com/@hachion", "_blank"),
+
     email: () => {
       const rawBlogUrl = window.location.href;
       const emailSubject = "Check out this blog!";
@@ -251,25 +256,43 @@ const BlogDetails = () => {
   <div className="detail-right-icon">
     <p className="share-label">Share :</p>
 
-    <FaFacebookF
-      className="social-icon facebook"
-    />
+   <FaFacebookF
+    className="social-icon facebook"
+    onClick={shareLinks.facebook}
+    style={{ cursor: "pointer" }}
+  />
 
-    <FaTwitter
-      className="social-icon twitter"
-    />
+  <FaTwitter
+    className="social-icon twitter"
+    onClick={shareLinks.twitter}
+    style={{ cursor: "pointer" }}
+  />
 
-    <FaLinkedinIn
-      className="social-icon linkedin"
-    />
+  <FaLinkedinIn
+    className="social-icon linkedin"
+    onClick={shareLinks.linkedin}
+    style={{ cursor: "pointer" }}
+  />
 
-    <IoLogoWhatsapp
-      className="social-icon whatsapp"
-    />
+  <IoLogoWhatsapp
+    className="social-icon whatsapp"
+    onClick={shareLinks.whatsapp}
+    style={{ cursor: "pointer" }}
+  />
 
-    <IoIosMail
-      className="social-icon mail"
-    />
+  <FaYoutube
+  onClick={shareLinks.youtube}
+  style={{
+    cursor: "pointer",
+    fontSize: "28px",
+    color: "#FF0000",
+    display: "inline-block",
+    marginLeft: "10px",
+    verticalAlign: "middle",
+  }}
+/>
+
+
   </div>
 </div>
 

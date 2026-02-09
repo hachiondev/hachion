@@ -42,7 +42,7 @@ const preselectedBatchId = location.state?.selectedBatchId || null;
      State
   =============================== */
   const [selectedBatch, setSelectedBatch] = useState(null);
-  const selectedMode = "Self-Paced Learning";
+  const selectedMode = "Self-Paced";
 
   const [couponCode, setCouponCode] = useState("");
   const [couponData, setCouponData] = useState(null);

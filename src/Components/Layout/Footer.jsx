@@ -36,6 +36,8 @@ const normalizeCourseNameFromSlug = (slug) => {
 const Footer = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const isCourseDetailPage = location.pathname.startsWith("/coursedetails/");
+
 
 
   const { data: trendingCourses = [], isLoading } = useTrendingData();
@@ -79,6 +81,12 @@ const Footer = () => {
     const formatted = courseName.toLowerCase().replace(/\s+/g, "-");
     navigate(`/coursedetails/${formatted}`);
   };
+
+  const showPopularSearches =
+    isCourseDetailPage &&
+    normalizedCourseName &&
+    geoKeywords.length > 0;
+
 
   return (
     <div className="footer">
@@ -180,29 +188,34 @@ const Footer = () => {
           </div>
 
         </div>
-        <hr />
+
         {/* ✅ DYNAMIC COURSE KEYWORDS (REPLACED FIRST HACHION) */}
-        <div className="footer-head">
-          {/* <p className="footer-heading">
-  {normalizedCourseName || 'Course Keywords'}
-</p> */}
-          <p className="footer-heading">Popular Searches</p>
+        {showPopularSearches && (
+          <>
+            <hr />
+            <div className="footer-head">
+              <p className="footer-heading">Popular Searches</p>
+
+              <div className="footer-column-search">
+                {geoLoading ? (
+                  <p>Loading...</p>
+                ) : (
+                  geoKeywords.map(item => (
+                    <p
+                      key={item.geoKeywordId}
+                      className="footer-content-search"
+                    >
+                      {item.geoKeywordName}
+                    </p>
+                  ))
+                )}
+              </div>
+            </div>
+          </>
 
 
-          <div className="footer-column-search">
-            {geoLoading ? (
-              <p>Loading...</p>
-            ) : geoKeywords.length > 0 ? (
-              geoKeywords.map(item => (
-                <p key={item.geoKeywordId} className="footer-content-search">
-                  {item.geoKeywordName}
-                </p>
-              ))
-            ) : (
-              <p>No keywords available</p>
-            )}
-          </div>
-        </div>
+        )}
+
       </div>
     </div>
   );

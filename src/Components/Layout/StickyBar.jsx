@@ -70,7 +70,7 @@ const StickyBar = () => {
         {/* COPYRIGHT (Desktop)     */}
         {/* ----------------------- */}
         <p className="footer-copyright-desktop">
-          © Hachion 2025. All Rights Reserved.
+          © Hachion 2026. All Rights Reserved.
         </p>
 
         {/* ----------------------- */}
@@ -136,7 +136,7 @@ const StickyBar = () => {
         {/* COPYRIGHT (Mobile)      */}
         {/* ----------------------- */}
         <p className="footer-copyright-mobile">
-          © Hachion 2025. All Rights Reserved.
+          © Hachion 2026. All Rights Reserved.
         </p>
         </div>
       </div>

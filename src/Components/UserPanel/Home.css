@@ -1755,6 +1755,7 @@
 .user-course-name {
   margin: 5px 0;
   transition: all 0.3s ease;
+  height: 45px;
 }
 
 .course-date {
@@ -3384,7 +3385,7 @@ p.footer-copyright-desktop {
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.5;
-    max-height: 3em;
+    max-height: 20px;
   }
 
   .popup-course-name {

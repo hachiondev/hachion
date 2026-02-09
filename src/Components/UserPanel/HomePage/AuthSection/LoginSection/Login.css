@@ -75,6 +75,7 @@
   margin-bottom: 16px !important;
   /* min-height: 72px; Ensure space for error message */
 }
+
 .error-field-message {
   color: #dc3545 !important;
   font-size: 12px !important;
@@ -418,8 +419,13 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* ============ INPUT GROUP STYLES ============ */
@@ -572,6 +578,7 @@
 
 /* Medium screens (768px to 1024px) */
 @media (min-width: 768px) and (max-width: 1024px) {
+
   .login,
   .login-page {
     display: flex;
@@ -606,25 +613,30 @@
   .form-control,
   .login-input {
     width: 100%;
-    font-size: 22px; /* Changed to 22px */
-    height: 56px; /* Increased for larger font */
+    font-size: 22px;
+    /* Changed to 22px */
+    height: 56px;
+    /* Increased for larger font */
     border-radius: 6px;
     margin-bottom: 15px;
   }
 
   .login-label,
   .login-field-label {
-    font-size: 20px; /* Changed to 22px */
+    font-size: 20px;
+    /* Changed to 22px */
     margin-top: 15px;
   }
 
   .login-form-heading,
   .login-continue {
-    font-size: 32px; /* Increased proportionally */
+    font-size: 32px;
+    /* Increased proportionally */
   }
 
-  .form-check-label{
-    font-size: 15px !important; /* Added */
+  .form-check-label {
+    font-size: 15px !important;
+    /* Added */
     margin-top: 0px !important;
   }
 
@@ -637,12 +649,14 @@
   }
 
   .login-link {
-    font-size: 20px; /* Increased proportionally */
+    font-size: 20px;
+    /* Increased proportionally */
   }
 
   .enter-otp {
     padding-top: 15px;
-    font-size: 24px; /* Increased proportionally */
+    font-size: 24px;
+    /* Increased proportionally */
   }
 
   .otp-verify {
@@ -651,94 +665,120 @@
 
   .error-field-message,
   .login-error-message {
-    font-size: 20px; /* Increased proportionally */
+    font-size: 20px;
+    /* Increased proportionally */
   }
 
   .login-btn,
   .primary-login-button {
-    font-size: 24px; /* Increased proportionally */
-    height: 60px; /* Increased for larger font */
+    font-size: 24px;
+    /* Increased proportionally */
+    height: 60px;
+    /* Increased for larger font */
   }
 
   .login-g-btn,
   .google-login-button {
-    font-size: 22px; /* Increased proportionally */
-    height: 60px; /* Increased for larger font */
+    font-size: 22px;
+    /* Increased proportionally */
+    height: 60px;
+    /* Increased for larger font */
   }
 
   .go-to-register,
   .account-redirect-text {
-    font-size: 20px !important; /* Increased proportionally */
+    font-size: 20px !important;
+    /* Increased proportionally */
   }
 
   .link-to-register,
   .redirect-link {
-    font-size: 20px; /* Increased proportionally */
+    font-size: 20px;
+    /* Increased proportionally */
   }
 
   .forgot-password,
   .forgot-password-link {
-    font-size: 17px !important; /* Increased proportionally */
+    font-size: 17px !important;
+    /* Increased proportionally */
   }
 
   .remember-me,
   .remember-me-checkbox {
-    font-size: 20px !important; /* Increased proportionally */
+    font-size: 20px !important;
+    /* Increased proportionally */
   }
 
   .captcha-canvas {
-    height: 50px !important; /* Increased proportionally */
+    height: 50px !important;
+    /* Increased proportionally */
   }
 
   .refresh-captcha-btn,
   .captcha-refresh-button {
-    width: 50px; /* Increased proportionally */
-    height: 50px; /* Increased proportionally */
-    font-size: 24px; /* Increased proportionally */
+    width: 50px;
+    /* Increased proportionally */
+    height: 50px;
+    /* Increased proportionally */
+    font-size: 24px;
+    /* Increased proportionally */
   }
 
   .otp-number {
-    height: 56px; /* Increased proportionally */
-    width: 80px; /* Increased proportionally */
-    font-size: 24px; /* Increased proportionally */
+    height: 56px;
+    /* Increased proportionally */
+    width: 80px;
+    /* Increased proportionally */
+    font-size: 24px;
+    /* Increased proportionally */
   }
 
   .country-dropdown {
-    font-size: 22px; /* Increased proportionally */
-    height: 58px; /* Increased proportionally */
+    font-size: 22px;
+    /* Increased proportionally */
+    height: 58px;
+    /* Increased proportionally */
   }
 
   .tag {
-    font-size: 20px; /* Increased proportionally */
+    font-size: 20px;
+    /* Increased proportionally */
   }
 
   .star,
   .required-asterisk {
-    font-size: 22px; /* Increased proportionally */
+    font-size: 22px;
+    /* Increased proportionally */
   }
 
   .checkbox-label {
-    font-size: 20px !important; /* Added */
+    font-size: 20px !important;
+    /* Added */
   }
 
   .mail-to-register {
-    font-size: 18px; /* Added */
+    font-size: 18px;
+    /* Added */
   }
 
   .spam-msg {
-    font-size: 18px; /* Added */
+    font-size: 18px;
+    /* Added */
   }
 
   .confirm-number-label {
-    font-size: 18px; /* Added */
+    font-size: 18px;
+    /* Added */
   }
 
-  .login input.form-control{
-    font-size: 20px; /* Changed to 22px */
+  .login input.form-control {
+    font-size: 20px;
+    /* Changed to 22px */
   }
 }
 
 @media (max-width: 480px) {
+
   .login,
   .login-page {
     display: flex;
@@ -775,9 +815,10 @@
 
   .login-form-heading,
   .login-continue {
-    font-size: 30px; /* Increased to 22px */
+    font-size: 30px;
+    /* Increased to 22px */
     margin-bottom: 24px;
-    text-align:left;
+    text-align: left;
     font-weight: 600;
     color: #333;
   }
@@ -790,11 +831,16 @@
     width: 100%;
   }
 
+  .expert-popup-container {
+    max-height: 90vh;
+  }
+
   .login-field-label,
   .login-label {
-    font-size: 18px; /* Increased */
+    font-size: 18px;
+    /* Increased */
     font-weight: 500;
-    margin-bottom: 8px;
+    margin-bottom: 8px !important;
     color: #333;
     display: block;
     width: 100%;
@@ -803,7 +849,8 @@
   .login-input,
   .login input.form-control {
     height: 46px !important;
-    font-size: 18px; /* Increased */
+    font-size: 18px;
+    /* Increased */
     border-radius: 8px;
     padding: 12px 16px;
   }
@@ -817,7 +864,8 @@
   .password-toggle-icon,
   .eye-icon {
     right: 16px;
-    font-size: 20px; /* Increased */
+    font-size: 20px;
+    /* Increased */
   }
 
   .captcha-canvas-wrapper {
@@ -830,17 +878,21 @@
 
   .captcha-canvas {
     width: 140px !important;
-    height: 44px !important; /* Increased */
+    height: 44px !important;
+    /* Increased */
   }
 
   .captcha-refresh-button,
   .refresh-captcha-btn {
-    width: 24px; /* Increased */
-    height: 44px; /* Increased */
-    font-size: 18px; /* Increased */
+    width: 24px;
+    /* Increased */
+    height: 44px;
+    /* Increased */
+    font-size: 18px;
+    /* Increased */
   }
 
-  .form-check-label{
+  .form-check-label {
     font-size: 18px !important;
   }
 
@@ -852,12 +904,14 @@
 
   .remember-me-checkbox,
   .remember-me {
-    font-size: 14px !important; /* Increased */
+    font-size: 14px !important;
+    /* Increased */
   }
 
   .forgot-password-link,
   .forgot-password {
-    font-size: 16px !important; /* Increased */
+    font-size: 16px !important;
+    /* Increased */
   }
 
   .checkbox-input,
@@ -867,8 +921,10 @@
 
   .primary-login-button,
   .login-btn {
-    height: 48px; /* Increased */
-    font-size: 20px; /* Increased to 18px */
+    height: 48px;
+    /* Increased */
+    font-size: 20px;
+    /* Increased to 18px */
     border-radius: 8px;
     margin: 14px 0;
     font-weight: 600;
@@ -876,8 +932,10 @@
 
   .google-login-button,
   .login-g-btn {
-    height: 48px; /* Increased */
-    font-size: 20px; /* Increased */
+    height: 48px;
+    /* Increased */
+    font-size: 20px;
+    /* Increased */
     border-radius: 8px;
     margin: 14px 0;
   }
@@ -890,7 +948,8 @@
 
   .account-redirect-text,
   .go-to-register {
-    font-size: 16px; /* Increased */
+    font-size: 16px;
+    /* Increased */
     padding: 10px 0;
     margin: 20px 0;
     text-align: center;
@@ -898,19 +957,22 @@
 
   .redirect-link,
   .link-to-register {
-    font-size: 16px; /* Increased */
+    font-size: 16px;
+    /* Increased */
   }
 
   .login-error-message,
   .error-field-message {
-    font-size: 14px; /* Increased */
+    font-size: 14px;
+    /* Increased */
     margin-top: 8px;
     margin-bottom: 6px;
   }
 
   .error-message-top,
   .error-message-bottom {
-    font-size: 14px; /* Increased */
+    font-size: 14px;
+    /* Increased */
     padding: 14px;
     margin: 18px 0;
   }
@@ -931,7 +993,8 @@
     right: 16px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 18px; /* Increased */
+    font-size: 18px;
+    /* Increased */
   }
 
   .captcha {
@@ -960,51 +1023,63 @@
 
   .otp {
     width: 100%;
-    height: 52px; /* Increased */
+    height: 52px;
+    /* Increased */
     justify-content: space-between;
     gap: 12px;
   }
 
   .otp-number {
-    height: 52px; /* Increased */
-    width: 56px; /* Adjusted */
-    font-size: 18px; /* Increased */
+    height: 52px;
+    /* Increased */
+    width: 56px;
+    /* Adjusted */
+    font-size: 18px;
+    /* Increased */
   }
 
   .country-dropdown {
     width: 120px;
-    font-size: 15px; /* Increased */
-    height: 52px; /* Increased */
+    font-size: 15px;
+    /* Increased */
+    height: 52px;
+    /* Increased */
   }
 
   .input-group,
   .form-control {
     width: 100%;
-    height: 46px; /* Increased */
-    font-size: 16px; /* Increased */
+    height: 46px;
+    /* Increased */
+    font-size: 16px;
+    /* Increased */
     border-radius: 8px;
     margin-bottom: 18px;
   }
 
   .login-link {
-    font-size: 15px; /* Increased */
+    font-size: 15px;
+    /* Increased */
   }
 
   .link-to {
-    font-size: 15px !important; /* Increased */
+    font-size: 15px !important;
+    /* Increased */
   }
 
   .go-to-login {
-    font-size: 16px; /* Increased */
+    font-size: 16px;
+    /* Increased */
     padding: 10px 0;
   }
 
   .mail-to-register {
-    font-size: 14px; /* Increased */
+    font-size: 14px;
+    /* Increased */
   }
 
-  .login-form-content > *:last-child,
-  .login-mid > *:last-child {
+  .login-form-content>*:last-child,
+  .login-mid>*:last-child {
     margin-bottom: 0;
   }
 
@@ -1024,19 +1099,25 @@
   /* Fix star alignment */
   .required-asterisk,
   .star {
-    font-size: 18px; /* Increased */
+    font-size: 18px;
+    /* Increased */
     vertical-align: middle;
   }
 
   /* Fix Google button icon alignment */
   .google-icon,
   .icon-btn-img {
-    width: 22px; /* Increased */
-    height: 22px; /* Increased */
+    width: 22px;
+    /* Increased */
+    height: 22px;
+    /* Increased */
   }
 
   /* Ensure form elements don't overflow */
-  input, button, select, textarea {
+  input,
+  button,
+  select,
+  textarea {
     max-width: 100%;
   }
 
@@ -1052,27 +1133,32 @@
 
   /* Tag text */
   .tag {
-    font-size: 14px; /* Increased */
+    font-size: 14px;
+    /* Increased */
   }
 
   /* Enter OTP text */
   .enter-otp {
-    font-size: 18px; /* Increased */
+    font-size: 18px;
+    /* Increased */
     font-weight: 600;
   }
 
   /* Spam message */
   .spam-msg {
-    font-size: 14px; /* Increased */
+    font-size: 14px;
+    /* Increased */
   }
 
   /* Confirm number label */
   .confirm-number-label {
-    font-size: 14px; /* Increased */
+    font-size: 14px;
+    /* Increased */
   }
 }
 
 @media (max-width: 375px) {
+
   .login,
   .login-page {
     display: flex;
@@ -1128,7 +1214,7 @@
   .login-label {
     font-size: 16px;
     font-weight: 500;
-    margin-bottom: 8px;
+    margin-bottom: 8px !important;
     color: #333;
     display: block;
     width: 100%;
@@ -1324,8 +1410,8 @@
     font-size: 12px;
   }
 
-  .login-form-content > *:last-child,
-  .login-mid > *:last-child {
+  .login-form-content>*:last-child,
+  .login-mid>*:last-child {
     margin-bottom: 0;
   }
 
@@ -1356,7 +1442,10 @@
   }
 
   /* Ensure form elements don't overflow */
-  input, button, select, textarea {
+  input,
+  button,
+  select,
+  textarea {
     max-width: 100%;
   }
 
@@ -1365,7 +1454,7 @@
   .login-btn,
   .google-login-button,
   .login-g-btn,
-  .captcha-refresh-button{
+  .captcha-refresh-button {
     min-height: 44px;
   }
 

@@ -420,7 +420,7 @@
   
   .countdown {
     gap: 10px;
-    bottom: 15px;
+    bottom: -35px;
   }
   
   .timeBox {
@@ -445,7 +445,7 @@
 
   .countrySelect {
     font-size: 13px;
-    padding: 9px 24px 13px 44px;
+    padding: 0px 24px 0px 44px;
   }
 
   .formInput {

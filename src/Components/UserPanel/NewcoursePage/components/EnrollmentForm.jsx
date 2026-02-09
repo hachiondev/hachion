@@ -551,7 +551,10 @@ const handleRecaptchaExpired = () => {
                     {countries
                       .filter((c) => c.code && c.flag)
                       .map((country) => (
-                        <option key={country.flag + country.code} value={country.code}>
+                        <option
+                          key={`${country.name}-${country.code}`}
+                          value={country.code}
+                        >
                           {country.flag} {country.code}
                         </option>
                       ))}

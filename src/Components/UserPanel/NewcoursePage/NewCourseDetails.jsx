@@ -174,20 +174,12 @@ const NewCourseDetails = () => {
           onAddToCart={() => console.log("Add to cart")}
         />
       </div>
-
-
       <LearnSection />
-
       <div ref={demoClassRef}>
         <DemoClassSection ref={demoClassRef} onViewDemoClass={scrollToDemoClass} />
       </div>
-
-
       <CourseCurriculum onViewDemoClass={scrollToDemoClass} />
-
       <InstructorSection />
-
-
       {/* <CareerOutcomes /> */}
       <CertificateSection />
       {/* <SuccessStories /> */}

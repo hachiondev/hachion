@@ -660,7 +660,7 @@ const Enrollment = () => {
               <Link to="/coursedetails">Courses</Link> <MdKeyboardArrowRight />
             </li>
             <li className="breadcrumb-item">
-              <Link to="/coursedetails">
+              <Link to="/coursedetails" state={{ selectedCategory: courseData?.courseCategory }}>
                 {courseData?.courseCategory}
               </Link> <MdKeyboardArrowRight />
             </li>

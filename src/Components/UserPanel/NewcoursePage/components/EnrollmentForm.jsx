@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Select from 'react-select';
 import styles from './Enrollmentform.module.css';
 import { FaUser, FaPhone, FaEnvelope, FaChevronDown, FaCheck, FaTimes } from 'react-icons/fa';
 import { HiOutlineAcademicCap } from 'react-icons/hi';
+import { AiFillCaretDown } from 'react-icons/ai';
+import Flag from 'react-world-flags';
 
 import { useCourses } from '../../../../Api/hooks/HomePageApi/NavbarApi/useCourses';
-
 import { useUserProfile } from "../../../../Api/hooks/CourseApi/useUserProfile";
+import { useTopBarApi } from '../../../../Api/hooks/HomePageApi/useTopBarApi';
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useCourseByName } from "../../../../Api/hooks/CourseApi/useCourseByName";
@@ -49,8 +51,6 @@ const EnrollmentForm = ({ onClose, onSuccess }) => {
     course: null,
     feedback: '',
     remark: '',
-    countryCode: '',
-
   });
 
   const [errors, setErrors] = useState({});
@@ -62,18 +62,62 @@ const EnrollmentForm = ({ onClose, onSuccess }) => {
   });
   const [recaptchaValue, setRecaptchaValue] = useState(null);
   const [recaptchaError, setRecaptchaError] = useState("");
-
-
+  const [isCountryMenuOpen, setIsCountryMenuOpen] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
+  const countryDropdownRef = useRef(null);
+  const mobileInputRef = useRef(null);
 
   const { data: coursesData = [], isLoading: loadingCourses, error: coursesError } = useCourses();
-
   const { data: profileData, isLoading: profileLoading, error: profileError } = useUserProfile();
+
+  // Use the useTopBarApi hook - same as in QueryFormWidget
+  const { 
+    countryCode, 
+    whatsappNumber, 
+    whatsappLink, 
+    isLoading: countryLoading,
+    error: countryError 
+  } = useTopBarApi();
+
+  // Auto-detect and set country based on API response - EXACTLY like in QueryFormWidget
+  useEffect(() => {
+    if (countryCode && !countryLoading) {
+      const matchedCountry = countries.find((c) => c.flag === countryCode);
+      if (matchedCountry) {
+        setSelectedCountry(matchedCountry);
+        // console.log(`Country auto-detected: ${matchedCountry.name} (${countryCode})`);
+      }
+    }
+  }, [countryCode, countryLoading]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (countryDropdownRef.current && !countryDropdownRef.current.contains(event.target)) {
+        setIsCountryMenuOpen(false);
+      }
+    };
+
+    if (isCountryMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isCountryMenuOpen]);
+
+  const handleCountrySelect = (country) => {
+    setSelectedCountry(country);
+    setIsCountryMenuOpen(false);
+    mobileInputRef.current?.focus();
+  };
+
   useEffect(() => {
     if (!profileData) return;
 
     const profile = profileData?.data || profileData?.user || profileData || {};
 
-    let countryCode = "+91";
     let phoneNumber = "";
 
     const fullPhone = profile.phone || profile.mobile || profile.mobileNumber;
@@ -81,8 +125,14 @@ const EnrollmentForm = ({ onClose, onSuccess }) => {
     if (fullPhone) {
       const match = fullPhone.match(/^(\+\d+)\s*(.*)$/);
       if (match) {
-        countryCode = match[1];
+        const detectedCode = match[1];
         phoneNumber = match[2];
+        
+        // Find matching country for the detected code
+        const matchedCountry = countries.find((c) => c.code === detectedCode);
+        if (matchedCountry) {
+          setSelectedCountry(matchedCountry);
+        }
       } else {
         phoneNumber = fullPhone;
       }
@@ -93,44 +143,8 @@ const EnrollmentForm = ({ onClose, onSuccess }) => {
       name: profile.name ?? prev.name,
       email: profile.email ?? prev.email,
       phone: phoneNumber ?? prev.phone,
-      countryCode: countryCode ?? prev.countryCode,
     }));
   }, [profileData]);
-
-  useEffect(() => {
-
-    if (formData.countryCode && formData.countryCode !== "") return;
-
-    const detectCountry = async () => {
-      try {
-        const res = await fetch("https://api.country.is");
-        const data = await res.json();
-
-        const flag = (data?.country || "US").toUpperCase();
-
-        const matched = getDefaultCountry(flag) || getDefaultCountry("US");
-
-        if (matched?.code) {
-          setFormData((prev) => ({
-            ...prev,
-            countryCode: matched.code,
-          }));
-        }
-      } catch (err) {
-        console.error("Country detect failed, using default US", err);
-
-        const fallback = getDefaultCountry("US");
-        if (fallback?.code) {
-          setFormData((prev) => ({
-            ...prev,
-            countryCode: fallback.code,
-          }));
-        }
-      }
-    };
-
-    detectCountry();
-  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -195,45 +209,44 @@ const EnrollmentForm = ({ onClose, onSuccess }) => {
   }, [course, coursesData]);
 
   useEffect(() => {
-  const digits = formData.phone.replace(/\D/g, '');
-  const showIcon = digits.length > 0; // Show icon only when user starts typing
-  
-  if (digits.length > 10) {
-    setPhoneValidation({
-      isValid: false,
-      showIcon: true
-    });
-    setErrors((prev) => ({
-      ...prev,
-      phone: 'invalid',
-    }));
-  } else if (digits.length === 10) {
-    setPhoneValidation({
-      isValid: true,
-      showIcon: true
-    });
-    setErrors((prev) => ({ ...prev, phone: '' }));
-  } else if (digits.length < 10 && digits.length > 0) {
-    setPhoneValidation({
-      isValid: false,
-      showIcon: true
-    });
-    setErrors((prev) => ({
-      ...prev,
-      phone: 'invalid',
-    }));
-  } else {
-    setPhoneValidation({
-      isValid: false,
-      showIcon: false
-    });
-    setErrors((prev) => ({ ...prev, phone: '' }));
-  }
-}, [formData.phone]);
+    const digits = formData.phone.replace(/\D/g, '');
+    const showIcon = digits.length > 0;
+    
+    if (digits.length > 10) {
+      setPhoneValidation({
+        isValid: false,
+        showIcon: true
+      });
+      setErrors((prev) => ({
+        ...prev,
+        phone: 'invalid',
+      }));
+    } else if (digits.length === 10) {
+      setPhoneValidation({
+        isValid: true,
+        showIcon: true
+      });
+      setErrors((prev) => ({ ...prev, phone: '' }));
+    } else if (digits.length < 10 && digits.length > 0) {
+      setPhoneValidation({
+        isValid: false,
+        showIcon: true
+      });
+      setErrors((prev) => ({
+        ...prev,
+        phone: 'invalid',
+      }));
+    } else {
+      setPhoneValidation({
+        isValid: false,
+        showIcon: false
+      });
+      setErrors((prev) => ({ ...prev, phone: '' }));
+    }
+  }, [formData.phone]);
 
   const courseOptions = React.useMemo(() => {
     if (!coursesData || !Array.isArray(coursesData)) {
-
       return [
         { value: 'web-dev', label: 'Web Development' },
         { value: 'data-science', label: 'Data Science' },
@@ -250,26 +263,6 @@ const EnrollmentForm = ({ onClose, onSuccess }) => {
     }));
 
   }, [coursesData]);
-
-  // const feedbackOptions = [
-  //   { value: 'Google / Search Engine', label: 'Google / Search Engine' },
-  //   { value: 'Social Media (FB, Insta, Linkedin..)', label: 'Social Media (FB, Insta, Linkedin..)' },
-  //   { value: 'Online Advertisement', label: 'Online Advertisement' },
-  //   { value: 'Referral from a Friend', label: 'Referral from a Friend' },
-  //   { value: 'Email Newsletter', label: 'Email Newsletter' },
-  //   { value: 'YouTube Video', label: 'YouTube Video' },
-  //   { value: 'Blog or Article', label: 'Blog or Article' },
-  //   { value: 'Webinar or Online Event', label: 'Webinar or Online Event' }
-  // ];
-
-  // const countryCodes = [
-  //   { code: '+91', country: 'India', flag: '🇮🇳' },
-  //   { code: '+1', country: 'USA', flag: '🇺🇸' },
-  //   { code: '+44', country: 'UK', flag: '🇬🇧' },
-  //   { code: '+61', country: 'Australia', flag: '🇦🇺' },
-  //   { code: '+971', country: 'UAE', flag: '🇦🇪' },
-  //   { code: '+65', country: 'Singapore', flag: '🇸🇬' },
-  // ];
 
   const customStyles = {
     control: (provided, state) => ({
@@ -328,73 +321,61 @@ const EnrollmentForm = ({ onClose, onSuccess }) => {
     }
   };
 
-  // const handleFeedbackChange = (selectedOption) => {
-  //   setFormData({ ...formData, feedback: selectedOption ? selectedOption.value : '' });
-  //   if (errors.feedback) {
-  //     setErrors({ ...errors, feedback: '' });
-  //   }
-  // };
+  const handlePhoneInput = (e) => {
+    const value = e.target.value;
 
-const handlePhoneInput = (e) => {
-  const value = e.target.value;
+    if (!/^[0-9\-\+\(\)\s]*$/.test(value)) return;
 
-  // Allow only valid phone characters
-  if (!/^[0-9\-\+\(\)\s]*$/.test(value)) return;
+    const digitsOnly = value.replace(/\D/g, '');
 
-  const digitsOnly = value.replace(/\D/g, '');
+    if (digitsOnly.length > 10) {
+      setPhoneValidation({
+        isValid: false,
+        showIcon: true
+      });
+      setErrors((prev) => ({
+        ...prev,
+        phone: 'invalid',
+      }));
+      setFormData({ ...formData, phone: value });
+      return;
+    }
 
-  // ❌ More than 10 digits → mark as invalid (input will turn red)
-  if (digitsOnly.length > 10) {
-    setPhoneValidation({
-      isValid: false,
-      showIcon: true
-    });
-    setErrors((prev) => ({
-      ...prev,
-      phone: 'invalid',
-    }));
+    if (digitsOnly.length === 10) {
+      setPhoneValidation({
+        isValid: true,
+        showIcon: true
+      });
+      setErrors((prev) => ({ ...prev, phone: '' }));
+    } else if (digitsOnly.length > 0) {
+      setPhoneValidation({
+        isValid: false,
+        showIcon: true
+      });
+      setErrors((prev) => ({
+        ...prev,
+        phone: 'invalid',
+      }));
+    } else {
+      setPhoneValidation({
+        isValid: false,
+        showIcon: false
+      });
+      setErrors((prev) => ({ ...prev, phone: '' }));
+    }
+
     setFormData({ ...formData, phone: value });
-    return;
-  }
+  };
 
-  // ✅ Clear error if valid
-  if (digitsOnly.length === 10) {
-    setPhoneValidation({
-      isValid: true,
-      showIcon: true
-    });
-    setErrors((prev) => ({ ...prev, phone: '' }));
-  } else if (digitsOnly.length > 0) {
-    setPhoneValidation({
-      isValid: false,
-      showIcon: true
-    });
-    setErrors((prev) => ({
-      ...prev,
-      phone: 'invalid',
-    }));
-  } else {
-    setPhoneValidation({
-      isValid: false,
-      showIcon: false
-    });
-    setErrors((prev) => ({ ...prev, phone: '' }));
-  }
+  const handleRecaptchaChange = (value) => {
+    setRecaptchaValue(value);
+    setRecaptchaError("");
+  };
 
-  setFormData({ ...formData, phone: value });
-};
-
-// Handle reCAPTCHA change
-const handleRecaptchaChange = (value) => {
-  setRecaptchaValue(value);
-  setRecaptchaError(""); // Clear any previous errors
-};
-
-// Handle reCAPTCHA expiration
-const handleRecaptchaExpired = () => {
-  setRecaptchaValue(null);
-  setRecaptchaError("reCAPTCHA has expired. Please verify again.");
-};
+  const handleRecaptchaExpired = () => {
+    setRecaptchaValue(null);
+    setRecaptchaError("reCAPTCHA has expired. Please verify again.");
+  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -413,13 +394,11 @@ const handleRecaptchaExpired = () => {
     } else if (phoneDigits.length < 10) {
       newErrors.phone = 'Phone number must be at least 10 digits';
     } else if (phoneDigits.length > 10) {
-      // Prevent submission if more than 10 digits
       newErrors.phone = 'Phone number cannot exceed 10 digits';
     }
 
     if (!formData.course) newErrors.course = 'Please select a course';
 
-    // Validate reCAPTCHA
     if (!recaptchaValue) {
       setRecaptchaError("Please verify that you're not a robot");
     }
@@ -435,7 +414,7 @@ const handleRecaptchaExpired = () => {
       setIsSubmitting(true);
 
       try {
-        const fullPhone = `${formData.countryCode}${formData.phone}`;
+        const fullPhone = `${selectedCountry.code} ${formData.phone}`;
         const submissionData = {
           name: formData.name,
           email: formData.email,
@@ -444,7 +423,11 @@ const handleRecaptchaExpired = () => {
           courseId: formData.course.originalData?.id || formData.course.originalData?._id,
           courseName: formData.course.label,
           remark: formData.remark || '',
-          recaptchaToken: recaptchaValue, // Add reCAPTCHA token to submission
+          country: selectedCountry.name,
+          countryCode: selectedCountry.code,
+          countryFlag: selectedCountry.flag,
+          detectedCountry: countryCode || 'Not detected',
+          recaptchaToken: recaptchaValue,
           timestamp: new Date().toISOString()
         };
         await axios.post("https://api.test.hachion.co/api/webhook/enrollment", submissionData);
@@ -454,9 +437,7 @@ const handleRecaptchaExpired = () => {
           onClose();
         }, 3000);
 
-
       } catch (error) {
-
         alert("There was an error submitting the form. Please try again.");
       } finally {
         setIsSubmitting(false);
@@ -464,7 +445,6 @@ const handleRecaptchaExpired = () => {
     }
   };
 
-  // Function to check if phone has red border
   const getPhoneBorderClass = () => {
     const digits = formData.phone.replace(/\D/g, '');
     if (digits.length > 10 || (digits.length > 0 && digits.length < 10)) {
@@ -521,7 +501,6 @@ const handleRecaptchaExpired = () => {
           <form onSubmit={handleSubmit} className={styles.form}>
             {/* Name Input */}
             <div className={styles.formGroup}>
-              {/* <label className={styles.formLabel}>Full name</label> */}
               <div className={styles.inputWithIcon}>
                 <FaUser className={styles.inputIcon} />
                 <input
@@ -537,35 +516,65 @@ const handleRecaptchaExpired = () => {
               {errors.name && <span className={styles.errorMessage}>{errors.name}</span>}
             </div>
 
-            {/* Phone Input */}
+            {/* Phone Input - Custom Built-in Dropdown */}
             <div className={styles.formGroup}>
-              {/* <label className={styles.formLabel}>Phone</label> */}
               <div className={styles.phoneInputWrapper}>
-                <div className={styles.countryCodeSelector}>
-                  <FaPhone className={styles.inputIcon} />
-                  <select
-                    value={formData.countryCode}
-                    onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
-                    className={styles.countrySelect}
-                  >
-                    {countries
-                      .filter((c) => c.code && c.flag)
-                      .map((country) => (
-                        <option
-                          key={`${country.name}-${country.code}`}
-                          value={country.code}
-                        >
-                          {country.flag} {country.code}
-                        </option>
-                      ))}
+                <div className={styles.countryDropdownWrapper} ref={countryDropdownRef}>
+                  <div className={styles.countryCodeSelector}>
+                    <FaPhone className={styles.inputIcon} />
+                    <button
+                      type="button"
+                      onClick={() => setIsCountryMenuOpen(!isCountryMenuOpen)}
+                      className={styles.countrySelectButton}
+                      disabled={isSubmitting}
+                    >
+                      <Flag
+                        code={selectedCountry.flag}
+                        className={styles.countryFlagIcon}
+                        height="14"
+                        width="20"
+                      />
+                      <span className={styles.countryCodeDisplay}>
+                        {selectedCountry.code}
+                      </span>
+                      <AiFillCaretDown className={styles.selectArrow} />
+                    </button>
 
-                  </select>
-                  <FaChevronDown className={styles.selectArrow} />
+                    {/* Custom Country Dropdown Menu */}
+                    {isCountryMenuOpen && (
+                      <div className={styles.countryMenu}>
+                        {countries.map((country) => (
+                          <div
+                            key={`${country.name}-${country.code}`}
+                            onClick={() => handleCountrySelect(country)}
+                            className={`${styles.countryMenuItem} ${
+                              country.flag === countryCode ? styles.detectedCountry : ''
+                            }`}
+                          >
+                            <Flag 
+                              code={country.flag} 
+                              className={styles.countryFlagIcon} 
+                              height="14"
+                              width="20"
+                            />
+                            <span>
+                              {country.name} ({country.code})
+                              {country.flag === countryCode && (
+                                <span style={{ color: '#28a745', marginLeft: '4px' }}>(Detected)</span>
+                              )}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
+
                 <div className={styles.phoneInputContainer}>
                   <input
                     type="tel"
                     name="phone"
+                    ref={mobileInputRef}
                     value={formData.phone}
                     onChange={handlePhoneInput}
                     onKeyDown={(e) => {
@@ -588,12 +597,10 @@ const handleRecaptchaExpired = () => {
                   )}
                 </div>
               </div>
-              {/* Removed the error message display for phone */}
             </div>
 
             {/* Email Input */}
             <div className={styles.formGroup}>
-              {/* <label className={styles.formLabel}>Email</label> */}
               <div className={styles.inputWithIcon}>
                 <FaEnvelope className={styles.inputIcon} />
                 <input
@@ -634,31 +641,16 @@ const handleRecaptchaExpired = () => {
               </div>
               {errors.course && <span className={styles.errorMessage}>{errors.course}</span>}
             </div>
-            
-            {/* Remark Section */}
-            {/* <div className={styles.formGroup}>
-              <div className={styles.inputWithIcon}>
-                <input
-                  type="text"
-                  name="remark"
-                  value={formData.remark}
-                  onChange={handleChange}
-                  className={`${styles.formInput} ${styles.remarkInput}`}
-                  placeholder="Enter your remarks (Optional)"
-                  rows={3}
-                />
-              </div>
-            </div> */}
 
             {/* Google reCAPTCHA */}
             <div className={styles.formGroup}>
               <div className={styles.recaptchaContainer}>
                 <ReCAPTCHA
-                  sitekey="6LcrZWMsAAAAACC6TICHN2N0sybzqO0uM9ozeBf-" // Replace with your actual site key
+                  sitekey="6LcrZWMsAAAAACC6TICHN2N0sybzqO0uM9ozeBf-"
                   onChange={handleRecaptchaChange}
                   onExpired={handleRecaptchaExpired}
-                  theme="light" // Can be "light" or "dark"
-                  size="normal" // Can be "normal" or "compact"
+                  theme="light"
+                  size="normal"
                 />
                 {recaptchaError && (
                   <span className={styles.errorMessage}>{recaptchaError}</span>
@@ -666,14 +658,12 @@ const handleRecaptchaExpired = () => {
               </div>
             </div>
 
-
             {/* Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting || loadingCourses || !!successMessage || formData.phone.replace(/\D/g, '').length > 10}
               className={styles.submitBtn}
             >
-
               {isSubmitting ? (
                 <>
                   <span className={styles.spinner}></span>

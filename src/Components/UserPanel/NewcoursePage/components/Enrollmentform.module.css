@@ -115,20 +115,18 @@
   width: 90%;
   z-index: 5;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    background: white;
+  background: white;
   border-radius: 8px;
 }
 
 .timeBox {
-
   padding: 12px 8px;
   text-align: center;
   flex: 1;
-  
 }
 
 .timeBox:not(:last-child) {
-    border-right: 1px solid #ccc;
+  border-right: 1px solid #ccc;
 }
 
 .timeValue {
@@ -187,8 +185,8 @@
   margin-bottom: 8px;
 }
 
-.formLabel{
-    font-size: 14px;
+.formLabel {
+  font-size: 14px;
 }
 
 /* Input with Icon */
@@ -241,15 +239,23 @@
   width: 100%;
 }
 
+/* Country Dropdown Wrapper */
+.countryDropdownWrapper {
+  position: relative;
+}
+
 .countryCodeSelector {
   position: relative;
   display: flex;
   align-items: center;
   min-width: 120px;
-  border-right: 2px solid #e0e0e0;
 }
 
-.countrySelect {
+/* Country Select Button - Custom Built-in Dropdown */
+.countrySelectButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   padding: 7px 28px 7px 48px;
   border: 2px solid #e0e0e0;
   border-right: none;
@@ -258,16 +264,30 @@
   font-size: 10px;
   background: white;
   cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
   color: #333;
+  transition: all 0.3s ease;
 }
 
-.countrySelect:focus {
+.countrySelectButton:hover {
+  border-color: #00AEEF;
+  background-color: #f8f9fa;
+}
+
+.countrySelectButton:focus {
   outline: none;
   border-color: #00AEEF;
   box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.1);
+}
+
+.countryFlagIcon {
+  border-radius: 3px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.countryCodeDisplay {
+  font-size: 10px;
+  font-weight: 600;
+  color: #333;
 }
 
 .selectArrow {
@@ -278,6 +298,60 @@
   color: #666;
   font-size: 12px;
   pointer-events: none;
+}
+
+/* Country Menu - Custom Built-in Dropdown */
+.countryMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 2px;
+  max-height: 216px;
+  overflow-y: auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e0e0e0;
+  z-index: 10001;
+  min-width: 226px;
+}
+
+.countryMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 13px;
+}
+
+.countryMenuItem:hover {
+  background-color: #f0f9ff;
+}
+
+.detectedCountry {
+  background-color: rgba(0, 174, 239, 0.08);
+  border-left: 3px solid #00AEEF;
+}
+
+/* Custom scrollbar for country menu */
+.countryMenu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.countryMenu::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.countryMenu::-webkit-scrollbar-thumb {
+  background: #00AEEF;
+  border-radius: 3px;
+}
+
+.countryMenu::-webkit-scrollbar-thumb:hover {
+  background: #0088cc;
 }
 
 .phoneInput {
@@ -375,8 +449,6 @@
   line-height: 1.5;
 }
 
-/* Add these styles to your Enrollmentform.module.css file */
-
 .phoneInputContainer {
   position: relative;
   flex: 1;
@@ -393,20 +465,18 @@
 }
 
 .validIcon {
-  color: #28a745; /* Green color for valid */
+  color: #28a745;
   font-size: 16px;
 }
 
 .invalidIcon {
-  color: #dc3545; /* Red color for invalid */
+  color: #dc3545;
   font-size: 16px;
 }
 
-/* Update the phone input to have padding on the right for the icon */
 .phoneInput {
   padding-right: 40px !important;
 }
-
 
 /* Responsive adjustments */
 @media (max-width: 480px) {
@@ -443,7 +513,7 @@
     min-width: 100px;
   }
 
-  .countrySelect {
+  .countrySelectButton {
     font-size: 13px;
     padding: 0px 24px 0px 44px;
   }
@@ -451,8 +521,14 @@
   .formInput {
     font-size: 13px;
   }
-    .remarkInput {
-    /* min-height: 70px; */
+  
+  .remarkInput {
     font-size: 13px;
+  }
+
+  .countryMenu {
+    left: 0;
+    right: 0;
+    min-width: 100%;
   }
 }

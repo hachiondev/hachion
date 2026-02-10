@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useNavigate } from "react-router-dom";
 
-import UserEnrolledCards from "../../UserEnrolledCards";
+import UserEnrolledCards from "./UserEnrolledCards";
 import "../../Dashboard.css";
 
 import { useEnrollAll } from "../../../../Api/hooks/UserDashboardApi/useEnrollAll";

@@ -24,6 +24,21 @@
   font-weight: 500;
 }
 
+.ccdownload {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border);
+    background: #fff;
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-weight: 400;
+    color: #000000;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    font-size: 14px;
+}
+
 .feeGroup {
   font-size: 16px;
   margin: 0;
@@ -706,6 +721,16 @@
   .bnofferright {
     font-size: 16px;
   }
+
+  .bnctaRow{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ccdownload{
+    padding: 3px 20px;
+    font-size: 12px;
+  }
 }
 
 @media (max-width: 375px) {
@@ -797,10 +822,10 @@
     font-size: 12px;
   }
 
-  .bnbtnprimary {
+  /* .bnbtnprimary {
     padding: 6px 20px;
     font-size: 12px;
-  }
+  } */
 
   .bnlink {
     font-size: 22px;

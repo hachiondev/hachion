@@ -15,6 +15,9 @@ import { useCurrency } from "../../../../Api/hooks/CourseApi/useCurrency";
 import { useCourseDiscountRule } from "../../../../Api/hooks/CourseApi/useCourseDiscountRule";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { saveRedirectUrl } from "../../../../redirectAfterLogin";
+import { useUserProfile } from "../../../../Api/hooks/CourseApi/useUserProfile";
+import { useCurriculumAll } from "../../../../Api/hooks/CurriculumApi/useCurriculumAll";
 
 
 dayjs.extend(customParseFormat);
@@ -23,13 +26,13 @@ function extractYoutubeInfo(url) {
 
   try {
     const parsedUrl = new URL(url);
-if (parsedUrl.searchParams.has("list")) {
-  return {
-    type: "playlist",
-    playlistId: parsedUrl.searchParams.get("list"),
-    videoId: parsedUrl.searchParams.get("v") || null, 
-  };
-}
+    if (parsedUrl.searchParams.has("list")) {
+      return {
+        type: "playlist",
+        playlistId: parsedUrl.searchParams.get("list"),
+        videoId: parsedUrl.searchParams.get("v") || null,
+      };
+    }
     const match = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})(?:\?|&|$)/);
 
     if (match) {
@@ -101,21 +104,27 @@ const stripHtml = (html) => {
 export default function CourseBanner({ onEnroll }) {
   const navigate = useNavigate();
   const { courseName } = useParams();
+  const { data: userData } = useUserProfile();
+  const email = userData?.email || null;
+  const encodedCourseName = encodeURIComponent(courseName);
+  const { data } = useCurriculumAll(encodedCourseName);
+
+  const curriculum = data?.curriculum || [];
 
   const courseNameForApi = courseName
-  ? decodeURIComponent(courseName)
+    ? decodeURIComponent(courseName)
 
-      
+
       .replace(/---+/g, " - ")
       .replace(/\b([a-zA-Z]{2,3})-(\d{3})\b/g, "$1@@$2")
 
-      
+
       .replace(/[-_]+/g, " ")
       .replace(/@@/g, "-")
       .replace(/\s+/g, " ")
       .trim()
       .toLowerCase()
-  : "";
+    : "";
 
 
 
@@ -127,7 +136,7 @@ export default function CourseBanner({ onEnroll }) {
   const { data: course, isLoading, isError } = useCourseByName(courseNameForApi);
 
   const youtubeInfo = extractYoutubeInfo(course?.youtubeLink);
-const hasYoutubeDemo = youtubeInfo.type !== null;
+  const hasYoutubeDemo = youtubeInfo.type !== null;
 
 
   const { currency, exchangeRate } = useCurrency();
@@ -187,21 +196,21 @@ const hasYoutubeDemo = youtubeInfo.type !== null;
   const subtitle =
     stripHtml(course.aboutCourse) ||
     "Course overview coming soon.";
-const seoTitle =
-  course.metaTitle ||
-  `${course.courseName} Training Course & Certification | Hachion`;
+  const seoTitle =
+    course.metaTitle ||
+    `${course.courseName} Training Course & Certification | Hachion`;
 
-const seoDescription =
-  course.metaDescription ||
-  stripHtml(course.aboutCourse || "").slice(0, 160);
+  const seoDescription =
+    course.metaDescription ||
+    stripHtml(course.aboutCourse || "").slice(0, 160);
 
-const seoKeywords = course.metaKeyword || "";
+  const seoKeywords = course.metaKeyword || "";
 
-const canonicalUrl = `https://hachion.co/course/${encodeURIComponent(courseName)}`;
+  const canonicalUrl = `https://hachion.co/course/${encodeURIComponent(courseName)}`;
 
-const ogImage = course.courseImage
-  ? `https://api.test.hachion.co/${course.courseImage}`
-  : heroImage;
+  const ogImage = course.courseImage
+    ? `https://api.test.hachion.co/${course.courseImage}`
+    : heroImage;
 
   const author =
     course?.defaultTrainer?.trim() || "Hachion Certified Trainer";
@@ -228,9 +237,9 @@ const ogImage = course.courseImage
     : "Duration will be updated soon";
 
   const baseDiscount =
-  currency === "INR"
-    ? course.idiscount ?? 0
-    : course.discount ?? 0;
+    currency === "INR"
+      ? course.idiscount ?? 0
+      : course.discount ?? 0;
 
   const effectiveDiscountPct = hasSpecialDiscount ? ruleDiscountPct : baseDiscount;
 
@@ -362,14 +371,14 @@ const ogImage = course.courseImage
     finalPrice = convertedTotalFee;
     originalPrice = convertedOriginalFee;
   }
-const hasValidPrice =
-  finalPrice !== null &&
-  finalPrice !== undefined &&
-  !isNaN(finalPrice);
+  const hasValidPrice =
+    finalPrice !== null &&
+    finalPrice !== undefined &&
+    !isNaN(finalPrice);
 
-const price = hasValidPrice
-  ? `${currency} ${Math.round(finalPrice)}`
-  : `${currency} 0`;
+  const price = hasValidPrice
+    ? `${currency} ${Math.round(finalPrice)}`
+    : `${currency} 0`;
 
   const oldPrice =
     hasSpecialDiscount && originalPrice > finalPrice
@@ -382,331 +391,375 @@ const price = hasValidPrice
       ? `${currency} ${Math.round(convertedTotalFee)}`
       : "Price on request";
 
+  // 🔥 UPDATED: Added saveRedirectUrl
+  const downloadPdf = () => {
+    if (!email) {
+      saveRedirectUrl(); // 🔥 Save URL before login prompt
+      setShowRegisterPrompt(true);
+      return;
+    }
 
-      
+    if (!curriculum.length) {
+      alert("No curriculum found.");
+      return;
+    }
+
+    // 1️⃣ Try brochure PDF first
+    const brochureItem = curriculum.find(
+      (item) => item.brochure_pdf && item.brochure_pdf.trim() !== ""
+    );
+
+    if (brochureItem) {
+      const filename = brochureItem.brochure_pdf.split("/").pop();
+      const url = `https://api.test.hachion.co/uploads/test/curriculum/pdfs/brochurepdf/${filename}`;
+      window.open(url, "_blank");
+      return;
+    }
+
+    // 2️⃣ Fallback → curriculum PDF
+    const curriculumItem = curriculum.find(
+      (item) => item.curriculum_pdf && item.curriculum_pdf.trim() !== ""
+    );
+
+    if (curriculumItem) {
+      const filename = curriculumItem.curriculum_pdf.split("/").pop();
+      const url = `https://api.test.hachion.co/uploads/test/curriculum/pdfs/${filename}`;
+      window.open(url, "_blank");
+      return;
+    }
+
+    // 3️⃣ Nothing available
+    alert("No syllabus PDF available.");
+  };
+
+
   return (
 
     <>
-     <Helmet>
-    <title>{seoTitle}</title>
-    <meta name="description" content={seoDescription} />
-    {seoKeywords && <meta name="keywords" content={seoKeywords} />}
+      <Helmet>
+        <title>{seoTitle}</title>
+        <meta name="description" content={seoDescription} />
+        {seoKeywords && <meta name="keywords" content={seoKeywords} />}
 
-    {/* Canonical */}
-    <link rel="canonical" href={canonicalUrl} />
+        {/* Canonical */}
+        <link rel="canonical" href={canonicalUrl} />
 
-    {/* Open Graph */}
-    <meta property="og:title" content={seoTitle} />
-    <meta property="og:description" content={seoDescription} />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:image" content={ogImage} />
+        {/* Open Graph */}
+        <meta property="og:title" content={seoTitle} />
+        <meta property="og:description" content={seoDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:image" content={ogImage} />
 
-    {/* Twitter */}
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={seoTitle} />
-    <meta name="twitter:description" content={seoDescription} />
-    <meta name="twitter:image" content={ogImage} />
-  </Helmet>
-    <section className={styles.bnwrap}>
-      {showOfferStrip && (
-        <OfferStrip
-          leftText={offerLeftText}
-          rightText={offerRightText}
-        />
-        
-      )}
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={seoTitle} />
+        <meta name="twitter:description" content={seoDescription} />
+        <meta name="twitter:image" content={ogImage} />
+      </Helmet>
+      <section className={styles.bnwrap}>
+        {showOfferStrip && (
+          <OfferStrip
+            leftText={offerLeftText}
+            rightText={offerRightText}
+          />
 
-      <div className={styles.bncardmain}>
-        <div className={`container ${styles.bncard}`}>
-          {/* Left */}
-          <div className={styles.bnleft}>
-            <span className={styles.bnchip}>{level}</span>
+        )}
 
-            <div className={styles.titleGroup}>
-              <h1 className={styles.bntitle}>{title}</h1>
-            </div>
+        <div className={styles.bncardmain}>
+          <div className={`container ${styles.bncard}`}>
+            {/* Left */}
+            <div className={styles.bnleft}>
+              <span className={styles.bnchip}>{level}</span>
 
-
-            <p className={styles.bnsub}>{subtitle}</p>
-
-            <p className={styles.bnby}>
-              By <strong>{author}</strong> in <strong>{categories.join(", ")}</strong>
-            </p>
-
-            <div className={styles.bnmetrics}>
-              <span className={styles.bnmetric}>
-                <span className={styles.bnmetricnogap}>
-                  {Array.from({ length: maxStars }).map((_, i) => (
-                    <Star key={i} filled={i < filledStars} />
-                  ))}
-                </span>{" "}
-                <b>{rating}</b> ({reviews} reviews)
-              </span>
-
-              <span className={styles.bnsep}></span>
-
-              <span className={styles.bnmetric}>
-                <img src={Medal} alt="icon" /> {enrolled}
-              </span>
-            </div>
-
-            <div className={styles.bnbullets}>
-              <span className={styles.bnbullet}>
-                <Clock /> {duration}
-              </span>
-              <span className={styles.bnbullet}>
-                <Certificate /> Certificate included
-              </span>
-            </div>
-
-            <div className={styles.bnpriceRow}>
-              <div className={styles.bnprice}>
-                <p className={styles.feeGroup}>
-                  <span className={styles.fee}>Fee:</span>
-                  <span className={styles.start}>Starts from </span>
-                  <span className={styles.bnpricenow}>{price}</span>
-                </p>
-
-                <div className={styles.groupdis}>
-                  {oldPrice && (
-                    <span className={styles.bnpriceold}>{oldPrice}</span>
-                  )}
-                  {/* <span className={styles.bntag}>{discount}% OFF</span> */}
-                  <span className={styles.bntag}>{effectiveDiscountPct}% OFF</span>
-                </div>
-
+              <div className={styles.titleGroup}>
+                <h1 className={styles.bntitle}>{title}</h1>
               </div>
 
-              <div className={styles.bnctaRow}>
-                <button
-                  className={cn(styles.bnbtn, styles.bnbtnprimary)}
-                  onClick={onEnroll}
-                >
-                  Enroll Now - Start Learning
-                </button>
 
-                {/* <button
+              <p className={styles.bnsub}>{subtitle}</p>
+
+              <p className={styles.bnby}>
+                By <strong>{author}</strong> in <strong>{categories.join(", ")}</strong>
+              </p>
+
+              <div className={styles.bnmetrics}>
+                <span className={styles.bnmetric}>
+                  <span className={styles.bnmetricnogap}>
+                    {Array.from({ length: maxStars }).map((_, i) => (
+                      <Star key={i} filled={i < filledStars} />
+                    ))}
+                  </span>{" "}
+                  <b>{rating}</b> ({reviews} reviews)
+                </span>
+
+                <span className={styles.bnsep}></span>
+
+                <span className={styles.bnmetric}>
+                  <img src={Medal} alt="icon" /> {enrolled}
+                </span>
+              </div>
+
+              <div className={styles.bnbullets}>
+                <span className={styles.bnbullet}>
+                  <Clock /> {duration}
+                </span>
+                <span className={styles.bnbullet}>
+                  <Certificate /> Certificate included
+                </span>
+              </div>
+
+              <div className={styles.bnpriceRow}>
+                <div className={styles.bnprice}>
+                  <p className={styles.feeGroup}>
+                    <span className={styles.fee}>Fee:</span>
+                    <span className={styles.start}>Starts from </span>
+                    <span className={styles.bnpricenow}>{price}</span>
+                  </p>
+
+                  <div className={styles.groupdis}>
+                    {oldPrice && (
+                      <span className={styles.bnpriceold}>{oldPrice}</span>
+                    )}
+                    {/* <span className={styles.bntag}>{discount}% OFF</span> */}
+                    <span className={styles.bntag}>{effectiveDiscountPct}% OFF</span>
+                  </div>
+
+                </div>
+
+                <div className={styles.bnctaRow}>
+                  <button
+                    className={cn(styles.bnbtn, styles.bnbtnprimary)}
+                    onClick={onEnroll}
+                  >
+                    Enroll Now - Start Learning
+                  </button>
+
+                  <button className={styles.ccdownload} onClick={downloadPdf}>
+                    <img src="/Download.png" alt="Download" height={24} />Download Curriculum
+                  </button>
+
+                  {/* <button
                   className={styles.bnlink}
                   onClick={() => setShowLoginRequired(true)}
                 >
                   Add to Cart
                 </button> */}
-              </div>
+                </div>
 
-              {/* <div className={styles.bnnote}>
+                {/* <div className={styles.bnnote}>
                 • Lifetime access • EMI starting at $29/month
               </div> */}
-            </div>
-          </div>
-
-          {/* Right */}
-          <div className={styles.bnright}>
-            <div className={styles.bnhero}>
-           <img
-  src={
-    youtubeInfo.type === "video"
-      ? `https://img.youtube.com/vi/${youtubeInfo.videoId}/hqdefault.jpg`
-      : youtubeInfo.type === "playlist" && youtubeInfo.videoId
-      ? `https://img.youtube.com/vi/${youtubeInfo.videoId}/hqdefault.jpg`
-      : heroImage
-  }
-  alt="Course preview"
-/>
-
-
-
-              {hasYoutubeDemo && (
-              <button
-  className={styles.bnplay}
-  aria-label="Watch demo video"
-  onClick={() => {
-    if (youtubeInfo.type === "playlist") {
-    
-      window.open(course.youtubeLink, "_blank", "noopener,noreferrer");
-    } else {
-    
-      setShowVideo(true);
-    }
-  }}
->
-  <Play />
-</button>
-
-              )}
-
-              <div className={styles.bnherotext}>
-                {hasYoutubeDemo ? "Watch Demo Video" : "Demo video coming soon"}
               </div>
+            </div>
 
-              <div className={styles.bnstats}>
-                <div className={styles.bnstat}>
-                  <div
-                    className={cn(styles.bnstatval, styles.bnstatvalBlue)}
-                  >
-                    {course.numberOfClasses || 12}
-                  </div>
-                  <div className={styles.bnstatlabel}>Classes</div>
-                </div>
-                <div className={styles.bnstat}>
-                  <div
-                    className={cn(styles.bnstatval, styles.bnstatvalGreen)}
-                  >
-                    {course.numberOfProjects || 0}
+            {/* Right */}
+            <div className={styles.bnright}>
+              <div className={styles.bnhero}>
+                <img
+                  src={
+                    youtubeInfo.type === "video"
+                      ? `https://img.youtube.com/vi/${youtubeInfo.videoId}/hqdefault.jpg`
+                      : youtubeInfo.type === "playlist" && youtubeInfo.videoId
+                        ? `https://img.youtube.com/vi/${youtubeInfo.videoId}/hqdefault.jpg`
+                        : heroImage
+                  }
+                  alt="Course preview"
+                />
 
-                  </div>
-                  <div className={styles.bnstatlabel}>Projects</div>
-                </div>
-                <div className={styles.bnstat}>
-                  <div
-                    className={cn(styles.bnstatval, styles.bnstatvalPurple)}
+
+
+                {hasYoutubeDemo && (
+                  <button
+                    className={styles.bnplay}
+                    aria-label="Watch demo video"
+                    onClick={() => {
+                      if (youtubeInfo.type === "playlist") {
+
+                        window.open(course.youtubeLink, "_blank", "noopener,noreferrer");
+                      } else {
+
+                        setShowVideo(true);
+                      }
+                    }}
                   >
-                    24/7
+                    <Play />
+                  </button>
+
+                )}
+
+                <div className={styles.bnherotext}>
+                  {hasYoutubeDemo ? "Watch Demo Video" : "Demo video coming soon"}
+                </div>
+
+                <div className={styles.bnstats}>
+                  <div className={styles.bnstat}>
+                    <div
+                      className={cn(styles.bnstatval, styles.bnstatvalBlue)}
+                    >
+                      {course.numberOfClasses || 12}
+                    </div>
+                    <div className={styles.bnstatlabel}>Classes</div>
                   </div>
-                  <div className={styles.bnstatlabel}>Support</div>
+                  <div className={styles.bnstat}>
+                    <div
+                      className={cn(styles.bnstatval, styles.bnstatvalGreen)}
+                    >
+                      {course.numberOfProjects || 0}
+
+                    </div>
+                    <div className={styles.bnstatlabel}>Projects</div>
+                  </div>
+                  <div className={styles.bnstat}>
+                    <div
+                      className={cn(styles.bnstatval, styles.bnstatvalPurple)}
+                    >
+                      24/7
+                    </div>
+                    <div className={styles.bnstatlabel}>Support</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {showLoginRequired && (
-        <LoginRequired
-          title="Login Required"
-          subtitle="To add items to cart please Login"
-          onCancel={() => setShowLoginRequired(false)}
-          onLogin={() => setShowLoginRequired(false)}
-        />
-      )}
+        {showLoginRequired && (
+          <LoginRequired
+            title="Login Required"
+            subtitle="To add items to cart please Login"
+            onCancel={() => setShowLoginRequired(false)}
+            onLogin={() => setShowLoginRequired(false)}
+          />
+        )}
 
-      {showEnroll && (
-        <NewEnrollNow
-          courseName={course.courseName}
-          totalAmount={price}
-          onClose={() => setShowEnroll(false)}
-          onPayNow={() => setShowEnroll(false)}
-        />
-      )}
+        {showEnroll && (
+          <NewEnrollNow
+            courseName={course.courseName}
+            totalAmount={price}
+            onClose={() => setShowEnroll(false)}
+            onPayNow={() => setShowEnroll(false)}
+          />
+        )}
 
-      {showVideo && (
-       <VideoModal
-  videoSrc={
-    youtubeInfo.type === "playlist"
-      ? `https://www.youtube.com/embed/videoseries?list=${youtubeInfo.playlistId}&autoplay=1`
-      : youtubeInfo.type === "video"
-      ? `https://www.youtube.com/embed/${youtubeInfo.videoId}?autoplay=1`
-      : ""
-  }
-  isYoutube={hasYoutubeDemo}
-  onClose={() => setShowVideo(false)}
-/>
+        {showVideo && (
+          <VideoModal
+            videoSrc={
+              youtubeInfo.type === "playlist"
+                ? `https://www.youtube.com/embed/videoseries?list=${youtubeInfo.playlistId}&autoplay=1`
+                : youtubeInfo.type === "video"
+                  ? `https://www.youtube.com/embed/${youtubeInfo.videoId}?autoplay=1`
+                  : ""
+            }
+            isYoutube={hasYoutubeDemo}
+            onClose={() => setShowVideo(false)}
+          />
 
-      )}
-      {showRegisterPrompt && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            background: "rgba(0,0,0,0.55)",
-            zIndex: 9999,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        )}
+        {showRegisterPrompt && (
           <div
             style={{
-              width: "520px",
-              background: "#fff",
-              borderRadius: "12px",
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              background: "rgba(0,0,0,0.55)",
+              zIndex: 9999,
               display: "flex",
-              padding: "20px",
-              boxShadow: "0 10px 35px rgba(0,0,0,0.28)",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            {/* LEFT IMAGE */}
             <div
               style={{
-                width: "42%",
+                width: "520px",
+                background: "#fff",
+                borderRadius: "12px",
                 display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                padding: "20px",
+                boxShadow: "0 10px 35px rgba(0,0,0,0.28)",
               }}
             >
-              <img
-                src={require("../../../../Assets/loginpopup.webp")}
-                alt="login popup"
+              {/* LEFT IMAGE */}
+              <div
                 style={{
-                  width: "100%",
-                  borderRadius: "8px",
-                  objectFit: "cover",
-                  transform: "scaleX(-1)",
+                  width: "42%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
-              />
-            </div>
-
-            {/* RIGHT CONTENT */}
-            <div
-              style={{
-                width: "58%",
-                paddingLeft: "14px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <h3 style={{ margin: 0, fontSize: "20px", marginBottom: "6px" }}>
-                Please Login
-              </h3>
-
-              <p style={{ fontSize: "14px", marginBottom: "20px", color: "#555" }}>
-                Before proceeding, please login into our Hachion.
-              </p>
-
-              <div style={{ display: "flex", gap: "10px" }}>
-                <button
+              >
+                <img
+                  src={require("../../../../Assets/loginpopup.webp")}
+                  alt="login popup"
                   style={{
-                    padding: "8px 14px",
-                    borderRadius: "6px",
-                    border: "none",
-                    background: "#2563eb",
-                    color: "#fff",
-                    fontSize: "14px",
-                    cursor: "pointer",
+                    width: "100%",
+                    borderRadius: "8px",
+                    objectFit: "cover",
+                    transform: "scaleX(-1)",
                   }}
-                  onClick={() => {
-                    navigate("/login");
-                    setShowRegisterPrompt(false);
-                  }}
-                >
-                  Login
-                </button>
+                />
+              </div>
 
-                <button
-                  style={{
-                    padding: "8px 14px",
-                    background: "#f1f5f9",
-                    color: "#333",
-                    borderRadius: "6px",
-                    border: "1px solid #ccc",
-                    fontSize: "14px",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => setShowRegisterPrompt(false)}
-                >
-                  Cancel
-                </button>
+              {/* RIGHT CONTENT */}
+              <div
+                style={{
+                  width: "58%",
+                  paddingLeft: "14px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <h3 style={{ margin: 0, fontSize: "20px", marginBottom: "6px" }}>
+                  Please Login
+                </h3>
+
+                <p style={{ fontSize: "14px", marginBottom: "20px", color: "#555" }}>
+                  Before proceeding, please login into our Hachion.
+                </p>
+
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <button
+                    style={{
+                      padding: "8px 14px",
+                      borderRadius: "6px",
+                      border: "none",
+                      background: "#2563eb",
+                      color: "#fff",
+                      fontSize: "14px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      navigate("/login");
+                      setShowRegisterPrompt(false);
+                    }}
+                  >
+                    Login
+                  </button>
+
+                  <button
+                    style={{
+                      padding: "8px 14px",
+                      background: "#f1f5f9",
+                      color: "#333",
+                      borderRadius: "6px",
+                      border: "1px solid #ccc",
+                      fontSize: "14px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => setShowRegisterPrompt(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-    </section>
-     </>
+      </section>
+    </>
   );
 }

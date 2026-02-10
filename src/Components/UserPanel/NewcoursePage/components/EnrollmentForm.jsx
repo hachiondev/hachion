@@ -651,7 +651,7 @@ const handleRecaptchaExpired = () => {
             </div> */}
 
             {/* Google reCAPTCHA */}
-            {/* <div className={styles.formGroup}>
+            <div className={styles.formGroup}>
               <div className={styles.recaptchaContainer}>
                 <ReCAPTCHA
                   sitekey="6LcrZWMsAAAAACC6TICHN2N0sybzqO0uM9ozeBf-" // Replace with your actual site key
@@ -664,7 +664,7 @@ const handleRecaptchaExpired = () => {
                   <span className={styles.errorMessage}>{recaptchaError}</span>
                 )}
               </div>
-            </div> */}
+            </div>
 
 
             {/* Submit Button */}

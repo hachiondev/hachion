@@ -17,7 +17,7 @@ import { Dialog, DialogContent } from "@mui/material";
 import { useStudentDetails } from "../../../Api/hooks/CourseApi/useStudentDetails";
 import { useInstallmentStatus } from "../../../Api/hooks/CourseApi/useInstallmentStatus";
 
-import { useCheckEnrollmentForSessions } 
+import { useCheckEnrollmentForSessions }
   from "../../../Api/hooks/CourseApi/useCheckEnrollmentForSessions";
 import { useNavigate } from "react-router-dom";
 
@@ -26,14 +26,14 @@ export default function NewEnrollNow() {
   const location = useLocation();
   const preselectedSession = location.state?.selectedSession || null;
   const preselectedBatchId = location.state?.selectedBatchId || null;
-  
+
   const initialRequestStatus = location.state?.requestStatus;
 
   const notifyVia = location.state?.notifyVia || {
     email: true,
     whatsapp: true,
   };
-  
+
 
   /* ===============================
      State
@@ -52,12 +52,12 @@ export default function NewEnrollNow() {
     sendWhatsApp, requestStatus,
 
     sendText } = location.state || {};
-  
+
   const user = JSON.parse(localStorage.getItem('loginuserData'));
   const email = user?.email;
   const { data: studentData, isLoading, error } = useStudentDetails(email);
-  
-const navigate = useNavigate();
+
+  const navigate = useNavigate();
 
 
   const [lockButtonsUntilBatchChange, setLockButtonsUntilBatchChange] = useState(false);
@@ -96,98 +96,98 @@ const navigate = useNavigate();
   const { data: userProfile } = useUserProfile();
   const { data: course } = useCourseByName(courseSlug);
 
-const selectedSessions = selectedBatch?.sessions || [];
+  const selectedSessions = selectedBatch?.sessions || [];
 
-const {
-  data: enrollmentCheckResults = [],
-  isLoading: enrollmentCheckLoading,
-} = useCheckEnrollmentForSessions(
-  selectedSessions,
-  studentData?.studentId,
-  course?.courseName
-);
+  const {
+    data: enrollmentCheckResults = [],
+    isLoading: enrollmentCheckLoading,
+  } = useCheckEnrollmentForSessions(
+    selectedSessions,
+    studentData?.studentId,
+    course?.courseName
+  );
 
-const isAlreadyEnrolledForBatch = enrollmentCheckResults.some(
-  (s) => s._isEnrolled === true
-);
-const studentId = studentData?.studentId;
-const courseNameForInstallment = course?.courseName;
-const selectedBatchIdForEnroll =
-  selectedBatch?.sessions?.[0]?.batchId || "";
+  const isAlreadyEnrolledForBatch = enrollmentCheckResults.some(
+    (s) => s._isEnrolled === true
+  );
+  const studentId = studentData?.studentId;
+  const courseNameForInstallment = course?.courseName;
+  const selectedBatchIdForEnroll =
+    selectedBatch?.sessions?.[0]?.batchId || "";
 
-const {
-  data: installmentStatusData,
-  isLoading: installmentStatusLoading,
-} = useInstallmentStatus(
-  studentId,
-  courseNameForInstallment,
-  selectedBatchIdForEnroll
-);
+  const {
+    data: installmentStatusData,
+    isLoading: installmentStatusLoading,
+  } = useInstallmentStatus(
+    studentId,
+    courseNameForInstallment,
+    selectedBatchIdForEnroll
+  );
 
   //   const selectedBatchIdForEnroll =
   // selectedBatch?.sessions?.[0]?.batchId || "";
 
 
   const hasInstallmentRequest =
-  installmentStatusData?.numSelectedInstallments === 2 ||
-  installmentStatusData?.numSelectedInstallments === 3;
+    installmentStatusData?.numSelectedInstallments === 2 ||
+    installmentStatusData?.numSelectedInstallments === 3;
 
   const currentRequestStatus = installmentStatusLoading
-  ? "loading"
-  : installmentStatusData?.requestStatus === "approved"
-    ? "approved"
-    : installmentStatusData?.requestStatus === "rejected"
-      ? "rejected"
-      : hasInstallmentRequest
-        ? "pending"
-        : "none";
-const isInstallmentDisabled =
-  installmentStatusLoading ||
-  currentRequestStatus !== "none" ||
-  !isTermsAccepted;
+    ? "loading"
+    : installmentStatusData?.requestStatus === "approved"
+      ? "approved"
+      : installmentStatusData?.requestStatus === "rejected"
+        ? "rejected"
+        : hasInstallmentRequest
+          ? "pending"
+          : "none";
+  const isInstallmentDisabled =
+    installmentStatusLoading ||
+    currentRequestStatus !== "none" ||
+    !isTermsAccepted;
 
   const { currency } = useCurrency();
   const { data: discountRule } = useCourseDiscountRule(courseSlug);
   useEffect(() => {
-  if (
-    installmentStatusLoading ||
-    !installmentStatusData ||
-    installmentStatusData.requestStatus !== "approved"
-  ) {
-    return;
-  }
+    if (
+      installmentStatusLoading ||
+      !installmentStatusData ||
+      installmentStatusData.requestStatus !== "approved"
+    ) {
+      return;
+    }
 
-  const slug = course?.courseName
-    ?.toLowerCase()
-    .replace(/\s+/g, "-");
+    const slug = course?.courseName
+      ?.toLowerCase()
+      .replace(/\s+/g, "-");
 
-  if (!slug || !selectedBatch?.sessions?.[0] || !course) return;
+    if (!slug || !selectedBatch?.sessions?.[0] || !course) return;
 
-  navigate(`/installments/${slug}`, {
-    state: {
-      // 🔑 IMPORTANT: send what OnlineInstallments EXPECTS
-      selectedBatchData: {
-        ...selectedBatch.sessions[0],
+    navigate(`/installments/${slug}`, {
+      state: {
+        // 🔑 IMPORTANT: send what OnlineInstallments EXPECTS
+        selectedBatchData: {
+          ...selectedBatch.sessions[0],
 
-        // required for pricing fetch
-        schedule_course_name: course.courseName,
+          // required for pricing fetch
+          schedule_course_name: course.courseName,
 
-        // optional but safe
-        courseName: course.courseName,
+          // optional but safe
+          courseName: course.courseName,
+        },
+
+        // already approved value (2 or 3)
+        numSelectedInstallments:
+          installmentStatusData.numSelectedInstallments,
       },
-
-      // already approved value (2 or 3)
-      numSelectedInstallments:
-        installmentStatusData.numSelectedInstallments,
-    },
-  });
-}, [
-  installmentStatusLoading,
-  installmentStatusData,
-  selectedBatch,
-  course,
-  navigate,
-]);
+    });
+  }, [
+    installmentStatusLoading,
+    installmentStatusData,
+    selectedBatch,
+    course,
+    navigate,
+  ]);
 
 
   useEffect(() => {
@@ -223,7 +223,7 @@ const isInstallmentDisabled =
     if (matchedGroup) {
       setSelectedBatch(matchedGroup);
     } else {
-      
+
       const firstLive = liveGroups.find(g => g.type === "live");
       if (firstLive) {
         setSelectedBatch(firstLive);
@@ -456,16 +456,16 @@ const isInstallmentDisabled =
   }, [discountRule]);
 
   const isPayLaterDisabled =
-  !selectedBatch ||
-  !isTermsAccepted ||
-  isEnrollmentBlocked ||
-  lockButtonsUntilBatchChange ||
-  isAlreadyEnrolledForBatch;
-const isInstallmentEnabled =
-  isTermsAccepted &&          // ✅ condition 1: checkbox checked
-  isPayLaterDisabled &&       // ✅ condition 2: pay-later button is disabled
-  currentRequestStatus === "none" &&
-  !installmentStatusLoading;
+    !selectedBatch ||
+    !isTermsAccepted ||
+    isEnrollmentBlocked ||
+    lockButtonsUntilBatchChange ||
+    isAlreadyEnrolledForBatch;
+  const isInstallmentEnabled =
+    isTermsAccepted &&          // ✅ condition 1: checkbox checked
+    isPayLaterDisabled &&       // ✅ condition 2: pay-later button is disabled
+    currentRequestStatus === "none" &&
+    !installmentStatusLoading;
 
 
   /* ===============================
@@ -520,6 +520,14 @@ const isInstallmentEnabled =
                 <label className={styles.enLabel}>Learning Mode</label>
                 <Input
                   value={selectedMode}
+                  readOnly
+                  className={styles.readOnlyInput}
+                />
+              </div>
+              <div className={styles.enCol}>
+                <label className={styles.enLabel}>Batch ID</label>
+                <Input
+                  value={selectedBatch?.sessions?.[0]?.batchId || "—"}
                   readOnly
                   className={styles.readOnlyInput}
                 />
@@ -633,35 +641,35 @@ const isInstallmentEnabled =
                 >
                   Pay Now
                 </button>
-             <button
-  className={`${styles.enPayBtn} ${!selectedBatch ||
-    !isTermsAccepted ||
-    isEnrollmentBlocked ||
-    lockButtonsUntilBatchChange ||
-    isAlreadyEnrolledForBatch
-      ? styles.disabledBtn
-      : ""
-  }`}
-  disabled={
-    !selectedBatch ||
-    !isTermsAccepted ||
-    isEnrollmentBlocked ||
-    lockButtonsUntilBatchChange ||
-    isAlreadyEnrolledForBatch
-  }
-  onClick={() => {
-    setLastAction("PAY_LATER");
-    selectedBatch &&
-      handleEnrollPayLater({
-        ...selectedBatch.sessions[0],
-        notifyVia,
-      });
-  }}
->
-  Enroll Now, Pay Later
-</button>
+                <button
+                  className={`${styles.enPayBtn} ${!selectedBatch ||
+                    !isTermsAccepted ||
+                    isEnrollmentBlocked ||
+                    lockButtonsUntilBatchChange ||
+                    isAlreadyEnrolledForBatch
+                    ? styles.disabledBtn
+                    : ""
+                    }`}
+                  disabled={
+                    !selectedBatch ||
+                    !isTermsAccepted ||
+                    isEnrollmentBlocked ||
+                    lockButtonsUntilBatchChange ||
+                    isAlreadyEnrolledForBatch
+                  }
+                  onClick={() => {
+                    setLastAction("PAY_LATER");
+                    selectedBatch &&
+                      handleEnrollPayLater({
+                        ...selectedBatch.sessions[0],
+                        notifyVia,
+                      });
+                  }}
+                >
+                  Enroll Now, Pay Later
+                </button>
 
-{/* 
+                {/* 
 
                 <div className={styles.installmentBtnContainer}>
             <button
@@ -700,46 +708,46 @@ const isInstallmentEnabled =
                   )}
                 </div> */}
                 {/* ===== BUTTON ROW (NO MESSAGES HERE) ===== */}
-<div className={styles.installmentBtnContainer}>
-  <button
-    className={styles.paymentBtn}
-    onClick={() => setOpenInstallmentPopup(true)}
-    disabled={!isInstallmentEnabled}
-    style={{
-      opacity: !isInstallmentEnabled ? 0.6 : 1,
-      cursor: !isInstallmentEnabled ? "not-allowed" : "pointer",
-    }}
-  >
-    Request for Installments
-  </button>
-</div>
+                <div className={styles.installmentBtnContainer}>
+                  <button
+                    className={styles.paymentBtn}
+                    onClick={() => setOpenInstallmentPopup(true)}
+                    disabled={!isInstallmentEnabled}
+                    style={{
+                      opacity: !isInstallmentEnabled ? 0.6 : 1,
+                      cursor: !isInstallmentEnabled ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    Request for Installments
+                  </button>
+                </div>
 
-{/* ===== MESSAGE ROW (ALWAYS BELOW ALL 3 BUTTONS) ===== */}
-<div style={{ marginTop: "8px" }}>
-  {isInstallmentEnabled && (
-    <p style={{ color: "#b45309", fontSize: "17px", margin: 0 }}>
-      ℹ️ Installments are offered with applicable additional fees.
-    </p>
-  )}
+                {/* ===== MESSAGE ROW (ALWAYS BELOW ALL 3 BUTTONS) ===== */}
+                <div style={{ marginTop: "8px" }}>
+                  {isInstallmentEnabled && (
+                    <p style={{ color: "#b45309", fontSize: "17px", margin: 0 }}>
+                      ℹ️ Installments are offered with applicable additional fees.
+                    </p>
+                  )}
 
-  {currentRequestStatus === "pending" && (
-    <p className={styles.pendingStatus} style={{ margin: "4px 0 0 0" }}>
-      Your installment request is pending admin approval
-    </p>
-  )}
+                  {currentRequestStatus === "pending" && (
+                    <p className={styles.pendingStatus} style={{ margin: "4px 0 0 0" }}>
+                      Your installment request is pending admin approval
+                    </p>
+                  )}
 
-  {currentRequestStatus === "approved" && (
-    <p className={styles.approvedStatus} style={{ margin: "4px 0 0 0" }}>
-      ✅ Installment request is approved for this course.
-    </p>
-  )}
+                  {currentRequestStatus === "approved" && (
+                    <p className={styles.approvedStatus} style={{ margin: "4px 0 0 0" }}>
+                      ✅ Installment request is approved for this course.
+                    </p>
+                  )}
 
-  {currentRequestStatus === "rejected" && (
-    <p className={styles.rejectedStatus} style={{ margin: "4px 0 0 0" }}>
-      ❌ Installment request rejected for this course, please contact with Hachion team
-    </p>
-  )}
-</div>
+                  {currentRequestStatus === "rejected" && (
+                    <p className={styles.rejectedStatus} style={{ margin: "4px 0 0 0" }}>
+                      ❌ Installment request rejected for this course, please contact with Hachion team
+                    </p>
+                  )}
+                </div>
 
 
               </div>
@@ -757,7 +765,7 @@ const isInstallmentEnabled =
           <RequestInstallment
             selectedBatchData={selectedBatch?.sessions?.[0]}
             closeModal={() => setOpenInstallmentPopup(false)}
-            
+
             courseFee={Math.round(finalPrice)}
             email={studentData?.email || ''}
             studentId={studentData?.studentId || ''}

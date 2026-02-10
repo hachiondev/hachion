@@ -17,6 +17,7 @@ import HomeFaq from './HomeFaq';
 import LimitedDeals from './HomePage/LimitedSection/LimitedDeals';
 import Banner from './HomePage/HomeBannerSection/Banner';
 import Trending from './HomePage/TrendingSection/Trending';
+import EnrollmentWidget from './HomePage/EnrollmentWidget/EnrollmentWidget';
 
 export const Home = () => {
   const location = useLocation();
@@ -87,6 +88,8 @@ export const Home = () => {
           <Learners page="home" />
           <HomeFaq />
         </main>
+        {/* Enrollment Widget - Fixed at bottom left */}
+        {/* <EnrollmentWidget /> */}
         {/* {showScrollButton && (
               <button className="scroll-to-top" onClick={scrollToTop}>
                 <FaArrowUp />

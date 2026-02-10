@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -32,6 +32,20 @@ export function useDemoLivePayment({
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get("status");
+    const orderId = urlParams.get("token");
+
+    if (status === "success" && orderId) {
+      handleCapturePayPalOrder(orderId);
+    } else if (status === "cancel") {
+      setEnrollErrorMessage("❌ Payment was cancelled.");
+      setEnrollSuccessMessage("");
+    }
+  }, []);
+
   const amount = useMemo(() => {
     return (
       courseData?.itotal ??
@@ -41,6 +55,55 @@ export function useDemoLivePayment({
       0
     );
   }, [courseData]);
+
+    const handleCapturePayPalOrder = async (orderId) => {
+    try {
+      const studentId = localStorage.getItem("studentId");
+      const courseName = localStorage.getItem("courseName");
+      const batchId = localStorage.getItem("batchId");
+      const selectedBatchData = JSON.parse(localStorage.getItem("selectedBatchData") || "{}");
+
+      if (!studentId || !courseName || !batchId) {
+        setEnrollErrorMessage("❌ Missing payment info. Please try again.");
+        return;
+      }
+
+      await axios.post(`${API_BASE}/capture-order`, null, {
+        params: {
+          orderId,
+          studentId,
+          courseName,
+          batchId,
+          discount: selectedBatchData?.discount ?? 0,
+        },
+      });
+
+      // cleanup
+      localStorage.removeItem("studentId");
+      localStorage.removeItem("courseName");
+      localStorage.removeItem("batchId");
+      localStorage.removeItem("selectedBatchData");
+
+      setEnrollSuccessMessage("✅ Payment successful!");
+
+      const slug = courseName.toLowerCase().replace(/\s+/g, "-");
+
+      navigate(`/payment/${slug}`, {
+        state: {
+          selectedBatchData,
+          modeType: "live",
+          sendEmail: true,
+          sendWhatsApp: true,
+          sendText: false,
+          email: userProfile?.email,
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      setEnrollErrorMessage("❌ Failed to complete PayPal payment.");
+    }
+  };
+
 
   const handleLiveEnrollPayment = async (session, notifyVia) => {
     setEnrollSuccessMessage("");
@@ -277,7 +340,44 @@ export function useDemoLivePayment({
         console.error(err);
         setEnrollErrorMessage("Razorpay initialization failed.");
       }
+    } else {
+  // ================= PAYPAL FLOW (FOR USA / NON-INDIA) =================
+  try {
+    // Save required info for return capture (same as old Enrollment page)
+    localStorage.setItem("studentId", userProfile.studentId);
+    localStorage.setItem("courseName", courseName);
+    localStorage.setItem("batchId", session.batchId);
+    localStorage.setItem(
+      "selectedBatchData",
+      JSON.stringify({
+        ...session,
+        schedule_course_name: courseName,
+        discount: 0,
+      })
+    );
+
+    const slug = courseName.toLowerCase().replace(/\s+/g, "-");
+    const returnUrl = `https://hachion.co/enroll/${slug}`;
+
+    const paypalRes = await axios.post(`${API_BASE}/create-order`, null, {
+      params: {
+        amount,
+        returnUrl,
+      },
+    });
+
+    const approvalUrl = paypalRes.data;
+
+    if (typeof approvalUrl === "string" && approvalUrl.startsWith("https://www.paypal.com")) {
+      window.location.href = approvalUrl; // 🔁 Redirect to PayPal
+    } else {
+      setEnrollErrorMessage("❌ Unexpected PayPal response.");
     }
+  } catch (err) {
+    console.error(err);
+    setEnrollErrorMessage("❌ Failed to start PayPal payment.");
+  }
+}
   };
 const handleEnrollPayLater = async (sessionWithNotify) => {
   setEnrollSuccessMessage("");

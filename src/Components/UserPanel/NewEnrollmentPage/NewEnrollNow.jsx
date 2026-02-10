@@ -661,7 +661,7 @@ const isInstallmentEnabled =
   Enroll Now, Pay Later
 </button>
 
-
+{/* 
 
                 <div className={styles.installmentBtnContainer}>
             <button
@@ -676,6 +676,11 @@ const isInstallmentEnabled =
   Request for Installments
 </button>
 
+ {isInstallmentEnabled && (
+    <p style={{ color: "#b45309", fontSize: "13px", marginTop: "6px" }}>
+      ℹ️ Additional charges will be applicable for Request Installments
+    </p>
+  )}
                   {currentRequestStatus === "pending" && (
                     <p className={styles.pendingStatus}>
                       Your installment request is pending admin approval
@@ -693,7 +698,50 @@ const isInstallmentEnabled =
                       ❌ Installment request rejected for this course, please contact with Hachion team
                     </p>
                   )}
-                </div>
+                </div> */}
+                {/* ===== BUTTON ROW (NO MESSAGES HERE) ===== */}
+<div className={styles.installmentBtnContainer}>
+  <button
+    className={styles.paymentBtn}
+    onClick={() => setOpenInstallmentPopup(true)}
+    disabled={!isInstallmentEnabled}
+    style={{
+      opacity: !isInstallmentEnabled ? 0.6 : 1,
+      cursor: !isInstallmentEnabled ? "not-allowed" : "pointer",
+    }}
+  >
+    Request for Installments
+  </button>
+</div>
+
+{/* ===== MESSAGE ROW (ALWAYS BELOW ALL 3 BUTTONS) ===== */}
+<div style={{ marginTop: "8px" }}>
+  {isInstallmentEnabled && (
+    <p style={{ color: "#b45309", fontSize: "17px", margin: 0 }}>
+      ℹ️ Installments are offered with applicable additional fees.
+    </p>
+  )}
+
+  {currentRequestStatus === "pending" && (
+    <p className={styles.pendingStatus} style={{ margin: "4px 0 0 0" }}>
+      Your installment request is pending admin approval
+    </p>
+  )}
+
+  {currentRequestStatus === "approved" && (
+    <p className={styles.approvedStatus} style={{ margin: "4px 0 0 0" }}>
+      ✅ Installment request is approved for this course.
+    </p>
+  )}
+
+  {currentRequestStatus === "rejected" && (
+    <p className={styles.rejectedStatus} style={{ margin: "4px 0 0 0" }}>
+      ❌ Installment request rejected for this course, please contact with Hachion team
+    </p>
+  )}
+</div>
+
+
               </div>
             </div>
           </div>

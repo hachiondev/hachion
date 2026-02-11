@@ -70,8 +70,9 @@ const StickyBar = () => {
         {/* COPYRIGHT (Desktop)     */}
         {/* ----------------------- */}
         <p className="footer-copyright-desktop">
-          © Hachion 2026. All Rights Reserved.
-        </p>
+  © Hachion {new Date().getFullYear()}. All Rights Reserved.
+</p>
+
 
         {/* ----------------------- */}
         {/* SOCIAL MEDIA LINKS      */}
@@ -135,9 +136,9 @@ const StickyBar = () => {
         {/* ----------------------- */}
         {/* COPYRIGHT (Mobile)      */}
         {/* ----------------------- */}
-        <p className="footer-copyright-mobile">
-          © Hachion 2026. All Rights Reserved.
-        </p>
+        <p className="footer-copyright-desktop">
+  © Hachion {new Date().getFullYear()}. All Rights Reserved.
+</p>
         </div>
       </div>
     </div>

@@ -71,6 +71,15 @@ const QueryFormWidget = () => {
     }
   }, [isOpen]);
 
+  // Auto-open widget after 5 seconds on page load
+  useEffect(() => {
+    const autoOpenTimer = setTimeout(() => {
+      setIsOpen(true);
+    }, 10000); // 5 seconds
+
+    return () => clearTimeout(autoOpenTimer);
+  }, []); // Empty dependency array - runs only once on mount
+
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
     setIsCountryMenuOpen(false);
@@ -227,7 +236,7 @@ const QueryFormWidget = () => {
       >
         <div className="d-flex align-items-center justify-content-between w-100">
           <span className={`d-flex align-items-center ${styles.buttonTitle}`}>
-            <span>Ask a Query</span>
+            <span>Drop us a Query</span>
             <span className={styles.buttonIcon}>
               <img 
                 width="20" 
@@ -248,7 +257,7 @@ const QueryFormWidget = () => {
       <div className={styles.widgetContent}>
         <div className={`${styles.widgetHeader} d-flex align-items-center justify-content-between`}>
           <h5 className={`m-0 d-flex align-items-center ${styles.widgetTitle}`}>
-            Ask a Query
+            Drop us a Query
             <span className={styles.buttonIcon}>
               <img 
                 width="20" 
@@ -443,9 +452,9 @@ const QueryFormWidget = () => {
               </div>
               <h3 className={styles.successTitle}>Thank You!</h3>
               <p className={styles.successMessage}>
-                Your query has been submitted successfully. Our support team will contact you soon.
+                Your query has been submitted successfully. Our team will contact you soon.
               </p>
-              {/* <div className={styles.successActions}>
+              <div className={styles.successActions}>
                 <Button 
                   variant="outline-primary" 
                   className={styles.submitAnotherButton}
@@ -460,7 +469,7 @@ const QueryFormWidget = () => {
                 >
                   Close
                 </Button>
-              </div> */}
+              </div>
             </div>
           )}
         </div>

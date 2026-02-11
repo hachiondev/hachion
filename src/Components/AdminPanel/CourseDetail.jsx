@@ -86,6 +86,8 @@ const CourseDetail = ({
     starRating: '', level: '', ratingByNumberOfPeople: '', totalEnrollment: '', keyHighlights1: '', keyHighlights2: '', keyHighlights3: '',
     keyHighlights4: '', keyHighlights5: '', keyHighlights6: '', amount: '', discount: '', total: '', samount: '', sdiscount: '', stotal: '', sqamount: '', sqdiscount: '', sqtotal: '', camount: '', cdiscount: '', ctotal: '', mamount: '', mdiscount: '', mtotal: '', iamount: '', idiscount: '', itotal: '', isamount: '', isdiscount: '', istotal: '', isqamount: '', isqdiscount: '', isqtotal: '', icamount: '', icdiscount: '', ictotal: '', imamount: '', imdiscount: '', imtotal: '', mentoring1: '', mentoring2: '', self1: '',
     self2: '', headerTitle: '', courseKeyword: '', courseKeywordDescription: '', aboutCourse: '', courseHighlight: '', courseDescription: '', date: currentDate, whatYouWillLearn: '', numberOfProjects: '', whoIsThisCourseFor: '', careerOpportunities: '', avarageSalaryRange: '', prerequisities: '', liveTraining: '', crashCourse: '', mentoringMode: '', selfPacedLearning: '',
+    // Add status field
+    status: 'active', // Default to active
   });
 
   // New state for checkbox selection
@@ -153,7 +155,9 @@ const CourseDetail = ({
         item.courseName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.courseCategory?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.shortCourse?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.date?.toLowerCase().includes(searchTerm.toLowerCase())
+        item.date?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        // Add status to search
+        item.status?.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredCourses(filtered);
     }
@@ -169,7 +173,9 @@ const CourseDetail = ({
         item.courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.courseCategory?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.shortCourse.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.date.toLowerCase().includes(searchTerm.toLowerCase());
+        item.date.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        // Add status to search
+        item.status?.toLowerCase().includes(searchTerm.toLowerCase());
 
       const inRange =
         (!start || courseDate >= start) &&
@@ -200,6 +206,14 @@ const CourseDetail = ({
       }
       return { ...prevData, [name]: value };
     });
+  };
+
+  // Handle toggle switch change
+  const handleStatusToggle = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      status: prevData.status === 'active' ? 'inactive' : 'active'
+    }));
   };
 
   const handleCalculate = (e) => {
@@ -317,7 +331,9 @@ const CourseDetail = ({
       liveTraining: formData.liveTraining,
       crashCourse: formData.crashCourse,
       mentoringMode: formData.mentoringMode,
-      selfPacedLearning: formData.selfPacedLearning
+      selfPacedLearning: formData.selfPacedLearning,
+      // Add status to course data
+      status: formData.status,
     };
 
     const formNewData = new FormData();
@@ -430,7 +446,9 @@ const CourseDetail = ({
           liveTraining: course.liveTraining,
           crashCourse: course.crashCourse,
           mentoringMode: course.mentoringMode,
-          selfPacedLearning: course.selfPacedLearning
+          selfPacedLearning: course.selfPacedLearning,
+          // Add status from course data
+          status: course.status || 'active',
         });
         setFormMode('Edit');
       } else {
@@ -495,7 +513,9 @@ const CourseDetail = ({
       liveTraining: '',
       crashCourse: '',
       mentoringMode: '',
-      selfPacedLearning: ''
+      selfPacedLearning: '',
+      // Reset status to default
+      status: 'active',
     });
   }
 
@@ -1798,6 +1818,28 @@ const CourseDetail = ({
                 {error && <p className="error-message">{error}</p>}
               </div>
 
+              {/* Status Toggle Switch - New Section */}
+              <div className="course-row" style={{ marginBottom: '20px' }}>
+                <div className="col-md-12">
+                  <label className="form-label" style={{ marginRight: '20px' }}>
+                    Status <span style={{ color: "red" }}>*</span>
+                  </label>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <span style={{ marginRight: '10px', fontWeight: '500', color: formData.status === 'active' ? '#00AEEF' : '#666' }}>
+                      {formData.status === 'active' ? 'Active' : 'Inactive'}
+                    </span>
+                    <label className="switch">
+                      <input
+                        type="checkbox"
+                        checked={formData.status === 'active'}
+                        onChange={handleStatusToggle}
+                      />
+                      <span className="slider round"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
               {/* Submit Buttons */}
 
               {errorMessage && (
@@ -1947,6 +1989,8 @@ const CourseDetail = ({
                       <StyledTableCell align="center">Short Course</StyledTableCell>
                       <StyledTableCell align="center">Course Name</StyledTableCell>
                       <StyledTableCell align="center">Date</StyledTableCell>
+                      {/* New Status Column */}
+                      <StyledTableCell align="center">Status</StyledTableCell>
                       <StyledTableCell align="center">Action</StyledTableCell>
                     </TableRow>
                   </TableHead>
@@ -1974,7 +2018,20 @@ const CourseDetail = ({
                             ? dayjs(course.date, "YYYY-MM-DD").format("MMM-DD-YYYY").toUpperCase()
                             : "-"}
                         </StyledTableCell>
-
+                        {/* Status Column Display */}
+                        <StyledTableCell align="center">
+                          <span style={{
+                            padding: '4px 8px',
+                            borderRadius: '12px',
+                            fontSize: '12px',
+                            fontWeight: '600',
+                            backgroundColor: course.status === 'active' ? '#d4edda' : '#f8d7da',
+                            color: course.status === 'active' ? '#155724' : '#721c24',
+                            border: course.status === 'active' ? '1px solid #c3e6cb' : '1px solid #f5c6cb'
+                          }}>
+                            {course.status ? (course.status.charAt(0).toUpperCase() + course.status.slice(1)) : 'Active'}
+                          </span>
+                        </StyledTableCell>
                         <StyledTableCell align="center">
                           <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
                             <FaEdit className="edit" onClick={() => handleEditClick(course.id)} style={{ cursor: "pointer" }} />
@@ -1984,7 +2041,7 @@ const CourseDetail = ({
                       </StyledTableRow>
                     )) : (
                       <StyledTableRow>
-                        <StyledTableCell colSpan={8} align="center">No courses available.</StyledTableCell>
+                        <StyledTableCell colSpan={9} align="center">No courses available.</StyledTableCell>
                       </StyledTableRow>
                     )}
                   </TableBody>
@@ -2004,6 +2061,7 @@ const CourseDetail = ({
           </div>
         </LocalizationProvider>
       )}
+
     </>
   );
 };

@@ -39,9 +39,9 @@ const ContactUs = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [error, setError] = useState("");
   const [contactNumber, setContactNumber] = useState("+1 (732) 485-2499");
-const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  
+
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: LoginSchema,
@@ -49,22 +49,22 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 
   useEffect(() => {
-  fetch("https://api.country.is")
-    .then((r) => r.json())
-    .then((data) => {
-      data.country_code = (data.country || "").toUpperCase();
+    fetch("https://api.country.is")
+      .then((r) => r.json())
+      .then((data) => {
+        data.country_code = (data.country || "").toUpperCase();
 
-      const match = countries.find((c) => c.flag === data?.country_code);
-      if (match) setSelectedCountry(match);
+        const match = countries.find((c) => c.flag === data?.country_code);
+        if (match) setSelectedCountry(match);
 
-      if (data?.country_code === "IN") {
-        setContactNumber("+91 94903 23388");
-      } else {
-        setContactNumber("+1 (732) 485-2499");
-      }
-    })
-    .catch(() => {});
-}, []);
+        if (data?.country_code === "IN") {
+          setContactNumber("+91 94903 23388");
+        } else {
+          setContactNumber("+1 (732) 485-2499");
+        }
+      })
+      .catch(() => { });
+  }, []);
 
 
   useEffect(() => {
@@ -75,7 +75,7 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
     setIsChecked(e.target.checked);
   };
 
-  
+
   const onlyDigits = (v) => String(v || "").replace(/\D/g, "").slice(0, 15);
 
   const handleCountrySelect = (country) => {
@@ -93,7 +93,7 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
     setMobileNumber((m) => onlyDigits(m));
   };
 
-  
+
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
     const userEmail = (userData.email || "").trim();
@@ -126,20 +126,20 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
           values.country = data.country;
         }
       } catch (_err) {
-        
+
       }
     };
 
     if (userEmail) {
       setIsLoggedIn(true);
       fetchUserProfile();
-      
+
     }
-    
+
   }, []);
 
-  
-    const areMandatoryFieldsFilled = () => {
+
+  const areMandatoryFieldsFilled = () => {
     return (
       values.name.trim() !== "" &&
       values.email.trim() !== "" &&
@@ -150,7 +150,7 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    
+
     if (!areMandatoryFieldsFilled()) {
       setError("Please provide all mandatory fields.");
       return;
@@ -163,7 +163,7 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
       return;
     }
 
-    setError(""); 
+    setError("");
 
     const currentDate = new Date().toISOString().split("T")[0];
     const requestData = {
@@ -383,6 +383,41 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
                 />
               </div>
             </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                value=""
+                id="flexCheckChecked"
+                checked={isChecked}
+                onChange={handleCheckboxChange}
+              />
+              <label className="form-check-label" htmlFor="flexCheckChecked">
+                By clicking on Send, you acknowledge read our{" "}
+                <span
+                  onClick={handlePrivacy}
+                  style={{
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                    color: "#00AAEF",
+                  }}
+                >
+                  Privacy Notice
+                </span>{" "}
+                and
+                <span
+                  onClick={handleTerms}
+                  style={{
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                    color: "#00AAEF",
+                    paddingLeft: 5,
+                  }}
+                >
+                  Terms & Conditions
+                </span>
+              </label>
+            </div>
 
             <div className="mb-3">
               {successMessage && (
@@ -391,59 +426,23 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
               {errorMessage && (
                 <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>
               )}
-             <button
-  type="button"
-  className="submit-button"
-  onClick={handleFormSubmit}
-  disabled={!areMandatoryFieldsFilled() || !isChecked}
-  style={{
-    backgroundColor: !areMandatoryFieldsFilled() || !isChecked ? "#cccccc" : "#00AAEF",
-    color: !areMandatoryFieldsFilled() || !isChecked ? "#666666" : "#ffffff",
-    cursor: !areMandatoryFieldsFilled() || !isChecked ? "not-allowed" : "pointer",
-    opacity: !areMandatoryFieldsFilled() || !isChecked ? 0.7 : 1,
-  }}
->
-  Send
-</button>
+              <button
+                type="button"
+                className="submit-button"
+                onClick={handleFormSubmit}
+                disabled={!areMandatoryFieldsFilled() || !isChecked}
+                style={{
+                  backgroundColor: !areMandatoryFieldsFilled() || !isChecked ? "#cccccc" : "#00AAEF",
+                  color: !areMandatoryFieldsFilled() || !isChecked ? "#666666" : "#ffffff",
+                  cursor: !areMandatoryFieldsFilled() || !isChecked ? "not-allowed" : "pointer",
+                  opacity: !areMandatoryFieldsFilled() || !isChecked ? 0.7 : 1,
+                }}
+              >
+                Send
+              </button>
 
 
               {error && <p className="error-message">{error}</p>}
-
-              <div className="form-check">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  value=""
-                  id="flexCheckChecked"
-                  checked={isChecked} 
-                  onChange={handleCheckboxChange}
-                />
-                <label className="form-check-label" htmlFor="flexCheckChecked">
-                  By clicking on Send, you acknowledge read our{" "}
-                  <span
-                    onClick={handlePrivacy}
-                    style={{
-                      textDecoration: "underline",
-                      cursor: "pointer",
-                      color: "#00AAEF",
-                    }}
-                  >
-                    Privacy Notice
-                  </span>{" "}
-                  and
-                  <span
-                    onClick={handleTerms}
-                    style={{
-                      textDecoration: "underline",
-                      cursor: "pointer",
-                      color: "#00AAEF",
-                      paddingLeft: 5,
-                    }}
-                  >
-                    Terms & Conditions
-                  </span>
-                </label>
-              </div>
             </div>
           </form>
         </div>

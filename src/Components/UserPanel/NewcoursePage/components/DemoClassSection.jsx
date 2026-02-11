@@ -673,7 +673,8 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
 
             isRequestBatchSuccess={isRequestBatchSuccess}
             requestBatchError={requestBatchError}
-            onRequestClick={handleClick}
+            // onRequestClick={handleClick}
+            onRequestClick={handleRequestBatch}
             mentoringMode={courseData?.mentoringMode || ""}
             isCourseLoading={isCourseLoading}
             courseError={courseError}

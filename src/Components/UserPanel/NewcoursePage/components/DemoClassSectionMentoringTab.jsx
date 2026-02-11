@@ -306,9 +306,13 @@ What's Included:
                 onClick={() => {
                   if (isSubmitting || isRequestBatchLoading) return;
 
-                  setIsSubmitting(true);
-                  onRequestClick();
-                }}
+                 setIsSubmitting(true);
+  onRequestClick({
+    selectedDays,
+    preferredTime,
+    notification,
+  });
+}}
                 disabled={
                   isSubmitting ||
                   isRequestBatchLoading ||

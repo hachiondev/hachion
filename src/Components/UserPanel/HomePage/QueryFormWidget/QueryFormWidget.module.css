@@ -514,7 +514,7 @@
   }
   
   .phoneFieldContainer {
-    flex-direction: column;
+    flex-direction: row;
     align-items: stretch;
     gap: 12px;
   }
@@ -527,18 +527,18 @@
   .countryMenu {
     left: 0;
     right: 0;
-    min-width: 100%;
+    /* min-width: 100%; */
   }
 }
 
 @media (max-width: 480px) {
   .widgetContainer {
-    bottom: 10px;
+    bottom: 50px;
     left: 10px;
   }
   
   .floatingButton {
-    bottom: 10px;
+    bottom: 56px;
     left: 10px;
     min-width: 160px;
     padding: 10px 14px;

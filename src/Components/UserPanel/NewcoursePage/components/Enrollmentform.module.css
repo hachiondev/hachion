@@ -529,6 +529,6 @@
   .countryMenu {
     left: 0;
     right: 0;
-    min-width: 100%;
+    /* min-width: 100%; */
   }
 }

@@ -396,11 +396,15 @@ export default function Curriculum() {
         (item.brochure_pdf || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
         (item.date || "").toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchesCategory =
-        !filterData.category_name || item.category_name === filterData.category_name;
+const matchesCategory =
+  !filterData.category_name ||
+  (item.category_name || "").trim().toLowerCase() ===
+    filterData.category_name.trim().toLowerCase();
 
-      const matchesCourse =
-        !filterData.course_name || item.course_name === filterData.course_name;
+const matchesCourse =
+  !filterData.course_name ||
+  (item.course_name || "").trim().toLowerCase() ===
+    filterData.course_name.trim().toLowerCase();
 
       return inDateRange && matchesSearch && matchesCategory && matchesCourse;
     });

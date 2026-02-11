@@ -1,74 +1,74 @@
-import './App.css';
-import { Home } from './Components/UserPanel/Home';
-import Login from './Components/UserPanel/HomePage/AuthSection/LoginSection/Login';
-import AdminLogin from './Components/AdminPanel/AdminLogin';
-import AdminRegister from './Components/AdminPanel/AdminRegister';
-import AdminForgot from './Components/AdminPanel/AdminForgot';
+import "./App.css";
+import { Home } from "./Components/UserPanel/Home";
+import Login from "./Components/UserPanel/HomePage/AuthSection/LoginSection/Login";
+import AdminLogin from "./Components/AdminPanel/AdminLogin";
+import AdminRegister from "./Components/AdminPanel/AdminRegister";
+import AdminForgot from "./Components/AdminPanel/AdminForgot";
 import {
   BrowserRouter,
   Routes,
   Route,
   useLocation,
   useNavigate,
-} from 'react-router-dom';
-import { useEffect } from 'react';
+} from "react-router-dom";
+import { useEffect } from "react";
 
-import Register from './Components/UserPanel/HomePage/AuthSection/RegisterSection/Register';
-import RegisterNext from './Components/UserPanel/HomePage/AuthSection//RegisterNext';
-import RegisterHere from './Components/UserPanel/HomePage/AuthSection//RegisterHere';
-import ForgotPassword from './Components/UserPanel/HomePage/AuthSection/ForgotPassword';
-import Course from './Components/UserPanel/CoursePage/Course';
+import Register from "./Components/UserPanel/HomePage/AuthSection/RegisterSection/Register";
+import RegisterNext from "./Components/UserPanel/HomePage/AuthSection//RegisterNext";
+import RegisterHere from "./Components/UserPanel/HomePage/AuthSection//RegisterHere";
+import ForgotPassword from "./Components/UserPanel/HomePage/AuthSection/ForgotPassword";
+import Course from "./Components/UserPanel/CoursePage/Course";
 // import CourseDetails from './Components/UserPanel/CourseDetails';
-import CorporateTraining from './Components/UserPanel/CorporateTraining';
-import Terms from './Components/UserPanel/LegalFooterSection/Terms';
-import Privacy from './Components/UserPanel/LegalFooterSection/Privacy';
-import Blogs from './Components/UserPanel/Blogs';
-import BlogDetails from './Components/UserPanel/BlogDetails';
-import Aboutus from './Components/UserPanel/Aboutus';
-import ContactUs from './Components/UserPanel/ContactUs';
-import UserProtectedRoute from './UserProtectedRoute';
-import UserDashboard from './Components/UserPanel/UserDashboardPage/UserDashboard';
-import AdminDashboardView from './Components/AdminPanel/AdminDashboardView';
-import CategoryTable from './Components/AdminPanel/CategoryTable';
-import Reports from './Components/AdminPanel/Reports';
-import Enrollment from './Components/UserPanel/EnrollmentPage/Enrollment';
-import UserWriteReview from './Components/UserPanel/UserWriteReview';
-import TrendingCourse from './Components/AdminPanel/TrendingCourseTable';
-import CourseSchedule from './Components/AdminPanel/CourseSchedule';
-import Workshop from './Components/UserPanel/Workshop';
-import ProtectedRoute from './ProtectedRoute';
-import CorporateCourses from './Components/AdminPanel/CorporateCourses';
-import Unsubscribe from './Components/UserPanel/LegalFooterSection/Unsubscribe';
-import Sitemap from './Components/UserPanel/SitemapPage/Sitemap';
-import KidsSummer from './Components/UserPanel/KidsSummer';
-import LeadForm from './Components/UserPanel/LeadForm';
-import HirefromUs from './Components/UserPanel/HirefromUs';
-import ApplyHiring from './Components/UserPanel/ApplyHiring';
-import JobDetails from './Components/UserPanel/JobDetails';
-import EnrollPayment from './Components/UserPanel/EnrollPayment';
-import OnlineInstallments from './Components/UserPanel/OnlineInstallments';
-import ConfirmOtp from './Components/UserPanel/HomePage/AuthSection/ConfirmOtp';
-import ResetPassword from './Components/UserPanel/HomePage/AuthSection/ResetPassword';
-import ViewFaq from './Components/UserPanel/ViewFaq';
-import DiscountDeals from './Components/UserPanel/DiscountDeals';
-import Instructors from './Components/UserPanel/InstructorsPage/Instructors';
-import InstructorDetails from './Components/UserPanel/InstructorsPage/InstructorDetails';
-import ViewReviews from './Components/UserPanel/ViewReviews';
-import BecomeInstructor from './Components/UserPanel/BecomeInstructor';
-import UserEnrolledAssignment from './Components/UserPanel/UserEnrolledAssignment';
-import QueryGuard from './Components/UserPanel/QueryGuard';
-import NotFound from './Components/UserPanel/NotFound';
-import NewCourseDetails from './Components/UserPanel/NewcoursePage/NewCourseDetails';
+import CorporateTraining from "./Components/UserPanel/CorporateTraining";
+import Terms from "./Components/UserPanel/LegalFooterSection/Terms";
+import Privacy from "./Components/UserPanel/LegalFooterSection/Privacy";
+import Blogs from "./Components/UserPanel/Blogs";
+import BlogDetails from "./Components/UserPanel/BlogDetails";
+import Aboutus from "./Components/UserPanel/Aboutus";
+import ContactUs from "./Components/UserPanel/ContactUs";
+import UserProtectedRoute from "./UserProtectedRoute";
+import UserDashboard from "./Components/UserPanel/UserDashboardPage/UserDashboard";
+import AdminDashboardView from "./Components/AdminPanel/AdminDashboardView";
+import CategoryTable from "./Components/AdminPanel/CategoryTable";
+import Reports from "./Components/AdminPanel/Reports";
+import Enrollment from "./Components/UserPanel/EnrollmentPage/Enrollment";
+import UserWriteReview from "./Components/UserPanel/UserWriteReview";
+import TrendingCourse from "./Components/AdminPanel/TrendingCourseTable";
+import CourseSchedule from "./Components/AdminPanel/CourseSchedule";
+import Workshop from "./Components/UserPanel/Workshop";
+import ProtectedRoute from "./ProtectedRoute";
+import CorporateCourses from "./Components/AdminPanel/CorporateCourses";
+import Unsubscribe from "./Components/UserPanel/LegalFooterSection/Unsubscribe";
+import Sitemap from "./Components/UserPanel/SitemapPage/Sitemap";
+import KidsSummer from "./Components/UserPanel/KidsSummer";
+import LeadForm from "./Components/UserPanel/LeadForm";
+import HirefromUs from "./Components/UserPanel/HirefromUs";
+import ApplyHiring from "./Components/UserPanel/ApplyHiring";
+import JobDetails from "./Components/UserPanel/JobDetails";
+import EnrollPayment from "./Components/UserPanel/EnrollPayment";
+import OnlineInstallments from "./Components/UserPanel/OnlineInstallments";
+import ConfirmOtp from "./Components/UserPanel/HomePage/AuthSection/ConfirmOtp";
+import ResetPassword from "./Components/UserPanel/HomePage/AuthSection/ResetPassword";
+import ViewFaq from "./Components/UserPanel/ViewFaq";
+import DiscountDeals from "./Components/UserPanel/DiscountDeals";
+import Instructors from "./Components/UserPanel/InstructorsPage/Instructors";
+import InstructorDetails from "./Components/UserPanel/InstructorsPage/InstructorDetails";
+import ViewReviews from "./Components/UserPanel/ViewReviews";
+import BecomeInstructor from "./Components/UserPanel/BecomeInstructor";
+import UserEnrolledAssignment from "./Components/UserPanel/UserEnrolledAssignment";
+import QueryGuard from "./Components/UserPanel/QueryGuard";
+import NotFound from "./Components/UserPanel/NotFound";
+import NewCourseDetails from "./Components/UserPanel/NewcoursePage/NewCourseDetails";
 
 // import CourseDetails from './Components/UserPanel/OldcoursePage/CourseDetails';
-import NewEnrollNow from './Components/UserPanel/NewEnrollmentPage/NewEnrollNow';
+import NewEnrollNow from "./Components/UserPanel/NewEnrollmentPage/NewEnrollNow";
 // import NewEnrollNow from './Components/UserPanel/NewEnrollNow';
-import NewEnrollSelfPaced from './Components/UserPanel/NewEnrollSelfPaced';
-import GoogleMobileNumber from './Components/UserPanel/HomePage/AuthSection/GoogleMobileNumber';
-import Layout from './Components/Layout/Layout';
-import WorkshopDetails from './Components/UserPanel/WorkshopDetails';
-import AuthLayout from './Components/Layout/AuthLayout';
-import RefundPolicy from './Components/UserPanel/LegalFooterSection/RefundPolicy';
+import NewEnrollSelfPaced from "./Components/UserPanel/NewEnrollSelfPaced";
+import GoogleMobileNumber from "./Components/UserPanel/HomePage/AuthSection/GoogleMobileNumber";
+import Layout from "./Components/Layout/Layout";
+import WorkshopDetails from "./Components/UserPanel/WorkshopDetails";
+import AuthLayout from "./Components/Layout/AuthLayout";
+import RefundPolicy from "./Components/UserPanel/LegalFooterSection/RefundPolicy";
 
 const RedirectToLowercase = () => {
   const location = useLocation();
@@ -88,7 +88,7 @@ const TrackPageView = () => {
   const location = useLocation();
   useEffect(() => {
     if (window.gtag) {
-      window.gtag('config', 'G-TE1LPJJ75K', {
+      window.gtag("config", "G-TE1LPJJ75K", {
         page_path: location.pathname + location.search,
       });
     }
@@ -131,8 +131,10 @@ function AppRoutes() {
           <Route path="/view-all-reviews" element={<ViewReviews />} />
           <Route path="/coursedetails" element={<Course />} />
           <Route path="/enroll-now/:courseName" element={<NewEnrollNow />} />
-          <Route path="/enroll-self/:courseName" element={<NewEnrollSelfPaced />}
-/>
+          <Route
+            path="/enroll-self/:courseName"
+            element={<NewEnrollSelfPaced />}
+          />
 
           <Route
             path="/coursedetails/:courseName"
@@ -164,7 +166,7 @@ function AppRoutes() {
           <Route path="/review" element={<UserWriteReview />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
-          <Route path="/refundpolicy" element={<RefundPolicy/>} />
+          <Route path="/refundpolicy" element={<RefundPolicy />} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
           <Route path="/sitemap" element={<Sitemap />} />
           <Route

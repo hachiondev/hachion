@@ -89,7 +89,7 @@ export const Home = () => {
           <HomeFaq />
         </main>
         {/* Query Form Widget - Fixed at bottom right (similar to screenshot) */}
-        { <QueryFormWidget /> }
+        {/* { <QueryFormWidget /> } */}
         {/* {showScrollButton && (
               // <button className="scroll-to-top" onClick={scrollToTop}>
                 <FaArrowUp />

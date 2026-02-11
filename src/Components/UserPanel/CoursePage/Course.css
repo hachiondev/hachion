@@ -2320,10 +2320,11 @@ html {
 }
 
 .sticky-bar-container {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: start;
 }
 
 .whatsapp-number-footer,
@@ -4041,6 +4042,7 @@ html {
         height: 120px;
         justify-content: space-around;
         /* padding: 5px 0; */
+        gap: 0;
     }
 
   .contact-info img,
@@ -4228,6 +4230,7 @@ html {
     width: 20px;
     margin-right: 5px;
   }
+
 }
 
 @media (max-width:375px) {

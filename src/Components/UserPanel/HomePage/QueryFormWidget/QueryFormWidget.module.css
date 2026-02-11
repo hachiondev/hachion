@@ -1,18 +1,16 @@
 /* QueryFormWidget.module.css */
-
 .widgetContainer {
   position: fixed;
   bottom: 20px;
-  left: 20px;
+  right: 20px;
   z-index: 9999;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Floating Button */
 .floatingButton {
   position: fixed;
-  bottom: 50px;
-  left: 20px;
+  bottom: 3px;
+  right: 20px;
   background: linear-gradient(135deg, #00AEEF 0%, #0088cc 100%);
   color: white;
   border: none;
@@ -60,8 +58,15 @@
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .chevronIcon {
@@ -87,11 +92,10 @@
   transform: rotate(0deg);
 }
 
-/* Widget Content */
 .widgetContent {
   position: absolute;
-  bottom: 100px;
-  left: 0;
+  bottom: 38px;
+  right: 0;
   width: 380px;
   background: white;
   border-radius: 12px;
@@ -102,6 +106,7 @@
   transition: all 0.3s ease;
   overflow: hidden;
   border: 1px solid #e0e0e0;
+  animation: slideInUp 0.3s ease-out;
 }
 
 .widgetContainer.open .widgetContent {
@@ -113,7 +118,7 @@
 .widgetHeader {
   background: linear-gradient(135deg, #00AEEF 0%, #0088cc 100%);
   color: white;
-  padding: 18px 20px;
+  padding: 14px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -122,7 +127,7 @@
 
 .widgetTitle {
   margin: 0;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -155,26 +160,14 @@
   fill: white;
 }
 
-/* Widget Body */
 .widgetBody {
-  padding: 0 20px 20px;
-  max-height: 380px;
+  padding: 0 16px 16px;
+  max-height: 450px;
   overflow-y: auto;
 }
 
-/* Support Banner */
-.supportBanner {
-  text-align: center;
-  margin: 20px 0;
-  padding: 15px 0;
-  border-bottom: 1px solid #eee;
-  background: linear-gradient(to right, #f8f9fa, #ffffff, #f8f9fa);
-  border-radius: 8px;
-  margin-top: 10px;
-}
-
 .bannerImage img {
-  max-width: 152px;
+  max-width: 140px;
   height: auto;
   transition: transform 0.3s ease;
 }
@@ -183,22 +176,20 @@
   transform: scale(1.05);
 }
 
-/* Contact Info */
 .contactInfo {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin: 20px 0;
-  padding: 16px;
+  gap: 10px;
+  padding: 10px;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border-radius: 10px;
+  border-radius: 8px;
   border-left: 4px solid #00AEEF;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
 }
 
 .contactIcon {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -209,9 +200,17 @@
 }
 
 .contactIcon svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   fill: white;
+}
+
+.form-label {
+  margin: 0.3vh 1vh;
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
+  margin-bottom: 6px;
 }
 
 .contactDetails {
@@ -223,7 +222,7 @@
   color: #00AEEF;
   font-weight: 600;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 14px;
   transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
@@ -238,24 +237,23 @@
 
 .availability {
   color: #666;
-  font-size: 13px;
-  margin-top: 4px;
+  font-size: 11px;
+  margin-top: 2px;
   font-weight: 500;
 }
 
-/* Form Styles */
 .queryForm {
-  margin-top: 20px;
+  margin-top: 8px;
 }
 
 .formGroup {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .formLabel {
   display: block;
-  margin-bottom: 10px;
-  font-size: 14px;
+  margin-bottom: 6px;
+  font-size: 12px;
   color: #333;
   font-weight: 600;
 }
@@ -265,19 +263,17 @@
   margin-left: 3px;
 }
 
-/* Textarea */
 .textareaInput {
   width: 100%;
-  padding: 14px 16px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: 10px 12px;
+  border: 1px solid #ced4da !important;
+  border-radius: 6px;
+  font-size: 13px;
   transition: all 0.3s ease;
   box-sizing: border-box;
-  min-height: 100px;
+  min-height: 80px;
   resize: vertical;
   font-family: inherit;
-  border: 1px solid #ced4da !important;
 }
 
 .textareaInput:focus {
@@ -286,7 +282,6 @@
   box-shadow: 0 0 0 0.2rem rgba(0, 174, 239, 0.25) !important;
 }
 
-/* Phone Field Container */
 .phoneFieldContainer {
   display: flex;
   align-items: center;
@@ -294,25 +289,22 @@
   width: 100%;
 }
 
-/* Country Dropdown Wrapper */
 .countryDropdownWrapper {
   position: relative;
 }
 
-/* Country Select Button */
 .countrySelectButton {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 14px;
+  gap: 6px;
+  padding: 7px 12px;
   background: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: 1px solid #ced4da !important;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 120px;
+  min-width: 110px;
   justify-content: space-between;
-  border: 1px solid #ced4da !important;
 }
 
 .countrySelectButton:hover {
@@ -327,14 +319,14 @@
 }
 
 .countryCodeDisplay {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: #333;
 }
 
 .caretIcon {
   color: #00AEEF;
-  font-size: 12px;
+  font-size: 11px;
   transition: transform 0.2s ease;
 }
 
@@ -342,7 +334,6 @@
   transform: translateY(1px);
 }
 
-/* Country Menu - Custom Built-in Dropdown */
 .countryMenu {
   position: absolute;
   top: 100%;
@@ -351,20 +342,21 @@
   max-height: 190px;
   overflow-y: auto;
   background: white;
-  border-radius: 8px;
+  border-radius: 6px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
   border: 1px solid #e0e0e0;
   z-index: 10001;
-  min-width: 272px;
+  min-width: 250px;
 }
 
 .countryMenuItem {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
+  gap: 10px;
+  padding: 10px 14px;
   cursor: pointer;
   transition: all 0.2s ease;
+  font-size: 13px;
 }
 
 .countryMenuItem:hover {
@@ -376,16 +368,14 @@
   border-left: 3px solid #00AEEF;
 }
 
-/* Phone Number Input */
 .phoneNumberInput {
   flex: 1;
-  padding: 14px 16px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: 10px 12px;
+  border: 1px solid #ced4da !important;
+  border-radius: 6px;
+  font-size: 13px;
   transition: all 0.3s ease;
   font-family: inherit;
-  border: 1px solid #ced4da !important;
 }
 
 .phoneNumberInput:focus {
@@ -396,18 +386,17 @@
 
 .phoneNumberInput::placeholder {
   color: #6c757d;
+  font-size: 12px;
 }
 
-/* Email Input */
 .emailInput {
   width: 100%;
-  padding: 14px 16px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: 10px 12px;
+  border: 1px solid #ced4da !important;
+  border-radius: 6px;
+  font-size: 13px;
   transition: all 0.3s ease;
   box-sizing: border-box;
-  border: 1px solid #ced4da !important;
 }
 
 .emailInput:focus {
@@ -416,7 +405,10 @@
   box-shadow: 0 0 0 0.2rem rgba(0, 174, 239, 0.25) !important;
 }
 
-/* Error States */
+.emailInput::placeholder {
+  font-size: 12px;
+}
+
 .is-invalid {
   border-color: #dc3545 !important;
 }
@@ -426,28 +418,27 @@
 }
 
 .invalid-feedback {
-  font-size: 13px;
+  font-size: 11px;
   color: #dc3545;
-  margin-top: 6px;
+  margin-top: 4px;
   display: block;
   font-weight: 500;
 }
 
-/* Submit Button */
 .submitButton {
   width: 100% !important;
   background: linear-gradient(135deg, #00AEEF 0%, #0088cc 100%) !important;
   color: white !important;
   border: none !important;
-  border-radius: 8px !important;
-  padding: 16px !important;
-  font-size: 16px !important;
+  border-radius: 6px !important;
+  padding: 12px !important;
+  font-size: 14px !important;
   font-weight: 600 !important;
   cursor: pointer;
   transition: all 0.3s ease !important;
   text-transform: uppercase !important;
   letter-spacing: 0.5px;
-  margin-top: 10px !important;
+  margin-top: 8px !important;
   box-shadow: 0 4px 15px rgba(0, 174, 239, 0.3) !important;
   position: relative;
   overflow: hidden;
@@ -469,154 +460,24 @@
   transform: none !important;
 }
 
-/* Loading Spinner in Button */
 .submitButton .spinner-border {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border-width: 2px;
 }
 
-/* Loading State for Country Detection */
 .text-center .spinner-border {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   border-width: 2px;
   border-color: #00AEEF #00AEEF transparent;
 }
 
 .text-center .text-muted {
-  font-size: 13px;
+  font-size: 12px;
   color: #6c757d;
 }
 
-/* Responsive Styles */
-@media (max-width: 768px) {
-  .widgetContainer {
-    bottom: 15px;
-    left: 15px;
-  }
-  
-  .floatingButton {
-    bottom: 15px;
-    left: 15px;
-    padding: 10px 16px;
-    min-width: 180px;
-  }
-  
-  .widgetContent {
-    width: 340px;
-    bottom: 60px;
-    left: 0;
-  }
-  
-  .buttonTitle {
-    font-size: 13px;
-  }
-  
-  .phoneFieldContainer {
-    flex-direction: row;
-    align-items: stretch;
-    gap: 12px;
-  }
-  
-  .countrySelectButton {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .countryMenu {
-    left: 0;
-    right: 0;
-    /* min-width: 100%; */
-  }
-}
-
-@media (max-width: 480px) {
-  .widgetContainer {
-    bottom: 50px;
-    left: 10px;
-  }
-  
-  .floatingButton {
-    bottom: 56px;
-    left: 10px;
-    min-width: 160px;
-    padding: 10px 14px;
-  }
-  
-  .widgetContent {
-    width: calc(100vw - 20px);
-    left: 10px;
-    bottom: 55px;
-  }
-  
-  .buttonTitle {
-    font-size: 12px;
-  }
-  
-  .widgetTitle {
-    font-size: 14px;
-  }
-  
-  .phoneLink {
-    font-size: 14px;
-  }
-  
-  .countrySelectButton {
-    min-width: 100px;
-    padding: 10px 12px;
-    font-size: 13px;
-  }
-  
-  .phoneNumberInput,
-  .emailInput,
-  .textareaInput {
-    padding: 12px 14px;
-    font-size: 13px;
-  }
-  
-  .submitButton {
-    padding: 14px !important;
-    font-size: 14px !important;
-  }
-}
-
-/* Animation for form open */
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.widgetContent {
-  animation: slideInUp 0.3s ease-out;
-}
-
-/* Custom scrollbar for country menu */
-.countryMenu::-webkit-scrollbar {
-  width: 6px;
-}
-
-.countryMenu::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
-}
-
-.countryMenu::-webkit-scrollbar-thumb {
-  background: #00AEEF;
-  border-radius: 3px;
-}
-
-.countryMenu::-webkit-scrollbar-thumb:hover {
-  background: #0088cc;
-}
-
-/* Ripple effect for submit button */
 .submitButton::after {
   content: '';
   position: absolute;
@@ -635,22 +496,172 @@
   animation: ripple 1s ease-out;
 }
 
+/* Success Message Styles */
+.successContainer {
+  padding: 40px 20px;
+  text-align: center;
+  animation: fadeInScale 0.5s ease-out;
+}
+
+.successIcon {
+  color: #28a745;
+  margin-bottom: 20px;
+  animation: scaleIn 0.6s ease-out;
+}
+
+.successIcon svg {
+  filter: drop-shadow(0 4px 10px rgba(40, 167, 69, 0.3));
+}
+
+.successTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 12px;
+  animation: fadeInUp 0.6s ease-out 0.1s both;
+}
+
+.successMessage {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.successActions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.submitAnotherButton {
+  width: 100% !important;
+  padding: 12px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  border: 2px solid #00AEEF !important;
+  color: #00AEEF !important;
+  background: white !important;
+  border-radius: 6px !important;
+  transition: all 0.3s ease !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px;
+}
+
+.submitAnotherButton:hover {
+  background: #00AEEF !important;
+  color: white !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 15px rgba(0, 174, 239, 0.3) !important;
+}
+
+.closeSuccessButton {
+  width: 100% !important;
+  background: linear-gradient(135deg, #00AEEF 0%, #0088cc 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 12px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+  transition: all 0.3s ease !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(0, 174, 239, 0.3) !important;
+}
+
+.closeSuccessButton:hover {
+  background: linear-gradient(135deg, #00C6FF 0%, #0099E6 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(0, 174, 239, 0.4) !important;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes ripple {
   0% {
     transform: scale(0, 0);
     opacity: 0.5;
   }
+
   20% {
     transform: scale(25, 25);
     opacity: 0.3;
   }
+
   100% {
     opacity: 0;
     transform: scale(40, 40);
   }
 }
 
-/* Override Bootstrap styles */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.countryMenu::-webkit-scrollbar {
+  width: 5px;
+}
+
+.countryMenu::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.countryMenu::-webkit-scrollbar-thumb {
+  background: #00AEEF;
+  border-radius: 3px;
+}
+
+.countryMenu::-webkit-scrollbar-thumb:hover {
+  background: #0088cc;
+}
+
 .form-control:focus {
   border-color: #00AEEF !important;
   box-shadow: 0 0 0 0.2rem rgba(0, 174, 239, 0.25) !important;
@@ -666,11 +677,144 @@
   border-color: #0099E6 !important;
 }
 
-/* Ensure form elements are visible */
 .phoneFieldContainer input,
 .phoneFieldContainer button,
 .form-control {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
+}
+
+@media (max-width: 768px) {
+  .widgetContainer {
+    bottom: 15px;
+    right: 15px;
+  }
+
+  .floatingButton {
+    bottom: 3px;
+    right: 15px;
+    padding: 10px 16px;
+    min-width: 180px;
+  }
+
+  .widgetContent {
+    width: 340px;
+    bottom: 38px;
+    right: 0;
+  }
+
+  .buttonTitle {
+    font-size: 13px;
+  }
+
+  .phoneFieldContainer {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .countrySelectButton {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .countryMenu {
+    left: 0;
+    right: 0;
+  }
+
+  .successContainer {
+    padding: 30px 15px;
+  }
+
+  .successTitle {
+    font-size: 22px;
+  }
+
+  .successMessage {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .widgetContainer {
+    bottom: 10px;
+    right: 10px;
+  }
+
+  .floatingButton {
+    bottom: 57px;
+    right: 10px;
+    min-width: 160px;
+    padding: 10px 14px;
+  }
+
+  .widgetContent {
+    width: calc(100vw - 20px);
+    right: 0;
+    bottom: 95px;
+  }
+
+  .buttonTitle {
+    font-size: 12px;
+  }
+
+  .widgetTitle {
+    font-size: 14px;
+  }
+
+  .phoneLink {
+    font-size: 13px;
+  }
+
+  .countrySelectButton {
+    min-width: 95px;
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .phoneNumberInput,
+  .emailInput,
+  .textareaInput {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .submitButton {
+    padding: 12px !important;
+    font-size: 13px !important;
+  }
+
+  .formLabel {
+    font-size: 11px;
+    margin-bottom: 4px;
+  }
+
+  .successContainer {
+    padding: 25px 10px;
+  }
+
+  .successIcon svg {
+    width: 50px;
+    height: 50px;
+  }
+
+  .successTitle {
+    font-size: 20px;
+  }
+
+  .successMessage {
+    font-size: 12px;
+  }
+
+  .successActions {
+    gap: 10px;
+  }
+
+  .submitAnotherButton,
+  .closeSuccessButton {
+    padding: 10px !important;
+    font-size: 13px !important;
+  }
 }

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FaPhone, FaChevronUp, FaChevronDown, FaTimes } from 'react-icons/fa';
+import { FaPhone, FaChevronUp, FaChevronDown, FaTimes, FaCheckCircle } from 'react-icons/fa';
 import { Form, Button, Spinner } from 'react-bootstrap';
 import Flag from 'react-world-flags';
 import { AiFillCaretDown } from 'react-icons/ai';
@@ -11,6 +11,7 @@ import { countries, getDefaultCountry } from '../../../../countryUtils';
 const QueryFormWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState({
     query: '',
     phone: '',
@@ -59,6 +60,17 @@ const QueryFormWidget = () => {
     };
   }, [isCountryMenuOpen]);
 
+  // Reset success state when widget opens/closes
+  useEffect(() => {
+    if (!isOpen) {
+      // Reset success state after closing
+      const timer = setTimeout(() => {
+        setIsSuccess(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
     setIsCountryMenuOpen(false);
@@ -74,6 +86,21 @@ const QueryFormWidget = () => {
     
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const handlePhoneChange = (e) => {
+    const value = e.target.value;
+    // Only allow digits (0-9)
+    const numbersOnly = value.replace(/\D/g, '');
+    
+    setFormData(prev => ({
+      ...prev,
+      phone: numbersOnly
+    }));
+    
+    if (errors.phone) {
+      setErrors(prev => ({ ...prev, phone: '' }));
     }
   };
 
@@ -143,31 +170,49 @@ const QueryFormWidget = () => {
       const result = await response.json();
       console.log('Submission successful:', result);
       
-      // Success handling
-      alert('Thank you! Your query has been submitted. We\'ll contact you soon.');
+      // Success handling - Show success message
+      setIsSuccess(true);
       setFormData({
         query: '',
         phone: '',
         email: ''
       });
       setErrors({});
-      setIsOpen(false);
+      
+      // Auto-close widget after 3 seconds
+      setTimeout(() => {
+        setIsOpen(false);
+      }, 3000);
       
     } catch (error) {
       console.error('Submission error:', error);
       
-      // Fallback - simulate successful submission if API fails
-      alert('Thank you! Your query has been submitted. We\'ll contact you soon.');
+      // Fallback - Show success message even if API fails
+      setIsSuccess(true);
       setFormData({
         query: '',
         phone: '',
         email: ''
       });
       setErrors({});
-      setIsOpen(false);
+      
+      // Auto-close widget after 3 seconds
+      setTimeout(() => {
+        setIsOpen(false);
+      }, 3000);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleSubmitAnother = () => {
+    setIsSuccess(false);
+    setFormData({
+      query: '',
+      phone: '',
+      email: ''
+    });
+    setErrors({});
   };
 
   return (
@@ -182,7 +227,7 @@ const QueryFormWidget = () => {
       >
         <div className="d-flex align-items-center justify-content-between w-100">
           <span className={`d-flex align-items-center ${styles.buttonTitle}`}>
-            <span>Drop us a Query</span>
+            <span>Ask a Query</span>
             <span className={styles.buttonIcon}>
               <img 
                 width="20" 
@@ -203,7 +248,7 @@ const QueryFormWidget = () => {
       <div className={styles.widgetContent}>
         <div className={`${styles.widgetHeader} d-flex align-items-center justify-content-between`}>
           <h5 className={`m-0 d-flex align-items-center ${styles.widgetTitle}`}>
-            Drop us a Query
+            Ask a Query
             <span className={styles.buttonIcon}>
               <img 
                 width="20" 
@@ -225,168 +270,199 @@ const QueryFormWidget = () => {
         </div>
         
         <div className={styles.widgetBody}>
-          {/* Support Banner */}
-          <div className={`text-center mb-3 ${styles.supportBanner}`}>
-            <img 
-              src="https://d1jnx9ba8s6j9r.cloudfront.net/img/24x7-available.png" 
-              alt="24x7 Support" 
-              className="img-fluid"
-              style={{ maxWidth: '152px' }}
-            />
-          </div>
-
-          {/* Contact Info - Using data from useTopBarApi */}
-          <div className={`d-flex align-items-center p-3 mb-3 ${styles.contactInfo}`}>
-            <div className={`d-flex align-items-center justify-content-center ${styles.contactIcon}`}>
-              <FaPhone size={14} />
-            </div>
-            <div className={styles.contactDetails}>
-              <a 
-                href={whatsappLink} 
-                className={`d-block ${styles.phoneLink}`} 
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                {whatsappNumber}
-              </a>
-              <span className={`d-block ${styles.availability}`}>
-                Available 24x7 for your queries
-              </span>
-            </div>
-          </div>
-
-          {/* Form */}
-          <Form onSubmit={handleSubmit} className={styles.queryForm}>
-            {/* Query Textarea */}
-            <Form.Group className="mb-3">
-              <Form.Control
-                as="textarea"
-                rows={3}
-                placeholder="Type your query here*"
-                name="query"
-                value={formData.query}
-                onChange={handleChange}
-                required
-                className={`${styles.textareaInput} ${errors.query ? 'is-invalid' : ''}`}
-                disabled={isSubmitting}
-              />
-              {errors.query && (
-                <div className="invalid-feedback d-block">{errors.query}</div>
-              )}
-            </Form.Group>
-
-            {/* Phone Field - Custom Built-in Dropdown */}
-            <Form.Group className="mb-3">
-              <Form.Label className={`${styles.formLabel} d-flex align-items-center`}>
-                Phone Number<span className="required-star ms-1">*</span>
-                {countryLoading && (
-                  <Spinner animation="border" size="sm" className="ms-2" />
-                )}
-              </Form.Label>
-              <div className={styles.phoneFieldContainer}>
-                <div className={styles.countryDropdownWrapper} ref={countryDropdownRef}>
-                  <button
-                    type="button"
-                    onClick={() => setIsCountryMenuOpen(!isCountryMenuOpen)}
-                    className={styles.countrySelectButton}
-                    disabled={isSubmitting}
-                  >
-                    <Flag
-                      code={selectedCountry.flag}
-                      className={styles.countryFlagIcon}
-                      height="16"
-                      width="24"
-                    />
-                    <span className={styles.countryCodeDisplay}>
-                      {selectedCountry.flag} ({selectedCountry.code})
-                    </span>
-                    <AiFillCaretDown className={styles.caretIcon} />
-                  </button>
-
-                  {/* Custom Country Dropdown Menu */}
-                  {isCountryMenuOpen && (
-                    <div className={styles.countryMenu}>
-                      {countries.map((country) => (
-                        <div
-                          key={country.code}
-                          onClick={() => handleCountrySelect(country)}
-                          className={`${styles.countryMenuItem} ${
-                            country.flag === countryCode ? styles.detectedCountry : ''
-                          }`}
-                        >
-                          <Flag 
-                            code={country.flag} 
-                            className={styles.countryFlagIcon} 
-                            height="14"
-                            width="20"
-                          />
-                          <span>
-                            {country.name} ({country.code})
-                            {country.flag === countryCode && (
-                              <span style={{ color: '#28a745', marginLeft: '4px' }}>(Detected)</span>
-                            )}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <input
-                  type="tel"
-                  className={`${styles.phoneNumberInput} ${errors.phone ? 'is-invalid' : ''}`}
-                  ref={mobileInputRef}
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="Enter your mobile number"
-                  autoComplete="tel-national"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  disabled={isSubmitting}
+          {!isSuccess ? (
+            <>
+              {/* Support Banner */}
+              <div className={`text-center ${styles.supportBanner}`}>
+                <img 
+                  src="https://d1jnx9ba8s6j9r.cloudfront.net/img/24x7-available.png" 
+                  alt="24x7 Support" 
+                  className="img-fluid"
+                  style={{ maxWidth: '152px' }}
                 />
               </div>
-              {errors.phone && (
-                <div className="invalid-feedback d-block">{errors.phone}</div>
-              )}
-            </Form.Group>
 
-            {/* Email Field */}
-            <Form.Group className="mb-3">
-              <Form.Label className={styles.formLabel}>
-                Email Id<span className="required-star ms-1">*</span>
-              </Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="Enter your email*"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className={`${styles.emailInput} ${errors.email ? 'is-invalid' : ''}`}
-                disabled={isSubmitting}
-              />
-              {errors.email && (
-                <div className="invalid-feedback d-block">{errors.email}</div>
-              )}
-            </Form.Group>
+              {/* Contact Info - Using data from useTopBarApi */}
+              <div className={`d-flex align-items-center ${styles.contactInfo}`}>
+                <div className={`d-flex align-items-center justify-content-center ${styles.contactIcon}`}>
+                  <FaPhone size={14} />
+                </div>
+                <div className={styles.contactDetails}>
+                  <a 
+                    href={whatsappLink} 
+                    className={`d-block ${styles.phoneLink}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
+                    {whatsappNumber}
+                  </a>
+                  <span className={`d-block ${styles.availability}`}>
+                    Available 24x7 for your queries
+                  </span>
+                </div>
+              </div>
 
-            <Button 
-              type="submit" 
-              variant="primary" 
-              className={`w-100 ${styles.submitButton}`}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <Spinner animation="border" size="sm" className="me-2" />
-                  SUBMITTING...
-                </>
-              ) : (
-                'SUBMIT QUERY'
-              )}
-            </Button>
-          </Form>
+              {/* Form */}
+              <Form onSubmit={handleSubmit} className={styles.queryForm}>
+                {/* Query Textarea */}
+                <Form.Group className="">
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    placeholder="Type your query here*"
+                    name="query"
+                    value={formData.query}
+                    onChange={handleChange}
+                    required
+                    className={`${styles.textareaInput} ${errors.query ? 'is-invalid' : ''}`}
+                    disabled={isSubmitting}
+                  />
+                  {errors.query && (
+                    <div className="invalid-feedback d-block">{errors.query}</div>
+                  )}
+                </Form.Group>
+
+                {/* Phone Field - Custom Built-in Dropdown */}
+                <Form.Group className="">
+                  <Form.Label className={`${styles.formLabel} d-flex align-items-center`}>
+                    Phone Number<span className="required-star ms-1">*</span>
+                    {countryLoading && (
+                      <Spinner animation="border" size="sm" className="ms-2" />
+                    )}
+                  </Form.Label>
+                  <div className={styles.phoneFieldContainer}>
+                    <div className={styles.countryDropdownWrapper} ref={countryDropdownRef}>
+                      <button
+                        type="button"
+                        onClick={() => setIsCountryMenuOpen(!isCountryMenuOpen)}
+                        className={styles.countrySelectButton}
+                        disabled={isSubmitting}
+                      >
+                        <Flag
+                          code={selectedCountry.flag}
+                          className={styles.countryFlagIcon}
+                          height="16"
+                          width="24"
+                        />
+                        <span className={styles.countryCodeDisplay}>
+                          {selectedCountry.flag} ({selectedCountry.code})
+                        </span>
+                        <AiFillCaretDown className={styles.caretIcon} />
+                      </button>
+
+                      {/* Custom Country Dropdown Menu */}
+                      {isCountryMenuOpen && (
+                        <div className={styles.countryMenu}>
+                          {countries.map((country) => (
+                            <div
+                              key={country.code}
+                              onClick={() => handleCountrySelect(country)}
+                              className={`${styles.countryMenuItem} ${
+                                country.flag === countryCode ? styles.detectedCountry : ''
+                              }`}
+                            >
+                              <Flag 
+                                code={country.flag} 
+                                className={styles.countryFlagIcon} 
+                                height="14"
+                                width="20"
+                              />
+                              <span>
+                                {country.name} ({country.code})
+                                {country.flag === countryCode && (
+                                  <span style={{ color: '#28a745', marginLeft: '4px' }}>(Detected)</span>
+                                )}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <input
+                      type="tel"
+                      className={`${styles.phoneNumberInput} ${errors.phone ? 'is-invalid' : ''}`}
+                      ref={mobileInputRef}
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handlePhoneChange}
+                      placeholder="Enter your mobile number"
+                      autoComplete="tel-national"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                  {errors.phone && (
+                    <div className="invalid-feedback d-block">{errors.phone}</div>
+                  )}
+                </Form.Group>
+
+                {/* Email Field */}
+                <Form.Group className="">
+                  <Form.Label className={styles.formLabel}>
+                    Email Id<span className="required-star ms-1">*</span>
+                  </Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="Enter your email*"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className={`${styles.emailInput} ${errors.email ? 'is-invalid' : ''}`}
+                    disabled={isSubmitting}
+                  />
+                  {errors.email && (
+                    <div className="invalid-feedback d-block">{errors.email}</div>
+                  )}
+                </Form.Group>
+
+                <Button 
+                  type="submit" 
+                  variant="primary" 
+                  className={`w-100 ${styles.submitButton}`}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Spinner animation="border" size="sm" className="me-2" />
+                      SUBMITTING...
+                    </>
+                  ) : (
+                    'SUBMIT QUERY'
+                  )}
+                </Button>
+              </Form>
+            </>
+          ) : (
+            /* Success Message */
+            <div className={styles.successContainer}>
+              <div className={styles.successIcon}>
+                <FaCheckCircle size={60} />
+              </div>
+              <h3 className={styles.successTitle}>Thank You!</h3>
+              <p className={styles.successMessage}>
+                Your query has been submitted successfully. Our support team will contact you soon.
+              </p>
+              {/* <div className={styles.successActions}>
+                <Button 
+                  variant="outline-primary" 
+                  className={styles.submitAnotherButton}
+                  onClick={handleSubmitAnother}
+                >
+                  Submit Another Query
+                </Button>
+                <Button 
+                  variant="primary" 
+                  className={styles.closeSuccessButton}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Close
+                </Button>
+              </div> */}
+            </div>
+          )}
         </div>
       </div>
     </div>

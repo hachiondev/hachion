@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import StickyBar from "./StickyBar";
 import { Outlet, useLocation } from "react-router-dom";
 import NavbarTop from "./Navbar/NavbarTop";
+import QueryFormWidget from "../UserPanel/HomePage/QueryFormWidget/QueryFormWidget";
 
 const Layout = () => {
   const [showStickyBar, setShowStickyBar] = useState(false);
@@ -62,6 +63,8 @@ const Layout = () => {
       <div ref={footerRef}>
         <Footer />
       </div>
+      {/* ✅ This makes it visible on all user pages */}
+      <QueryFormWidget />
 
       {showStickyBar && <StickyBar />}
     </div>

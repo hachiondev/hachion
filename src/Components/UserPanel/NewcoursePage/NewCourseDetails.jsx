@@ -86,12 +86,12 @@ const NewCourseDetails = () => {
     return () => clearTimeout(timer);
   }, [isLoggedIn, hasShownPopup]);
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      setShowPopup(false);
-      setHasShownPopup(false);
-    }
-  }, [courseName, isLoggedIn]);
+  // useEffect(() => {
+  //   if (!isLoggedIn) {
+  //     setShowPopup(false);
+  //     setHasShownPopup(false);
+  //   }
+  // }, [courseName, isLoggedIn]);
 
   /** Lock body scroll */
   useEffect(() => {

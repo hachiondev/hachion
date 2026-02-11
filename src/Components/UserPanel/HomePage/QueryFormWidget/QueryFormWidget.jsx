@@ -43,6 +43,64 @@ const QueryFormWidget = () => {
     }
   }, [countryCode, countryLoading]);
 
+  useEffect(() => {
+  const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
+  const userEmail = (userData.email || "").trim();
+
+  if (!userEmail) {
+    // Not logged in → keep fields empty
+    return;
+  }
+
+  // Prefill email immediately
+  setFormData((prev) => ({
+    ...prev,
+    email: userEmail,
+  }));
+
+  const fetchUserProfile = async () => {
+    try {
+      const response = await fetch(
+        `https://api.test.hachion.co/api/v1/user/myprofile?email=${userEmail}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch profile");
+      }
+
+      const data = await response.json();
+
+      // Handle mobile number (same logic as ContactUs)
+      if (data?.mobile) {
+        const clean = String(data.mobile).includes(" ")
+          ? String(data.mobile).split(" ")[1].trim()
+          : String(data.mobile).trim();
+
+        const digitsOnly = clean.replace(/\D/g, "");
+
+        setFormData((prev) => ({
+          ...prev,
+          phone: digitsOnly,
+        }));
+      }
+
+      // If backend returns country, try to match it
+      if (data?.country) {
+        const matched = countries.find(
+          (c) => c.name.toLowerCase() === data.country.toLowerCase()
+        );
+        if (matched) {
+          setSelectedCountry(matched);
+        }
+      }
+    } catch (err) {
+      console.error("Profile fetch failed:", err);
+    }
+  };
+
+  fetchUserProfile();
+}, []);
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -60,10 +118,10 @@ const QueryFormWidget = () => {
     };
   }, [isCountryMenuOpen]);
 
-  // Reset success state when widget opens/closes
+  
   useEffect(() => {
     if (!isOpen) {
-      // Reset success state after closing
+      
       const timer = setTimeout(() => {
         setIsSuccess(false);
       }, 300);
@@ -71,14 +129,14 @@ const QueryFormWidget = () => {
     }
   }, [isOpen]);
 
-  // Auto-open widget after 5 seconds on page load
+  
   useEffect(() => {
     const autoOpenTimer = setTimeout(() => {
       setIsOpen(true);
-    }, 10000); // 5 seconds
+    }, 10000); 
 
     return () => clearTimeout(autoOpenTimer);
-  }, []); // Empty dependency array - runs only once on mount
+  }, []); 
 
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
@@ -100,7 +158,7 @@ const QueryFormWidget = () => {
 
   const handlePhoneChange = (e) => {
     const value = e.target.value;
-    // Only allow digits (0-9)
+    
     const numbersOnly = value.replace(/\D/g, '');
     
     setFormData(prev => ({
@@ -146,40 +204,39 @@ const QueryFormWidget = () => {
     setIsSubmitting(true);
     
     try {
-      // Prepare form data exactly like in Register component
+      
       const sanitizedMobile = formData.phone.trim().replace(/^(\+)?/, "");
       const fullMobileNumber = `${selectedCountry.code} ${sanitizedMobile}`;
 
       const submitData = {
-        query: formData.query,
-        email: formData.email,
-        phone: fullMobileNumber,
-        country: selectedCountry.name,
-        countryCode: selectedCountry.code,
-        countryFlag: selectedCountry.flag,
-        detectedCountry: countryCode || 'Not detected',
-        timestamp: new Date().toISOString()
-      };
+  email: formData.email,
+  phone: fullMobileNumber,              
+  comments: formData.query,             
+  location: selectedCountry?.name || "" 
+};
+
       
       console.log('Query submitted:', submitData);
       
-      // Submit to your API endpoint
-      const response = await fetch('https://your-api-endpoint.com/api/queries', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(submitData),
-      });
       
+      const response = await fetch(
+  'https://api.test.hachion.co/ask-query/send-to-webhook',
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(submitData),
+  }
+);
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       
       const result = await response.json();
       console.log('Submission successful:', result);
-      
-      // Success handling - Show success message
+    
       setIsSuccess(true);
       setFormData({
         query: '',

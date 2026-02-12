@@ -288,7 +288,7 @@ const QueryFormWidget = () => {
       >
         <div className="d-flex align-items-center justify-content-between w-100">
           <span className={`d-flex align-items-center ${styles.buttonTitle}`}>
-            <span>Drop us a Query</span>
+            <span>Ask a Query</span>
             <span className={styles.buttonIcon}>
               <img 
                 width="20" 
@@ -309,7 +309,7 @@ const QueryFormWidget = () => {
       <div className={styles.widgetContent}>
         <div className={`${styles.widgetHeader} d-flex align-items-center justify-content-between`}>
           <h5 className={`m-0 d-flex align-items-center ${styles.widgetTitle}`}>
-            Drop us a Query
+            Ask a Query
             <span className={styles.buttonIcon}>
               <img 
                 width="20" 
@@ -504,24 +504,8 @@ const QueryFormWidget = () => {
               </div>
               <h3 className={styles.successTitle}>Thank You!</h3>
               <p className={styles.successMessage}>
-                Your query has been submitted successfully. Our team will contact you soon.
+                Your query has been submitted successfully. Our support team will contact you soon.
               </p>
-              <div className={styles.successActions}>
-                <Button 
-                  variant="outline-primary" 
-                  className={styles.submitAnotherButton}
-                  onClick={handleSubmitAnother}
-                >
-                  Submit Another Query
-                </Button>
-                <Button 
-                  variant="primary" 
-                  className={styles.closeSuccessButton}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Close
-                </Button>
-              </div>
             </div>
           )}
         </div>

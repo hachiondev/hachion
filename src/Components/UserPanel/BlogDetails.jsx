@@ -14,6 +14,119 @@ import { IoLogoWhatsapp } from "react-icons/io";
 import { IoIosMail } from "react-icons/io";
 import { FaYoutube } from "react-icons/fa";
 
+// ✅ NEW: Table of Contents Component with Active State Tracking
+const TableOfContents = ({ headings }) => {
+  const [activeId, setActiveId] = useState('');
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: '0% 0% -80% 0%' }
+    );
+
+    headings.forEach((heading) => {
+      const element = document.getElementById(heading.id);
+      if (element) observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, [headings]);
+
+  if (headings.length === 0) return null;
+
+  return (
+    <aside className="table-of-contents-wrapper">
+      <div className="toc-header">
+        <h3>📚 Table of Contents</h3>
+        <span className="toc-count">{headings.length} topics</span>
+      </div>
+      <ul className="toc-list-modern">
+        {headings.map((h, index) => (
+          <li key={h.id} className={`toc-item-modern ${activeId === h.id ? 'active' : ''}`}>
+            <span className="toc-index-modern">{index + 1}</span>
+            <a
+              href={`#${h.id}`}
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById(h.id)?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+              }}
+            >
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  );
+};
+
+// ✅ NEW: Reading Progress Bar Component
+const ReadingProgress = () => {
+  const [width, setWidth] = useState(0);
+  
+  useEffect(() => {
+    const updateProgress = () => {
+      const element = document.documentElement;
+      const scrollTop = window.scrollY;
+      const scrollHeight = element.scrollHeight - element.clientHeight;
+      const progress = (scrollTop / scrollHeight) * 100;
+      setWidth(progress);
+    };
+    
+    window.addEventListener('scroll', updateProgress);
+    return () => window.removeEventListener('scroll', updateProgress);
+  }, []);
+  
+  return <div className="reading-progress-bar" style={{ width: `${width}%` }} />;
+};
+
+// ✅ NEW: Enhanced Content Processor for better formatting
+const processBlogContent = (html) => {
+  if (!html) return "";
+  
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+  
+  // Add classes to paragraphs for better styling
+  const paragraphs = doc.querySelectorAll("p");
+  paragraphs.forEach((p) => {
+    const firstChild = p.firstChild;
+    if (firstChild?.nodeName === 'STRONG' && !p.querySelector('img')) {
+      p.classList.add('qa-question');
+    }
+  });
+  
+  // Wrap question-answer pairs in beautiful cards
+  let content = doc.body.innerHTML;
+  content = content.replace(
+    /<p><strong[^>]*>(.*?)<\/strong><\/p>\s*<p>(.*?)<\/p>/gs,
+    (match, question, answer) => {
+      return `
+        <div class="qa-card">
+          <div class="qa-question">
+            <span class="qa-icon">❓</span>
+            <strong>${question}</strong>
+          </div>
+          <div class="qa-answer">
+            <span class="qa-icon">💡</span>
+            ${answer}
+          </div>
+        </div>
+      `;
+    }
+  );
+  
+  return content;
+};
 
 const BlogDetails = () => {
   const { category_name } = useParams();
@@ -74,7 +187,7 @@ const BlogDetails = () => {
     setHelmetKey((prev) => prev + 1);
   }, [selectedBlog]);
 
-  // ✅ Parse HTML for headings and inline images
+  // ✅ Parse HTML for headings and inline images (Enhanced)
   useEffect(() => {
     if (selectedBlog?.description) {
       const parser = new DOMParser();
@@ -95,7 +208,7 @@ const BlogDetails = () => {
       const imageUrlRegex = /(https?:\/\/\S+\.(?:png|jpg|jpeg|gif|webp))/gi;
       doc.body.innerHTML = doc.body.innerHTML.replace(
         imageUrlRegex,
-        '<img src="$1" alt="Image" style="max-width:100%; display:block; margin:10px auto;" />'
+        '<img src="$1" alt="Blog Image" loading="lazy" class="blog-content-image" />'
       );
 
       setHeadings(foundHeadings);
@@ -119,8 +232,7 @@ const BlogDetails = () => {
     whatsapp: () =>
       window.open(`https://whatsapp.com/channel/0029VbBClUlKbYMFEaRnjp28`, "_blank"),
     youtube: () =>
-  window.open("https://www.youtube.com/@hachion", "_blank"),
-
+      window.open("https://www.youtube.com/@hachion", "_blank"),
     email: () => {
       const rawBlogUrl = window.location.href;
       const emailSubject = "Check out this blog!";
@@ -169,6 +281,8 @@ const BlogDetails = () => {
       </Helmet>
 
       <div className="home-background">
+        {/* ✅ NEW: Reading Progress Bar */}
+        <ReadingProgress />
 
         <div className="blogs-header">
           <nav aria-label="breadcrumb">
@@ -197,6 +311,8 @@ const BlogDetails = () => {
                     src={`https://api.test.hachion.co/blogs/${selectedBlog.blog_image}`}
                     alt={selectedBlog.title}
                     onError={handleImageError}
+                    loading="lazy"
+                    className="featured-blog-image"
                   />
                   <div>
                     <div className="detail-top">
@@ -211,96 +327,80 @@ const BlogDetails = () => {
                         })()}
                       </div>
                     </div>
-                    <h1>{selectedBlog.title}</h1>
+                    <h1 className="blog-detail-title">{selectedBlog.title}</h1>
                   </div>
                 </div>
 
-                {headings.length > 0 && (
-                  <aside className="container">
-                    <h3 className="toc-title">Topics</h3>
-
-                    <ul className="toc-list">
-                      {headings.map((h, index) => (
-                        <li key={h.id} className="toc-item">
-                          <span className="toc-index">{index + 1}</span>
-
-                          <a
-                            href={`#${h.id}`}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              document.getElementById(h.id)?.scrollIntoView({
-                                behavior: "smooth",
-                                block: "start",
-                              });
-                            }}
-                          >
-                            {h.text}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </aside>
+                {/* ✅ NEW: Estimated Read Time */}
+                {processedHtml && (
+                  <div className="estimated-read-time">
+                    ⏱️ {Math.ceil(processedHtml.split(' ').length / 200)} min read
+                    <span className="read-time-separator">•</span>
+                    <span className="word-count">{processedHtml.split(' ').length} words</span>
+                  </div>
                 )}
 
+                {/* ✅ ENHANCED: Modern Table of Contents with active state */}
+                {headings.length > 0 && (
+                  <TableOfContents headings={headings} />
+                )}
 
+                {/* ✅ ENHANCED: Blog content with beautiful formatting */}
                 <div
-                  className="topics"
-                  dangerouslySetInnerHTML={{ __html: processedHtml }}
+                  className="topics enhanced-blog-content"
+                  dangerouslySetInnerHTML={{ 
+                    __html: processBlogContent(processedHtml) 
+                  }}
                 />
               </>
             ) : (
-              <p>Loading blog...</p>
+              <div className="blog-not-found">
+                <p>🔍 Blog post not found</p>
+              </div>
             )}
 
+            {/* ✅ ENHANCED: Social Share Sidebar - Kept exactly as is */}
             <div className="detail-right">
-  <div className="detail-right-icon">
-    <p className="share-label">Share :</p>
-
-   <FaFacebookF
-    className="social-icon facebook"
-    onClick={shareLinks.facebook}
-    style={{ cursor: "pointer" }}
-  />
-
-  <FaTwitter
-    className="social-icon twitter"
-    onClick={shareLinks.twitter}
-    style={{ cursor: "pointer" }}
-  />
-
-  <FaLinkedinIn
-    className="social-icon linkedin"
-    onClick={shareLinks.linkedin}
-    style={{ cursor: "pointer" }}
-  />
-
-  <IoLogoWhatsapp
-    className="social-icon whatsapp"
-    onClick={shareLinks.whatsapp}
-    style={{ cursor: "pointer" }}
-  />
-
-  <FaYoutube
-  onClick={shareLinks.youtube}
-  style={{
-    cursor: "pointer",
-    fontSize: "28px",
-    color: "#FF0000",
-    display: "inline-block",
-    marginLeft: "10px",
-    verticalAlign: "middle",
-  }}
-/>
-
-
-  </div>
-</div>
-
+              <div className="detail-right-icon">
+                <p className="share-label">Share :</p>
+                <FaFacebookF
+                  className="social-icon facebook"
+                  onClick={shareLinks.facebook}
+                  style={{ cursor: "pointer" }}
+                />
+                <FaTwitter
+                  className="social-icon twitter"
+                  onClick={shareLinks.twitter}
+                  style={{ cursor: "pointer" }}
+                />
+                <FaLinkedinIn
+                  className="social-icon linkedin"
+                  onClick={shareLinks.linkedin}
+                  style={{ cursor: "pointer" }}
+                />
+                <IoLogoWhatsapp
+                  className="social-icon whatsapp"
+                  onClick={shareLinks.whatsapp}
+                  style={{ cursor: "pointer" }}
+                />
+                <FaYoutube
+                  onClick={shareLinks.youtube}
+                  style={{
+                    cursor: "pointer",
+                    fontSize: "28px",
+                    color: "#FF0000",
+                    display: "inline-block",
+                    marginLeft: "10px",
+                    verticalAlign: "middle",
+                  }}
+                />
+              </div>
+            </div>
           </div>
 
-          {/* ✅ RECENT POSTS with Skeleton Loader */}
+          {/* ✅ RECENT POSTS with Skeleton Loader - Kept exactly as is */}
           <div className="detail-blog-left">
-            <h3>Recent Post</h3>
+            <h3>📌 Recent Post</h3>
             {recentLoading
               ? Array.from({ length: 5 }).map((_, i) => (
                 <div className="recent-post-skeleton" key={i}>
@@ -328,6 +428,7 @@ const BlogDetails = () => {
                       alt={blog.title}
                       className="recent-post-img"
                       onError={(e) => (e.target.src = Blogimageplaceholder)}
+                      loading="lazy"
                     />
                     <div className="recent-post-text">
                       <div className="recent-post-row">
@@ -348,7 +449,7 @@ const BlogDetails = () => {
                   </div>
                 ))
               ) : (
-                <p>No blogs available</p>
+                <p className="no-blogs-message">📭 No blogs available</p>
               )}
           </div>
         </div>

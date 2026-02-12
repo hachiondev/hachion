@@ -53,10 +53,7 @@ const Footer = () => {
     str.replace(/\w\S*/g, (txt) =>
       txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase()
     );
-  // const { courseName } = useParams();
   const { courseName } = useParams();
-
-  console.log('Footer useParams:', useParams());
 
 
   const normalizedCourseName = React.useMemo(() => {

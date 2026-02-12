@@ -23,7 +23,7 @@ const QueryFormWidget = () => {
   const countryDropdownRef = useRef(null);
   const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
 
-  // Use the EXISTING TanStack query hook - same as in Register component
+  
   const { 
     countryCode, 
     whatsappNumber, 
@@ -32,7 +32,7 @@ const QueryFormWidget = () => {
     error: countryError 
   } = useTopBarApi();
 
-  // Auto-detect and set country based on API response - EXACTLY like in Register
+  
   useEffect(() => {
     if (countryCode && !countryLoading) {
       const matchedCountry = countries.find((c) => c.flag === countryCode);
@@ -48,11 +48,10 @@ const QueryFormWidget = () => {
   const userEmail = (userData.email || "").trim();
 
   if (!userEmail) {
-    // Not logged in → keep fields empty
+    
     return;
   }
 
-  // Prefill email immediately
   setFormData((prev) => ({
     ...prev,
     email: userEmail,
@@ -69,8 +68,6 @@ const QueryFormWidget = () => {
       }
 
       const data = await response.json();
-
-      // Handle mobile number (same logic as ContactUs)
       if (data?.mobile) {
         const clean = String(data.mobile).includes(" ")
           ? String(data.mobile).split(" ")[1].trim()
@@ -83,8 +80,6 @@ const QueryFormWidget = () => {
           phone: digitsOnly,
         }));
       }
-
-      // If backend returns country, try to match it
       if (data?.country) {
         const matched = countries.find(
           (c) => c.name.toLowerCase() === data.country.toLowerCase()
@@ -101,7 +96,7 @@ const QueryFormWidget = () => {
   fetchUserProfile();
 }, []);
 
-  // Close dropdown when clicking outside
+  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (countryDropdownRef.current && !countryDropdownRef.current.contains(event.target)) {
@@ -245,7 +240,7 @@ const QueryFormWidget = () => {
       });
       setErrors({});
       
-      // Auto-close widget after 3 seconds
+      
       setTimeout(() => {
         setIsOpen(false);
       }, 3000);
@@ -253,16 +248,16 @@ const QueryFormWidget = () => {
     } catch (error) {
       console.error('Submission error:', error);
       
-      // Fallback - Show success message even if API fails
+      
       setIsSuccess(true);
-      setFormData({
-        query: '',
-        phone: '',
-        email: ''
-      });
+     setFormData((prev) => ({
+  ...prev,
+  query: ''   
+}));
+
       setErrors({});
       
-      // Auto-close widget after 3 seconds
+      
       setTimeout(() => {
         setIsOpen(false);
       }, 3000);
@@ -272,14 +267,14 @@ const QueryFormWidget = () => {
   };
 
   const handleSubmitAnother = () => {
-    setIsSuccess(false);
-    setFormData({
-      query: '',
-      phone: '',
-      email: ''
-    });
-    setErrors({});
-  };
+  setIsSuccess(false);
+  setFormData((prev) => ({
+    ...prev,
+    query: ''
+  }));
+  setErrors({});
+};
+
 
   return (
     <div className={`${styles.widgetContainer} ${isOpen ? styles.open : ''}`}>

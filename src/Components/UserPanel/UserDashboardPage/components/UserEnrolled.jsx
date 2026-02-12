@@ -19,7 +19,6 @@ export default function UserEnrolledCourses() {
   const [courses, setCourses] = useState([]);
   const [activeTab, setActiveTab] = useState("Enrolled Courses");
 
-  // ✅ TanStack Query hooks with safe defaults
   const { data: allEroll = [], isLoading: enrollLoading } = useEnrollAll();
   const { data: allCourses = [], isLoading: coursesLoading } = useAllCourses();
   const { data: allTrainers = [], isLoading: trainersLoading } =
@@ -34,7 +33,7 @@ export default function UserEnrolledCourses() {
     const email = user?.email;
     if (!email) return;
 
-    const today = dayjs().startOf("day");
+    const todayDate = dayjs().startOf("day");
 
     const mergedCourses = allEroll
       .filter((e) => e.email === email)
@@ -47,35 +46,44 @@ export default function UserEnrolledCourses() {
           (t) => normalize(t.course_name) === normalize(e.course_name)
         );
 
-        const rawDate =
-          e.demo_date ||
-          e.demoDate ||
-          e.end_date ||
-          e.endDate ||
-          e.completionDate ||
-          e.enroll_date;
-
-        const parsedDate = dayjs(rawDate, [
-          "YYYY-MM-DD",
-          "MM/DD/YYYY",
-          "DD/MM/YYYY",
-          "YYYY-MM-DDTHH:mm:ssZ",
-        ]);
-
-        const isValidDate = parsedDate.isValid();
-        const isFuture = isValidDate && parsedDate.isAfter(today, "day");
-        const isPast = isValidDate && parsedDate.isBefore(today, "day");
+        const enrollDate = dayjs(e.enroll_date, "YYYY-MM-DD");
+        const mode = (e.mode || "").toLowerCase();
 
         let baseStatus = "ENROLLED";
-        if (isFuture) baseStatus = "UPCOMING";
-        else if (isPast) baseStatus = "COMPLETED";
 
-        let progress = e.progress || 0;
+        // Scenario 1: Before scheduled date
+        if (todayDate.isBefore(enrollDate, "day")) {
+          baseStatus = "ENROLLED";
+        }
+        // Scenario 2: On scheduled date
+        else if (todayDate.isSame(enrollDate, "day")) {
+          baseStatus = "IN_PROGRESS";
+        }
+        // Scenario 3: After scheduled date
+        else if (todayDate.isAfter(enrollDate, "day")) {
+          if (mode.includes("demo")) {
+            // Live Demo: directly completed
+            baseStatus = "COMPLETED";
+          } else if (mode.includes("class")) {
+            // Live Class: allow 3 days window
+            const endWindow = enrollDate.add(3, "day");
+            if (todayDate.isAfter(endWindow, "day")) {
+              baseStatus = "COMPLETED";
+            } else {
+              baseStatus = "IN_PROGRESS";
+            }
+          } else {
+            baseStatus = "COMPLETED";
+          }
+        }
+
+        let progress = 0;
+        if (baseStatus === "IN_PROGRESS") progress = 50;
         if (baseStatus === "COMPLETED") progress = 100;
 
         const isLiveClass =
-          course?.mode?.toLowerCase() === "live" ||
-          e.mode?.toLowerCase() === "live";
+          course?.mode?.toLowerCase().includes("live") ||
+          e.mode?.toLowerCase().includes("live");
 
         return {
           ...e,
@@ -84,21 +92,20 @@ export default function UserEnrolledCourses() {
           baseStatus,
           progress,
           isLiveClass,
-          formattedDate: isValidDate
-            ? parsedDate.format("MMM-DD-YYYY")
+          formattedDate: enrollDate.isValid()
+            ? enrollDate.format("MMM-DD-YYYY")
             : "",
-          uniqueId: `${e.email}-${e.course_name}-${e.demo_date || e.enroll_date}`,
+          uniqueId: `${e.email}-${e.course_name}-${e.enroll_date}`,
         };
       });
 
     setCourses(mergedCourses);
   }, [allEroll, allCourses, allTrainers]);
 
-  // ✅ Filtered courses - FIXED: Properly filter based on activeTab
   const filteredCourses = useMemo(() => {
     if (activeTab === "Enrolled Courses") {
       return courses.filter(
-        (c) => c.baseStatus === "ENROLLED" || c.baseStatus === "UPCOMING"
+        (c) => c.baseStatus === "ENROLLED" || c.baseStatus === "IN_PROGRESS"
       );
     }
     if (activeTab === "Completed Courses") {
@@ -107,42 +114,39 @@ export default function UserEnrolledCourses() {
     return [];
   }, [activeTab, courses]);
 
-  // ✅ Loader state
   if (enrollLoading || coursesLoading || trainersLoading) {
-    return <p className="wishlist-empty"><Loader /></p>;
+    return (
+      <p className="wishlist-empty">
+        <Loader />
+      </p>
+    );
   }
 
   return (
     <>
-      {/* Tabs */}
       <div className="dashboard-activity-title">
         {["Enrolled Courses", "Completed Courses"].map((tab) => (
           <button
             key={tab}
             className={`tab-button ${activeTab === tab ? "active" : ""}`}
-            onClick={() => {
-              setActiveTab(tab);
-              // ✅ Force re-render by resetting filteredCourses
-            }}
+            onClick={() => setActiveTab(tab)}
           >
             {tab}
           </button>
         ))}
       </div>
 
-      {/* Courses */}
       <div className="wishlist-container">
         {filteredCourses.length ? (
           <div className="wishlist-grid">
             {filteredCourses.map((course) => {
-              // ✅ Determine button label based on activeTab
               let buttonStatus;
-              if (activeTab === "Completed Courses") {
+              if (course.baseStatus === "COMPLETED") {
                 buttonStatus = "Completed";
-              } else if (course.baseStatus === "UPCOMING") {
-                buttonStatus = "Upcoming Demo";
+              } else if (course.baseStatus === "IN_PROGRESS") {
+                buttonStatus = "In Progress";
               } else {
-                buttonStatus = "Enrolled to Demo";
+                buttonStatus = "Enrolled";
               }
 
               return (
@@ -156,11 +160,10 @@ export default function UserEnrolledCourses() {
                   progress={course.progress}
                   isLiveClass={course.isLiveClass}
                   date={course.formattedDate}
-                  status={buttonStatus} // ✅ Pass correct status based on activeTab
+                  status={buttonStatus}
                   courseData={course}
                   type={course.type}
                   activeTab={activeTab}
-                  // ✅ Force complete courses to show 100% progress in Completed tab
                   forceCompleted={activeTab === "Completed Courses"}
                 />
               );
@@ -175,11 +178,7 @@ export default function UserEnrolledCourses() {
         )}
       </div>
 
-      {/* CTA */}
-      <button
-        className="explore-btn"
-        onClick={() => navigate("/coursedetails")}
-      >
+      <button className="explore-btn" onClick={() => navigate("/coursedetails")}>
         Explore All Courses
       </button>
     </>

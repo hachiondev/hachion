@@ -10,123 +10,14 @@ import { FaCalendarAlt } from "react-icons/fa";
 import { FaFacebookF } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa";
-import { IoLogoWhatsapp } from "react-icons/io";
+import { IoLogoWhatsapp, IoMdMail } from "react-icons/io";
 import { IoIosMail } from "react-icons/io";
 import { FaYoutube } from "react-icons/fa";
 
-// ✅ NEW: Table of Contents Component with Active State Tracking
-const TableOfContents = ({ headings }) => {
-  const [activeId, setActiveId] = useState('');
-  
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        });
-      },
-      { rootMargin: '0% 0% -80% 0%' }
-    );
-
-    headings.forEach((heading) => {
-      const element = document.getElementById(heading.id);
-      if (element) observer.observe(element);
-    });
-
-    return () => observer.disconnect();
-  }, [headings]);
-
-  if (headings.length === 0) return null;
-
-  return (
-    <aside className="table-of-contents-wrapper">
-      <div className="toc-header">
-        <h3>📚 Table of Contents</h3>
-        <span className="toc-count">{headings.length} topics</span>
-      </div>
-      <ul className="toc-list-modern">
-        {headings.map((h, index) => (
-          <li key={h.id} className={`toc-item-modern ${activeId === h.id ? 'active' : ''}`}>
-            <span className="toc-index-modern">{index + 1}</span>
-            <a
-              href={`#${h.id}`}
-              onClick={(e) => {
-                e.preventDefault();
-                document.getElementById(h.id)?.scrollIntoView({
-                  behavior: "smooth",
-                  block: "start",
-                });
-              }}
-            >
-              {h.text}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </aside>
-  );
-};
-
-// ✅ NEW: Reading Progress Bar Component
-const ReadingProgress = () => {
-  const [width, setWidth] = useState(0);
-  
-  useEffect(() => {
-    const updateProgress = () => {
-      const element = document.documentElement;
-      const scrollTop = window.scrollY;
-      const scrollHeight = element.scrollHeight - element.clientHeight;
-      const progress = (scrollTop / scrollHeight) * 100;
-      setWidth(progress);
-    };
-    
-    window.addEventListener('scroll', updateProgress);
-    return () => window.removeEventListener('scroll', updateProgress);
-  }, []);
-  
-  return <div className="reading-progress-bar" style={{ width: `${width}%` }} />;
-};
-
-// ✅ NEW: Enhanced Content Processor for better formatting
-const processBlogContent = (html) => {
-  if (!html) return "";
-  
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, "text/html");
-  
-  // Add classes to paragraphs for better styling
-  const paragraphs = doc.querySelectorAll("p");
-  paragraphs.forEach((p) => {
-    const firstChild = p.firstChild;
-    if (firstChild?.nodeName === 'STRONG' && !p.querySelector('img')) {
-      p.classList.add('qa-question');
-    }
-  });
-  
-  // Wrap question-answer pairs in beautiful cards
-  let content = doc.body.innerHTML;
-  content = content.replace(
-    /<p><strong[^>]*>(.*?)<\/strong><\/p>\s*<p>(.*?)<\/p>/gs,
-    (match, question, answer) => {
-      return `
-        <div class="qa-card">
-          <div class="qa-question">
-            <span class="qa-icon">❓</span>
-            <strong>${question}</strong>
-          </div>
-          <div class="qa-answer">
-            <span class="qa-icon">💡</span>
-            ${answer}
-          </div>
-        </div>
-      `;
-    }
-  );
-  
-  return content;
-};
+import TableOfContents from "./BlogDetailComponents/TableOfContents";
+import ReadingProgress from "./BlogDetailComponents/ReadingProgress";
+import processBlogContent from "./BlogDetailComponents/processBlogContent";
+import MobileShareButton from "./BlogDetailComponents/MobileShareButton";
 
 const BlogDetails = () => {
   const { category_name } = useParams();
@@ -283,6 +174,8 @@ const BlogDetails = () => {
       <div className="home-background">
         {/* ✅ NEW: Reading Progress Bar */}
         <ReadingProgress />
+        {/* ✅ NEW: Mobile Share Button - Only visible on mobile */}
+        <MobileShareButton selectedBlog={selectedBlog} />
 
         <div className="blogs-header">
           <nav aria-label="breadcrumb">
@@ -348,14 +241,14 @@ const BlogDetails = () => {
                 {/* ✅ ENHANCED: Blog content with beautiful formatting */}
                 <div
                   className="topics enhanced-blog-content"
-                  dangerouslySetInnerHTML={{ 
-                    __html: processBlogContent(processedHtml) 
+                  dangerouslySetInnerHTML={{
+                    __html: processBlogContent(processedHtml)
                   }}
                 />
               </>
             ) : (
               <div className="blog-not-found">
-                <p>🔍 Blog post not found</p>
+                <p>Blog post not found</p>
               </div>
             )}
 
@@ -385,15 +278,13 @@ const BlogDetails = () => {
                 />
                 <FaYoutube
                   onClick={shareLinks.youtube}
-                  style={{
-                    cursor: "pointer",
-                    fontSize: "28px",
-                    color: "#FF0000",
-                    display: "inline-block",
-                    marginLeft: "10px",
-                    verticalAlign: "middle",
-                  }}
+                  className="social-icon youtube"
                 />
+                <IoMdMail
+                  onClick={shareLinks.email}
+                  className="social-icon mail"
+                />
+
               </div>
             </div>
           </div>

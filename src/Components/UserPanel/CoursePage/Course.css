@@ -4039,7 +4039,7 @@ html {
   }
 
   .sticky-bar-container {
-        height: 120px;
+        height: 100px;
         justify-content: space-around;
         /* padding: 5px 0; */
         gap: 0;
@@ -5217,7 +5217,7 @@ html {
   }
 
   .sticky-bar-container {
-        height: 120px;
+        height: 100px;
         justify-content: space-around;
         /* padding: 5px 0; */
     }

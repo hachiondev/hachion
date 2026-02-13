@@ -290,155 +290,117 @@ background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
   object-fit: cover;
 }
 
-/* Blog Content Styling - Make dynamic HTML attractive */
+/* Blog Content Styling - Clean & Minimal */
 .topics {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  line-height: 1.8;
-  color: #2d3e50;
+  line-height: 1.7;
+  color: #1e293b;
   max-width: 100%;
   padding: 20px 0;
 }
 
-/* Headings Styling */
+/* Headings - Simple & Clear */
 .topics h1 {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   font-weight: 700;
-  color: #1a2634;
+  color: #0f172a;
   margin: 40px 0 20px;
-  border-bottom: 4px solid #f0b73e;
-  padding-bottom: 15px;
-  scroll-margin-top: 100px;
+  padding-bottom: 12px;
+  border-bottom: 3px solid #f0b73e;
+  scroll-margin-top: 80px;
 }
 
 .topics h2 {
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 600;
-  color: #1e3a5f;
+  color: #1e293b;
   margin: 35px 0 20px;
-  padding-left: 15px;
-  border-left: 6px solid #f0b73e;
-  background: linear-gradient(to right, rgba(240, 183, 62, 0.05), transparent);
-  padding: 15px 0 15px 20px;
-  border-radius: 0 8px 8px 0;
-  scroll-margin-top: 100px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e2e8f0;
+  scroll-margin-top: 80px;
 }
 
 .topics h3 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: #334155;
   margin: 30px 0 15px;
-  display: inline-block;
-  border-bottom: 2px dashed #f0b73e;
-  padding-bottom: 8px;
-  scroll-margin-top: 100px;
+  scroll-margin-top: 80px;
 }
 
-.topics h4, .topics h5, .topics h6 {
+.topics h4 {
+  font-size: 1.25rem;
   font-weight: 600;
-  color: #34495e;
-  margin: 25px 0 10px;
-  scroll-margin-top: 100px;
+  color: #475569;
+  margin: 25px 0 15px;
+  scroll-margin-top: 80px;
 }
 
-/* Paragraph Styling */
+/* Paragraphs */
 .topics p {
   font-size: 1.1rem;
   margin-bottom: 1.5rem;
-  color: #000000;
+  color: #334155;
   line-height: 1.7;
 }
 
-/* Strong/Bold Text */
+/* Bold Text */
 .topics strong {
-  color: #000000;
-  font-weight: 700;
-  /* background: linear-gradient(120deg, rgba(240, 183, 62, 0.1) 0%, rgba(240, 183, 62, 0.1) 100%); */
-  padding: 2px 6px;
-  border-radius: 4px;
+  color: #0f172a;
+  font-weight: 600;
 }
 
-/* Links Styling */
+/* Links - Simple */
 .topics a {
   color: #2563eb;
-  text-decoration: underline;
-  font-weight: 500;
-  border-bottom: 2px solid transparent;
-  transition: all 0.3s ease;
-  position: relative;
+  text-decoration: none;
+  border-bottom: 1px solid #2563eb;
+  transition: border-color 0.2s;
 }
 
-/* Images Styling */
+.topics a:hover {
+  border-bottom: 2px solid #1e40af;
+}
+
+/* Images */
 .topics img {
   max-width: 100%;
   height: auto;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-  margin: 30px auto !important;
+  border-radius: 8px;
+  margin: 30px auto;
   display: block;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid #eaeef2;
+  border: 1px solid #e2e8f0;
 }
 
-.topics img:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.12);
-}
-
-/* Lists Styling */
+/* Lists */
 .topics ul, .topics ol {
-  margin: 20px 0 25px;
-  padding-left: 30px;
+  margin: 20px 0;
+  padding-left: 25px;
 }
 
 .topics li {
-  font-size: 1.05rem;
-  margin-bottom: 12px;
-  color: #000000;
-  position: relative;
-  padding-left: 8px;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  color: #334155;
 }
 
 .topics ul li {
-  list-style-type: none;
-  position: relative;
-}
-
-.topics ul li:before {
-  content: "▹";
-  color: #f0b73e;
-  font-weight: bold;
-  position: absolute;
-  left: -20px;
-  font-size: 1.2rem;
+  list-style-type: disc;
 }
 
 .topics ol li {
-  padding-left: 8px;
+  list-style-type: decimal;
 }
 
 /* Blockquotes */
 .topics blockquote {
   margin: 30px 0;
-  padding: 25px 30px;
-  background: linear-gradient(145deg, #f8fafc, #f1f5f9);
-  border-left: 6px solid #f0b73e;
-  border-radius: 0 16px 16px 0;
-  font-style: italic;
-  color: #334155;
+  padding: 20px 25px;
+  background: #f8fafc;
+  border-left: 4px solid #f0b73e;
+  color: #475569;
   font-size: 1.1rem;
-  position: relative;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-}
-
-.topics blockquote:before {
-  content: '"';
-  font-size: 4rem;
-  color: rgba(240, 183, 62, 0.2);
-  position: absolute;
-  left: 15px;
-  top: -15px;
-  font-family: Georgia, serif;
+  border-radius: 0 8px 8px 0;
 }
 
 /* Tables */
@@ -446,134 +408,130 @@ background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
   width: 100%;
   border-collapse: collapse;
   margin: 30px 0;
-  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
 
 .topics th {
-  background-color: #1e3a5f;
-  color: white;
+  background: #f1f5f9;
+  color: #1e293b;
   font-weight: 600;
-  padding: 15px;
+  padding: 12px 16px;
   text-align: left;
+  border-bottom: 2px solid #cbd5e1;
 }
 
 .topics td {
-  padding: 12px 15px;
+  padding: 12px 16px;
   border-bottom: 1px solid #e2e8f0;
-  background-color: white;
+  background: white;
 }
 
 .topics tr:last-child td {
   border-bottom: none;
 }
 
-.topics tr:hover td {
-  background-color: #f8fafc;
-}
-
-/* Code Blocks */
+/* Code */
 .topics pre {
-  background: #1e1e2f;
+  background: #1e293b;
   color: #e2e8f0;
-  padding: 25px;
-  border-radius: 16px;
+  padding: 20px;
+  border-radius: 8px;
   overflow-x: auto;
   margin: 25px 0;
   font-size: 0.95rem;
-  line-height: 1.6;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
 .topics code {
   font-family: 'Fira Code', 'Courier New', monospace;
   background: #f1f5f9;
-  color: #e11d48;
+  color: #be123c;
   padding: 3px 8px;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 0.9rem;
-  border: 1px solid #e2e8f0;
 }
 
 .topics pre code {
   background: transparent;
   color: #e2e8f0;
-  border: none;
   padding: 0;
 }
 
-/* Question & Answer Formatting */
+/* Q&A Formatting */
 .topics p:has(strong:first-child) {
   background: #f8fafc;
-  padding: 18px 22px;
-  border-radius: 12px;
-  margin: 20px 0;
-  border-left: 6px solid #00AEEF;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  padding: 20px 25px;
+  border-radius: 8px;
+  margin: 25px 0;
+  border-left: 4px solid #3b82f6;
 }
 
-/* Numbered Content Styling */
+/* QA Block */
 .topics .qa-block {
-  display: grid;
-  grid-template-columns: 40px 1fr;
-  gap: 15px;
+  display: flex;
+  gap: 16px;
   margin-bottom: 25px;
-  align-items: start;
+  align-items: flex-start;
 }
 
 .topics .qa-number {
   background: #f0b73e;
-  color: #1e3a5f;
-  width: 40px;
-  height: 40px;
+  color: #0f172a;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 1.2rem;
+  font-weight: 600;
+  font-size: 1rem;
+  flex-shrink: 0;
 }
 
-/* Call to Action Styling */
+/* Call to Action */
 .topics .cta-section {
-  background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
-  color: white;
-  padding: 40px;
-  border-radius: 24px;
-  margin: 50px 0 30px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 32px;
+  border-radius: 12px;
+  margin: 40px 0 30px;
   text-align: center;
 }
 
 .topics .cta-section h3 {
-  color: white;
-  border-bottom: none;
-  font-size: 2rem;
-  margin-bottom: 15px;
+  color: #0f172a;
+  font-size: 1.6rem;
+  margin-bottom: 12px;
+  border: none;
 }
 
 .topics .cta-button {
   display: inline-block;
   background: #f0b73e;
-  color: #1e3a5f;
-  padding: 14px 32px;
-  border-radius: 40px;
-  font-weight: 700;
+  color: #0f172a;
+  padding: 12px 32px;
+  border-radius: 6px;
+  font-weight: 600;
   text-decoration: none;
-  margin-top: 20px;
-  transition: all 0.3s ease;
-  border: 2px solid transparent;
+  margin-top: 16px;
+  transition: background 0.2s;
+  border: none;
 }
 
 .topics .cta-button:hover {
-  background: #e6a823;
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(240, 183, 62, 0.3);
+  background: #e6a623;
 }
 
 .topics .cta-button:after {
-  content: "✓";
-  margin-left: 8px;
+  content: " →";
+}
+
+/* Horizontal Rule */
+.topics hr {
+  margin: 40px 0;
+  border: 0;
+  border-top: 2px solid #e2e8f0;
 }
 
 /* Progress Bar for Reading */

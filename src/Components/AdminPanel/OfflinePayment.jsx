@@ -9,6 +9,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import './Admin.css';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -39,6 +41,19 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     borderRight: '1px solid #e0e0e0',
   },
 }));
+
+const ReminderSwitch = styled(Switch)(({ theme }) => ({
+  '& .MuiSwitch-switchBase.Mui-checked': {
+    color: '#00AEEF',
+    '&:hover': {
+      backgroundColor: 'rgba(0, 174, 239, 0.08)',
+    },
+  },
+  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+    backgroundColor: '#00AEEF',
+  },
+}));
+
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.action.hover,
@@ -47,6 +62,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
+
 export default function OfflinePayment() {
   const [filterCourse, setFilterCourse] = useState([]);
   const [searchTerm, setSearchTerm] = useState("")
@@ -66,6 +82,10 @@ export default function OfflinePayment() {
   const [invoiceNumber, setInvoiceNumber] = useState("");
   const [lastModifiedInstallmentId, setLastModifiedInstallmentId] = useState(null);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
+  
+  // State for reminder toggle switch (true = start/on, false = stop/off)
+  const [reminderEnabled, setReminderEnabled] = useState(true); // true = start, false = stop
+  
   const [paymentData, setPaymentData] = useState({
     id: "",
     student_ID: "",
@@ -89,10 +109,11 @@ export default function OfflinePayment() {
     status: "",
     invoiceNumber: "",
     date: currentDate,
-    selectedInstallmentId: null
+    selectedInstallmentId: null,
+    reminderEnabled: true
   });
   
-  // ADDED: State for checkbox selection
+  // State for checkbox selection
   const [selectedIds, setSelectedIds] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   
@@ -114,7 +135,7 @@ export default function OfflinePayment() {
     currentPage * rowsPerPage
   );
 
-  // ADDED: Handle Select All checkbox
+  // Handle Select All checkbox
   const handleSelectAll = (event) => {
     if (event.target.checked) {
       const allIds = displayedCourse.map(payment => payment.id);
@@ -126,7 +147,7 @@ export default function OfflinePayment() {
     }
   };
 
-  // ADDED: Handle individual checkbox
+  // Handle individual checkbox
   const handleSelectOne = (id) => {
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
@@ -141,7 +162,7 @@ export default function OfflinePayment() {
     }
   };
 
-  // ADDED: Update selectAll state when page changes
+  // Update selectAll state when page changes
   useEffect(() => {
     const allCurrentPageIds = displayedCourse.map(payment => payment.id);
     const allSelected = allCurrentPageIds.length > 0 && 
@@ -149,7 +170,7 @@ export default function OfflinePayment() {
     setSelectAll(allSelected);
   }, [currentPage, displayedCourse, selectedIds]);
 
-  // ADDED: Handle bulk delete
+  // Handle bulk delete
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) {
       setErrorMessage("Please select at least one payment to delete");
@@ -283,6 +304,10 @@ export default function OfflinePayment() {
 
     setInvoiceNumber(row.invoiceNumber || "");
 
+    // Set reminderEnabled from row data (default to true if not present)
+    const reminderStatus = row.reminderEnabled !== undefined ? row.reminderEnabled : true;
+    setReminderEnabled(reminderStatus);
+
     setPaymentData({
       student_ID: row.student_ID || "",
       student_name: row.student_name || "",
@@ -297,6 +322,7 @@ export default function OfflinePayment() {
       total: row.total || "",
       balance: row.balance ?? "",
       status: row.status ?? "",
+      reminderEnabled: reminderStatus
     });
 
     const rowData = (row.rawInstallments || []).map((inst) => ({
@@ -312,6 +338,16 @@ export default function OfflinePayment() {
     }));
 
     Rows(rowData);
+  };
+
+  // Handle reminder toggle change
+  const handleReminderToggle = (event) => {
+    const checked = event.target.checked;
+    setReminderEnabled(checked);
+    setPaymentData(prev => ({
+      ...prev,
+      reminderEnabled: checked
+    }));
   };
 
   useEffect(() => {
@@ -418,7 +454,8 @@ export default function OfflinePayment() {
           date: item.installments?.[0]?.payDate || "",
           rawInstallments: item.installments,
           invoiceNumber: item.invoiceNumber,
-          status: item.status
+          status: item.status,
+          reminderEnabled: item.reminderEnabled !== undefined ? item.reminderEnabled : true
         }));
         setOfflinePayment(normalizedData);
         setFilteredPayment(normalizedData);
@@ -582,6 +619,7 @@ export default function OfflinePayment() {
       reference: row.reference,
     }));
 
+    // Include reminderEnabled in payload
     const payload = {
       studentId: paymentData.student_ID,
       studentName: paymentData.student_name,
@@ -597,6 +635,7 @@ export default function OfflinePayment() {
       balancePay: parseFloat(paymentData.balance),
       installments: formattedInstallments,
       date: currentDate,
+      reminderEnabled: reminderEnabled
     };
 
     formData.append("paymentData", new Blob([JSON.stringify(payload)], { type: "application/json" }));
@@ -719,6 +758,7 @@ export default function OfflinePayment() {
       reference: row.reference,
     }));
 
+    // Include reminderEnabled in update payload
     const payload = {
       studentId: paymentData.student_ID,
       studentName: paymentData.student_name,
@@ -734,6 +774,7 @@ export default function OfflinePayment() {
       balancePay: parseFloat(paymentData.balance),
       installments: formattedInstallments,
       date: currentDate,
+      reminderEnabled: reminderEnabled
     };
 
     formData.append("paymentData", new Blob([JSON.stringify(payload)], { type: "application/json" }));
@@ -792,6 +833,7 @@ export default function OfflinePayment() {
         invoiceNumber: invoiceNumber,
         balancePay: parseFloat(paymentData.balance),
         totalAmount: parseFloat(paymentData.total),
+        reminderEnabled: reminderEnabled
       };
 
       const response = await axios.post("https://api.test.hachion.co/payments/reminder", reminderPayload, {
@@ -829,6 +871,7 @@ export default function OfflinePayment() {
       reference: row.reference,
     }));
 
+    // Include reminderEnabled in payload
     const payload = {
       studentId: paymentData.student_ID,
       studentName: paymentData.student_name,
@@ -844,6 +887,7 @@ export default function OfflinePayment() {
       balancePay: parseFloat(paymentData.balance),
       installments: formattedInstallments,
       date: currentDate,
+      reminderEnabled: reminderEnabled
     };
 
     formData.append("paymentData", new Blob([JSON.stringify(payload)], { type: "application/json" }));
@@ -906,6 +950,9 @@ export default function OfflinePayment() {
   
   const handleAddTrendingCourseClick = () => {
     setShowAddCourse(true);
+    // Reset reminderEnabled to default true when adding new payment
+    setReminderEnabled(true);
+    setFormMode("Add");
   }
 
   return (
@@ -923,7 +970,7 @@ export default function OfflinePayment() {
                 </a>
                 <MdKeyboardArrowRight />
               </li>
-              <li className="breadcrumb-item active" aria-current="page">
+<li className="breadcrumb-item active" aria-current="page">
                 {formMode === "Edit" ? "Edit Payment" : "Add Payment"}
               </li>
             </ol>
@@ -1014,6 +1061,34 @@ export default function OfflinePayment() {
                   <input type="text" class="schedule-input" id="inputEmail4" name='days' value={paymentData.days} onChange={handleChange} />
                 </div>
               </div>
+
+              {/* REMINDER TOGGLE - SHOW ONLY IN EDIT MODE */}
+              {formMode === "Edit" && (
+                <div className='course-row' style={{ marginTop: '15px', marginBottom: '15px', alignItems: 'center' }}>
+                  <div className="col" style={{ display: 'flex', alignItems: 'center' }}>
+                    <FormControlLabel
+                      control={
+                        <ReminderSwitch
+                          checked={reminderEnabled}
+                          onChange={handleReminderToggle}
+                          name="reminderSwitch"
+                          color="primary"
+                        />
+                      }
+                      label={
+                        <span style={{ 
+                          fontWeight: '500', 
+                          color: reminderEnabled ? '#00AEEF' : '#666',
+                          marginLeft: '5px'
+                        }}>
+                          Reminder {reminderEnabled ? 'START' : 'STOP'}
+                        </span>
+                      }
+                      labelPlacement="end"
+                    />
+                  </div>
+                </div>
+              )}
 
               <div className='course-row' style={{ marginTop: 5 }}>
                 <button
@@ -1252,7 +1327,7 @@ export default function OfflinePayment() {
                   <p style={{ marginBottom: 0 }}>View Offline Payment List</p>
                 </div>
                 
-                {/* ADDED: Success and Error Messages */}
+                {/* Success and Error Messages */}
                 {successMessage && <div style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</div>}
                 {errorMessage && <div style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</div>}
                 
@@ -1300,7 +1375,7 @@ export default function OfflinePayment() {
                       <button className="btn-search" type="submit"><IoSearch style={{ fontSize: '2rem' }} /></button>
                     </div>
                     
-                    {/* ADDED: Bulk Delete Button */}
+                    {/* Bulk Delete Button */}
                     {selectedIds.length > 0 && (
                       <button 
                         type="button" 
@@ -1324,7 +1399,7 @@ export default function OfflinePayment() {
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
-                  {/* ADDED: Select All Checkbox */}
+                  {/* Select All Checkbox */}
                   <StyledTableCell align='center'>
                     <Checkbox 
                       checked={selectAll}
@@ -1343,6 +1418,8 @@ export default function OfflinePayment() {
                   <StyledTableCell align="center">Balance Fee</StyledTableCell>
                   <StyledTableCell align="center">Status</StyledTableCell>
                   <StyledTableCell align="center">Created Date </StyledTableCell>
+                  {/* Reminder Status Column with Toggle-like Display */}
+                  <StyledTableCell align="center">Reminder</StyledTableCell>
                   <StyledTableCell align="center">Action</StyledTableCell>
                 </TableRow>
               </TableHead>
@@ -1351,7 +1428,7 @@ export default function OfflinePayment() {
                   displayedCourse.map((curr, index) => {
                     return (
                       <StyledTableRow key={curr.id}>
-                        {/* ADDED: Individual Checkbox */}
+                        {/* Individual Checkbox */}
                         <StyledTableCell align='center'>
                           <Checkbox 
                             checked={selectedIds.includes(curr.id)}
@@ -1373,6 +1450,21 @@ export default function OfflinePayment() {
                         <StyledTableCell align="center">
                           {curr.date ? dayjs(curr.date).format('MMM-DD-YYYY').toUpperCase() : ''}
                         </StyledTableCell>
+                        {/* Display Reminder Status as Toggle-like Badge */}
+                        <StyledTableCell align="center">
+                          <span style={{ 
+                            display: 'inline-block',
+                            padding: '4px 8px',
+                            borderRadius: '20px',
+                            backgroundColor: curr.reminderEnabled ? '#e6f7e6' : '#ffe6e6',
+                            color: curr.reminderEnabled ? '#28a745' : '#dc3545',
+                            fontWeight: 'bold',
+                            fontSize: '12px',
+                            border: `1px solid ${curr.reminderEnabled ? '#28a745' : '#dc3545'}`
+                          }}>
+                            {curr.reminderEnabled ? 'START' : 'STOP'}
+                          </span>
+                        </StyledTableCell>
                         <StyledTableCell align="center">
                           <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                             <FaEdit className="edit" onClick={() => handleClickOpen(curr)} />
@@ -1384,8 +1476,8 @@ export default function OfflinePayment() {
                   })
                 ) : (
                   <StyledTableRow>
-                    {/* UPDATED: Changed colSpan from 13 to 14 to include checkbox column */}
-                    <StyledTableCell colSpan={14} align="center">
+                    {/* Updated colSpan from 14 to 15 to include reminder status column */}
+                    <StyledTableCell colSpan={15} align="center">
                       No data available.
                     </StyledTableCell>
                   </StyledTableRow>

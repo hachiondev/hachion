@@ -83,8 +83,8 @@ export default function OfflinePayment() {
   const [lastModifiedInstallmentId, setLastModifiedInstallmentId] = useState(null);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   
-  // State for reminder toggle switch (true = start/on, false = stop/off)
-  const [reminderEnabled, setReminderEnabled] = useState(true); // true = start, false = stop
+  
+  const [reminderEnabled, setReminderEnabled] = useState(true); 
   
   const [paymentData, setPaymentData] = useState({
     id: "",
@@ -113,7 +113,7 @@ export default function OfflinePayment() {
     reminderEnabled: true
   });
   
-  // State for checkbox selection
+  
   const [selectedIds, setSelectedIds] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   
@@ -135,7 +135,7 @@ export default function OfflinePayment() {
     currentPage * rowsPerPage
   );
 
-  // Handle Select All checkbox
+  
   const handleSelectAll = (event) => {
     if (event.target.checked) {
       const allIds = displayedCourse.map(payment => payment.id);
@@ -147,7 +147,7 @@ export default function OfflinePayment() {
     }
   };
 
-  // Handle individual checkbox
+  
   const handleSelectOne = (id) => {
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
@@ -155,14 +155,14 @@ export default function OfflinePayment() {
     } else {
       const newSelectedIds = [...selectedIds, id];
       setSelectedIds(newSelectedIds);
-      // Check if all items are selected
+      
       if (newSelectedIds.length === displayedCourse.length) {
         setSelectAll(true);
       }
     }
   };
 
-  // Update selectAll state when page changes
+  
   useEffect(() => {
     const allCurrentPageIds = displayedCourse.map(payment => payment.id);
     const allSelected = allCurrentPageIds.length > 0 && 
@@ -170,7 +170,7 @@ export default function OfflinePayment() {
     setSelectAll(allSelected);
   }, [currentPage, displayedCourse, selectedIds]);
 
-  // Handle bulk delete
+  
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) {
       setErrorMessage("Please select at least one payment to delete");
@@ -183,14 +183,14 @@ export default function OfflinePayment() {
     
     if (window.confirm(confirmMessage)) {
       try {
-        // Delete all selected payments
+        
         const deletePromises = selectedIds.map(id => 
           axios.delete(`https://api.test.hachion.co/payments/${id}`)
         );
         
         await Promise.all(deletePromises);
 
-        // Update state
+    
         const updatedPayments = offlinePayment.filter(item => !selectedIds.includes(item.id));
         setOfflinePayment(updatedPayments);
         setFilteredPayment(updatedPayments);
@@ -285,7 +285,7 @@ export default function OfflinePayment() {
         setFilteredPayment((prev) => prev.filter((item) => item.id !== id));
         setOfflinePayment((prev) => prev.filter((item) => item.id !== id));
         
-        // Remove from selectedIds if present
+        
         setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
       } else {
         setSuccessMessage("");
@@ -304,9 +304,9 @@ export default function OfflinePayment() {
 
     setInvoiceNumber(row.invoiceNumber || "");
 
-    // Set reminderEnabled from row data (default to true if not present)
-    const reminderStatus = row.reminderEnabled !== undefined ? row.reminderEnabled : true;
-    setReminderEnabled(reminderStatus);
+    
+const reminderStatus = row.reminderEnabled === false ? false : true;
+setReminderEnabled(reminderStatus);
 
     setPaymentData({
       student_ID: row.student_ID || "",
@@ -340,15 +340,49 @@ export default function OfflinePayment() {
     Rows(rowData);
   };
 
-  // Handle reminder toggle change
-  const handleReminderToggle = (event) => {
-    const checked = event.target.checked;
-    setReminderEnabled(checked);
-    setPaymentData(prev => ({
-      ...prev,
-      reminderEnabled: checked
-    }));
-  };
+const handleReminderToggle = async (event) => {
+  const checked = event.target.checked;
+
+  
+  setReminderEnabled(checked);
+  setPaymentData(prev => ({
+    ...prev,
+    reminderEnabled: checked
+  }));
+
+  
+  const stopReminderValue = checked ? "start" : "stop";
+
+  try {
+    
+    const response = await axios.put(
+      "https://api.test.hachion.co/payments/stop-reminder",
+      {
+        stopReminder: stopReminderValue,
+        courseName: paymentData.course_name,
+        studentId: paymentData.student_ID,
+        email: paymentData.email
+      },
+      {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    if (response.data?.success) {
+      setSuccessMessage(`✅ Reminder ${stopReminderValue} successfully.`);
+      setErrorMessage("");
+    } else {
+      setErrorMessage("⚠️ Failed to update reminder status.");
+      setSuccessMessage("");
+    }
+  } catch (error) {
+    console.error("Error updating reminder status:", error);
+    setErrorMessage("❌ Error updating reminder status.");
+    setSuccessMessage("");
+  }
+};
 
   useEffect(() => {
     const fetchByStudentId = async () => {
@@ -455,7 +489,9 @@ export default function OfflinePayment() {
           rawInstallments: item.installments,
           invoiceNumber: item.invoiceNumber,
           status: item.status,
-          reminderEnabled: item.reminderEnabled !== undefined ? item.reminderEnabled : true
+          
+reminderEnabled: item.stopReminder === "stop" ? false : true
+
         }));
         setOfflinePayment(normalizedData);
         setFilteredPayment(normalizedData);
@@ -619,7 +655,7 @@ export default function OfflinePayment() {
       reference: row.reference,
     }));
 
-    // Include reminderEnabled in payload
+    
     const payload = {
       studentId: paymentData.student_ID,
       studentName: paymentData.student_name,
@@ -758,7 +794,7 @@ export default function OfflinePayment() {
       reference: row.reference,
     }));
 
-    // Include reminderEnabled in update payload
+    
     const payload = {
       studentId: paymentData.student_ID,
       studentName: paymentData.student_name,
@@ -871,7 +907,7 @@ export default function OfflinePayment() {
       reference: row.reference,
     }));
 
-    // Include reminderEnabled in payload
+    
     const payload = {
       studentId: paymentData.student_ID,
       studentName: paymentData.student_name,
@@ -950,7 +986,7 @@ export default function OfflinePayment() {
   
   const handleAddTrendingCourseClick = () => {
     setShowAddCourse(true);
-    // Reset reminderEnabled to default true when adding new payment
+    
     setReminderEnabled(true);
     setFormMode("Add");
   }
@@ -1460,7 +1496,7 @@ export default function OfflinePayment() {
                             color: curr.reminderEnabled ? '#28a745' : '#dc3545',
                             fontWeight: 'bold',
                             fontSize: '12px',
-                            border: `1px solid ${curr.reminderEnabled ? '#28a745' : '#dc3545'}`
+                            border: `1px solid ${curr.stopReminder ? '#28a745' : '#dc3545'}`
                           }}>
                             {curr.reminderEnabled ? 'START' : 'STOP'}
                           </span>

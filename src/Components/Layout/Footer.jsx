@@ -3,6 +3,13 @@ import FooterLogo from '../../Assets/Logowhite.webp';
 import { IoIosMail, IoIosArrowForward } from "react-icons/io";
 import { FaPhone } from "react-icons/fa6";
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import whatsapp from '../../Assets/logos_whatsapp-icon.webp';
+import facebook from '../../Assets/facebook.webp';
+import twitter from '../../Assets/twitter.webp';
+import youtube from '../../Assets/youtube.webp';
+import linkedin from '../../Assets/linkedin.webp';
+import instagram from '../../Assets/instagram.webp';
+import quora from '../../Assets/Component 141.webp';
 
 import '../../Components/UserPanel/Home.css';
 
@@ -86,6 +93,7 @@ const Footer = () => {
 
 
   return (
+    <>
     <div className="footer">
       <style>
         {`
@@ -119,6 +127,67 @@ const Footer = () => {
               />
               <span className="arrow"><IoIosArrowForward /></span>
             </div>
+            {/* ----------------------- */}
+          {/* SOCIAL MEDIA LINKS      */}
+          {/* ----------------------- */}
+          <div className='mt-2'>
+          <h6 className='footer-heading text-center'>Social Links</h6>
+          <div className="footer-link">
+            <a
+              href="https://www.facebook.com/hachion.co"
+              aria-label="Facebook"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img src={facebook} alt="facebook-icon" loading="lazy" />
+            </a>
+
+            <a
+              href="https://x.com/hachion_co"
+              aria-label="Twitter"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img src={twitter} alt="twitter-icon" loading="lazy" />
+            </a>
+
+            <a
+              href="https://www.linkedin.com/company/hachion"
+              aria-label="Linkedin"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img src={linkedin} alt="linkedin-icon" loading="lazy" />
+            </a>
+
+            <a
+              href="https://www.instagram.com/hachion_trainings"
+              aria-label="Instagram"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img src={instagram} alt="instagram-icon" loading="lazy" />
+            </a>
+
+            <a
+              href="https://www.quora.com/profile/Hachion"
+              aria-label="Quora"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img src={quora} alt="quora-icon" loading="lazy" />
+            </a>
+
+            <a
+              href="https://www.youtube.com/@hachion"
+              aria-label="YouTube"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img src={youtube} alt="youtube" loading="lazy" />
+            </a>
+          </div>
+          </div>
 
             <div className="desktop-query">
               <a href={whatsappLink} target="_blank" rel="noopener noreferrer"
@@ -215,6 +284,10 @@ const Footer = () => {
 
       </div>
     </div>
+    <p className="footer-copyright-desktop">
+            © Hachion {new Date().getFullYear()}. All Rights Reserved.
+          </p>
+    </>
   );
 };
 

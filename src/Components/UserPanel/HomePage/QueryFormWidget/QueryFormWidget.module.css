@@ -1,50 +1,80 @@
 /* QueryFormWidget.module.css */
 .widgetContainer {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 0px;
+  right: 0px;
   z-index: 9999;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
 }
 
-.floatingButton {
-  position: fixed;
-  bottom: 3px;
-  right: 20px;
+.widgetHeader {
   background: linear-gradient(135deg, #00AEEF 0%, #0088cc 100%);
   color: white;
-  border: none;
-  border-radius: 30px;
-  padding: 12px 20px;
-  cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0, 174, 239, 0.3);
-  transition: all 0.3s ease;
-  z-index: 10000;
-  min-width: 200px;
+  padding: 16px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 4px 12px rgba(0, 174, 239, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  order: 2;
 }
 
-.floatingButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(0, 174, 239, 0.4);
+.widgetContainer.open .widgetHeader {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  order: 1;
+}
+
+.widgetHeader:hover {
+  box-shadow: 0 4px 15px rgba(0, 174, 239, 0.3);
   background: linear-gradient(135deg, #00C6FF 0%, #0099E6 100%);
 }
 
-.buttonContent {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.buttonTitle {
+.widgetTitle {
+  margin: 0;
   font-size: 14px;
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  cursor: pointer;
+  flex: 1;
+}
+
+.widgetContent {
+  background: white;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-left: 1px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  opacity: 0;
+  max-height: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  order: 1;
+}
+
+.widgetContainer.open .widgetContent {
+  opacity: 1;
+  max-height: 480px;
+  order: 2;
+  overflow: visible;
+}
+
+.formContentWrapper {
+  background: white;
+  pointer-events: none;
+}
+
+.widgetContainer.open .formContentWrapper {
+  pointer-events: auto;
 }
 
 .buttonIcon {
@@ -54,137 +84,46 @@
 
 .blinkImage {
   animation: blink 1.5s infinite;
-  filter: drop-shadow(0 0 3px rgba(0, 174, 239, 0.5));
 }
 
 @keyframes blink {
-
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0.5;
-  }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 .chevronIcon {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  transition: transform 0.3s ease;
+  cursor: pointer;
 }
 
 .chevronIcon svg {
-  width: 100%;
-  height: 100%;
-  fill: white;
-}
-
-.chevronIcon.open {
-  transform: rotate(180deg);
-}
-
-.chevronIcon.closed {
-  transform: rotate(0deg);
-}
-
-.widgetContent {
-  position: absolute;
-  bottom: 38px;
-  right: 0;
-  width: 380px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  transform: translateY(20px);
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
-  overflow: hidden;
-  border: 1px solid #e0e0e0;
-  animation: slideInUp 0.3s ease-out;
-}
-
-.widgetContainer.open .widgetContent {
-  transform: translateY(0);
-  opacity: 1;
-  visibility: visible;
-}
-
-.widgetHeader {
-  background: linear-gradient(135deg, #00AEEF 0%, #0088cc 100%);
-  color: white;
-  padding: 14px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.widgetTitle {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.closeButton {
-  background: none !important;
-  border: none !important;
-  color: white !important;
-  cursor: pointer;
-  padding: 4px !important;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-}
-
-.closeButton:hover {
-  background-color: rgba(255, 255, 255, 0.15) !important;
-  transform: rotate(90deg);
-}
-
-.closeButton svg {
-  width: 16px;
-  height: 16px;
   fill: white;
 }
 
 .widgetBody {
-  padding: 0 16px 16px;
-  max-height: 450px;
+  padding: 16px 16px 20px;
+  max-height: 480px;
   overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
 }
 
-.bannerImage img {
-  max-width: 140px;
-  height: auto;
-  transition: transform 0.3s ease;
+/* Support Banner - Hidden */
+.supportBanner {
+  display: none;
 }
 
-.bannerImage img:hover {
-  transform: scale(1.05);
-}
-
+/* Contact Info - Compact */
 .contactInfo {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border-radius: 8px;
-  border-left: 4px solid #00AEEF;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  padding: 10px 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 3px solid #00AEEF;
+  margin-bottom: 16px;
 }
 
 .contactIcon {
@@ -196,21 +135,12 @@
   background: #00AEEF;
   border-radius: 50%;
   flex-shrink: 0;
-  box-shadow: 0 3px 8px rgba(0, 174, 239, 0.3);
 }
 
 .contactIcon svg {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   fill: white;
-}
-
-.form-label {
-  margin: 0.3vh 1vh;
-  font-size: 12px;
-  font-weight: 500;
-  color: #000000;
-  margin-bottom: 6px;
 }
 
 .contactDetails {
@@ -222,56 +152,63 @@
   color: #00AEEF;
   font-weight: 600;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 12px;
   transition: all 0.2s ease;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
+  flex-wrap: wrap;
 }
 
 .phoneLink:hover {
   color: #0088cc;
   text-decoration: underline;
-  transform: translateX(2px);
+}
+
+.phoneLink span {
+  font-size: 11px;
+  color: #666;
+  font-weight: 400;
 }
 
 .availability {
   color: #666;
   font-size: 11px;
   margin-top: 2px;
-  font-weight: 500;
 }
 
+/* Form */
 .queryForm {
-  margin-top: 8px;
+  margin-top: 0;
+  position: relative;
 }
 
 .formGroup {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .formLabel {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 12px;
-  color: #333;
-  font-weight: 600;
+  display: block !important;
+  margin-bottom: 0px;
+  font-size: 12px !important;
 }
 
 .required-star {
-  color: #ff4757;
-  margin-left: 3px;
+  color: #00AEEF;
+  font-size: 14px;
+  margin-left: 2px;
 }
 
+/* Textarea */
 .textareaInput {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #ced4da !important;
+  width: 100% !important;
+  padding: 8px 12px !important;
+  border: 1px solid #e0e0e0 !important;
   border-radius: 6px;
-  font-size: 13px;
-  transition: all 0.3s ease;
-  box-sizing: border-box;
-  min-height: 80px;
+  font-size: 13px !important;
+  transition: all 0.2s ease;
+  box-sizing: border-box !important;
+  min-height: 80px !important;
   resize: vertical;
   font-family: inherit;
 }
@@ -279,84 +216,82 @@
 .textareaInput:focus {
   outline: none !important;
   border-color: #00AEEF !important;
-  box-shadow: 0 0 0 0.2rem rgba(0, 174, 239, 0.25) !important;
+  box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.1) !important;
 }
 
+/* Phone Field */
 .phoneFieldContainer {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 6px;
   width: 100%;
+  position: relative;
 }
 
 .countryDropdownWrapper {
   position: relative;
+  z-index: 1000;
 }
 
 .countrySelectButton {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 12px;
+  gap: 4px;
+  padding: 8px 10px;
   background: white;
-  border: 1px solid #ced4da !important;
+  border: 1px solid #e0e0e0 !important;
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 110px;
+  transition: all 0.2s ease;
+  min-width: 85px;
   justify-content: space-between;
+  font-size: 12px;
 }
 
 .countrySelectButton:hover {
   border-color: #00AEEF !important;
   background-color: #f8f9fa;
-  transform: translateY(-1px);
 }
 
 .countryFlagIcon {
-  border-radius: 3px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .countryCodeDisplay {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 500;
   color: #333;
 }
 
 .caretIcon {
   color: #00AEEF;
-  font-size: 11px;
-  transition: transform 0.2s ease;
-}
-
-.countrySelectButton:hover .caretIcon {
-  transform: translateY(1px);
+  font-size: 10px;
 }
 
 .countryMenu {
   position: absolute;
   top: 100%;
   left: 0;
-  margin-top: 5px;
-  max-height: 190px;
+  margin-top: 4px;
+  max-height: 180px;
   overflow-y: auto;
   background: white;
   border-radius: 6px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   border: 1px solid #e0e0e0;
-  z-index: 10001;
-  min-width: 250px;
+  z-index: 10001 !important;
+  min-width: 220px;
 }
 
 .countryMenuItem {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
+  gap: 8px;
+  padding: 8px 12px;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .countryMenuItem:hover {
@@ -364,57 +299,122 @@
 }
 
 .detectedCountry {
-  background-color: rgba(0, 174, 239, 0.08);
-  border-left: 3px solid #00AEEF;
+  background-color: rgba(0, 174, 239, 0.05);
+  border-left: 2px solid #00AEEF;
+}
+
+.detectedBadge {
+  color: #28a745;
+  font-size: 10px;
+  margin-left: 4px;
 }
 
 .phoneNumberInput {
   flex: 1;
-  padding: 10px 12px;
-  border: 1px solid #ced4da !important;
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0 !important;
   border-radius: 6px;
   font-size: 13px;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   font-family: inherit;
 }
 
 .phoneNumberInput:focus {
   outline: none !important;
   border-color: #00AEEF !important;
-  box-shadow: 0 0 0 0.2rem rgba(0, 174, 239, 0.25) !important;
+  box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.1) !important;
 }
 
 .phoneNumberInput::placeholder {
-  color: #6c757d;
+  color: #999;
   font-size: 12px;
 }
 
+/* Email Field Container */
+.emailFieldContainer {
+  position: relative;
+  width: 100%;
+}
+
+/* Email Input */
 .emailInput {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #ced4da !important;
+  padding: 8px 35px 8px 12px !important;
+  border: 1px solid #e0e0e0 !important;
   border-radius: 6px;
   font-size: 13px;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   box-sizing: border-box;
 }
 
 .emailInput:focus {
   outline: none !important;
   border-color: #00AEEF !important;
-  box-shadow: 0 0 0 0.2rem rgba(0, 174, 239, 0.25) !important;
+  box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.1) !important;
 }
 
 .emailInput::placeholder {
+  color: #999;
   font-size: 12px;
 }
 
+/* Email Lock Icon */
+.emailLockIcon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.validEmail {
+  color: #28a745;
+  animation: lockPulse 0.3s ease;
+}
+
+.invalidEmail {
+  color: #dc3545;
+  animation: lockShake 0.3s ease;
+}
+
+@keyframes lockPulse {
+  0% {
+    transform: translateY(-50%) scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(-50%) scale(1.1);
+  }
+  100% {
+    transform: translateY(-50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes lockShake {
+  0%, 100% {
+    transform: translateY(-50%) translateX(0);
+  }
+  25% {
+    transform: translateY(-50%) translateX(-3px);
+  }
+  75% {
+    transform: translateY(-50%) translateX(3px);
+  }
+}
+
+/* Validation */
 .is-invalid {
   border-color: #dc3545 !important;
 }
 
 .is-invalid:focus {
-  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
 }
 
 .invalid-feedback {
@@ -422,32 +422,31 @@
   color: #dc3545;
   margin-top: 4px;
   display: block;
-  font-weight: 500;
+  font-weight: 400;
 }
 
+/* Submit Button */
 .submitButton {
   width: 100% !important;
   background: linear-gradient(135deg, #00AEEF 0%, #0088cc 100%) !important;
   color: white !important;
   border: none !important;
   border-radius: 6px !important;
-  padding: 12px !important;
-  font-size: 14px !important;
+  padding: 10px !important;
+  font-size: 13px !important;
   font-weight: 600 !important;
   cursor: pointer;
-  transition: all 0.3s ease !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.5px;
+  transition: all 0.2s ease !important;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
   margin-top: 8px !important;
-  box-shadow: 0 4px 15px rgba(0, 174, 239, 0.3) !important;
-  position: relative;
-  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 174, 239, 0.2) !important;
 }
 
 .submitButton:hover:not(:disabled) {
   background: linear-gradient(135deg, #00C6FF 0%, #0099E6 100%) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(0, 174, 239, 0.4) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 174, 239, 0.3) !important;
 }
 
 .submitButton:active:not(:disabled) {
@@ -457,132 +456,180 @@
 .submitButton:disabled {
   opacity: 0.65 !important;
   cursor: not-allowed !important;
-  transform: none !important;
 }
 
 .submitButton .spinner-border {
-  width: 16px;
-  height: 16px;
-  border-width: 2px;
-}
-
-.text-center .spinner-border {
   width: 14px;
   height: 14px;
   border-width: 2px;
-  border-color: #00AEEF #00AEEF transparent;
 }
 
-.text-center .text-muted {
-  font-size: 12px;
-  color: #6c757d;
-}
-
-.submitButton::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 5px;
-  height: 5px;
-  background: rgba(255, 255, 255, 0.5);
-  opacity: 0;
-  border-radius: 100%;
-  transform: scale(1, 1) translate(-50%);
-  transform-origin: 50% 50%;
-}
-
-.submitButton:focus:not(:active)::after {
-  animation: ripple 1s ease-out;
-}
-
-/* Success Message Styles */
-.successContainer {
-  padding: 40px 20px;
+/* Rating Badge */
+.ratingBadge {
+  font-size: 11px;
+  color: #666;
   text-align: center;
-  animation: fadeInScale 0.5s ease-out;
+  margin-top: 8px;
+  display: block;
+}
+
+/* Success Message */
+.successContainer {
+  padding: 30px 20px;
+  text-align: center;
+  height: 40vh;
+  animation: fadeInScale 0.3s ease-out;
 }
 
 .successIcon {
   color: #28a745;
-  margin-bottom: 20px;
-  animation: scaleIn 0.6s ease-out;
+  margin-bottom: 12px;
 }
 
 .successIcon svg {
-  filter: drop-shadow(0 4px 10px rgba(40, 167, 69, 0.3));
+  filter: drop-shadow(0 2px 5px rgba(40, 167, 69, 0.2));
 }
 
 .successTitle {
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 600;
   color: #333;
-  margin-bottom: 12px;
-  animation: fadeInUp 0.6s ease-out 0.1s both;
+  margin-bottom: 8px;
 }
 
 .successMessage {
-  font-size: 14px;
+  font-size: 13px;
   color: #666;
-  line-height: 1.6;
-  margin-bottom: 30px;
-  animation: fadeInUp 0.6s ease-out 0.2s both;
+  line-height: 1.5;
+  margin-bottom: 0;
 }
 
-.successActions {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  animation: fadeInUp 0.6s ease-out 0.3s both;
+/* Scrollbar */
+.widgetBody::-webkit-scrollbar,
+.countryMenu::-webkit-scrollbar {
+  width: 4px;
 }
 
-.submitAnotherButton {
-  width: 100% !important;
-  padding: 12px !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  border: 2px solid #00AEEF !important;
-  color: #00AEEF !important;
-  background: white !important;
-  border-radius: 6px !important;
-  transition: all 0.3s ease !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.5px;
+.widgetBody::-webkit-scrollbar-track,
+.countryMenu::-webkit-scrollbar-track {
+  background: #f1f1f1;
 }
 
-.submitAnotherButton:hover {
-  background: #00AEEF !important;
-  color: white !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 4px 15px rgba(0, 174, 239, 0.3) !important;
+.widgetBody::-webkit-scrollbar-thumb,
+.countryMenu::-webkit-scrollbar-thumb {
+  background: #00AEEF;
+  border-radius: 2px;
 }
 
-.closeSuccessButton {
-  width: 100% !important;
-  background: linear-gradient(135deg, #00AEEF 0%, #0088cc 100%) !important;
-  color: white !important;
-  border: none !important;
-  border-radius: 6px !important;
-  padding: 12px !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
+.widgetBody::-webkit-scrollbar-thumb:hover,
+.countryMenu::-webkit-scrollbar-thumb:hover {
+  background: #0088cc;
+}
+
+/* Mobile Sticky Footer */
+.mobileFooter {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 9998;
+  padding: 8px 12px;
+  gap: 8px;
+}
+
+/* Mobile Modal */
+.mobileModal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  animation: fadeIn 0.2s ease;
+}
+
+.mobileModalContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  max-height: 85vh;
+  overflow-y: auto;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  animation: slideUpModal 0.2s ease;
+}
+
+.mobileCloseButton {
+  background: none;
+  border: none;
+  color: white;
   cursor: pointer;
-  transition: all 0.3s ease !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 15px rgba(0, 174, 239, 0.3) !important;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
 }
 
-.closeSuccessButton:hover {
-  background: linear-gradient(135deg, #00C6FF 0%, #0099E6 100%) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(0, 174, 239, 0.4) !important;
+.mobileCloseButton:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.blinkIcon {
+  animation: blink 1.5s infinite;
+  width: 10px;
+  color: white; /* or any color that matches your design */
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5));
+}
+
+/* If you want different colors for different states */
+.blinkIcon.primary {
+  color: #00AEEF;
+}
+
+.blinkIcon.white {
+  color: white;
+}
+
+.blinkIcon.warning {
+  color: #ffc107;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUpModal {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
 }
 
 @keyframes fadeInScale {
   from {
     opacity: 0;
-    transform: scale(0.9);
+    transform: scale(0.95);
   }
   to {
     opacity: 1;
@@ -590,231 +637,398 @@
   }
 }
 
-@keyframes scaleIn {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+.footerButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.callButton {
+  background: white;
+  color: #333;
+  border: 1px solid #e0e0e0;
 }
 
-@keyframes ripple {
-  0% {
-    transform: scale(0, 0);
-    opacity: 0.5;
-  }
-
-  20% {
-    transform: scale(25, 25);
-    opacity: 0.3;
-  }
-
-  100% {
-    opacity: 0;
-    transform: scale(40, 40);
-  }
+.callButton:hover {
+  background: #f8f9fa;
+  transform: translateY(-1px);
 }
 
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.queryButton {
+  background: linear-gradient(135deg, #00AEEF 0%, #0088cc 100%);
+  color: white;
+  box-shadow: 0 2px 6px rgba(0, 174, 239, 0.2);
 }
 
-.countryMenu::-webkit-scrollbar {
-  width: 5px;
+.queryButton:hover {
+  background: linear-gradient(135deg, #00C6FF 0%, #0099E6 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 174, 239, 0.3);
 }
 
-.countryMenu::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
+.footerIcon {
+  font-size: 14px;
 }
 
-.countryMenu::-webkit-scrollbar-thumb {
-  background: #00AEEF;
-  border-radius: 3px;
+.footerIconImg {
+  filter: brightness(0) invert(1);
+  width: 14px;
+  height: 14px;
 }
 
-.countryMenu::-webkit-scrollbar-thumb:hover {
-  background: #0088cc;
+.emailFieldContainer {
+  position: relative;
+  width: 100%;
 }
 
-.form-control:focus {
+.emailInput {
+  width: 100%;
+  padding: 8px 12px;
+  padding-right: 35px; /* Make space for the lock icon */
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 6px;
+  font-size: 13px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.emailInput:focus {
+  outline: none !important;
   border-color: #00AEEF !important;
-  box-shadow: 0 0 0 0.2rem rgba(0, 174, 239, 0.25) !important;
+  box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.1) !important;
 }
 
-.btn-primary {
-  background-color: #00AEEF !important;
-  border-color: #00AEEF !important;
+.emailInput::placeholder {
+  color: #999;
+  font-size: 12px;
 }
 
-.btn-primary:hover {
-  background-color: #0099E6 !important;
-  border-color: #0099E6 !important;
+/* Email Lock Icon */
+.emailLockIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  z-index: 2;
 }
 
-.phoneFieldContainer input,
-.phoneFieldContainer button,
-.form-control {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+.emailLockIcon svg {
+  width: 14px;
+  height: 14px;
 }
 
+.validEmail svg {
+  color: #28a745;
+}
+
+.invalidEmail svg {
+  color: #dc3545;
+}
+
+/* Privacy Note */
+.privacyNote {
+  font-size: 11px;
+  color: #666;
+  margin: -4px 0 8px 0;
+  text-align: left;
+  font-style: italic;
+}
+
+/* Rating Badge */
+.ratingBadge {
+  font-size: 11px;
+  color: #666;
+  text-align: center;
+  margin-top: 8px;
+  display: block;
+}
+
+/* Responsive Styles */
 @media (max-width: 768px) {
   .widgetContainer {
-    bottom: 15px;
-    right: 15px;
+    display: none;
   }
 
-  .floatingButton {
-    bottom: 3px;
-    right: 15px;
-    padding: 10px 16px;
-    min-width: 180px;
+  .mobileFooter {
+    display: flex;
   }
 
-  .widgetContent {
-    width: 340px;
-    bottom: 38px;
-    right: 0;
+  .mobileModal {
+    display: block;
   }
 
-  .buttonTitle {
-    font-size: 13px;
-  }
-
-  .phoneFieldContainer {
-    flex-direction: row;
-    align-items: stretch;
-    gap: 12px;
-  }
-
-  .countrySelectButton {
-    width: 100%;
-    justify-content: space-between;
+  .widgetBody {
+    padding: 16px;
+    max-height: none;
   }
 
   .countryMenu {
-    left: 0;
-    right: 0;
-  }
-
-  .successContainer {
-    padding: 30px 15px;
-  }
-
-  .successTitle {
-    font-size: 22px;
-  }
-
-  .successMessage {
-    font-size: 13px;
+    min-width: 200px;
   }
 }
 
 @media (max-width: 480px) {
-  .widgetContainer {
-    bottom: 10px;
-    right: 10px;
+  .mobileFooter {
+    padding: 6px 10px;
   }
 
-  .floatingButton {
-    bottom: 57px;
-    right: 10px;
-    min-width: 160px;
-    padding: 10px 14px;
-  }
-
-  .widgetContent {
-    width: calc(100vw - 20px);
-    right: 0;
-    bottom: 95px;
-  }
-
-  .buttonTitle {
-    font-size: 12px;
-  }
-
-  .widgetTitle {
-    font-size: 14px;
-  }
-
-  .phoneLink {
-    font-size: 13px;
-  }
-
-  .countrySelectButton {
-    min-width: 95px;
+  .footerButton {
     padding: 8px 10px;
     font-size: 12px;
   }
 
-  .phoneNumberInput,
-  .emailInput,
-  .textareaInput {
-    padding: 10px 12px;
+  .widgetBody {
+    padding: 14px;
+  }
+
+  .contactInfo {
+    padding: 8px 10px;
+  }
+
+  .phoneLink {
     font-size: 12px;
   }
 
-  .submitButton {
-    padding: 12px !important;
-    font-size: 13px !important;
+  .phoneLink span {
+    font-size: 10px;
+  }
+
+  .availability {
+    font-size: 10px;
+  }
+
+  .countrySelectButton {
+    min-width: 75px;
+    padding: 7px 8px;
+    font-size: 11px;
+  }
+
+  .countryCodeDisplay {
+    font-size: 11px;
+  }
+
+  .countryMenu {
+    min-width: 180px;
+  }
+
+  .countryMenuItem {
+    font-size: 11px;
+    padding: 7px 10px;
+  }
+
+  .detectedBadge {
+    font-size: 9px;
+  }
+
+  .textareaInput {
+    font-size: 12px !important;
+    min-height: 80px !important;
+    padding: 7px 10px !important;
+  }
+
+  .phoneNumberInput,
+  .emailInput {
+    font-size: 12px;
+    padding: 7px 10px;
+  }
+
+  .emailInput {
+    padding: 7px 30px 7px 10px !important;
+  }
+
+  .phoneNumberInput::placeholder,
+  .emailInput::placeholder {
+    font-size: 11px;
   }
 
   .formLabel {
     font-size: 11px;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
+  }
+
+  .emailLockIcon {
+    font-size: 12px;
+    right: 10px;
+  }
+
+  .submitButton {
+    font-size: 12px !important;
+    padding: 9px !important;
+  }
+
+  .ratingBadge {
+    font-size: 10px;
+    margin-top: 6px;
   }
 
   .successContainer {
-    padding: 25px 10px;
+    padding: 20px 15px;
   }
 
   .successIcon svg {
-    width: 50px;
-    height: 50px;
+    width: 35px;
+    height: 35px;
   }
 
   .successTitle {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .successMessage {
     font-size: 12px;
   }
 
-  .successActions {
-    gap: 10px;
+    .emailInput {
+    font-size: 12px;
+    padding: 7px 10px;
+    padding-right: 32px;
   }
 
-  .submitAnotherButton,
-  .closeSuccessButton {
-    padding: 10px !important;
-    font-size: 13px !important;
+  .emailLockIcon svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .privacyNote {
+    font-size: 10px;
+    margin: -2px 0 6px 0;
+  }
+
+  .ratingBadge {
+    font-size: 10px;
+    margin-top: 6px;
+  }
+
+  .blinkIcon{
+    width: 14px;
+  }
+}
+
+@media (max-width: 375px) {
+  .mobileFooter {
+    padding: 5px 8px;
+  }
+
+  .footerButton {
+    padding: 7px 8px;
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  .widgetBody {
+    padding: 12px;
+  }
+
+  .contactInfo {
+    padding: 7px 8px;
+  }
+
+  .contactIcon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .contactIcon svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .phoneLink {
+    font-size: 11px;
+  }
+
+  .phoneLink span {
+    font-size: 9px;
+  }
+
+  .countrySelectButton {
+    min-width: 70px;
+    padding: 6px 6px;
+    font-size: 10px;
+  }
+
+  .countryFlagIcon {
+    width: 16px;
+    height: 12px;
+  }
+
+  .textareaInput {
+    font-size: 11px !important;
+    padding: 6px 8px !important;
+    min-height: 89px !important;
+  }
+
+  .phoneNumberInput,
+  .emailInput {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+
+  .emailInput {
+    padding: 6px 28px 6px 8px !important;
+  }
+
+  .emailLockIcon {
+    font-size: 11px;
+    right: 8px;
+  }
+
+  .formLabel {
+    font-size: 10px;
+  }
+
+  .submitButton {
+    font-size: 11px !important;
+    padding: 8px !important;
+  }
+
+  .ratingBadge {
+    font-size: 9px;
+    margin-top: 4px;
+  }
+
+  .successIcon svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .successTitle {
+    font-size: 16px;
+  }
+
+  .successMessage {
+    font-size: 11px;
+  }
+
+    .emailInput {
+    font-size: 11px;
+    padding: 6px 8px;
+    padding-right: 30px;
+  }
+
+  .privacyNote {
+    font-size: 9px;
+    margin: -1px 0 4px 0;
+  }
+
+  .ratingBadge {
+    font-size: 9px;
+    margin-top: 4px;
   }
 }

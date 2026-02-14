@@ -66,7 +66,7 @@ const Layout = () => {
       {/* ✅ This makes it visible on all user pages */}
       <QueryFormWidget />
 
-      {showStickyBar && <StickyBar />}
+      {/* {showStickyBar && <StickyBar />} */}
     </div>
   );
 };

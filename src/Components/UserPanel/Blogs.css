@@ -4711,6 +4711,10 @@ background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
     margin-top: 5px;
   }
 
+  .toc-header h3{
+    font-size: 17px !important;
+  }
+
   .detail-blog {
     background-color: #ffffff;
     display: flex;
@@ -4766,7 +4770,7 @@ background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
 
   .topics p,
   .topics li {
-    font-size: 18px;
+    /* font-size: 15px; */
     margin-bottom: 5px;
   }
 

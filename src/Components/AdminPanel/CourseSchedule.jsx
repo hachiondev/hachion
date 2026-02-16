@@ -846,10 +846,20 @@ export default function CourseSchedule() {
                             </StyledTableCell>
                             <StyledTableCell align="center" sx={{ padding: 0 }}>
                               <input
+                                type="number"
                                 name="schedule_duration"
-                                className="table-curriculum"
-                                value={rows.schedule_duration}
+                                className="table-curriculum no-spinners"
+                                value={rows[index]?.schedule_duration || ''}
                                 onChange={(e) => handleRowChange(index, 'schedule_duration', e.target.value)}
+                                min="1"
+                                step="1"
+                                placeholder="min"
+                                onKeyDown={(e) => {
+                                  // Prevent entering negative numbers
+                                  if (e.key === '-' || e.key === 'e') {
+                                    e.preventDefault();
+                                  }
+                                }}
                               />
                               {formErrors[index]?.schedule_duration && (
                                 <div style={{ color: "red", fontSize: "12px" }}>
@@ -1313,10 +1323,20 @@ export default function CourseSchedule() {
               <div className="col">
                 <label className="form-label">Duration</label>
                 <input
+                  type="number"
                   className="schedule-input"
                   name="schedule_duration"
                   value={editedRow.schedule_duration}
                   onChange={handleInputChange}
+                  min="1"
+                  step="1"
+                  placeholder="Enter duration"
+                  onKeyDown={(e) => {
+                    // Prevent entering negative numbers or 'e'
+                    if (e.key === '-' || e.key === 'e' || e.key === 'E') {
+                      e.preventDefault();
+                    }
+                  }}
                 />
               </div>
               <div className="col">

@@ -1112,6 +1112,26 @@ input:checked+.slider:before {
   border-radius: 50%;
 }
 
+/* Hide arrows/spinners for number inputs */
+.no-spinners,
+.schedule-input {
+  appearance: textfield;
+  -moz-appearance: textfield; /* Firefox */
+}
+
+.no-spinners::-webkit-outer-spin-button,
+.no-spinners::-webkit-inner-spin-button,
+.schedule-input::-webkit-outer-spin-button,
+.schedule-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-spinners::-ms-clear,
+.schedule-input::-ms-clear {
+  display: none;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .ql-editor h1 {

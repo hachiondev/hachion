@@ -474,7 +474,7 @@ const EnrollmentForm = ({ onClose, onSuccess }) => {
           </div>
 
           {/* Countdown Timer Overlay */}
-          <div className={styles.countdown}>
+          {/* <div className={styles.countdown}>
             <div className={styles.timeBox}>
               <div className={styles.timeValue}>{String(timeLeft.days).padStart(2, '0')}</div>
               <div className={styles.timeLabel}>Days</div>
@@ -491,7 +491,7 @@ const EnrollmentForm = ({ onClose, onSuccess }) => {
               <div className={styles.timeValue}>{timeLeft.seconds}</div>
               <div className={styles.timeLabel}>Sec</div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Form Section */}

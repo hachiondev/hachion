@@ -3,6 +3,7 @@
   padding: 2vh;
   margin-bottom: 0;
 }
+
 .unsub-us {
   display: flex;
   flex-direction: row;
@@ -15,6 +16,7 @@
   font-weight: 400;
   align-items: center;
 }
+
 .unsub-block {
   display: flex;
   flex-direction: row;
@@ -23,6 +25,7 @@
   gap: 1vw;
   padding-top: 2vh;
 }
+
 .unsub-us-icon {
   padding-top: 20px;
   display: flex;
@@ -30,6 +33,7 @@
   justify-content: space-evenly;
   gap: 4vh;
 }
+
 .unsub-us-icon img {
   width: 2vw;
 }
@@ -38,6 +42,7 @@
   height: 100px;
   width: 100px;
 }
+
 .unsub-us-right {
   max-width: 90%;
   background-color: #f6f6f6;
@@ -45,10 +50,12 @@
   border-radius: 20px;
   box-shadow: 5px 5px 10px #d3d3d3;
 }
+
 .unsub-form {
   margin: auto;
   padding: 10px 20px;
 }
+
 .unsub-us-bottom-div {
   display: flex;
   justify-content: space-around;
@@ -56,6 +63,7 @@
   flex-direction: row;
   flex-wrap: wrap;
 }
+
 .unsub-us-right-header {
   border-radius: 2vh 2vh 0 0;
   background: #00aeef;
@@ -66,6 +74,7 @@
   padding: 2vh;
   align-items: center;
 }
+
 .unsubscribe-info {
   background-color: #d9f3fd;
   padding: 20px;
@@ -134,6 +143,7 @@
     margin-bottom: 0;
     padding: 5px;
   }
+
   .unsub-block {
     display: flex;
     flex-direction: row;
@@ -143,6 +153,7 @@
     padding-top: 20px;
     padding-left: 20%;
   }
+
   .unsub-us-icon {
     padding-top: 10px;
     /* justify-content: space-evenly; */
@@ -150,6 +161,7 @@
     align-items: center;
     gap: 5px;
   }
+
   .unsub-us-icon img {
     width: 30px;
     margin: 5px;
@@ -159,6 +171,7 @@
     height: 100px;
     width: 100px;
   }
+
   .unsub-us-right {
     width: 340px;
     background-color: #ffffff;
@@ -167,10 +180,12 @@
     border: 1px solid #b3b3b3;
     box-shadow: 5px 5px 10px #d3d3d3;
   }
+
   .unsub-form {
     margin-left: 5px;
     padding: 10px;
   }
+
   .unsub-us-bottom-div {
     display: flex;
     flex-direction: column;
@@ -178,6 +193,7 @@
     align-items: center;
     margin-top: 20px;
   }
+
   .unsub-us-right-header {
     display: flex;
     border-radius: 10px 10px 0 0;
@@ -193,27 +209,32 @@
   .unsub-us-right-header p {
     margin-bottom: 0;
   }
+
   .unsubscribe-info {
-  margin-bottom: 20px;
-  border-radius: 8px;
-  margin: 10px;
-  margin-top: 10px;
-}
+    margin-bottom: 20px;
+    border-radius: 8px;
+    margin: 10px;
+    margin-top: 10px;
+  }
 
   #unsub1.form-control-unsub {
     max-width: 100%;
-    width: 80vw; /* 80% of the screen width */
+    width: 80vw;
+    /* 80% of the screen width */
     height: 35px;
     font-size: 12px;
     padding: 5px;
   }
-    #unsub1.form-select-unsub {
+
+  #unsub1.form-select-unsub {
     max-width: 100%;
-    width: 80vw; /* 80% of the screen width */
+    width: 80vw;
+    /* 80% of the screen width */
     height: 35px;
     font-size: 12px;
     padding: 5px;
   }
+
   .country-code-dropdown {
     font-size: 12px;
     height: 35px !important;
@@ -225,6 +246,7 @@
     width: 18px;
     margin-right: 3px;
   }
+
   #unsubscribe-txt.u-mobile-number {
     width: 65% !important;
 
@@ -235,6 +257,7 @@
     font-size: 12px;
     margin-bottom: 10px;
   }
+
   .mobile-number {
     width: 90% !important;
     max-width: 550px !important;
@@ -245,6 +268,7 @@
     font-size: 12px;
     margin-bottom: 10px;
   }
+
   #unsub3.form-control-unsub {
     max-width: 100%;
     width: 80vw;
@@ -265,9 +289,9 @@
   }
 
   .form-check-label {
-    font-size: 15px !important;
-    padding-top: 0;
-    margin-top: 0;
+    font-size: 12px !important;
+    padding-top: 10px !important;
+    margin-top: 0px;
   }
 
   .input-group {
@@ -290,15 +314,18 @@
   .unsub-us {
     margin-left: 0px !important;
   }
+
   .unsub-us-div {
     width: 30vw;
     padding: 10px;
   }
 }
+
 @media (max-width: 1366px) {
   .unsub-us {
     margin-left: 10px !important;
   }
+
   .unsub-us-div {
     width: 300px;
     padding: 5px;
@@ -326,14 +353,19 @@
   display: flex;
   align-items: center;
   flex-direction: row;
-  flex-wrap: wrap; /* Allow wrapping if needed */
-  width: 90%; /* Makes it flexible */
-  max-width: 550px; /* Prevents it from becoming too large */
+  flex-wrap: wrap;
+  /* Allow wrapping if needed */
+  width: 90%;
+  /* Makes it flexible */
+  max-width: 550px;
+  /* Prevents it from becoming too large */
 }
 
 .custom-width .dropdown-menu {
-  min-width: 100px; /* Adjust dropdown menu width if necessary */
+  min-width: 100px;
+  /* Adjust dropdown menu width if necessary */
 }
+
 #unsub1 {
   width: 90%;
   max-width: 550px;
@@ -351,8 +383,10 @@
   padding: 0px;
   width: 120px;
   border: 1px solid #b3b3b3 !important;
-  display: flex; /* Ensure content is centered */
-  align-items: center; /* Center icon and text vertically */
+  display: flex;
+  /* Ensure content is centered */
+  align-items: center;
+  /* Center icon and text vertically */
 }
 
 .country-flag {
@@ -379,16 +413,19 @@
   border: 1px solid #b3b3b3;
   padding: 5px;
 }
+
 .form-check {
-     margin-left: 10px;
-    display: flex;
-    margin-bottom: 20px;
-    align-items: center;
+  margin-left: 10px;
+  display: flex;
+  margin-bottom: 20px;
+  align-items: center;
 }
+
 .form-check-input {
   font-size: 20px;
   border: 1px solid #b3b3b3;
 }
+
 .form-check-label {
   font-size: 14px;
   padding-top: 0px;

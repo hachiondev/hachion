@@ -115,6 +115,7 @@ const NewCourseDetails = () => {
     sectionRefs.current[index] = el;
   };
 
+  
   return (
     <>
       {courseData && (

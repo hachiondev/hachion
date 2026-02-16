@@ -45,7 +45,7 @@ const QueryFormWidget = () => {
 
   // Check if user has previously closed the widget
   useEffect(() => {
-    const userClosedWidget = localStorage.getItem('queryWidgetClosed');
+    const userClosedWidget = sessionStorage.getItem('queryWidgetClosed');
     const hasVisitedBefore = sessionStorage.getItem('queryWidgetVisited');
 
     if (userClosedWidget === 'true') {
@@ -80,7 +80,7 @@ const QueryFormWidget = () => {
       const matchedCountry = countries.find((c) => c.flag === countryCode);
       if (matchedCountry) {
         setSelectedCountry(matchedCountry);
-        console.log(`Country auto-detected: ${matchedCountry.name} (${countryCode})`);
+        // console.log(`Country auto-detected: ${matchedCountry.name} (${countryCode})`);
       }
     }
   }, [countryCode, countryLoading]);
@@ -172,7 +172,6 @@ const QueryFormWidget = () => {
   }, [isOpen]);
 
   const handleCountrySelect = (country) => {
-    console.log('Country selected:', country.name, country.code);
     setSelectedCountry(country);
     setIsCountryMenuOpenDesktop(false);
     setIsCountryMenuOpenMobile(false);
@@ -253,6 +252,8 @@ const QueryFormWidget = () => {
 
     if (!formData.query.trim()) {
       newErrors.query = 'Query is required.';
+    } else if (formData.query.length > 300) {
+      newErrors.query = 'Query cannot exceed 300 characters.';
     }
 
     if (!formData.email.trim()) {
@@ -260,13 +261,8 @@ const QueryFormWidget = () => {
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email address.';
     } else {
-      // Check for typos in 'gmail.com' as a complete phrase
       const lowerEmail = formData.email.toLowerCase();
-
-      // Extract the domain part (everything after @)
       const domainPart = lowerEmail.split('@')[1];
-
-      // Check if it looks like gmail.com but is misspelled
       const gmailComTypos = [
         'gamil.com', 'gmial.com', 'gmai.com', 'gmaill.com', 'gmil.com',
         'gnail.com', 'gmal.com', 'gmeil.com', 'gmaul.com', 'gimail.com',
@@ -276,7 +272,6 @@ const QueryFormWidget = () => {
         'gnail.co', 'gmal.om', 'gmeil.vom', 'gmaul.xom', 'gimail.con'
       ];
 
-      // Check if domain matches any typo
       if (gmailComTypos.includes(domainPart)) {
         newErrors.email = 'Did you mean "gmail.com"? Please check your email address.';
       }
@@ -374,7 +369,7 @@ const QueryFormWidget = () => {
   const handleClose = () => {
     setIsOpen(false);
     setHasUserClosed(true);
-    localStorage.setItem('queryWidgetClosed', 'true');
+    sessionStorage.setItem('queryWidgetClosed', 'true');
   };
 
   const handleToggle = () => {
@@ -451,10 +446,14 @@ const QueryFormWidget = () => {
                           name="query"
                           value={formData.query}
                           onChange={handleChange}
+                          maxLength={300}
                           required
                           className={`${styles.textareaInput} ${errors.query ? 'is-invalid' : ''}`}
                           disabled={isSubmitting}
                         />
+                        <div className={styles.charCount}>
+                          {formData.query.length}/300
+                        </div>
                         {errors.query && (
                           <div className="invalid-feedback d-block">{errors.query}</div>
                         )}

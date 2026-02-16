@@ -2507,6 +2507,10 @@ html {
   padding: 20px;
 }
 
+/* Hide breadcrumb by default on desktop */
+.breadcrumb-course-header .breadcrumb-nav {
+  display: none;
+}
 
 @media (max-width: 1366px) {
 
@@ -2954,6 +2958,16 @@ html {
 }
 
 @media (max-width: 768px) {
+  .breadcrumb-course-header .breadcrumb-nav {
+    display: block;
+  }
+
+  .breadcrumb-course-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
   .course-card-container {
     grid-template-columns: 1fr;
     gap: 10px;

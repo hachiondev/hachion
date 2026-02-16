@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams, Link } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import SidebarRight from './components/SidebarRight';
 import Pagination from '../Common/Pagination';
@@ -7,6 +7,7 @@ import './Course.css';
 import { Helmet } from 'react-helmet-async';
 import TrendingCourseNames from './components/TrendingCourseNames';
 import InstructorProfile from './components/InstructorProfile';
+import { MdKeyboardArrowRight } from 'react-icons/md';
 
 const Course = () => {
   const location = useLocation();
@@ -31,13 +32,12 @@ const Course = () => {
 
     if (categoryFromUrl) {
       const decoded = decodeURIComponent(categoryFromUrl);
-      // console.log("✅ Course.jsx picked category:", decoded);
       setSelectedCategoryFromParent(decoded);
+      setSelectedCategory(decoded); // Update selectedCategory as well
     } else {
       setSelectedCategoryFromParent(null);
     }
   }, [searchParams]);
-
 
   const handleFilterChange = (updatedFilters) => {
     const normalized = {
@@ -87,6 +87,22 @@ const Course = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // Get display name for breadcrumb
+  const getBreadcrumbCategory = () => {
+    if (filters.categories.length > 0) {
+      return filters.categories[0];
+    }
+    if (selectedCategoryFromParent) {
+      return selectedCategoryFromParent;
+    }
+    if (selectedCategory && selectedCategory !== 'All') {
+      return selectedCategory;
+    }
+    return null;
+  };
+
+  const displayCategory = getBreadcrumbCategory();
+
   return (
     <>
       <Helmet>
@@ -105,9 +121,26 @@ const Course = () => {
           />
 
           <div className="sidebar-right-container">
-            <div className="course-count">
-              Count <strong>{totalCards}</strong> courses
+            {/* Breadcrumb and Course Count */}
+            <div className="breadcrumb-course-header">
+              <nav aria-label="breadcrumb" className="breadcrumb-nav">
+                <ol className="breadcrumb">
+                  <li className="breadcrumb-item">
+                    <Link to="/">Home</Link> <MdKeyboardArrowRight />
+                  </li>
+                  {displayCategory && (
+                    <li className="breadcrumb-item active" aria-current="page">
+                      {displayCategory}
+                    </li>
+                  )}
+                </ol>
+              </nav>
+              
+              <div className="course-count">
+                Count <strong>{totalCards}</strong> courses
+              </div>
             </div>
+
             <SidebarRight
               category={selectedCategory}
               filters={filters}

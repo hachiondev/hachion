@@ -1,0 +1,229 @@
+.container {
+  border: 0;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+  padding: 1.5rem !important;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.avatar {
+  width: 100px !important;
+  height: 100px !important;
+  border-radius: 50% !important;
+  margin-right: 10px;
+}
+
+.contentWrapper {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.mainContent {
+  width: 100%;
+}
+
+.nameSection {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.name {
+  margin-bottom: 0;
+  font-weight: 700;
+  margin-right: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #F6EF26;
+  color: #1d1a00;
+  font-weight: 500;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.875rem;
+}
+
+.courseName {
+  color: #000000;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.statsContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.statItem {
+  margin-right: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.statItem:last-child {
+  margin-right: 0;
+}
+
+.starIcon {
+  color: #ffc107;
+  margin-right: 0.25rem;
+}
+
+.statValue {
+  font-weight: 600;
+}
+
+.statLabel {
+  color: #000000;
+  margin-left: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.iconBlue {
+  color: #00aeef;
+}
+
+.iconSize {
+  width: 20px;
+  height: 20px;
+}
+
+/* Tablet styles - all in one media query */
+@media (min-width: 768px) {
+  .container {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .contentWrapper {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+/* Mobile styles - all in one media query for 480px */
+@media (max-width: 480px) {
+  .container {
+    align-items: center;
+    padding: 1.25rem !important;
+  }
+
+  .avatar {
+    width: 90px !important;
+    height: 90px !important;
+    margin-right: 0 !important;
+    margin-bottom: 16px;
+  }
+
+  .contentWrapper {
+    width: 100%;
+  }
+
+  .mainContent {
+    text-align: center;
+  }
+
+  .nameSection {
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .name {
+    font-size: 24px;
+    margin-right: 0 !important;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .badge {
+    margin-bottom: 8px;
+    padding: 6px 14px;
+    font-size: 0.9rem;
+  }
+
+  .courseName {
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 1rem;
+  }
+
+  .statsContainer {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .statItem {
+    margin-right: 0 !important;
+    justify-content: center;
+    width: 100%;
+    padding: 8px 0;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+
+  .statLabel {
+    font-size: 0.9rem;
+  }
+}
+
+/* Small mobile styles - all in one media query for 375px */
+@media (max-width: 375px) {
+  .container {
+    padding: 1rem !important;
+  }
+
+  .avatar {
+    width: 80px !important;
+    height: 80px !important;
+    margin-bottom: 14px;
+  }
+
+  .name {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+
+  .badge {
+    padding: 5px 12px;
+    font-size: 0.85rem;
+    gap: 4px;
+  }
+
+  .courseName {
+    font-size: 15px;
+    margin-bottom: 0.75rem;
+  }
+
+  .statItem {
+    padding: 6px 0;
+  }
+
+  .statValue {
+    font-size: 14px;
+  }
+  
+  .statLabel {
+    font-size: 0.85rem;
+  }
+
+  .starIcon {
+    font-size: 0.9rem;
+  }
+
+  .iconBlue {
+    width: 18px;
+    height: 18px;
+  }
+}

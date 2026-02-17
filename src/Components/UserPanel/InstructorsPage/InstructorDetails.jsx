@@ -14,6 +14,7 @@ import { useAllCourses } from "../../../Api/hooks/SitemapPageApi/useAllCourses";
 import Loader from "../Common/Loader/Loader";
 import { useTrainerCourseReviews } from "../../../Api/hooks/InstructorSection/useTrainerCourseReviews";
 import { useGeoData } from "../../../Api/hooks/HomePageApi/TrendingApi/useGeoData";
+import styles from './InstructorDetails.module.css';
 
 const countryToCurrencyMap = {
   IN: "INR", US: "USD", GB: "GBP", AU: "AUD", CA: "CAD", AE: "AED", JP: "JPY",
@@ -195,7 +196,7 @@ const InstructorDetails = () => {
 
       <div className="container">
         {/* Trainer Profile */}
-        <div className="border-0 shadow-sm p-4 d-flex flex-column flex-md-row align-items-start">
+        <div className={styles.container}>
           <Avatar
             alt={trainer.trainer_name}
             src={
@@ -203,36 +204,57 @@ const InstructorDetails = () => {
                 ? `https://api.test.hachion.co/${trainer.trainerImage}`
                 : ""
             }
-            sx={{ width: 100, height: 100, borderRadius: "50%", marginRight: "10px" }}
+            className={styles.avatar}
           />
 
-          <div className="flex-grow-1 d-flex flex-column flex-md-row justify-content-between">
-            <div>
-              <div className="d-flex align-items-center mb-2">
-                <h4 className="mb-0 fw-bold me-2">{trainer.trainer_name}</h4>
-                <span className="badge top-badge"><LuCrown /> Top Rated</span>
+          <div className={styles.contentWrapper}>
+            <div className={styles.mainContent}>
+              <div className={styles.nameSection}>
+                <h4 className={styles.name}>{trainer.trainer_name}</h4>
+                <span className={styles.badge}>
+                  <LuCrown size={14} /> Top Rated
+                </span>
               </div>
-              <p className="text-black mb-2">{trainer.course_name || "Instructor"}</p>
-              <div className="d-flex flex-wrap">
-                <div className="me-4 d-flex align-items-center">
-                  <FaStar className="text-warning me-1" />
-                  <span className="fw-semibold">{trainer.trainerUserRating || 5}</span>
-                  <small className="text-black ms-1">({reviews.length} reviews)</small>
-                </div>
-                <div className="me-4">
-                  {/* <span className="fw-semibold"><GoPeople size="20" color="#00aeef"/> {{enrollCount}}</span> */}
-                  <span className="fw-semibold">
-                    <GoPeople size="20" color="#00aeef" /> {enrollCount ?? 0}
+
+              <p className={styles.courseName}>
+                {trainer.course_name || "Instructor"}
+              </p>
+
+              <div className={styles.statsContainer}>
+                <div className={styles.statItem}>
+                  <FaStar className={styles.starIcon} />
+                  <span className={styles.statValue}>
+                    {trainer.trainerUserRating || 5}
                   </span>
-                  <small className="text-black"> students</small>
+                  <span className={styles.statLabel}>
+                    ({reviews.length} reviews)
+                  </span>
                 </div>
-                <div>
-                  <span className="fw-semibold"><IoMdPlayCircle size="20" color="#00aeef" /> {trainerCourses.length}</span>
-                  <small className="text-black"> courses</small>
+
+                <div className={styles.statItem}>
+                  <span className={styles.statValue}>
+                    <GoPeople className={styles.iconBlue} size={18} />
+                    {enrollCount ?? 0}
+                  </span>
+                  <span className={styles.statLabel}>students</span>
+                </div>
+
+                <div className={styles.statItem}>
+                  <span className={styles.statValue}>
+                    <IoMdPlayCircle className={styles.iconBlue} size={18} />
+                    {trainerCourses.length}
+                  </span>
+                  <span className={styles.statLabel}>courses</span>
                 </div>
               </div>
             </div>
 
+            {/* Optional: Add action buttons here if needed */}
+            {/* <div className={styles.rightSection}>
+          <button className={styles.actionButton}>
+            View Profile
+          </button>
+        </div> */}
           </div>
         </div>
         {/* About Section */}

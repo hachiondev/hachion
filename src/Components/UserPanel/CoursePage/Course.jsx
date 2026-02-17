@@ -88,20 +88,21 @@ const Course = () => {
   };
 
   // Get display name for breadcrumb
-  const getBreadcrumbCategory = () => {
-    if (filters.categories.length > 0) {
-      return filters.categories[0];
-    }
-    if (selectedCategoryFromParent) {
-      return selectedCategoryFromParent;
-    }
-    if (selectedCategory && selectedCategory !== 'All') {
-      return selectedCategory;
-    }
-    return null;
-  };
+// ✅ UPDATED: Return ALL selected categories for breadcrumb
+const getBreadcrumbCategories = () => {
+  if (filters.categories.length > 0) {
+    return filters.categories; // returns all selected, e.g. ["React", "Python", "Node.js"]
+  }
+  if (selectedCategoryFromParent) {
+    return [selectedCategoryFromParent];
+  }
+  if (selectedCategory && selectedCategory !== 'All') {
+    return [selectedCategory];
+  }
+  return [];
+};
 
-  const displayCategory = getBreadcrumbCategory();
+const displayCategories = getBreadcrumbCategories();
 
   return (
     <>
@@ -128,14 +129,20 @@ const Course = () => {
                   <li className="breadcrumb-item">
                     <Link to="/">Home</Link> <MdKeyboardArrowRight />
                   </li>
-                  {displayCategory && (
-                    <li className="breadcrumb-item active" aria-current="page">
-                      {displayCategory}
+
+                  {displayCategories.map((cat, index) => (
+                    <li
+                      key={index}
+                      className="breadcrumb-item active"
+                      aria-current={index === displayCategories.length - 1 ? "page" : undefined}
+                    >
+                      {index > 0 && <MdKeyboardArrowRight />}
+                      {cat}
                     </li>
-                  )}
+                  ))}
                 </ol>
               </nav>
-              
+
               <div className="course-count">
                 Count <strong>{totalCards}</strong> courses
               </div>

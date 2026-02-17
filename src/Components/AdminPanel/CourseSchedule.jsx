@@ -845,24 +845,46 @@ export default function CourseSchedule() {
                               )}
                             </StyledTableCell>
                             <StyledTableCell align="center" sx={{ padding: 0 }}>
-                              <input
-                                type="number"
-                                name="schedule_duration"
-                                className="table-curriculum no-spinners"
-                                value={rows[index]?.schedule_duration || ''}
-                                onChange={(e) => handleRowChange(index, 'schedule_duration', e.target.value)}
-                                min="1"
-                                step="1"
-                                placeholder="min"
-                                onKeyDown={(e) => {
-                                  // Prevent entering negative numbers
-                                  if (e.key === '-' || e.key === 'e') {
-                                    e.preventDefault();
-                                  }
-                                }}
-                              />
+                              <div style={{ position: 'relative', display: 'inline-block' }}>
+                                <input
+                                  type="number"
+                                  name="schedule_duration"
+                                  className="table-curriculum no-spinners"
+                                  value={rows[index]?.schedule_duration || ''}
+                                  onChange={(e) => handleRowChange(index, 'schedule_duration', e.target.value)}
+                                  min="1"
+                                  step="1"
+                                  placeholder="0"
+                                  onKeyDown={(e) => {
+                                    // Prevent entering negative numbers
+                                    if (e.key === '-' || e.key === 'e') {
+                                      e.preventDefault();
+                                    }
+                                  }}
+                                  style={{
+                                    width: '80px',
+                                    padding: '4px 8px',
+                                    paddingRight: '30px',
+                                    border: '1px solid #ddd',
+                                    borderRadius: '4px',
+                                    textAlign: 'center',
+                                    backgroundColor: "#fff"
+                                  }}
+                                />
+                                <span style={{
+                                  position: 'absolute',
+                                  right: '8px',
+                                  top: '50%',
+                                  transform: 'translateY(-50%)',
+                                  fontSize: '12px',
+                                  color: '#000000',
+                                  pointerEvents: 'none'
+                                }}>
+                                  min
+                                </span>
+                              </div>
                               {formErrors[index]?.schedule_duration && (
-                                <div style={{ color: "red", fontSize: "12px" }}>
+                                <div style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
                                   {formErrors[index].schedule_duration}
                                 </div>
                               )}

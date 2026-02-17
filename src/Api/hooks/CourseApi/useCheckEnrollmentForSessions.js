@@ -10,11 +10,6 @@ export function useCheckEnrollmentForSessions(
 ) {
   const hasSessions = Array.isArray(sessions) && sessions.length > 0;
 
-  /**
-   * 🔑 IMPORTANT
-   * Create a STABLE key from sessions
-   * (never pass array/object directly to queryKey)
-   */
   const sessionKey = hasSessions
     ? sessions.map((s) => s.batchId).join("|")
     : "no-sessions";
@@ -29,7 +24,7 @@ export function useCheckEnrollmentForSessions(
 
     enabled: hasSessions && !!studentId && !!courseName,
 
-    staleTime: 5 * 60 * 1000, 
+    staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     refetchOnMount: false,
@@ -40,30 +35,87 @@ export function useCheckEnrollmentForSessions(
       const results = await Promise.all(
         sessions.map(async (sess) => {
           try {
-            const res = await axios.get(
-              `${API_BASE}/enroll/is-enrolled`,
-              {
-                params: {
-                  studentId,
-                  courseName,
-                  batchId: sess.batchId || "",
-                },
-              }
-            );
+            
+            const res = await axios.get(`${API_BASE}/enroll/is-enrolled`, {
+              params: {
+                studentId,
+                courseName,
+                batchId: sess.batchId || "",
+              },
+            });
 
-            return {
-              ...sess,
-              _isEnrolled: res.data?.enrolled ?? false,
-              amount: res.data?.amount ?? 0,
-            };
-          } catch (e) {
-            console.error(
-              "Error checking enrollment for session",
-              sess.id,
-              e
-            );
+            const enrolled = res.data?.enrolled ?? false;
+            const amount = Number(res.data?.amount ?? 0);
 
             
+            if (enrolled && amount > 0) {
+              return {
+                ...sess,
+                _isEnrolled: true,
+                amount,
+              };
+            }
+
+            // 🟡 Case B: Enrolled but amount = 0 → check installments
+           if (enrolled && amount === 0) {
+  try {
+    const progressRes = await axios.get(
+      `${API_BASE}/enroll/installment-progress`,
+      {
+        params: {
+          studentId,
+          courseName,
+          batchId: sess.batchId || "",
+        },
+      }
+    );
+
+    const progress = progressRes.data;
+
+    const clicked = Number(progress?.checkboxClicked ?? 0);
+    const total = Number(progress?.numberOfInstallments ?? 0);
+    const allPaid = progress?.allInstallmentsPaid === true;
+
+    
+    if ((total > 0 && clicked === total) || allPaid) {
+      return {
+        ...sess,
+        _isEnrolled: true,   
+        amount: 0,
+        _installmentsCompleted: true,
+      };
+    }
+
+    
+    return {
+      ...sess,
+      _isEnrolled: false,  
+      amount: 0,
+      _installmentsCompleted: false,
+    };
+  } catch (e) {
+    console.error(
+      "Error checking installment progress for session",
+      sess.id,
+      e
+    );
+
+    
+    return {
+      ...sess,
+      _isEnrolled: false,
+      amount: 0,
+    };
+  }
+}
+            return {
+              ...sess,
+              _isEnrolled: false,
+              amount: 0,
+            };
+          } catch (e) {
+            console.error("Error checking enrollment for session", sess.id, e);
+
             return {
               ...sess,
               _isEnrolled: false,

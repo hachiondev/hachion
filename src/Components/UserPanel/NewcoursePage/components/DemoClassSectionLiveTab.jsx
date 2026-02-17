@@ -449,7 +449,8 @@ What's Included:
                                 : "Resend"}
                           </button>
                         </div>
-                      ) : sess.mode === "Live Class" && isEnrolled && Number(sess.amount) > 0
+                      ) : sess.mode === "Live Class" && isEnrolled && (Number(sess.amount) > 0 || sess._installmentsCompleted)
+
                         ? (
                           /* =========================
                              LIVE CLASS → PAID → ENROLLED

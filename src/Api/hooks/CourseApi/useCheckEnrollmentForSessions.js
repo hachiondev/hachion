@@ -89,7 +89,7 @@ export function useCheckEnrollmentForSessions(
     
     return {
       ...sess,
-      _isEnrolled: false,  
+      _isEnrolled: true,  
       amount: 0,
       _installmentsCompleted: false,
     };
@@ -103,14 +103,14 @@ export function useCheckEnrollmentForSessions(
     
     return {
       ...sess,
-      _isEnrolled: false,
+      _isEnrolled: true,
       amount: 0,
     };
   }
 }
             return {
               ...sess,
-              _isEnrolled: false,
+              _isEnrolled: true,
               amount: 0,
             };
           } catch (e) {
@@ -118,7 +118,7 @@ export function useCheckEnrollmentForSessions(
 
             return {
               ...sess,
-              _isEnrolled: false,
+              _isEnrolled: true,
               amount: 0,
             };
           }

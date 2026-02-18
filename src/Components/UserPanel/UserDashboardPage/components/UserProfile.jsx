@@ -276,6 +276,11 @@ const UserProfile = () => {
       })
         .then((response) => {
           const data = response.data;
+ setFacebook(data.facebook || '');
+  setTwitter(data.twitter || '');
+  setLinkedin(data.linkedin || '');
+  setWebsite(data.website || '');
+  setGithub(data.github || '');
 
           setInitialProfile({
             name: data.name || '',
@@ -539,17 +544,7 @@ const UserProfile = () => {
 
   return (
     <>
-      {/* <div className="dashboard-activity-title">
-        {["Profile", "Password", "Social Share"].map((tab) => (
-          <button
-            key={tab}
-            className={`tab-button ${activeTab === tab ? "active" : ""}`}
-            onClick={() => setActiveTab(tab)}
-          >
-            {tab}
-          </button>
-        ))}
-      </div> */}
+      
       <div className="dashboard-activity-title">
         {(canChangePassword ? ["Profile", "Password", "Social Share"] : ["Profile", "Social Share"]).map((tab) => (
           <button
@@ -946,56 +941,7 @@ const UserProfile = () => {
           <button className='update-profile-btn' onClick={handleResetPassword}>Update Password</button>
         </div>
       )}
-      {/* 
-      {activeTab === "Social Share" && (
-        <div className="write-review">
-          <div className="dashboard-nav">Social Details</div>
-          <div>
-            <label className="login-label">Facebook</label>
-            <div className="register-field">
-              <div className="form-field">
-                <input type="text" className="form-control" placeholder="Enter your link" />
-              </div>
-            </div>
-          </div>
-          <div>
-            <label className="login-label">Twitter</label>
-            <div className="register-field">
-              <div className="form-field">
-                <input type="text" className="form-control" placeholder="Enter your link" />
-              </div>
-            </div>
-          </div>
-          <div>
-            <label className="login-label">LinkedIn</label>
-            <div className="register-field">
-              <div className="form-field">
-                <input type="text" className="form-control" placeholder="Enter your link" />
-              </div>
-            </div>
-          </div>
-          <div>
-            <label className="login-label">Website</label>
-            <div className="register-field">
-              <div className="form-field">
-                <input type="text" className="form-control" placeholder="Enter your link" />
-              </div>
-            </div>
-          </div>
-          <div>
-            <label className="login-label">GitHub</label>
-            <div className="register-field">
-              <div className="form-field">
-                <input type="text" className="form-control" placeholder="Enter your link" />
-              </div>
-            </div>
-          </div>
-          {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
-          {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
-
-          <button className='update-profile-btn'>Save Changes</button>
-        </div>
-      )} */}
+      
       {activeTab === "Social Share" && (
         <div className="write-review">
           <div className="dashboard-nav">Social Details</div>

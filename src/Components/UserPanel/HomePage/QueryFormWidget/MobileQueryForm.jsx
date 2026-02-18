@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaPhone, FaTimes, FaCheckCircle, FaLock } from 'react-icons/fa';
+import { FaPhone, FaTimes, FaCheckCircle, FaLock, FaChevronDown } from 'react-icons/fa';
 import { Form, Button, Spinner } from 'react-bootstrap';
 import Flag from 'react-world-flags';
 import { AiFillCaretDown } from 'react-icons/ai';
@@ -52,7 +52,7 @@ const MobileQueryForm = ({
             onClick={handleClose}
             aria-label="Close"
           >
-            <FaTimes size={18} />
+            <FaChevronDown size={18} />
           </button>
         </div>
 

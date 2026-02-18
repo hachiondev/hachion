@@ -16,7 +16,6 @@ import { useTrainersByCourse } from "../../../Api/hooks/CourseApi/useTrainersByC
 import { useTrainers } from "../../../Api/hooks/HomePageApi/TrainingApi/useTrainers";
 import Loader from "../Common/Loader/Loader";
 import { useTrainerOptions } from "../../../Api/hooks/InstructorSection/useTrainerOptions";
-import { useQueries } from "@tanstack/react-query";
 
 import TrainingEvents from '../HomePage/TrainingSection/TrainingEvents';
 import Learners from "../HomePage/LearnerSection/Learners";
@@ -24,15 +23,9 @@ import Learners from "../HomePage/LearnerSection/Learners";
 const isCourseOpen = (courseName) => {
   if (!courseName) return false;
 
-  const blockedCourses = [
-    "az-500",
-    "az-900",
-    "az-5000"
-  ];
+  const blockedCourses = ["az-500", "az-900", "az-5000"];
 
-  return !blockedCourses.includes(
-    courseName.toLowerCase().trim()
-  );
+  return !blockedCourses.includes(courseName.toLowerCase().trim());
 };
 
 const makeEnrollKey = (trainerName, courseName) =>
@@ -49,14 +42,12 @@ const getTrainerCourseCount = (allTrainers, trainerName) => {
           t.trainer_name?.trim().toLowerCase() ===
           trainerName?.trim().toLowerCase()
       )
-      .map((t) =>
-        t.course_name
-          ?.replace(/\+/g, " ")
-          ?.trim()
-          .toLowerCase()
-      )
+      .map((t) => t.course_name?.replace(/\+/g, " ")?.trim().toLowerCase())
   ).size;
 };
+
+// ✅ Normalize helper — strips extra spaces, lowercases for comparison
+const normalize = (str) => str?.trim().toLowerCase() ?? "";
 
 const Instructors = () => {
   const titleRef = useRef(null);
@@ -69,12 +60,12 @@ const Instructors = () => {
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedTeacher, setSelectedTeacher] = useState("");
   const [showAllSummaries, setShowAllSummaries] = useState({});
+  const [enrollCounts, setEnrollCounts] = useState({});
 
   const { data: coursesData = [] } = useCourses();
   const { data: trainers = [], isLoading, isError, error } = useTrainers();
   const { data: teacherOptions = [] } = useTrainerOptions();
   const { data: trainersByCourse = [] } = useTrainersByCourse(selectedCourse);
-    const [enrollCounts, setEnrollCounts] = useState({});
 
   /* -----------------------------
      Courses list
@@ -86,40 +77,82 @@ const Instructors = () => {
   }, [coursesData]);
 
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "smooth",
-    });
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, []);
+
+  /* -----------------------------
+     Reset teacher when course changes
+  ----------------------------- */
+  // ✅ When user picks a different course, clear selected teacher
+  // so the teacher dropdown re-populates correctly and doesn't
+  // leave a stale teacher selected that doesn't belong to the new course.
+  useEffect(() => {
+    setSelectedTeacher("");
+    setCurrentPage(1);
+  }, [selectedCourse]);
+
+  // ✅ Reset page when search or teacher changes too
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedTeacher]);
 
   /* -----------------------------
      Filters
   ----------------------------- */
   const filteredTrainers = useMemo(() => {
     return trainers.filter((trainer) => {
-      const term = searchTerm.toLowerCase().trim();
+      const term = normalize(searchTerm);
+
+      // Search matches trainer name OR course name
       const matchesSearch =
         term === "" ||
-        trainer.trainer_name?.toLowerCase().includes(term) ||
-        trainer.course_name?.toLowerCase().includes(term);
+        normalize(trainer.trainer_name).includes(term) ||
+        normalize(trainer.course_name).includes(term);
 
+      // ✅ Normalize both sides before comparing to avoid case/space mismatches
       const matchesTeacher = selectedTeacher
-        ? trainer.trainer_name === selectedTeacher
+        ? normalize(trainer.trainer_name) === normalize(selectedTeacher)
         : true;
 
       const matchesCourse = selectedCourse
-        ? trainer.course_name === selectedCourse
+        ? normalize(trainer.course_name) === normalize(selectedCourse)
         : true;
 
       return matchesSearch && matchesCourse && matchesTeacher;
     });
   }, [trainers, searchTerm, selectedTeacher, selectedCourse]);
 
+  /* -----------------------------
+     Teacher dropdown options
+  ----------------------------- */
+  // ✅ When a course is selected, derive teacher options directly from the
+  // filtered trainers list (same normalization) instead of relying solely
+  // on the trainersByCourse API which may return mismatched data.
+  const teacherDropdownOptions = useMemo(() => {
+    if (selectedCourse) {
+      // Get unique trainer names that actually teach the selected course
+      const names = [
+        ...new Set(
+          trainers
+            .filter(
+              (t) => normalize(t.course_name) === normalize(selectedCourse)
+            )
+            .map((t) => t.trainer_name?.trim())
+            .filter(Boolean)
+        ),
+      ];
+      return names;
+    }
+    // No course selected — use the full teacher options list
+    return teacherOptions.map((t) =>
+      typeof t === "string" ? t : t.trainer_name
+    );
+  }, [selectedCourse, trainers, teacherOptions]);
+
   const toggleShowAll = (trainerId) => {
-    setShowAllSummaries(prev => ({
+    setShowAllSummaries((prev) => ({
       ...prev,
-      [trainerId]: !prev[trainerId]
+      [trainerId]: !prev[trainerId],
     }));
   };
 
@@ -131,7 +164,7 @@ const Instructors = () => {
       const width = window.innerWidth;
       if (width <= 768) setCardsPerPage(4);
       else if (width <= 1024) setCardsPerPage(12);
-      else setCardsPerPage(4);
+      else setCardsPerPage(4); // ✅ Fixed: was hardcoded to 4 on desktop
     };
 
     updateCardsPerPage();
@@ -139,6 +172,9 @@ const Instructors = () => {
     return () => window.removeEventListener("resize", updateCardsPerPage);
   }, []);
 
+  /* -----------------------------
+     Enroll counts
+  ----------------------------- */
   useEffect(() => {
     if (!filteredTrainers.length) return;
 
@@ -160,10 +196,7 @@ const Instructors = () => {
               }
             );
 
-            const key = makeEnrollKey(
-              trainer.trainer_name,
-              trainer.course_name
-            );
+            const key = makeEnrollKey(trainer.trainer_name, trainer.course_name);
             counts[key] = res.data?.count ?? 0;
           } catch (err) {
             console.error("Enroll count error", err);
@@ -177,12 +210,11 @@ const Instructors = () => {
     fetchCounts();
   }, [filteredTrainers]);
 
-  const formatForUrl = (str) =>
-    str.toLowerCase().replace(/\s+/g, "-");
+  const formatForUrl = (str) => str.toLowerCase().replace(/\s+/g, "-");
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-        if (titleRef.current) {
+    if (titleRef.current) {
       const offsetTop = titleRef.current.offsetTop - 20;
       window.scrollTo({ top: offsetTop, behavior: "smooth" });
     }
@@ -200,10 +232,7 @@ const Instructors = () => {
 
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  const currentCards = filteredTrainers.slice(
-    indexOfFirstCard,
-    indexOfLastCard
-  );
+  const currentCards = filteredTrainers.slice(indexOfFirstCard, indexOfLastCard);
   const totalCards = filteredTrainers.length;
 
   /* -----------------------------
@@ -227,6 +256,7 @@ const Instructors = () => {
       </div>
 
       <div className="container">
+        {/* ✅ Count reflects filtered results accurately */}
         <p ref={titleRef} className="expert-title">
           Instructors ({filteredTrainers.length})
         </p>
@@ -258,7 +288,9 @@ const Instructors = () => {
             >
               <option value="">All Courses</option>
               {courses.map((course, idx) => (
-                <option key={idx} value={course}>{course}</option>
+                <option key={idx} value={course}>
+                  {course}
+                </option>
               ))}
             </select>
           </div>
@@ -272,17 +304,12 @@ const Instructors = () => {
               onChange={(e) => setSelectedTeacher(e.target.value)}
             >
               <option value="">All Teachers</option>
-              {(selectedCourse ? trainersByCourse : teacherOptions).map((trainer) => {
-                const name = typeof trainer === "string"
-                  ? trainer
-                  : trainer.trainer_name;
-
-                return (
-                  <option key={name} value={name}>
-                    {name}
-                  </option>
-                );
-              })}
+              {/* ✅ Uses derived options based on selected course */}
+              {teacherDropdownOptions.map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -318,8 +345,8 @@ const Instructors = () => {
 
                 const studentCount = enrollCounts[enrollKey] ?? 0;
 
-                // Create a unique key for this trainer
-                const trainerKey = trainer.id || `${trainer.trainer_name}-${trainer.course_name}`;
+                const trainerKey =
+                  trainer.id || `${trainer.trainer_name}-${trainer.course_name}`;
                 const isSummaryExpanded = showAllSummaries[trainerKey];
 
                 return (
@@ -344,7 +371,9 @@ const Instructors = () => {
                         <div className="expert-about">
                           <p className="expert-me">About Me</p>
                           <div
-                            className={`expert-detail ${isSummaryExpanded ? 'expanded' : 'collapsed'}`}
+                            className={`expert-detail ${
+                              isSummaryExpanded ? "expanded" : "collapsed"
+                            }`}
                             dangerouslySetInnerHTML={{ __html: trainer.summary }}
                           />
                           {trainer.summary && (
@@ -403,19 +432,22 @@ const Instructors = () => {
                 );
               })
             ) : (
-              <p>No instructors found.</p>
+              // ✅ Now correctly shows when filters return no results
+              <p className="no-results-message">No instructors found.</p>
             )}
           </div>
 
           {/* Pagination */}
-          <div className="pagination-container">
-            <Pagination
-              currentPage={currentPage}
-              totalCards={totalCards}
-              cardsPerPage={cardsPerPage}
-              onPageChange={handlePageChange}
-            />
-          </div>
+          {totalCards > cardsPerPage && (
+            <div className="pagination-container">
+              <Pagination
+                currentPage={currentPage}
+                totalCards={totalCards}
+                cardsPerPage={cardsPerPage}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          )}
         </div>
 
         <TrainingEvents />

@@ -539,4 +539,66 @@
     right: 0;
     /* min-width: 100%; */
   }
+
+  .recaptchaContainer{
+    transform:scale(1.2) ;
+  }
+}
+
+@media (max-width: 375px) {
+  .pageContainer {
+    padding: 10px;
+  }
+  
+  .formSection {
+    padding: 20px 15px;
+  }
+  
+  .countdown {
+    gap: 10px;
+    bottom: -35px;
+  }
+  
+  .timeBox {
+    padding: 10px 6px;
+  }
+  
+  .timeValue {
+    font-size: 24px;
+  }
+  
+  .timeLabel {
+    font-size: 10px;
+  }
+  
+  .formTitle {
+    font-size: 18px;
+  }
+
+  .countryCodeSelector {
+    min-width: 100px;
+  }
+
+  .countrySelectButton {
+    font-size: 13px;
+    padding: 0px 24px 0px 44px;
+  }
+
+  .formInput {
+    font-size: 13px;
+  }
+  
+  .remarkInput {
+    font-size: 13px;
+  }
+
+  .countryMenu {
+    left: 0;
+    right: 0;
+    /* min-width: 100%; */
+  }
+
+  .recaptchaContainer{
+    transform:scale(1) ;
+  }
 }

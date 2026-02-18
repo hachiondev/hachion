@@ -9,6 +9,7 @@
   max-width: 360px;
   display: flex;
   flex-direction: column;
+  color: #000000; /* Black text for container */
 }
 
 .widgetHeader {
@@ -45,6 +46,7 @@
   gap: 6px;
   cursor: pointer;
   flex: 1;
+  color: white; /* Keep header text white */
 }
 
 .widgetContent {
@@ -59,6 +61,7 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   order: 1;
+  color: #000000; /* Black text */
 }
 
 .widgetContainer.open .widgetContent {
@@ -107,6 +110,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
+  color: #000000; /* Black text */
 }
 
 /* Support Banner - Hidden */
@@ -124,6 +128,7 @@
   border-radius: 6px;
   border-left: 3px solid #00AEEF;
   margin-bottom: 16px;
+  color: #000000; /* Black text */
 }
 
 .contactIcon {
@@ -146,10 +151,11 @@
 .contactDetails {
   display: flex;
   flex-direction: column;
+  color: #000000; /* Black text */
 }
 
 .phoneLink {
-  color: #00AEEF;
+  color: #00AEEF !important; /* Keep this blue as specified */
   font-weight: 600;
   text-decoration: none;
   font-size: 12px;
@@ -161,18 +167,18 @@
 }
 
 .phoneLink:hover {
-  color: #0088cc;
+  color: #0088cc !important;
   text-decoration: underline;
 }
 
 .phoneLink span {
   font-size: 11px;
-  color: #666;
+  color: #000000 !important; /* Black text for the span inside phoneLink */
   font-weight: 400;
 }
 
 .availability {
-  color: #666;
+  color: #000000; /* Black text */
   font-size: 11px;
   margin-top: 2px;
 }
@@ -181,6 +187,7 @@
 .queryForm {
   margin-top: 0;
   position: relative;
+  color: #000000; /* Black text */
 }
 
 .formGroup {
@@ -191,6 +198,7 @@
   display: block !important;
   margin-bottom: 0px;
   font-size: 12px !important;
+  color: #000000; /* Black text */
 }
 
 .required-star {
@@ -211,12 +219,17 @@
   min-height: 80px !important;
   resize: vertical;
   font-family: inherit;
+  color: #000000; /* Black text */
 }
 
 .textareaInput:focus {
   outline: none !important;
   border-color: #00AEEF !important;
   box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.1) !important;
+}
+
+.textareaInput::placeholder {
+  color: #666666; /* Keep placeholder gray */
 }
 
 /* Phone Field */
@@ -246,6 +259,7 @@
   min-width: 85px;
   justify-content: space-between;
   font-size: 12px;
+  color: #000000; /* Black text */
 }
 
 .countrySelectButton:hover {
@@ -261,7 +275,7 @@
 .countryCodeDisplay {
   font-size: 12px;
   font-weight: 500;
-  color: #333;
+  color: #000000; /* Black text */
 }
 
 .caretIcon {
@@ -282,6 +296,7 @@
   border: 1px solid #e0e0e0;
   z-index: 10001 !important;
   min-width: 220px;
+  color: #000000; /* Black text */
 }
 
 .countryMenuItem {
@@ -292,6 +307,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 12px;
+  color: #000000; /* Black text */
 }
 
 .countryMenuItem:hover {
@@ -311,13 +327,13 @@
 
 .charCount {
   font-size: 11px;
-  color: #6c757d;
+  color: #000000; /* Black text */
   text-align: right;
   margin-top: 4px;
 }
 
 .textareaInput:focus + .charCount {
-  color: #007bff;
+  color: #000000; /* Black text */
 }
 
 .phoneNumberInput {
@@ -328,6 +344,7 @@
   font-size: 13px;
   transition: all 0.2s ease;
   font-family: inherit;
+  color: #000000; /* Black text */
 }
 
 .phoneNumberInput:focus {
@@ -337,7 +354,7 @@
 }
 
 .phoneNumberInput::placeholder {
-  color: #999;
+  color: #666666; /* Keep placeholder gray */
   font-size: 12px;
 }
 
@@ -356,6 +373,7 @@
   font-size: 13px;
   transition: all 0.2s ease;
   box-sizing: border-box;
+  color: #000000; /* Black text */
 }
 
 .emailInput:focus {
@@ -365,7 +383,7 @@
 }
 
 .emailInput::placeholder {
-  color: #999;
+  color: #666666; /* Keep placeholder gray */
   font-size: 12px;
 }
 
@@ -391,32 +409,6 @@
 .invalidEmail {
   color: #dc3545;
   animation: lockShake 0.3s ease;
-}
-
-@keyframes lockPulse {
-  0% {
-    transform: translateY(-50%) scale(0.8);
-    opacity: 0;
-  }
-  50% {
-    transform: translateY(-50%) scale(1.1);
-  }
-  100% {
-    transform: translateY(-50%) scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes lockShake {
-  0%, 100% {
-    transform: translateY(-50%) translateX(0);
-  }
-  25% {
-    transform: translateY(-50%) translateX(-3px);
-  }
-  75% {
-    transform: translateY(-50%) translateX(3px);
-  }
 }
 
 /* Validation */
@@ -478,7 +470,7 @@
 /* Rating Badge */
 .ratingBadge {
   font-size: 11px;
-  color: #666;
+  color: #000000; /* Black text */
   text-align: center;
   margin-top: 8px;
   display: block;
@@ -490,6 +482,7 @@
   text-align: center;
   height: 40vh;
   animation: fadeInScale 0.3s ease-out;
+  color: #000000; /* Black text */
 }
 
 .successIcon {
@@ -504,13 +497,13 @@
 .successTitle {
   font-size: 20px;
   font-weight: 600;
-  color: #333;
+  color: #000000; /* Black text */
   margin-bottom: 8px;
 }
 
 .successMessage {
   font-size: 13px;
-  color: #666;
+  color: #000000; /* Black text */
   line-height: 1.5;
   margin-bottom: 0;
 }
@@ -549,6 +542,7 @@
   z-index: 9998;
   padding: 8px 12px;
   gap: 8px;
+  color: #000000; /* Black text */
 }
 
 /* Mobile Modal */
@@ -575,6 +569,7 @@
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
   animation: slideUpModal 0.2s ease;
+  color: #000000; /* Black text */
 }
 
 .mobileCloseButton {
@@ -599,7 +594,7 @@
 .blinkIcon {
   animation: blink 1.5s infinite;
   width: 10px;
-  color: white; /* or any color that matches your design */
+  color: white;
   filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5));
 }
 
@@ -666,7 +661,7 @@
 
 .callButton {
   background: white;
-  color: #333;
+  color: #000000 !important; /* Black text */
   border: 1px solid #e0e0e0;
 }
 
@@ -677,7 +672,7 @@
 
 .queryButton {
   background: linear-gradient(135deg, #00AEEF 0%, #0088cc 100%);
-  color: white;
+  color: white !important;
   box-shadow: 0 2px 6px rgba(0, 174, 239, 0.2);
 }
 
@@ -705,12 +700,13 @@
 .emailInput {
   width: 100%;
   padding: 8px 12px;
-  padding-right: 35px; /* Make space for the lock icon */
+  padding-right: 35px;
   border: 1px solid #e0e0e0 !important;
   border-radius: 6px;
   font-size: 13px;
   transition: all 0.2s ease;
   box-sizing: border-box;
+  color: #000000; /* Black text */
 }
 
 .emailInput:focus {
@@ -720,7 +716,7 @@
 }
 
 .emailInput::placeholder {
-  color: #999;
+  color: #666666; /* Keep placeholder gray */
   font-size: 12px;
 }
 
@@ -755,7 +751,7 @@
 /* Privacy Note */
 .privacyNote {
   font-size: 11px;
-  color: #666;
+  color: #000000; /* Black text */
   margin: -4px 0 8px 0;
   text-align: left;
   font-style: italic;
@@ -764,7 +760,7 @@
 /* Rating Badge */
 .ratingBadge {
   font-size: 11px;
-  color: #666;
+  color: #000000; /* Black text */
   text-align: center;
   margin-top: 8px;
   display: block;
@@ -818,20 +814,24 @@
 
   .phoneLink span {
     font-size: 10px;
+    color: #000000 !important; /* Black text */
   }
 
   .availability {
     font-size: 10px;
+    color: #000000; /* Black text */
   }
 
   .countrySelectButton {
     min-width: 75px;
     padding: 7px 8px;
     font-size: 11px;
+    color: #000000; /* Black text */
   }
 
   .countryCodeDisplay {
     font-size: 11px;
+    color: #000000; /* Black text */
   }
 
   .countryMenu {
@@ -841,22 +841,26 @@
   .countryMenuItem {
     font-size: 11px;
     padding: 7px 10px;
+    color: #000000; /* Black text */
   }
 
   .detectedBadge {
     font-size: 9px;
+    color: #28a745; /* Keep detected badge green */
   }
 
   .textareaInput {
     font-size: 12px !important;
     min-height: 80px !important;
     padding: 7px 10px !important;
+    color: #000000; /* Black text */
   }
 
   .phoneNumberInput,
   .emailInput {
     font-size: 12px;
     padding: 7px 10px;
+    color: #000000; /* Black text */
   }
 
   .emailInput {
@@ -866,11 +870,13 @@
   .phoneNumberInput::placeholder,
   .emailInput::placeholder {
     font-size: 11px;
+    color: #666666; /* Keep placeholder gray */
   }
 
   .formLabel {
     font-size: 11px;
     margin-bottom: 3px;
+    color: #000000; /* Black text */
   }
 
   .emailLockIcon {
@@ -886,6 +892,7 @@
   .ratingBadge {
     font-size: 10px;
     margin-top: 6px;
+    color: #000000; /* Black text */
   }
 
   .successContainer {
@@ -899,16 +906,19 @@
 
   .successTitle {
     font-size: 18px;
+    color: #000000; /* Black text */
   }
 
   .successMessage {
     font-size: 12px;
+    color: #000000; /* Black text */
   }
 
-    .emailInput {
+  .emailInput {
     font-size: 12px;
     padding: 7px 10px;
     padding-right: 32px;
+    color: #000000; /* Black text */
   }
 
   .emailLockIcon svg {
@@ -919,11 +929,13 @@
   .privacyNote {
     font-size: 10px;
     margin: -2px 0 6px 0;
+    color: #000000; /* Black text */
   }
 
   .ratingBadge {
     font-size: 10px;
     margin-top: 6px;
+    color: #000000; /* Black text */
   }
 
   .blinkIcon{
@@ -966,12 +978,14 @@
 
   .phoneLink span {
     font-size: 9px;
+    color: #000000 !important; /* Black text */
   }
 
   .countrySelectButton {
     min-width: 70px;
     padding: 6px 6px;
     font-size: 10px;
+    color: #000000; /* Black text */
   }
 
   .countryFlagIcon {
@@ -983,12 +997,14 @@
     font-size: 11px !important;
     padding: 6px 8px !important;
     min-height: 89px !important;
+    color: #000000; /* Black text */
   }
 
   .phoneNumberInput,
   .emailInput {
     font-size: 11px;
     padding: 6px 8px;
+    color: #000000; /* Black text */
   }
 
   .emailInput {
@@ -1002,6 +1018,7 @@
 
   .formLabel {
     font-size: 10px;
+    color: #000000; /* Black text */
   }
 
   .submitButton {
@@ -1012,6 +1029,7 @@
   .ratingBadge {
     font-size: 9px;
     margin-top: 4px;
+    color: #000000; /* Black text */
   }
 
   .successIcon svg {
@@ -1021,25 +1039,30 @@
 
   .successTitle {
     font-size: 16px;
+    color: #000000; /* Black text */
   }
 
   .successMessage {
     font-size: 11px;
+    color: #000000; /* Black text */
   }
 
-    .emailInput {
+  .emailInput {
     font-size: 11px;
     padding: 6px 8px;
     padding-right: 30px;
+    color: #000000; /* Black text */
   }
 
   .privacyNote {
     font-size: 9px;
     margin: -1px 0 4px 0;
+    color: #000000; /* Black text */
   }
 
   .ratingBadge {
     font-size: 9px;
     margin-top: 4px;
+    color: #000000; /* Black text */
   }
 }

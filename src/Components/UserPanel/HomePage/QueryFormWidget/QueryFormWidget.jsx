@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './QueryFormWidget.module.css';
 import { useTopBarApi } from '../../../../Api/hooks/HomePageApi/useTopBarApi';
 import { countries, getDefaultCountry } from '../../../../countryUtils';
+import MobileQueryForm from './MobileQueryForm'; // Import the mobile component
 
 const QueryFormWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,18 +20,12 @@ const QueryFormWidget = () => {
     email: ''
   });
   const [errors, setErrors] = useState({});
-  const [emailValid, setEmailValid] = useState(null); // null = not checked, true = valid, false = invalid
-
-  // 🔹 UPDATED: Separate dropdown state for desktop & mobile
+  const [emailValid, setEmailValid] = useState(null);
   const [isCountryMenuOpenDesktop, setIsCountryMenuOpenDesktop] = useState(false);
   const [isCountryMenuOpenMobile, setIsCountryMenuOpenMobile] = useState(false);
-
   const mobileInputRef = useRef(null);
-
-  // 🔹 UPDATED: Separate refs
   const countryDropdownRefDesktop = useRef(null);
   const countryDropdownRefMobile = useRef(null);
-
   const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
   const [hasUserClosed, setHasUserClosed] = useState(false);
   const [isFirstVisit, setIsFirstVisit] = useState(false);
@@ -43,7 +38,7 @@ const QueryFormWidget = () => {
     error: countryError
   } = useTopBarApi();
 
-  // Check if user has previously closed the widget
+  // All your existing useEffect hooks remain exactly the same...
   useEffect(() => {
     const userClosedWidget = sessionStorage.getItem('queryWidgetClosed');
     const hasVisitedBefore = sessionStorage.getItem('queryWidgetVisited');
@@ -52,14 +47,12 @@ const QueryFormWidget = () => {
       setHasUserClosed(true);
     }
 
-    // Check if this is a first visit/refresh in this session
     if (!hasVisitedBefore) {
       setIsFirstVisit(true);
       sessionStorage.setItem('queryWidgetVisited', 'true');
     }
   }, []);
 
-  // Show component after 10 seconds
   useEffect(() => {
     const showTimer = setTimeout(() => {
       setIsVisible(true);
@@ -68,7 +61,6 @@ const QueryFormWidget = () => {
     return () => clearTimeout(showTimer);
   }, []);
 
-  // Auto-open only on first visit/refresh if user hasn't permanently closed it
   useEffect(() => {
     if (isVisible && isFirstVisit && !hasUserClosed) {
       setIsOpen(true);
@@ -80,7 +72,6 @@ const QueryFormWidget = () => {
       const matchedCountry = countries.find((c) => c.flag === countryCode);
       if (matchedCountry) {
         setSelectedCountry(matchedCountry);
-        // console.log(`Country auto-detected: ${matchedCountry.name} (${countryCode})`);
       }
     }
   }, [countryCode, countryLoading]);
@@ -137,7 +128,6 @@ const QueryFormWidget = () => {
     fetchUserProfile();
   }, []);
 
-  // 🔹 UPDATED: Outside click handling for both dropdowns
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -171,6 +161,7 @@ const QueryFormWidget = () => {
     }
   }, [isOpen]);
 
+  // All your existing methods remain exactly the same...
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
     setIsCountryMenuOpenDesktop(false);
@@ -189,25 +180,18 @@ const QueryFormWidget = () => {
       [name]: value
     }));
 
-    // Validate email in real-time
     if (name === 'email') {
       if (value.trim() === '') {
-        setEmailValid(null); // No input, no icon
+        setEmailValid(null);
       } else {
-        // Basic email format validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const isValidFormat = emailRegex.test(value);
 
         if (!isValidFormat) {
-          setEmailValid(false); // Invalid format
+          setEmailValid(false);
         } else {
-          // Check for typos in 'gmail.com' as a complete phrase
           const lowerEmail = value.toLowerCase();
-
-          // Extract the domain part (everything after @)
           const domainPart = lowerEmail.split('@')[1];
-
-          // Check if it looks like gmail.com but is misspelled
           const gmailComTypos = [
             'gamil.com', 'gmial.com', 'gmai.com', 'gmaill.com', 'gmil.com',
             'gnail.com', 'gmal.com', 'gmeil.com', 'gmaul.com', 'gimail.com',
@@ -217,13 +201,12 @@ const QueryFormWidget = () => {
             'gnail.co', 'gmal.om', 'gmeil.vom', 'gmaul.xom', 'gimail.con'
           ];
 
-          // Check if domain matches any typo
           const hasGmailComTypo = gmailComTypos.includes(domainPart);
 
           if (hasGmailComTypo) {
-            setEmailValid(false); // Has typo in gmail.com
+            setEmailValid(false);
           } else {
-            setEmailValid(true); // Valid email
+            setEmailValid(true);
           }
         }
       }
@@ -334,7 +317,7 @@ const QueryFormWidget = () => {
         email: ''
       });
       setErrors({});
-      setEmailValid(null); // Reset email validation state
+      setEmailValid(null);
 
       localStorage.removeItem('queryWidgetClosed');
       setHasUserClosed(false);
@@ -353,7 +336,7 @@ const QueryFormWidget = () => {
       }));
 
       setErrors({});
-      setEmailValid(null); // Reset email validation state
+      setEmailValid(null);
 
       localStorage.removeItem('queryWidgetClosed');
       setHasUserClosed(false);
@@ -378,6 +361,37 @@ const QueryFormWidget = () => {
     } else {
       setIsOpen(true);
     }
+  };
+
+  // Prepare all props to pass to MobileQueryForm
+  const mobileViewProps = {
+    isOpen,
+    isVisible,
+    isSubmitting,
+    isSuccess,
+    formData,
+    errors,
+    emailValid,
+    isCountryMenuOpenMobile,
+    selectedCountry,
+    countryCode,
+    countryLoading,
+    whatsappLink,
+    whatsappNumber,
+    mobileInputRef,
+    countryDropdownRefMobile,
+    handleClose,
+    handleToggle,
+    handleSubmit,
+    handleChange,
+    handlePhoneChange,
+    handleCountrySelect,
+    setIsCountryMenuOpenMobile,
+    setEmailValid,
+    setErrors,
+    setIsSuccess,
+    setFormData,
+    setHasUserClosed
   };
 
   return (
@@ -604,211 +618,8 @@ const QueryFormWidget = () => {
         </div>
       )}
 
-      {/* Mobile Modal - Full Screen */}
-      {isVisible && isOpen && (
-        <div className={styles.mobileModal}>
-          <div className={styles.mobileModalContent}>
-            <div className={`${styles.widgetHeader} d-flex align-items-center justify-content-between`}>
-              <h5 className={`m-0 d-flex align-items-center ${styles.widgetTitle}`}>
-                Have a Question? We're Here to Help
-
-                <span className={styles.buttonIcon}>
-                  <FaQuestionCircle size={16} className={styles.blinkIcon} />
-                </span>
-              </h5>
-              <button
-                className={styles.mobileCloseButton}
-                onClick={handleClose}
-                aria-label="Close"
-              >
-                <FaTimes size={18} />
-              </button>
-            </div>
-
-            <div className={styles.widgetBody}>
-              {!isSuccess ? (
-                <>
-                  {/* Contact Info */}
-                  <div className={`d-flex align-items-center ${styles.contactInfo}`}>
-                    <div className={`d-flex align-items-center justify-content-center ${styles.contactIcon}`}>
-                      <FaPhone size={12} />
-                    </div>
-                    <div className={styles.contactDetails}>
-                      <a
-                        href={whatsappLink}
-                        className={`d-block ${styles.phoneLink}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {whatsappNumber}
-                        <span className={styles.contactActions}> [Call Now] [WhatsApp]</span>
-                      </a>
-                      <span className={`d-block ${styles.availability}`}>
-                        Get expert guidance within 24 hours
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Form */}
-                  <Form onSubmit={handleSubmit} className={styles.queryForm}>
-                    <Form.Group className={styles.formGroup}>
-                      <Form.Control
-                        as="textarea"
-                        rows={2}
-                        placeholder="Tell us about your course interest, batch timing, or any doubts you have*"
-                        name="query"
-                        value={formData.query}
-                        onChange={handleChange}
-                        required
-                        className={`${styles.textareaInput} ${errors.query ? 'is-invalid' : ''}`}
-                        disabled={isSubmitting}
-                      />
-                      {errors.query && (
-                        <div className="invalid-feedback d-block">{errors.query}</div>
-                      )}
-                    </Form.Group>
-
-                    {/* Phone Field */}
-                    <Form.Group className={styles.formGroup}>
-                      <Form.Label className={styles.formLabel}>
-                        Phone Number<span className="required-star">*</span>
-                        {countryLoading && (
-                          <Spinner animation="border" size="sm" className="ms-1" />
-                        )}
-                      </Form.Label>
-                      <div className={styles.phoneFieldContainer}>
-                        <div className={styles.countryDropdownWrapper} ref={countryDropdownRefMobile}>
-                          <button
-                            type="button"
-                            onClick={() => setIsCountryMenuOpenMobile(!isCountryMenuOpenMobile)}
-                            className={styles.countrySelectButton}
-                            disabled={isSubmitting}
-                          >
-                            <Flag
-                              code={selectedCountry.flag}
-                              className={styles.countryFlagIcon}
-                              height="14"
-                              width="20"
-                            />
-                            <span className={styles.countryCodeDisplay}>
-                              {selectedCountry.code}
-                            </span>
-                            <AiFillCaretDown className={styles.caretIcon} />
-                          </button>
-
-                          {isCountryMenuOpenMobile && (
-                            <div className={styles.countryMenu}>
-                              {countries.map((country) => (
-                                <div
-                                  key={`${country.name}-${country.code}`}
-                                  onClick={() => handleCountrySelect(country)}
-                                  className={`${styles.countryMenuItem} ${country.flag === countryCode ? styles.detectedCountry : ''
-                                    }`}
-                                >
-                                  <Flag
-                                    code={country.flag}
-                                    className={styles.countryFlagIcon}
-                                    height="12"
-                                    width="18"
-                                  />
-                                  <span>
-                                    {country.name} ({country.code})
-                                    {country.flag === countryCode && (
-                                      <span className={styles.detectedBadge}>Detected</span>
-                                    )}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-
-                        <input
-                          type="tel"
-                          className={`${styles.phoneNumberInput} ${errors.phone ? 'is-invalid' : ''}`}
-                          ref={mobileInputRef}
-                          name="phone"
-                          value={formData.phone}
-                          onChange={handlePhoneChange}
-                          placeholder="Mobile number"
-                          autoComplete="tel-national"
-                          inputMode="numeric"
-                          pattern="[0-9]*"
-                          disabled={isSubmitting}
-                        />
-                      </div>
-                      {errors.phone && (
-                        <div className="invalid-feedback d-block">{errors.phone}</div>
-                      )}
-                    </Form.Group>
-
-                    {/* Email Field */}
-                    <Form.Group className={styles.formGroup}>
-                      <Form.Label className={styles.formLabel}>
-                        Email<span className="required-star">*</span>
-                      </Form.Label>
-                      <div className={styles.emailFieldContainer}>
-                        <Form.Control
-                          type="email"
-                          placeholder="Your email address"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          required
-                          className={`${styles.emailInput} ${errors.email ? 'is-invalid' : ''}`}
-                          disabled={isSubmitting}
-                        />
-                        {emailValid !== null && (
-                          <span className={`${styles.emailLockIcon} ${emailValid ? styles.validEmail : styles.invalidEmail}`}>
-                            <FaLock />
-                          </span>
-                        )}
-                      </div>
-                      {errors.email && (
-                        <div className="invalid-feedback d-block">{errors.email}</div>
-                      )}
-                    </Form.Group>
-
-                    <div className={styles.privacyNote}>
-                      We'll only use this to contact you about your query
-                    </div>
-
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      className={`w-100 ${styles.submitButton}`}
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <Spinner animation="border" size="sm" className="me-1" />
-                          Submitting...
-                        </>
-                      ) : (
-                        'Get Support'
-                      )}
-                    </Button>
-
-                    <div className={styles.ratingBadge}>
-                      ⭐ 4.8/5 by 120K+ learners
-                    </div>
-                  </Form>
-                </>
-              ) : (
-                <div className={styles.successContainer}>
-                  <div className={styles.successIcon}>
-                    <FaCheckCircle size={40} />
-                  </div>
-                  <h4 className={styles.successTitle}>Thank You!</h4>
-                  <p className={styles.successMessage}>
-                    Your query has been submitted. Our team will contact you soon.
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Mobile Modal - Using the new MobileQueryForm component */}
+      <MobileQueryForm {...mobileViewProps} />
 
       {/* Mobile Sticky Footer */}
       {isVisible && (

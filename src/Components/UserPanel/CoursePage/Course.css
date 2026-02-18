@@ -2507,6 +2507,11 @@ html {
   padding: 20px;
 }
 
+.breadcrumb-course-header{
+  display: flex;
+  justify-content: end;
+}
+
 /* Hide breadcrumb by default on desktop */
 .breadcrumb-course-header .breadcrumb-nav {
   display: none;
@@ -2958,15 +2963,34 @@ html {
 }
 
 @media (max-width: 768px) {
-  .breadcrumb-course-header .breadcrumb-nav {
-    display: block;
-  }
+.breadcrumb-course-header {
+  display: flex;
+  align-items: flex-start; /* ✅ align to top when breadcrumb wraps */
+  justify-content: space-between;
+  flex-wrap: wrap; /* ✅ prevents overflow on small screens */
+  gap: 8px; /* ✅ spacing between breadcrumb and count when wrapped */
+}
 
-  .breadcrumb-course-header{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+.breadcrumb-course-header .breadcrumb-nav {
+  display: block;
+  flex: 1; /* ✅ breadcrumb takes available space */
+  min-width: 0; /* ✅ prevents overflow when many categories selected */
+}
+
+.breadcrumb-course-header .breadcrumb {
+  display: flex;
+  flex-wrap: wrap; /* ✅ items wrap to next line if too many categories */
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.breadcrumb-course-header .course-count {
+  white-space: nowrap; /* ✅ count never breaks into two lines */
+  flex-shrink: 0; /* ✅ count never gets squeezed */
+}
   
   .course-card-container {
     grid-template-columns: 1fr;
@@ -4245,6 +4269,9 @@ html {
     margin-right: 5px;
   }
 
+  .installment-modal-content{
+    width: 80%;
+  }
 }
 
 @media (max-width:375px) {
@@ -4682,6 +4709,10 @@ html {
   .sidebar-card {
     min-width: 100%;
     max-height: 380px;
+  }
+
+    .installment-modal-content{
+    width: 95%;
   }
 
   .sidebar-card-header-div {

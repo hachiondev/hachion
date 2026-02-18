@@ -24,7 +24,7 @@ import Terms from "./Components/UserPanel/LegalFooterSection/Terms";
 import Privacy from "./Components/UserPanel/LegalFooterSection/Privacy";
 import Blogs from "./Components/UserPanel/Blogs";
 import BlogDetails from "./Components/UserPanel/BlogDetails";
-import Aboutus from "./Components/UserPanel/Aboutus";
+import Aboutus from "./Components/UserPanel/AboutusPage/Aboutus";
 import ContactUs from "./Components/UserPanel/ContactUs";
 import UserProtectedRoute from "./UserProtectedRoute";
 import UserDashboard from "./Components/UserPanel/UserDashboardPage/UserDashboard";

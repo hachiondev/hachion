@@ -1,0 +1,1004 @@
+/* JobApplicationForm.module.css */
+@import url('https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:wght@300;400;500;600&display=swap');
+
+/* ─── Reset ─────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* ─── Page Wrapper ───────────────────────────── */
+.container {
+  min-height: 100vh;
+  background: #f0f6fb;
+  padding: 2rem 1rem;
+  font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.container::before {
+  content: '';
+  position: fixed;
+  top: -30%;
+  left: -15%;
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, rgba(0, 174, 239, 0.1) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.container::after {
+  content: '';
+  position: fixed;
+  bottom: -20%;
+  right: -10%;
+  width: 45vw;
+  height: 45vw;
+  background: radial-gradient(circle, rgba(0, 136, 204, 0.07) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* ─── Brand Bar ──────────────────────────────── */
+.brandBar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  animation: slideDown 0.5s ease both;
+}
+
+.brandDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #00aeef;
+  box-shadow: 0 0 10px rgba(0, 174, 239, 0.6);
+  animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 6px rgba(0, 174, 239, 0.5); }
+  50%       { box-shadow: 0 0 16px rgba(0, 174, 239, 0.9); }
+}
+
+.brandText {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #a0b8c8;
+}
+
+/* ─── Card ───────────────────────────────────── */
+.formWrapper {
+  max-width: 680px;
+  width: 100%;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    0 8px 32px rgba(0, 174, 239, 0.1),
+    0 20px 60px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  animation: slideUp 0.6s ease both 0.1s;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Hero ───────────────────────────────────── */
+.heroSection {
+  position: relative;
+  padding: 2.5rem 2.5rem 2rem;
+  background: linear-gradient(135deg, #00aeef 0%, #0088cc 100%);
+  overflow: hidden;
+}
+
+.heroSection::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.heroSection::after {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  pointer-events: none;
+}
+
+.heroTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.28rem 0.75rem;
+  border-radius: 100px;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.heroTagDot {
+  width: 5px;
+  height: 5px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.8;
+}
+
+.heroTitle {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  font-weight: 700;
+  color: white;
+  line-height: 1.15;
+  margin: 0 0 0.6rem;
+  position: relative;
+}
+
+.heroAccent {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.heroSub {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.85rem;
+  font-weight: 300;
+  margin: 0;
+  position: relative;
+}
+
+.heroDeco {
+  position: absolute;
+  right: 2.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 110px;
+  height: 110px;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+/* ─── Progress Bar ───────────────────────────── */
+.progressBar {
+  display: flex;
+  gap: 4px;
+  padding: 0.9rem 2.5rem;
+  background: #fafcff;
+  border-bottom: 1px solid #eef4f9;
+}
+
+.progressStep {
+  flex: 1;
+  height: 3px;
+  border-radius: 100px;
+  background: #e4eef5;
+  transition: background 0.4s ease;
+}
+
+.progressDone {
+  background: rgba(0, 174, 239, 0.35);
+}
+
+.progressActive {
+  background: #00aeef;
+  box-shadow: 0 0 6px rgba(0, 174, 239, 0.5);
+}
+
+/* ─── Form Body ──────────────────────────────── */
+.form {
+  padding: 0 2.5rem 2rem;
+}
+
+/* ─── Section ────────────────────────────────── */
+.section {
+  padding: 1.75rem 0;
+  border-bottom: 1px solid #f0f5fa;
+  animation: fadeSection 0.4s ease both;
+}
+
+.section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+@keyframes fadeSection {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1.2rem;
+}
+
+.sectionIcon {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, rgba(0, 174, 239, 0.12), rgba(0, 174, 239, 0.04));
+  border: 1px solid rgba(0, 174, 239, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  flex-shrink: 0;
+}
+
+.sectionTitle {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #1a2a3a;
+  letter-spacing: 0.01em;
+}
+
+.sectionCount {
+  margin-left: auto;
+  font-size: 0.62rem;
+  color: #b0c4d4;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+/* ─── Grid Layouts ───────────────────────────── */
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.row:last-child { margin-bottom: 0; }
+
+.grid3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+/* ─── Field ──────────────────────────────────── */
+.field {
+  margin-bottom: 0.75rem;
+  width: 100%;
+}
+
+.field:last-child { margin-bottom: 0; }
+
+.label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #1a2a3a;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+
+.labelReq {
+  color: #00aeef;
+  margin-left: 2px;
+}
+
+/* ─── Inputs ─────────────────────────────────── */
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  background: #f7fafd;
+  border: 1.5px solid #dde8f0;
+  border-radius: 10px;
+  color: #1a2a3a;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 0.84rem;
+  font-weight: 400;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: #b8ccd8;
+}
+
+.input:hover,
+.select:hover,
+.textarea:hover {
+  border-color: #b8d4e8;
+  background: #f2f8fc;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: #00aeef;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.1);
+}
+
+.errorInput {
+  border-color: #f87272 !important;
+  background: #fff8f8 !important;
+}
+
+.errorInput:focus {
+  border-color: #f87272 !important;
+  box-shadow: 0 0 0 3px rgba(248, 114, 114, 0.1) !important;
+}
+
+.errorMessage {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+  color: #e05252;
+  font-size: 0.68rem;
+  font-weight: 500;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 72px;
+  line-height: 1.55;
+}
+
+.select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2390a8b8' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2rem;
+}
+
+.select:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background-color: #f0f5f8;
+}
+
+/* ─── File Upload ────────────────────────────── */
+.fileInput {
+  position: relative;
+  border: 1.5px dashed #ccdde8;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  background: #f7fafd;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.fileInput:hover {
+  border-color: #00aeef;
+  background: #f0f9ff;
+}
+
+.fileInputActive {
+  border-color: #00aeef !important;
+  background: #f0faff !important;
+  border-style: solid !important;
+}
+
+.file {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.fileIcon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(0, 174, 239, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.fileText {
+  flex: 1;
+  overflow: hidden;
+}
+
+.fileLabel {
+  display: block;
+  font-size: 0.8rem;
+  color: #3a5a78;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fileHint {
+  font-size: 0.65rem;
+  color: #a0b8c8;
+  margin-top: 1px;
+}
+
+/* ─── Toggle Group ───────────────────────────── */
+.toggleGroup {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.toggle {
+  flex: 1;
+  padding: 0.5rem 0.5rem;
+  border: 1.5px solid #dde8f0;
+  border-radius: 8px;
+  background: #f7fafd;
+  color: #7a9ab0;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.toggle:hover {
+  border-color: #b8d4e8;
+  color: #3a5a78;
+}
+
+.toggleSelected {
+  background: rgba(0, 174, 239, 0.08) !important;
+  border-color: rgba(0, 174, 239, 0.5) !important;
+  color: #0088cc !important;
+  font-weight: 600 !important;
+}
+
+/* ─── Terms / Checkbox ───────────────────────── */
+.terms {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1.2rem;
+  background: #f5fbff;
+  border: 1.5px solid #d0eaf8;
+  border-radius: 12px;
+  margin-bottom: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.terms:hover {
+  background: #eef7ff;
+  border-color: rgba(0, 174, 239, 0.4);
+}
+
+.terms input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: #00aeef;
+}
+
+.termsText {
+  color: #4a6a80;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  font-family: 'Bricolage Grotesque', sans-serif;
+}
+
+.termsText strong {
+  color: #1a2a3a;
+  font-weight: 600;
+}
+
+.checkboxLabel {
+  display: contents;
+}
+
+/* ─── Submit Button ──────────────────────────── */
+.submitButton {
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  background: linear-gradient(135deg, #00aeef 0%, #0088cc 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.submitButton::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, transparent 55%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.submitButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 174, 239, 0.3);
+}
+
+.submitButton:hover::before { opacity: 1; }
+
+.submitButton:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* ─── Footer Note ────────────────────────────── */
+.footerNote {
+  text-align: center;
+  font-size: 0.68rem;
+  color: #a0b8c8;
+  padding: 0.9rem 2.5rem 1.2rem;
+  border-top: 1px solid #eef4f9;
+}
+
+/* ─── Success Screen ─────────────────────────── */
+.successScreen {
+  padding: 4rem 2.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.successIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(0, 174, 239, 0.12), rgba(0, 174, 239, 0.04));
+  border: 2px solid rgba(0, 174, 239, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.4); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.successTitle {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1a2a3a;
+}
+
+.successSub {
+  font-size: 0.88rem;
+  color: #7a9ab0;
+  max-width: 320px;
+  line-height: 1.65;
+}
+
+.backBtn {
+  padding: 0.65rem 2rem;
+  background: rgba(0, 174, 239, 0.08);
+  border: 1.5px solid rgba(0, 174, 239, 0.3);
+  border-radius: 10px;
+  color: #0088cc;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.backBtn:hover {
+  background: rgba(0, 174, 239, 0.15);
+  border-color: rgba(0, 174, 239, 0.5);
+}
+
+/* ─── Responsive ─────────────────────────────── */
+
+/* Tablet — 768px */
+@media (max-width: 768px) {
+    .container {
+        padding: 1.5rem 1rem;
+        align-items: flex-start;
+    }
+
+    .formWrapper {
+        border-radius: 16px;
+    }
+
+    .heroSection {
+        padding: 2rem 2rem 1.75rem;
+    }
+
+    .heroTitle {
+        font-size: 1.75rem;
+    }
+
+    .progressBar {
+        padding: 0.85rem 2rem;
+    }
+
+    .form {
+        padding: 0 2rem 1.75rem;
+    }
+
+    .footerNote {
+        padding: 0.85rem 2rem 1rem;
+    }
+
+    .successScreen {
+        padding: 3.5rem 2rem;
+    }
+
+    .row {
+        gap: 0.65rem;
+    }
+
+    .grid3 {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.65rem;
+    }
+
+    .sectionTitle {
+        font-size: 0.9rem;
+    }
+}
+
+/* Large Mobile — 480px */
+@media (max-width: 480px) {
+    .container {
+        padding: 1rem 0.5rem;
+    }
+
+    .formWrapper {
+        border-radius: 14px;
+    }
+
+    .heroSection {
+        padding: 1.75rem 1.25rem 1.5rem;
+    }
+
+    .heroDeco {
+        display: none;
+    }
+
+    .heroTag {
+        font-size: 0.6rem;
+        padding: 0.25rem 0.65rem;
+    }
+
+    .heroTitle {
+        font-size: 1.5rem;
+    }
+
+    .heroSub {
+        font-size: 0.8rem;
+    }
+
+    .progressBar {
+        padding: 0.75rem 1.25rem;
+        gap: 3px;
+    }
+
+    .form {
+        padding: 0 1.25rem 1.5rem;
+    }
+
+    .footerNote {
+        padding: 0.75rem 1.25rem 1rem;
+    }
+
+    .successScreen {
+        padding: 3rem 1.25rem;
+    }
+
+    .row {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .grid3 {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+    }
+
+    .section {
+        padding: 1.4rem 0;
+    }
+
+    .sectionHeader {
+        margin-bottom: 1rem;
+    }
+
+    .sectionIcon {
+        width: 26px;
+        height: 26px;
+        font-size: 0.75rem;
+    }
+
+    .sectionTitle {
+        font-size: 0.85rem;
+    }
+
+    .input,
+    .select,
+    .textarea {
+        font-size: 0.82rem;
+        padding: 0.55rem 0.75rem;
+    }
+
+    .label {
+        font-size: 0.65rem;
+    }
+
+    .submitButton {
+        font-size: 0.92rem;
+        padding: 0.75rem 1.25rem;
+    }
+
+    .toggleGroup {
+        gap: 0.4rem;
+    }
+
+    .toggle {
+        font-size: 0.75rem;
+        padding: 0.45rem 0.4rem;
+    }
+
+    .fileInput {
+        padding: 0.65rem 0.85rem;
+    }
+
+    .fileIcon {
+        width: 26px;
+        height: 26px;
+    }
+
+    .fileLabel {
+        font-size: 0.76rem;
+    }
+
+    .terms {
+        padding: 0.85rem 1rem;
+    }
+
+    .termsText {
+        font-size: 0.76rem;
+    }
+}
+
+/* Small Mobile — 375px */
+@media (max-width: 375px) {
+    .container {
+        padding: 0.5rem 0.25rem;
+    }
+
+    .formWrapper {
+        border-radius: 12px;
+    }
+
+    .brandBar {
+        margin-bottom: 1rem;
+        padding: 0 0.25rem;
+    }
+
+    .brandText {
+        font-size: 0.6rem;
+        letter-spacing: 0.12em;
+    }
+
+    .heroSection {
+        padding: 1.4rem 1rem 1.25rem;
+    }
+
+    .heroTag {
+        font-size: 0.58rem;
+        padding: 0.22rem 0.55rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .heroTitle {
+        font-size: 1.3rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .heroSub {
+        font-size: 0.75rem;
+    }
+
+    .progressBar {
+        padding: 0.65rem 1rem;
+        gap: 3px;
+    }
+
+    .progressStep {
+        height: 2.5px;
+    }
+
+    .form {
+        padding: 0 1rem 1.25rem;
+    }
+
+    .footerNote {
+        padding: 0.65rem 1rem 0.85rem;
+        font-size: 0.62rem;
+    }
+
+    .successScreen {
+        padding: 2.5rem 1rem;
+    }
+
+    .successIcon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.6rem;
+    }
+
+    .successTitle {
+        font-size: 1.5rem;
+    }
+
+    .successSub {
+        font-size: 0.82rem;
+    }
+
+    .section {
+        padding: 1.2rem 0;
+    }
+
+    .sectionHeader {
+        gap: 0.5rem;
+        margin-bottom: 0.85rem;
+    }
+
+    .sectionIcon {
+        width: 24px;
+        height: 24px;
+        font-size: 0.7rem;
+        border-radius: 7px;
+    }
+
+    .sectionTitle {
+        font-size: 0.8rem;
+    }
+
+    .sectionCount {
+        font-size: 0.58rem;
+    }
+
+    .label {
+        font-size: 0.62rem;
+        letter-spacing: 0.05em;
+    }
+
+    .input,
+    .select,
+    .textarea {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.65rem;
+        border-radius: 8px;
+    }
+
+    .errorMessage {
+        font-size: 0.62rem;
+    }
+
+    .submitButton {
+        font-size: 0.88rem;
+        padding: 0.7rem 1rem;
+        border-radius: 10px;
+    }
+
+    .toggle {
+        font-size: 0.72rem;
+        padding: 0.4rem 0.3rem;
+        border-radius: 6px;
+    }
+
+    .fileInput {
+        padding: 0.55rem 0.75rem;
+        border-radius: 8px;
+        gap: 0.55rem;
+    }
+
+    .fileIcon {
+        width: 24px;
+        height: 24px;
+        font-size: 0.75rem;
+        border-radius: 6px;
+    }
+
+    .fileLabel {
+        font-size: 0.72rem;
+    }
+
+    .fileHint {
+        font-size: 0.6rem;
+    }
+
+    .terms {
+        padding: 0.75rem 0.85rem;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        gap: 0.55rem;
+    }
+
+    .termsText {
+        font-size: 0.72rem;
+    }
+
+    .terms input[type="checkbox"] {
+        width: 14px;
+        height: 14px;
+        min-width: 14px;
+    }
+
+    .backBtn {
+        padding: 0.55rem 1.5rem;
+        font-size: 0.8rem;
+    }
+
+    .row {
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .field {
+        margin-bottom: 0.6rem;
+    }
+}

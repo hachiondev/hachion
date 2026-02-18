@@ -83,9 +83,12 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
@@ -171,9 +174,11 @@
 .recaptchaContainer {
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  align-items: center;
   margin: 15px 0;
-  transform: scale(1.1); /* Increase size by 10% */
-  transform-origin: center; /* Keep it centered */
+  transform: scale(1.1);
+  transform-origin: center;
 }
 
 .formTitle {
@@ -445,7 +450,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Privacy Note */
@@ -491,28 +498,28 @@
   .pageContainer {
     padding: 10px;
   }
-  
+
   .formSection {
     padding: 20px 15px;
   }
-  
+
   .countdown {
     gap: 10px;
     bottom: -35px;
   }
-  
+
   .timeBox {
     padding: 10px 6px;
   }
-  
+
   .timeValue {
     font-size: 24px;
   }
-  
+
   .timeLabel {
     font-size: 10px;
   }
-  
+
   .formTitle {
     font-size: 18px;
   }
@@ -529,7 +536,7 @@
   .formInput {
     font-size: 13px;
   }
-  
+
   .remarkInput {
     font-size: 13px;
   }
@@ -540,8 +547,8 @@
     /* min-width: 100%; */
   }
 
-  .recaptchaContainer{
-    transform:scale(1.2) ;
+  .recaptchaContainer {
+    transform: scale(1.2);
   }
 }
 
@@ -549,28 +556,28 @@
   .pageContainer {
     padding: 10px;
   }
-  
+
   .formSection {
     padding: 20px 15px;
   }
-  
+
   .countdown {
     gap: 10px;
     bottom: -35px;
   }
-  
+
   .timeBox {
     padding: 10px 6px;
   }
-  
+
   .timeValue {
     font-size: 24px;
   }
-  
+
   .timeLabel {
     font-size: 10px;
   }
-  
+
   .formTitle {
     font-size: 18px;
   }
@@ -587,7 +594,7 @@
   .formInput {
     font-size: 13px;
   }
-  
+
   .remarkInput {
     font-size: 13px;
   }
@@ -598,7 +605,7 @@
     /* min-width: 100%; */
   }
 
-  .recaptchaContainer{
-    transform:scale(1) ;
+  .recaptchaContainer {
+    transform: scale(1);
   }
 }

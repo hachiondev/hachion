@@ -209,7 +209,7 @@ const Footer = () => {
                 <p className="footer-content" onClick={() => navigate('/contactus')}>Contact us</p>
                 <p className="footer-content" onClick={() => navigate('/blogs')}>Blog</p>
                 <p className="footer-content" onClick={() => navigate('/sitemap')}>Sitemap</p>
-                <p className="footer-content" onClick={() => navigate('/workshop')}>Workshop</p>
+                {/* <p className="footer-content" onClick={() => navigate('/workshop')}>Workshop</p> */}
                 <p className="footer-content" onClick={() => navigate('/summer-tech-bootcamp-for-teens')}>
                   Kids Summer Training
                 </p>

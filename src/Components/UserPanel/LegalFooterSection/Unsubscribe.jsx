@@ -355,7 +355,7 @@ useEffect(() => {
                     id="chkmails"
                     onChange={handleCheckboxChange}
                   />
-                  <label class="form-check-label" for="chkmails">
+                  <label className="login-label" for="chkmails">
                     Mails and Messages
                   </label>
                 </div>
@@ -367,7 +367,7 @@ useEffect(() => {
                     id="chkpromotional"
                     onChange={handleCheckboxChange}
                   />
-                  <label class="form-check-label" for="chkpromotional">
+                  <label className="login-label" for="chkpromotional">
                     Promotional mails &amp; Messages
                   </label>
                 </div>
@@ -380,7 +380,7 @@ useEffect(() => {
                 <div className="register-field">
               <div className="form-field">
                 <select
-                  className="form-select"
+                  className="login-label"
                   name="duration"
                   value={values.duration}
                   onChange={handleChange}

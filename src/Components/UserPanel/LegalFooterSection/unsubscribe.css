@@ -294,6 +294,19 @@
     margin-top: 0px;
   }
 
+  .form-control{
+    border: 1px solid #b3b3b3 !important;
+  }
+
+  .login-label{
+    font-size: 15px !important;
+    color: #000000 !important;
+  }
+
+  .u-submit-button{
+    margin-top: 10px !important;
+    padding: 5px !important;
+  }
   .input-group {
     display: flex;
     align-items: center;

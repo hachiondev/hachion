@@ -503,95 +503,97 @@ const handleMouseLeave = () => {
       </nav>
 
       {/* Overlay and Drawer */}
-      {drawerOpen && <div className="overlay" onClick={() => setDrawerOpen(false)} />}
-      <div className={`sidebar-drawer ${drawerOpen ? "open" : ""}`}>
-        <div className="category-drawer-header">
-          <a href="/">
-            <img src={logo} alt="logo" className="logo" />
-          </a>
-          <button className="filter-close-btn" 
-          aria-label="Close menu"
-          onClick={() => setDrawerOpen(false)}>
-            ✕
-          </button>
-        </div>
-        <div className="drawer-body">
-          {isLoggedIn ? (
-            <>
-              <div className="d-flex align-items-center mb-3">
-                {userData?.picture ? (
-                  <ProfileAvatar src={userData.picture} alt="user avatar" />
-                ) : (
-                  <ProfileAvatar>
-                    <FaUserAlt size={20} color="#b3b3b3" />
-                  </ProfileAvatar>
-                )}
-                <span className="ms-2">{userData?.name || "User"}</span>
-              </div>
-
-              <div className="drawer-item" onClick={() => navigate("/userdashboard/dashboard")}>
-                <RxDashboard /> Dashboard
-              </div>
-              <div className="drawer-item" onClick={() => navigate("/userdashboard/profile")}>
-                <GoPerson /> Profile
-              </div>
-              <div className="drawer-item" onClick={() => navigate("/userdashboard/enrolls")}>
-                <PiNotePencilBold /> Enrolls
-              </div>
-              <div className="drawer-item" onClick={() => navigate("/userdashboard/wishlist")}>
-                <BsBookmarkHeart /> Wishlist
-              </div>
-              <div className="drawer-item" onClick={() => navigate("/userdashboard/order_history")}>
-                <BsCart2 /> Orders
-              </div>
-              <div className="drawer-item" onClick={() => navigate("/userdashboard/certificate")}>
-                <PiCertificateBold /> Certificates
-              </div>
-              <div className="drawer-item" onClick={() => navigate("/userdashboard/review")}>
-                <MdOutlineRateReview /> Review
-              </div>
-              <div className="drawer-item" onClick={() => navigate("/userdashboard/pathfinder")}>
-                <CgPathOutline /> Pathfinder
-              </div>
-
-              <div className="drawer-item" onClick={() => navigate("/coursedetails")}>
-                Explore Courses
-              </div>
-              <div className="drawer-item" onClick={() => navigate("/corporate")}>
-                Corporate Training
-              </div>
-
-              <button
-                className="btn btn-info rounded-pill w-100 text-white mt-3"
-                onClick={handleLogout}
-              >
-                <MdLogout /> Logout
-              </button>
-            </>
+{drawerOpen && <div className="overlay" onClick={() => setDrawerOpen(false)} />}
+<div className={`sidebar-drawer ${drawerOpen ? "open" : ""}`}>
+  <div className="category-drawer-header">
+    <a href="/">
+      <img src={logo} alt="logo" className="logo" />
+    </a>
+    <button className="filter-close-btn" 
+    aria-label="Close menu"
+    onClick={() => setDrawerOpen(false)}>
+      ✕
+    </button>
+  </div>
+  <div className="drawer-body">
+    {isLoggedIn ? (
+      <>
+        <div className="d-flex align-items-center mb-3">
+          {userData?.picture ? (
+            <ProfileAvatar src={userData.picture} alt="user avatar" />
           ) : (
-            <>
-              <div className="drawer-item" onClick={() => navigate("/coursedetails")}>
-                Explore Courses
-              </div>
-              <div className="drawer-item" onClick={() => navigate("/corporate")}>
-                Corporate Training
-              </div>
-              <Link
-                to="/login"
-                className="btn btn-outline-info rounded-pill w-100 mt-3 fw-bold"
-              >
-                Log In
-              </Link>
-              <Link
-                to="/register"
-                className="btn btn-info rounded-pill w-100 mt-2 text-white fw-bold"
-              >
-                Sign Up
-              </Link>
-            </>
+            <ProfileAvatar>
+              <FaUserAlt size={20} color="#b3b3b3" />
+            </ProfileAvatar>
           )}
+          <span className="ms-2">{userData?.name || "User"}</span>
         </div>
-      </div>
+
+        <div className="drawer-item" onClick={() => { navigate("/userdashboard/dashboard"); setDrawerOpen(false); }}>
+          <RxDashboard /> Dashboard
+        </div>
+        <div className="drawer-item" onClick={() => { navigate("/userdashboard/profile"); setDrawerOpen(false); }}>
+          <GoPerson /> Profile
+        </div>
+        <div className="drawer-item" onClick={() => { navigate("/userdashboard/enrolls"); setDrawerOpen(false); }}>
+          <PiNotePencilBold /> Enrolls
+        </div>
+        <div className="drawer-item" onClick={() => { navigate("/userdashboard/wishlist"); setDrawerOpen(false); }}>
+          <BsBookmarkHeart /> Wishlist
+        </div>
+        <div className="drawer-item" onClick={() => { navigate("/userdashboard/order_history"); setDrawerOpen(false); }}>
+          <BsCart2 /> Orders
+        </div>
+        <div className="drawer-item" onClick={() => { navigate("/userdashboard/certificate"); setDrawerOpen(false); }}>
+          <PiCertificateBold /> Certificates
+        </div>
+        <div className="drawer-item" onClick={() => { navigate("/userdashboard/review"); setDrawerOpen(false); }}>
+          <MdOutlineRateReview /> Review
+        </div>
+        <div className="drawer-item" onClick={() => { navigate("/userdashboard/pathfinder"); setDrawerOpen(false); }}>
+          <CgPathOutline /> Pathfinder
+        </div>
+
+        <div className="drawer-item" onClick={() => { navigate("/coursedetails"); setDrawerOpen(false); }}>
+          Explore Courses
+        </div>
+        <div className="drawer-item" onClick={() => { navigate("/corporate"); setDrawerOpen(false); }}>
+          Corporate Training
+        </div>
+
+        <button
+          className="btn btn-info rounded-pill w-100 text-white mt-3"
+          onClick={() => { setDrawerOpen(false); handleLogout(); }}
+        >
+          <MdLogout /> Logout
+        </button>
+      </>
+    ) : (
+      <>
+        <div className="drawer-item" onClick={() => { navigate("/coursedetails"); setDrawerOpen(false); }}>
+          Explore Courses
+        </div>
+        <div className="drawer-item" onClick={() => { navigate("/corporate"); setDrawerOpen(false); }}>
+          Corporate Training
+        </div>
+        <Link
+          to="/login"
+          className="btn btn-outline-info rounded-pill w-100 mt-3 fw-bold"
+          onClick={() => setDrawerOpen(false)}
+        >
+          Log In
+        </Link>
+        <Link
+          to="/register"
+          className="btn btn-info rounded-pill w-100 mt-2 text-white fw-bold"
+          onClick={() => setDrawerOpen(false)}
+        >
+          Sign Up
+        </Link>
+      </>
+    )}
+  </div>
+</div>
 
       {/* Mobile Search Popup */}
      {mobileSearchOpen && (

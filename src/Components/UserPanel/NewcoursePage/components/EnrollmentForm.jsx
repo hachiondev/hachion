@@ -267,14 +267,14 @@ const EnrollmentForm = ({ onClose, onSuccess }) => {
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
-      minHeight: '30px',
-      border: state.isFocused ? '2px solid #00bcd4' : '2px solid #e0e0e0',
+      minHeight: '40px',
+      border: state.isFocused ? '2px solid #00AEEF' : '2px solid #e0e0e0',
       borderRadius: '8px',
       boxShadow: state.isFocused ? '0 0 0 3px rgba(0, 188, 212, 0.1)' : 'none',
       '&:hover': {
-        borderColor: state.isFocused ? '#00bcd4' : '#ccc',
+        borderColor: state.isFocused ? '#00AEEF' : '#ccc',
       },
-      paddingLeft: '45px',
+      paddingLeft: '36px',
       fontSize: '14px',
       backgroundColor: 'white',
     }),
@@ -460,10 +460,10 @@ const EnrollmentForm = ({ onClose, onSuccess }) => {
 
         {/* Image Section with Overlay */}
         <div className={styles.imageSection}>
-          <div className={styles.liveIndicator}>
+          {/* <div className={styles.liveIndicator}>
             <span className={styles.liveDot}></span>
             Live Class Starts in...
-          </div>
+          </div> */}
 
           <div className={styles.imageContainer}>
             <img
@@ -528,12 +528,12 @@ const EnrollmentForm = ({ onClose, onSuccess }) => {
                       className={styles.countrySelectButton}
                       disabled={isSubmitting}
                     >
-                      <Flag
+                      {/* <Flag
                         code={selectedCountry.flag}
                         className={styles.countryFlagIcon}
                         height="14"
                         width="20"
-                      />
+                      /> */}
                       <span className={styles.countryCodeDisplay}>
                         {selectedCountry.code}
                       </span>

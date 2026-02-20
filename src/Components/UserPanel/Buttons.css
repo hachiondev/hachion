@@ -957,4 +957,8 @@
     left: 35%;
     bottom: 0vh;
   }
+
+  .submit-btn{
+    width: 40%;
+  }
 }

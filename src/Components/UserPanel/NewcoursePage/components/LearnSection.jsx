@@ -158,13 +158,13 @@ export default function LearnSection() {
                     {activeTab === "learn" && (
                         <div className={styles.tabPane}>
                             <ul className={styles.lsbullets}>
-                                {(showAll.learn ? whatYouWillLearnItems : whatYouWillLearnItems.slice(0, 8)).map((item, index) => (
+                                {(showAll.learn ? whatYouWillLearnItems : whatYouWillLearnItems.slice(0, 5)).map((item, index) => (
                                     <li key={item}  style={{ "--i": index }}>
                                         {item}
                                     </li>
                                 ))}
                             </ul>
-                            {whatYouWillLearnItems.length > 8 && (
+                            {whatYouWillLearnItems.length > 5 && (
                                 <button
                                     type="button"
                                     className={styles.readMoreBtn}
@@ -180,13 +180,13 @@ export default function LearnSection() {
                     {activeTab === "prereq" && (
                         <div className={styles.tabPane}>
                             <ul className={styles.lsbullets}>
-                                {(showAll.prereq ? prerequisites : prerequisites.slice(0, 8)).map(
+                                {(showAll.prereq ? prerequisites : prerequisites.slice(0, 5)).map(
                                     (p, idx) => (
                                         <li key={idx}>{p}</li>
                                     )
                                 )}
                             </ul>
-                            {prerequisites.length > 8 && (
+                            {prerequisites.length > 5 && (
                                 <button
                                     type="button"
                                     className={styles.readMoreBtn}
@@ -205,7 +205,7 @@ export default function LearnSection() {
                                 {Array.isArray(whoThisCourseIsForItems) && whoThisCourseIsForItems.length > 0 ? (
                                     (showAll.who
                                         ? whoThisCourseIsForItems
-                                        : whoThisCourseIsForItems.slice(0, 8)
+                                        : whoThisCourseIsForItems.slice(0, 5)
                                     ).map((item, index) => (
                                         <li key={index}>{item}</li>
                                     ))
@@ -213,7 +213,7 @@ export default function LearnSection() {
                                     <li className={styles.noData}>No data available</li>
                                 )}
                             </ul>
-                            {whoThisCourseIsForItems.length > 8 && (
+                            {whoThisCourseIsForItems.length > 5 && (
                                 <button
                                     type="button"
                                     className={styles.readMoreBtn}
@@ -231,14 +231,14 @@ export default function LearnSection() {
                             <div className={styles.lspills}>
                                 {careerItems.length > 0 ? (
                                     <>
-                                        {(showAll.career ? careerItems : careerItems.slice(0, 8)).map(
+                                        {(showAll.career ? careerItems : careerItems.slice(0, 5)).map(
                                             (p, index) => (
                                                 <span key={index} className={styles.lspill} style={{ "--i": index }}>
                                                     {p}
                                                 </span>
                                             )
                                         )}
-                                        {careerItems.length > 8 && (
+                                        {careerItems.length > 5 && (
                                             <div className={styles.readMoreWrapper}>
                                                 <button
                                                     type="button"

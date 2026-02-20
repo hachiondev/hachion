@@ -96,7 +96,7 @@
 
 .imageContainer {
   width: 100%;
-  height: 220px;
+  height: 200px;
   overflow: hidden;
   background: linear-gradient(135deg, #c7d2fe 0%, #ddd6fe 100%);
 }
@@ -182,7 +182,7 @@
 }
 
 .formTitle {
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 600;
   color: #333;
   margin: 10px 0;
@@ -224,7 +224,7 @@
   padding: 13px 16px 13px 48px;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
-  height: 30px;
+  height: 40px;
   font-size: 14px;
   color: #000000;
   transition: all 0.3s ease;
@@ -237,7 +237,7 @@
 
 .formInput:focus {
   outline: none;
-  border-color: #00bcd4;
+  border-color: #00AEEF;
   box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.1);
 }
 
@@ -261,7 +261,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  min-width: 120px;
+  border-right: 2px solid #e0e0e0;
 }
 
 /* Country Select Button - Custom Built-in Dropdown */
@@ -273,7 +273,7 @@
   border: 2px solid #e0e0e0;
   border-right: none;
   border-radius: 8px 0 0 8px;
-  height: 30px;
+  height: 40px;
   font-size: 10px;
   background: white;
   cursor: pointer;
@@ -298,7 +298,7 @@
 }
 
 .countryCodeDisplay {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   color: #333;
 }
@@ -522,10 +522,6 @@
 
   .formTitle {
     font-size: 18px;
-  }
-
-  .countryCodeSelector {
-    min-width: 100px;
   }
 
   .countrySelectButton {

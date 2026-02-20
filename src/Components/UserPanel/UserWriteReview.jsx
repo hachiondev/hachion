@@ -189,210 +189,209 @@ const handleSubmit = async () => {
 
   return (
     <div>
-      <div className="review-form-content">
-        {errorMessage && <div className="error-message">{errorMessage}</div>}
-        {successMessage && <div className="success-message">{successMessage}</div>}
+  <div className="review-form-content">
+    {errorMessage && <div className="error-message">{errorMessage}</div>}
+    {successMessage && <div className="success-message">{successMessage}</div>}
 
-        <div className="instructor-fields">
-          <div>
-            <label className="login-label">
-              Student Name
-            </label>
-            <span className="star">*</span>
-            <div className="register-field">
-              <div className="password-field">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Enter your Name"
-                  name="student_name"
-                  value={reviewData.student_name}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label className="login-label">Email</label>
-            <span className="star">*</span>
-            <div className="register-field">
-              <div className="password-field">
-                <input
-                  type="email"
-                  className="form-control"
-                  placeholder="abc@gmail.com"
-                  name="email"
-                  value={reviewData.email}
-                  readOnly
-                />
-              </div>
-            </div>
+    <div className="instructor-fields">
+      <div className="form-group">
+        <label className="login-label">
+          Student Name <span className="star">*</span>
+        </label>
+        <div className="register-field">
+          <div className="password-field">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter your Name"
+              name="student_name"
+              value={reviewData.student_name}
+              onChange={handleChange}
+            />
           </div>
         </div>
+      </div>
 
-        <div className="instructor-fields">
-          <div>
-            <label className="login-label">Image</label>
-            <div className="register-field">
-              <div className="password-field">
-                <input
-                  type="file"
-                  className="form-control"
-                  name="user_image"
-                  onChange={handleFileChange}
-                />
-              </div>
-            </div>
+      <div className="form-group">
+        <label className="login-label">
+          Email <span className="star">*</span>
+        </label>
+        <div className="register-field">
+          <div className="password-field">
+            <input
+              type="email"
+              className="form-control"
+              placeholder="abc@gmail.com"
+              name="email"
+              value={reviewData.email}
+              readOnly
+            />
           </div>
-
-          <div>
-            <label className="login-label">Review Type</label>
-            <span className="star">*</span>
-            <div className="register-field">
-              <div className="password-field">
-                <select
-                  className="form-select"
-                  name="type"
-                  value={reviewData.type}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Type</option>
-                  <option value="Course Review">Course</option>
-                  <option value="Trainer Review">Trainer</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="instructor-fields">
-          <div>
-            <label className="login-label">Course Name</label>
-            <span className="star">*</span>
-            <div className="register-field">
-              <div className="password-field">
-                <select
-                  className="form-select"
-                  name="course_name"
-                  value={reviewData.course_name}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Course</option>
-                  {filteredCourses.map((course, index) => (
-                    <option key={index} value={course}>
-                      {course}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label className="login-label">
-              Trainer Name
-              {reviewData.type === "Trainer Review" && (
-                <span className="star">*</span>
-              )}
-            </label>
-
-            <div className="register-field">
-              <div className="password-field">
-               <select
-  className="form-select"
-  name="trainer_name"
-  value={reviewData.trainer_name}
-  onChange={handleChange}
-  disabled={reviewData.type !== "Trainer Review" || !reviewData.course_name}
->
-  <option value="">Select Trainer</option>
-  {filteredTrainers.map((trainer, index) => (
-    <option key={index} value={trainer}>
-      {trainer}
-    </option>
-  ))}
-</select>
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="instructor-fields">
-          <div>
-            <label className="login-label">Rating</label>
-            <span className="star">*</span>
-            <div className="register-field">
-              <div className="password-field">
-                <Box sx={{ '& > legend': { mt: 2, ml: 1 } }}>
-                  <Rating
-                    name="rating"
-                    value={reviewData.rating}
-                    onChange={(event, newValue) =>
-                      setReviewData(prevData => ({
-                        ...prevData,
-                        rating: newValue || 0,
-                      }))
-                    }
-                    sx={{ ml: 1, mt: 1 }}
-                  />
-                </Box>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label className="login-label">Source</label>
-            <div className="register-field">
-              <div className="password-field">
-                <select
-                  className="form-select"
-                  name="social_id"
-                  value={reviewData.social_id}
-                  onChange={handleChange}
-                >
-                  <option value="">Select</option>
-                  <option value="LinkedIn">LinkedIn</option>
-                  <option value="Facebook">Facebook</option>
-                  <option value="Twitter">Twitter</option>
-                  <option value="Instagram">Instagram</option>
-                  <option value="Google">Google</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <label className="login-label">Review</label>
-          <span className="star">*</span>
-          <div className="register-field">
-            <div className="password-field">
-              <textarea
-                className="form-control"
-                placeholder="Write review"
-                name="review"
-                value={reviewData.review}
-                onChange={handleChange}
-                rows={5}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="center">
-          <button
-            className="submit-btn"
-            onClick={handleSubmit}
-            disabled={!isFormValid()}
-          >
-            Submit
-          </button>
         </div>
       </div>
     </div>
+
+    <div className="instructor-fields">
+      <div className="form-group">
+        <label className="login-label">Image</label>
+        <div className="register-field">
+          <div className="password-field">
+            <input
+              type="file"
+              className="form-control"
+              name="user_image"
+              onChange={handleFileChange}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="form-group">
+        <label className="login-label">
+          Review Type <span className="star">*</span>
+        </label>
+        <div className="register-field">
+          <div className="password-field">
+            <select
+              className="form-select"
+              name="type"
+              value={reviewData.type}
+              onChange={handleChange}
+            >
+              <option value="">Select Type</option>
+              <option value="Course Review">Course</option>
+              <option value="Trainer Review">Trainer</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div className="instructor-fields">
+      <div className="form-group">
+        <label className="login-label">
+          Course Name <span className="star">*</span>
+        </label>
+        <div className="register-field">
+          <div className="password-field">
+            <select
+              className="form-select"
+              name="course_name"
+              value={reviewData.course_name}
+              onChange={handleChange}
+            >
+              <option value="">Select Course</option>
+              {filteredCourses.map((course, index) => (
+                <option key={index} value={course}>
+                  {course}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div className="form-group">
+        <label className="login-label">
+          Trainer Name
+          {reviewData.type === "Trainer Review" && (
+            <span className="star">*</span>
+          )}
+        </label>
+        <div className="register-field">
+          <div className="password-field">
+            <select
+              className="form-select"
+              name="trainer_name"
+              value={reviewData.trainer_name}
+              onChange={handleChange}
+              disabled={reviewData.type !== "Trainer Review" || !reviewData.course_name}
+            >
+              <option value="">Select Trainer</option>
+              {filteredTrainers.map((trainer, index) => (
+                <option key={index} value={trainer}>
+                  {trainer}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div className="instructor-fields">
+      <div className="form-group">
+        <label className="login-label">
+          Rating <span className="star">*</span>
+        </label>
+        <div className="register-field">
+          <div className="password-field">
+            <Box sx={{ '& > legend': { mt: 2, ml: 1 } }}>
+              <Rating
+                name="rating"
+                value={reviewData.rating}
+                onChange={(event, newValue) =>
+                  setReviewData(prevData => ({
+                    ...prevData,
+                    rating: newValue || 0,
+                  }))
+                }
+                sx={{ ml: 1, mt: 1 }}
+              />
+            </Box>
+          </div>
+        </div>
+      </div>
+
+      <div className="form-group">
+        <label className="login-label">Source</label>
+        <div className="register-field">
+          <div className="password-field">
+            <select
+              className="form-select"
+              name="social_id"
+              value={reviewData.social_id}
+              onChange={handleChange}
+            >
+              <option value="">Select</option>
+              <option value="LinkedIn">LinkedIn</option>
+              <option value="Facebook">Facebook</option>
+              <option value="Twitter">Twitter</option>
+              <option value="Instagram">Instagram</option>
+              <option value="Google">Google</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div className="form-group full-width">
+      <label className="login-label">
+        Review <span className="star">*</span>
+      </label>
+      <div className="register-field">
+        <div className="password-field">
+          <textarea
+            className="form-control"
+            placeholder="Write review"
+            name="review"
+            value={reviewData.review}
+            onChange={handleChange}
+            rows={5}
+          />
+        </div>
+      </div>
+    </div>
+      <button
+        className="submit-btn"
+        onClick={handleSubmit}
+        disabled={!isFormValid()}
+      >
+        Submit
+      </button>
+  </div>
+</div>
   );
 };
 

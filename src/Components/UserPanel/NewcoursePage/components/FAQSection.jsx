@@ -39,7 +39,7 @@ export default function FAQSection({
   // const courseNameForApi = rawSlug ? normalizeCourseSlug(rawSlug) : "";
 
   const courseNameForApi = courseName
-  ? decodeURIComponent(courseName)
+    ? decodeURIComponent(courseName)
       .replace(/---+/g, " - ")
       .replace(/\b([a-zA-Z]{2,3})-(\d{3})\b/g, "$1@@$2")
       .replace(/[-_]+/g, " ")
@@ -47,7 +47,7 @@ export default function FAQSection({
       .replace(/\s+/g, " ")
       .trim()
       .toLowerCase()
-  : "";
+    : "";
 
   const {
     data: course,
@@ -58,11 +58,11 @@ export default function FAQSection({
   const [expandedTopics, setExpandedTopics] = useState({});
   const [showAll, setShowAll] = useState(false);
   const firstFaqRef = useRef(null);
-const {
-  data: faqs = [],
-  isLoading: loading,
-  isError: error,
-} = useFaqsByCourse(course?.courseName || courseNameForApi);
+  const {
+    data: faqs = [],
+    isLoading: loading,
+    isError: error,
+  } = useFaqsByCourse(courseNameForApi);
 
 
   if (courseLoading || loading) {
@@ -92,10 +92,10 @@ const {
       <div className="container">
         <div className={styles.faqhead}>
           <h2>
-  {course?.courseName
-    ? `Frequently Asked Questions in ${course.courseName}`
-    : "Frequently Asked Questions"}
-</h2>
+            {course?.courseName
+              ? `Frequently Asked Questions in ${course.courseName}`
+              : "Frequently Asked Questions"}
+          </h2>
 
           <p>Got questions? We’ve got answers</p>
 
@@ -114,7 +114,7 @@ const {
 
             return (
               <div
-                key={idx}
+                key={item.faq_id}
                 className={cn(styles.faqitem, open && styles.isopen)}
                 role="listitem"
                 ref={idx === 0 ? firstFaqRef : null}
@@ -157,25 +157,25 @@ const {
         </div>
 
         {faqs.length > 4 && (
-  <div style={{ textAlign: "center", marginTop: 24 }}>
-    <button
-      className={styles.faqViewButton}
-      onClick={() => {
-        if (showAll && firstFaqRef.current) {
-          firstFaqRef.current.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
-        }
+          <div style={{ textAlign: "center", marginTop: 24 }}>
+            <button
+              className={styles.faqViewButton}
+              onClick={() => {
+                if (showAll && firstFaqRef.current) {
+                  firstFaqRef.current.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                }
 
-        setShowAll(!showAll);
-        setExpandedTopics({});
-      }}
-    >
-      {showAll ? "View Less ↑" : "View More ↓"}
-    </button>
-  </div>
-)}
+                setShowAll(!showAll);
+                setExpandedTopics({});
+              }}
+            >
+              {showAll ? "View Less ↑" : "View More ↓"}
+            </button>
+          </div>
+        )}
 
         <div className={styles.faqactions}>
           <button

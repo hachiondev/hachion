@@ -16,6 +16,5 @@ export function useFaqsByCourse(courseName) {
 
       return res.data || [];
     },
-    staleTime: 5 * 60 * 1000,
   });
 }

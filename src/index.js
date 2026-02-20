@@ -6,7 +6,20 @@ import reportWebVitals from "./reportWebVitals";
 import { HelmetProvider } from "react-helmet-async";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 10 * 60 * 1000,        // 10 minutes
+      cacheTime: 30 * 60 * 1000,          // cacheTime (React Query v5 uses gcTime)
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      refetchOnMount: false,
+      retry: 1,                        // prevent multiple retries
+      networkMode: "online",           // avoid unnecessary refetch logic
+    },
+  },
+});
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>

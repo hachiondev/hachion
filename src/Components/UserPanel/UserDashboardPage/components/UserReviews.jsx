@@ -21,7 +21,7 @@ export default function UserReviews() {
   const [errorMessage, setErrorMessage] = useState("");
   const [userEmail, setUserEmail] = useState("");
 
-  
+
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("loginuserData")) || {};
 
@@ -39,7 +39,7 @@ export default function UserReviews() {
     setUserEmail(emailFromStorage);
   }, []);
 
-  
+
   const fetchReviews = async (emailToUse = userEmail) => {
     try {
       if (!emailToUse) {
@@ -56,18 +56,18 @@ export default function UserReviews() {
 
       if (Array.isArray(data)) {
         setReviews(
-  data.map((review, index) => ({
-    S_No: index + 1,
-    review_id: review.review_id,
-    course_name: review.course_name,
-    rating: [...Array(review.rating || 0)].map((_, i) => (
-      <LiaStarSolid key={i} style={{ color: 'gold' }} />
-    )),
-    review: review.review,
-    
-    status: review.status,
-  }))
-);
+          data.map((review, index) => ({
+            S_No: index + 1,
+            review_id: review.review_id,
+            course_name: review.course_name,
+            rating: [...Array(review.rating || 0)].map((_, i) => (
+              <LiaStarSolid key={i} style={{ color: 'gold' }} />
+            )),
+            review: review.review,
+
+            status: review.status,
+          }))
+        );
 
         setErrorMessage("");
       } else {
@@ -87,7 +87,7 @@ export default function UserReviews() {
     }
   }, [userEmail]);
 
-  
+
   const handleAddReview = () => {
     setSuccessMessage("Review added successfully!");
     setErrorMessage("");
@@ -98,24 +98,24 @@ export default function UserReviews() {
     setTimeout(() => setSuccessMessage(""), 2000);
   };
 
-const handleDeleteReview = (reviewId) => {
-  const confirmed = window.confirm("Are you sure you want to delete this review?");
-  if (!confirmed) return;
+  const handleDeleteReview = (reviewId) => {
+    const confirmed = window.confirm("Are you sure you want to delete this review?");
+    if (!confirmed) return;
 
-  axios
-    .delete(`https://api.test.hachion.co/userreview/delete/${reviewId}`)
-    .then(() => {
-      console.log("Review deleted:", reviewId);
-      fetchReviews();
-      setSuccessMessage("Review deleted successfully!");
-      setTimeout(() => setSuccessMessage(""), 2000);
-    })
-    .catch((error) => {
-      console.error("Error deleting review:", error);
-      setErrorMessage("Failed to delete review. Please try again.");
-      setTimeout(() => setErrorMessage(""), 2000);
-    });
-};
+    axios
+      .delete(`https://api.test.hachion.co/userreview/delete/${reviewId}`)
+      .then(() => {
+        console.log("Review deleted:", reviewId);
+        fetchReviews();
+        setSuccessMessage("Review deleted successfully!");
+        setTimeout(() => setSuccessMessage(""), 2000);
+      })
+      .catch((error) => {
+        console.error("Error deleting review:", error);
+        setErrorMessage("Failed to delete review. Please try again.");
+        setTimeout(() => setErrorMessage(""), 2000);
+      });
+  };
 
 
   return (
@@ -157,7 +157,7 @@ const handleDeleteReview = (reviewId) => {
           {showReviewForm ? (
             <UserWriteReview
               setShowReviewForm={setShowReviewForm}
-              onSubmitReview={handleAddReview} 
+              onSubmitReview={handleAddReview}
             />
           ) : (
             <div className="resume-div">
@@ -198,50 +198,50 @@ const handleDeleteReview = (reviewId) => {
                             <TableCell align="left" style={{ whiteSpace: 'pre-wrap' }}>{row.course_name}</TableCell>
                             <TableCell align="center">{row.rating}</TableCell>
                             <TableCell align="left" style={{ whiteSpace: 'pre-wrap' }}>{row.review}</TableCell>
-                           <TableCell align="center">
-  {row.status === null || row.status === "" ? (
-    
-    <IconButton
-      onClick={() => handleDeleteReview(row.review_id)}
-      className="delete-button"
-    >
-      <MdOutlineDeleteForever />
-    </IconButton>
-  ) : row.status.toLowerCase() === "approved" ? (
-    
-    <span
-      style={{
-        backgroundColor: "green",
-        color: "white",
-        padding: "5px 12px",
-        borderRadius: "12px",
-        fontWeight: "600",
-        fontSize: "13px",
-        display: "inline-block",
-      }}
-    >
-      Approved
-    </span>
-  ) : row.status.toLowerCase() === "rejected" ? (
-    
-    <span
-      style={{
-        backgroundColor: "red",
-        color: "white",
-        padding: "5px 12px",
-        borderRadius: "12px",
-        fontWeight: "600",
-        fontSize: "13px",
-        display: "inline-block",
-      }}
-    >
-      Rejected
-    </span>
-  ) : (
-    
-    <span>{row.status}</span>
-  )}
-</TableCell>
+                            <TableCell align="center">
+                              {row.status === null || row.status === "" ? (
+
+                                <IconButton
+                                  onClick={() => handleDeleteReview(row.review_id)}
+                                  className="delete-button"
+                                >
+                                  <MdOutlineDeleteForever />
+                                </IconButton>
+                              ) : row.status.toLowerCase() === "approved" ? (
+
+                                <span
+                                  style={{
+                                    backgroundColor: "green",
+                                    color: "white",
+                                    padding: "5px 12px",
+                                    borderRadius: "12px",
+                                    fontWeight: "600",
+                                    fontSize: "13px",
+                                    display: "inline-block",
+                                  }}
+                                >
+                                  Approved
+                                </span>
+                              ) : row.status.toLowerCase() === "rejected" ? (
+
+                                <span
+                                  style={{
+                                    backgroundColor: "red",
+                                    color: "white",
+                                    padding: "5px 12px",
+                                    borderRadius: "12px",
+                                    fontWeight: "600",
+                                    fontSize: "13px",
+                                    display: "inline-block",
+                                  }}
+                                >
+                                  Rejected
+                                </span>
+                              ) : (
+
+                                <span>{row.status}</span>
+                              )}
+                            </TableCell>
 
                           </TableRow>
                         ))

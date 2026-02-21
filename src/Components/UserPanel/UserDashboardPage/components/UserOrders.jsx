@@ -14,7 +14,10 @@ import '../../Dashboard.css';
 
 export default function UserOrders() {
   const [rows, setRows] = useState([]);
+  const [studentName, setStudentName] = useState(null);
+  const [profileLoading, setProfileLoading] = useState(true);
 
+  
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
     const email = user?.email;
@@ -23,7 +26,6 @@ export default function UserOrders() {
     axios.get(`https://api.test.hachion.co/razorpay/orders?email=${email}`)
       .then((res) => {
         const data = res.data.map((item, index) => {
-          
           let formattedDate = '-';
           if (item.paymentDate) {
             formattedDate = dayjs(item.paymentDate).format('MMMM D, YYYY');
@@ -37,13 +39,65 @@ export default function UserOrders() {
               ? item.totalAmount.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })
               : '₹0',
             status: item.status || 'Processing',
-            invoice: <FiDownload className='invoice-icon' />
           };
         });
         setRows(data);
       })
       .catch((err) => console.error('Error fetching dashboard orders:', err));
   }, []);
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("loginuserData")) || null;
+    const email = user?.email;
+    if (!email) {
+      setProfileLoading(false);
+      return;
+    }
+
+    axios
+      .get("https://api.test.hachion.co/api/v1/user/myprofile", { params: { email } })
+      .then((res) => {
+        
+        setStudentName(res.data?.studentName || res.data?.name || null);
+      })
+      .catch((err) => {
+        console.error("Error fetching profile:", err);
+      })
+      .finally(() => {
+        setProfileLoading(false);
+      });
+  }, []);
+
+  
+  const buildInvoiceUrl = (studentName, courseName) => {
+    if (!studentName || !courseName) return null;
+
+    const safeStudent = studentName.trim().replace(/\s+/g, "_");
+    const safeCourse = courseName.trim().replace(/\s+/g, "_");
+
+    const fileName = `${safeStudent}_${safeCourse}.pdf`;
+    const encodedFileName = encodeURIComponent(fileName);
+
+    return `https://api.test.hachion.co/uploads/test/payments/invoices/${encodedFileName}`;
+  };
+
+  const handleDownloadInvoice = (courseName) => {
+    if (profileLoading) return;
+
+    if (!studentName) {
+      alert("Profile not loaded. Please refresh the page.");
+      return;
+    }
+
+    const url = buildInvoiceUrl(studentName, courseName);
+
+    if (!url) {
+      alert("Invoice not available yet");
+      return;
+    }
+
+    
+    window.open(url, "_blank");
+  };
 
   const getStatusClass = (status) => {
     switch (status.toLowerCase()) {
@@ -84,7 +138,17 @@ export default function UserOrders() {
                         {row.status}
                       </span>
                     </TableCell>
-                    <TableCell align="center">{row.invoice}</TableCell>
+                    <TableCell align="center">
+                      <FiDownload
+                        className="invoice-icon"
+                        style={{
+                          cursor: profileLoading ? "not-allowed" : "pointer",
+                          opacity: profileLoading ? 0.4 : 1
+                        }}
+                        title={profileLoading ? "Loading profile..." : "View Invoice"}
+                        onClick={() => handleDownloadInvoice(row.courseName)}
+                      />
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

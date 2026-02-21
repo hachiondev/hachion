@@ -3,7 +3,7 @@ import axios from "axios";
 import "./CoursePage/Course.css";
 import { useNavigate } from "react-router-dom";
 
-const DropdownCourseList = ({ category }) => {
+const DropdownCourseList = ({ category,onCourseSelect  }) => {
   const [courses, setCourses] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [activeCourse, setActiveCourse] = useState(null);
@@ -67,6 +67,7 @@ const DropdownCourseList = ({ category }) => {
     setActiveCourse(title);
     const slug = title.toLowerCase().replace(/\s+/g, "-");
     navigate(`/coursedetails/${slug}`);
+    if (onCourseSelect) onCourseSelect(); 
   };
 
   if (loading) {

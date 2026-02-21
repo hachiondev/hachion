@@ -35,7 +35,7 @@ const BlogDetails = () => {
   const [loading, setLoading] = useState(true);
   const [recentLoading, setRecentLoading] = useState(true);
   // Add this state near the top with your other states
-const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // ✅ Fetch single blog for details
   useEffect(() => {
@@ -79,12 +79,12 @@ const [searchQuery, setSearchQuery] = useState("");
   }, []);
 
   const filteredBlogs = searchQuery.trim()
-  ? blogs.filter(
+    ? blogs.filter(
       (blog) =>
         blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         blog.category_name.toLowerCase().includes(searchQuery.toLowerCase())
     )
-  : blogs;
+    : blogs;
 
   useEffect(() => {
     setHelmetKey((prev) => prev + 1);
@@ -304,144 +304,144 @@ const [searchQuery, setSearchQuery] = useState("");
           {/* ✅ RECENT POSTS with Skeleton Loader - Kept exactly as is */}
           <div className="detail-blog-left">
             <div className="search-input">
-  <div className="search-input-wrapper">
-    <BiSearch className="search-icon" />
-    <input
-      type="text"
-      placeholder="Search blogs by title or category..."
-      value={searchQuery}
-      onChange={(e) => setSearchQuery(e.target.value)}
-    />
-    {searchQuery && (
-      <button
-        className="search-clear-btn"
-        onClick={() => setSearchQuery("")}
-        aria-label="Clear search"
-      >
-        <BiX />
-        <span className="clear-tooltip">Clear</span>
-      </button>
-    )}
-  </div>
+              <div className="search-input-wrapper">
+                <BiSearch className="search-icon" />
+                <input
+                  type="text"
+                  placeholder="Search blogs by title or category..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                {searchQuery && (
+                  <button
+                    className="search-clear-btn"
+                    onClick={() => setSearchQuery("")}
+                    aria-label="Clear search"
+                  >
+                    <BiX />
+                    <span className="clear-tooltip">Clear</span>
+                  </button>
+                )}
+              </div>
 
-  {/* Live dropdown results */}
-  {searchQuery.trim() && (
-  <div className="search-dropdown">
-    <div className="dropdown-header">
-      <span className="results-count">{filteredBlogs.length} result{filteredBlogs.length !== 1 ? 's' : ''}</span>
-      {filteredBlogs.length > 6 && (
-        <span className="showing-count">
-          Showing {Math.min(filteredBlogs.length, 10)} of {filteredBlogs.length}
-        </span>
-      )}
-    </div>
-    
-    <div className="dropdown-results">
-      {filteredBlogs.length > 0 ? (
-        filteredBlogs.slice(0, 10).map((blog, index) => (
-          <div
-            key={blog.id}
-            className="search-dropdown-item"
-            style={{ animationDelay: `${index * 0.03}s` }}
-            onClick={() => {
-              navigate(
-                `/blogs/${blog.category_name
-                  .replace(/\s+/g, "-")
-                  .toLowerCase()}/${blog.id}`
-              );
-              setSearchQuery("");
-              window.scrollTo(0, 0);
-            }}
-          >
-            <div className="image-wrapper">
-              <img
-                src={blog.blog_image}
-                alt={blog.title}
-                className="search-dropdown-img"
-                onError={(e) => (e.target.src = Blogimageplaceholder)}
-              />
+              {/* Live dropdown results */}
+              {searchQuery.trim() && (
+                <div className="search-dropdown">
+                  <div className="dropdown-header">
+                    <span className="results-count">{filteredBlogs.length} result{filteredBlogs.length !== 1 ? 's' : ''}</span>
+                    {filteredBlogs.length > 6 && (
+                      <span className="showing-count">
+                        Showing {Math.min(filteredBlogs.length, 10)} of {filteredBlogs.length}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="dropdown-results">
+                    {filteredBlogs.length > 0 ? (
+                      filteredBlogs.slice(0, 10).map((blog, index) => (
+                        <div
+                          key={blog.id}
+                          className="search-dropdown-item"
+                          style={{ animationDelay: `${index * 0.03}s` }}
+                          onClick={() => {
+                            navigate(
+                              `/blogs/${blog.category_name
+                                .replace(/\s+/g, "-")
+                                .toLowerCase()}/${blog.id}`
+                            );
+                            setSearchQuery("");
+                            window.scrollTo(0, 0);
+                          }}
+                        >
+                          <div className="image-wrapper">
+                            <img
+                              src={blog.blog_image}
+                              alt={blog.title}
+                              className="search-dropdown-img"
+                              onError={(e) => (e.target.src = Blogimageplaceholder)}
+                            />
+                          </div>
+                          <div className="search-dropdown-text">
+                            <span className="search-dropdown-category">
+                              {blog.category_name}
+                            </span>
+                            <p className="search-dropdown-title">{blog.title}</p>
+                            <span className="read-more-hint">
+                              Read <BsArrowRight className="arrow-icon" />
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="search-no-results">
+                        <BiSearch className="no-results-icon" />
+                        <div className="no-results-text">
+                          No blogs found for "<strong>{searchQuery}</strong>"
+                        </div>
+                        <div className="no-results-suggestion">
+                          Try different keywords or browse all blogs
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Optional scroll indicator */}
+                  {filteredBlogs.length > 5 && <div className="scroll-indicator" />}
+                </div>
+              )}
             </div>
-            <div className="search-dropdown-text">
-              <span className="search-dropdown-category">
-                {blog.category_name}
-              </span>
-              <p className="search-dropdown-title">{blog.title}</p>
-              <span className="read-more-hint">
-                Read <BsArrowRight className="arrow-icon" />
-              </span>
-            </div>
-          </div>
-        ))
-      ) : (
-        <div className="search-no-results">
-          <BiSearch className="no-results-icon" />
-          <div className="no-results-text">
-            No blogs found for "<strong>{searchQuery}</strong>"
-          </div>
-          <div className="no-results-suggestion">
-            Try different keywords or browse all blogs
-          </div>
-        </div>
-      )}
-    </div>
-    
-    {/* Optional scroll indicator */}
-    {filteredBlogs.length > 5 && <div className="scroll-indicator" />}
-  </div>
-)}
-</div>
 
-<h3>Recent Post</h3>
+            <h3>Recent Post</h3>
 
-{/* Recent posts now always show from unfiltered blogs */}
-{recentLoading
-  ? Array.from({ length: 5 }).map((_, i) => (
-      <div className="recent-post-skeleton" key={i}>
-        <div className="recent-skeleton-image"></div>
-        <div className="recent-skeleton-text subtitle"></div>
-        <div className="recent-skeleton-text title"></div>
-      </div>
-    ))
-  : blogs.length > 0
-  ? blogs.slice(0, 5).map((blog) => (
-      <div
-        key={blog.id}
-        className="recent-post-item"
-        onClick={() => {
-          navigate(
-            `/blogs/${blog.category_name
-              .replace(/\s+/g, "-")
-              .toLowerCase()}/${blog.id}`
-          );
-          window.scrollTo(0, 0);
-        }}
-      >
-        <img
-          src={blog.blog_image}
-          alt={blog.title}
-          className="recent-post-img"
-          onError={(e) => (e.target.src = Blogimageplaceholder)}
-          loading="lazy"
-        />
-        <div className="recent-post-text">
-          <div className="recent-post-row">
-            <FaCalendarAlt className="recent-post-date-icon" />
-            <p className="recent-post-date">
-              {(() => {
-                const d = new Date(blog.date);
-                return d.toLocaleDateString("en-US", {
-                  day: "2-digit",
-                  month: "long",
-                  year: "numeric",
-                });
-              })()}
-            </p>
-          </div>
-          <h5 className="recent-post-title">{blog.title}</h5>
-        </div>
-      </div>
-    ))
-  : <p className="no-blogs-message">📭 No blogs available</p>}
+            {/* Recent posts now always show from unfiltered blogs */}
+            {recentLoading
+              ? Array.from({ length: 5 }).map((_, i) => (
+                <div className="recent-post-skeleton" key={i}>
+                  <div className="recent-skeleton-image"></div>
+                  <div className="recent-skeleton-text subtitle"></div>
+                  <div className="recent-skeleton-text title"></div>
+                </div>
+              ))
+              : blogs.length > 0
+                ? blogs.slice(0, 5).map((blog) => (
+                  <div
+                    key={blog.id}
+                    className="recent-post-item"
+                    onClick={() => {
+                      navigate(
+                        `/blogs/${blog.category_name
+                          .replace(/\s+/g, "-")
+                          .toLowerCase()}/${blog.id}`
+                      );
+                      window.scrollTo(0, 0);
+                    }}
+                  >
+                    <img
+                      src={blog.blog_image}
+                      alt={blog.title}
+                      className="recent-post-img"
+                      onError={(e) => (e.target.src = Blogimageplaceholder)}
+                      loading="lazy"
+                    />
+                    <div className="recent-post-text">
+                      <div className="recent-post-row">
+                        <FaCalendarAlt className="recent-post-date-icon" />
+                        <p className="recent-post-date">
+                          {(() => {
+                            const d = new Date(blog.date);
+                            return d.toLocaleDateString("en-US", {
+                              day: "2-digit",
+                              month: "long",
+                              year: "numeric",
+                            });
+                          })()}
+                        </p>
+                      </div>
+                      <h5 className="recent-post-title">{blog.title}</h5>
+                    </div>
+                  </div>
+                ))
+                : <p className="no-blogs-message">📭 No blogs available</p>}
           </div>
         </div>
 

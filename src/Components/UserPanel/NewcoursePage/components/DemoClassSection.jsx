@@ -78,6 +78,10 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
     return () => clearTimeout(timer);
   }, [enrollSuccessMessage, enrollErrorMessage]);
 
+  useEffect(() => {
+  setActiveTab(null);
+}, [courseName]);
+
   const {
     data: userProfile,
     isLoading: isProfileLoading,

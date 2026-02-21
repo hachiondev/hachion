@@ -2851,13 +2851,14 @@ background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
 }
 
 .search-input-wrapper input {
-  border: none;
+  border: none !important;
   outline: none;
   width: 100%;
   font-size: 15px;
   color: #1f2937;
   background: transparent;
   font-weight: 400;
+  padding: 8px 10px 8px 5px !important;
 }
 
 .search-input-wrapper input::placeholder {
@@ -2931,7 +2932,7 @@ background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
   border: 1px solid #eef2f6;
   border-radius: 16px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-  z-index: 999;
+  z-index: 9999 ;
   overflow: hidden;
   animation: dropdownFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   max-height: 400px; /* Fixed max height */

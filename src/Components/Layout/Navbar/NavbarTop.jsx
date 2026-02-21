@@ -18,7 +18,7 @@ import DropdownSidebar from '../../UserPanel/DropdownSidebar';
 import DropdownCourseList, { getTotalCards } from '../../UserPanel/DropdownCourseList';
 import '../../../Components/UserPanel/CoursePage/Course.css';
 import { BsCart2 } from "react-icons/bs";
-import { CgPathOutline , CgMenuGridR } from "react-icons/cg";
+import { CgPathOutline, CgMenuGridR } from "react-icons/cg";
 import { BsBookmarkHeart } from "react-icons/bs";
 import { PiNotePencilBold, PiCertificateBold, PiBriefcase } from "react-icons/pi";
 import { MdOutlineRateReview } from "react-icons/md";
@@ -40,8 +40,8 @@ async function ensureAvatarFromApi(email, setUserData) {
     const img = data?.profileImageUrl
       ? resolveImageUrl(data.profileImageUrl)
       : data?.profileImage
-      ? resolveImageUrl(`/api/v1/user/profile/${data.profileImage}`)
-      : "";
+        ? resolveImageUrl(`/api/v1/user/profile/${data.profileImage}`)
+        : "";
 
     if (img) {
       setUserData((prev) => {
@@ -54,19 +54,19 @@ async function ensureAvatarFromApi(email, setUserData) {
           const raw = localStorage.getItem("loginuserData");
           const stored = raw ? JSON.parse(raw) : {};
           localStorage.setItem("loginuserData", JSON.stringify({ ...stored, ...next }));
-        } catch {}
+        } catch { }
         return next;
       });
     }
-  } catch {}
+  } catch { }
 }
 
 const ProfileAvatar = styled(Avatar)({
-    width: 40,
-    height: 40,
-    border: "2px solid #00AEEF",
-    backgroundColor: "#ffffff",
-  });
+  width: 40,
+  height: 40,
+  border: "2px solid #00AEEF",
+  backgroundColor: "#ffffff",
+});
 
 const NavbarTop = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -121,7 +121,7 @@ const NavbarTop = () => {
     }
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     // Try to hydrate from localStorage + avatar cookie first
     const stored = localStorage.getItem("loginuserData");
     const avatarCookie = getCookie("avatar");
@@ -171,7 +171,7 @@ const NavbarTop = () => {
   const handleLogout = async () => {
     try {
       await fetch("https://api.test.hachion.co/api/logout", { method: "POST", credentials: "include" });
-    } catch {}
+    } catch { }
     finally {
       localStorage.clear();
       deleteCookieEverywhere("avatar");
@@ -210,55 +210,55 @@ const NavbarTop = () => {
   };
 
   useEffect(() => {
-  function handleClickOutside(e) {
-    const searchBox = document.querySelector(".custom-search");
-    const resultsBox = document.querySelector(".search-results");
+    function handleClickOutside(e) {
+      const searchBox = document.querySelector(".custom-search");
+      const resultsBox = document.querySelector(".search-results");
 
-    if (
-      searchBox &&
-      !searchBox.contains(e.target) &&
-      resultsBox &&
-      !resultsBox.contains(e.target)
-    ) {
-      setSearchResults([]);
+      if (
+        searchBox &&
+        !searchBox.contains(e.target) &&
+        resultsBox &&
+        !resultsBox.contains(e.target)
+      ) {
+        setSearchResults([]);
+      }
     }
-  }
 
-  document.addEventListener("click", handleClickOutside);
-  return () => document.removeEventListener("click", handleClickOutside);
-}, []);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = drawerOpen ? "hidden" : "";
   }, [drawerOpen]);
 
   const handleMouseEnter = () => {
-  clearTimeout(window.dropdownTimeout);
-  setIsDropdownOpen(true);
-};
+    clearTimeout(window.dropdownTimeout);
+    setIsDropdownOpen(true);
+  };
 
-const handleMouseLeave = () => {
-  window.dropdownTimeout = setTimeout(() => {
-    setIsDropdownOpen(false);
-  }, 200);
-};
+  const handleMouseLeave = () => {
+    window.dropdownTimeout = setTimeout(() => {
+      setIsDropdownOpen(false);
+    }, 200);
+  };
 
   const handleClickToggle = () => {
     setIsDropdownOpen(prev => !prev);
   };
 
   useEffect(() => {
-  const handleClickOutside = (e) => {
-    if (userDropdownRef.current && !userDropdownRef.current.contains(e.target)) {
-      setIsOpen(false); 
-    }
-  };
+    const handleClickOutside = (e) => {
+      if (userDropdownRef.current && !userDropdownRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    };
 
-  document.addEventListener("click", handleClickOutside);
-  return () => {
-    document.removeEventListener("click", handleClickOutside);
-  };
-}, []);
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -274,24 +274,24 @@ const handleMouseLeave = () => {
             <div className="navbar-nav my-lg-0 navbar-nav-scroll" ref={dropdownRef}>
               <div className="nav-item dropdown">
                 <button
-              className="nav-link"
-              type="button"
-              aria-expanded={isDropdownOpen}
-              aria-haspopup="true"
-              onClick={handleClickToggle}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              style={{ color: "#000000", fontWeight: "500", background: "none", border: "none" }}
-            >
-              Explore Courses{" "}
-              <span className="ms-1 arrow-icon" aria-hidden="true">
-                {isDropdownOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
-              </span>
-            </button>
+                  className="nav-link"
+                  type="button"
+                  aria-expanded={isDropdownOpen}
+                  aria-haspopup="true"
+                  onClick={handleClickToggle}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  style={{ color: "#000000", fontWeight: "500", background: "none", border: "none" }}
+                >
+                  Explore Courses{" "}
+                  <span className="ms-1 arrow-icon" aria-hidden="true">
+                    {isDropdownOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
+                  </span>
+                </button>
                 {isDropdownOpen && (
                   <ul className="dropdown-menu custom-dropdown-menu show"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}>
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}>
                     <li>
                       <div className="course-content">
                         <div className="scrollable-category-list">
@@ -301,11 +301,15 @@ const handleMouseLeave = () => {
                           />
                         </div>
                         <div className="sidebar-right-container">
-                          <DropdownCourseList category={selectedCategory} />
+                          <DropdownCourseList category={selectedCategory} onCourseSelect={() => setIsDropdownOpen(false)}/>
                           <li>
                             <button
                               className="dropdown-all-btn"
-                              onClick={() => navigate("/coursedetails")}
+                              onClick={() => {
+                                navigate("/coursedetails");
+                                setIsDropdownOpen(false); // ← add this
+                              }}
+
                             >
                               Explore All Courses
                             </button>
@@ -374,15 +378,15 @@ const handleMouseLeave = () => {
               <IoSearch size={26} color="#00AEEF" />
             </button>
             {isLoggedIn && (
-              <button className="btn ms-2" 
-              aria-label="View cart"
-              onClick={() => navigate("/userdashboard/order_history")}>
+              <button className="btn ms-2"
+                aria-label="View cart"
+                onClick={() => navigate("/userdashboard/order_history")}>
                 <BsCart2 size={24} color="#000" />
               </button>
             )}
             <button className="btn ms-2"
-            aria-label="Open menu"
-            onClick={() => setDrawerOpen(true)}>
+              aria-label="Open menu"
+              onClick={() => setDrawerOpen(true)}>
               <GiHamburgerMenu size={28} />
             </button>
           </div>
@@ -427,64 +431,64 @@ const handleMouseLeave = () => {
                       </ProfileAvatar>
                     )}
                     <span className="ms-2">{userData?.name || "User"}</span>
-                    <span 
-                  className="ms-1 arrow-icon"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsOpen(!isOpen);
-                  }}
-                  style={{ cursor: "pointer" }}
-                >
-                  {isOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
-                </span>
+                    <span
+                      className="ms-1 arrow-icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsOpen(!isOpen);
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {isOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
+                    </span>
                   </button>
                   {isOpen && (
                     <ul className="dropdown-menu dropdown-menu-end show">
                       <li>
                         <Link className="dropdown-item" to="/userdashboard/dashboard"
-                        onClick={() => setIsOpen(false)}>
+                          onClick={() => setIsOpen(false)}>
                           <RxDashboard /> Dashboard
                         </Link>
                       </li>
                       <li>
                         <Link className="dropdown-item" to="/userdashboard/profile"
-                        onClick={() => setIsOpen(false)}>
+                          onClick={() => setIsOpen(false)}>
                           <GoPerson /> Profile
                         </Link>
                       </li>
                       <li>
                         <Link className="dropdown-item" to="/userdashboard/enrolls"
-                        onClick={() => setIsOpen(false)}>
+                          onClick={() => setIsOpen(false)}>
                           <PiNotePencilBold /> Enrolls
                         </Link>
                       </li>
                       <li>
                         <Link className="dropdown-item" to="/userdashboard/wishlist"
-                        onClick={() => setIsOpen(false)}>
+                          onClick={() => setIsOpen(false)}>
                           <BsBookmarkHeart /> Wishlist
                         </Link>
                       </li>
                       <li>
                         <Link className="dropdown-item" to="/userdashboard/order_history"
-                        onClick={() => setIsOpen(false)}>
+                          onClick={() => setIsOpen(false)}>
                           <BsCart2 /> Orders
                         </Link>
                       </li>
                       <li>
                         <Link className="dropdown-item" to="/userdashboard/certificate"
-                        onClick={() => setIsOpen(false)}>
+                          onClick={() => setIsOpen(false)}>
                           <PiCertificateBold /> Certificates
                         </Link>
                       </li>
                       <li>
                         <Link className="dropdown-item" to="/userdashboard/review"
-                        onClick={() => setIsOpen(false)}>
+                          onClick={() => setIsOpen(false)}>
                           <MdOutlineRateReview /> Review
                         </Link>
                       </li>
                       <li>
                         <Link className="dropdown-item" to="/userdashboard/pathfinder"
-                        onClick={() => setIsOpen(false)}>
+                          onClick={() => setIsOpen(false)}>
                           <CgPathOutline /> Pathfinder
                         </Link>
                       </li>
@@ -503,155 +507,155 @@ const handleMouseLeave = () => {
       </nav>
 
       {/* Overlay and Drawer */}
-{drawerOpen && <div className="overlay" onClick={() => setDrawerOpen(false)} />}
-<div className={`sidebar-drawer ${drawerOpen ? "open" : ""}`}>
-  <div className="category-drawer-header">
-    <a href="/">
-      <img src={logo} alt="logo" className="logo" />
-    </a>
-    <button className="filter-close-btn" 
-    aria-label="Close menu"
-    onClick={() => setDrawerOpen(false)}>
-      ✕
-    </button>
-  </div>
-  <div className="drawer-body">
-    {isLoggedIn ? (
-      <>
-        <div className="d-flex align-items-center mb-3">
-          {userData?.picture ? (
-            <ProfileAvatar src={userData.picture} alt="user avatar" />
-          ) : (
-            <ProfileAvatar>
-              <FaUserAlt size={20} color="#b3b3b3" />
-            </ProfileAvatar>
-          )}
-          <span className="ms-2">{userData?.name || "User"}</span>
-        </div>
-
-        <div className="drawer-item" onClick={() => { navigate("/userdashboard/dashboard"); setDrawerOpen(false); }}>
-          <RxDashboard /> Dashboard
-        </div>
-        <div className="drawer-item" onClick={() => { navigate("/userdashboard/profile"); setDrawerOpen(false); }}>
-          <GoPerson /> Profile
-        </div>
-        <div className="drawer-item" onClick={() => { navigate("/userdashboard/enrolls"); setDrawerOpen(false); }}>
-          <PiNotePencilBold /> Enrolls
-        </div>
-        <div className="drawer-item" onClick={() => { navigate("/userdashboard/wishlist"); setDrawerOpen(false); }}>
-          <BsBookmarkHeart /> Wishlist
-        </div>
-        <div className="drawer-item" onClick={() => { navigate("/userdashboard/order_history"); setDrawerOpen(false); }}>
-          <BsCart2 /> Orders
-        </div>
-        <div className="drawer-item" onClick={() => { navigate("/userdashboard/certificate"); setDrawerOpen(false); }}>
-          <PiCertificateBold /> Certificates
-        </div>
-        <div className="drawer-item" onClick={() => { navigate("/userdashboard/review"); setDrawerOpen(false); }}>
-          <MdOutlineRateReview /> Review
-        </div>
-        <div className="drawer-item" onClick={() => { navigate("/userdashboard/pathfinder"); setDrawerOpen(false); }}>
-          <CgPathOutline /> Pathfinder
-        </div>
-
-        <div className="drawer-item" onClick={() => { navigate("/coursedetails"); setDrawerOpen(false); }}>
-          Explore Courses
-        </div>
-        <div className="drawer-item" onClick={() => { navigate("/corporate"); setDrawerOpen(false); }}>
-          Corporate Training
-        </div>
-
-        <button
-          className="btn btn-info rounded-pill w-100 text-white mt-3"
-          onClick={() => { setDrawerOpen(false); handleLogout(); }}
-        >
-          <MdLogout /> Logout
-        </button>
-      </>
-    ) : (
-      <>
-        <div className="drawer-item" onClick={() => { navigate("/coursedetails"); setDrawerOpen(false); }}>
-          Explore Courses
-        </div>
-        <div className="drawer-item" onClick={() => { navigate("/corporate"); setDrawerOpen(false); }}>
-          Corporate Training
-        </div>
-        <Link
-          to="/login"
-          className="btn btn-outline-info rounded-pill w-100 mt-3 fw-bold"
-          onClick={() => setDrawerOpen(false)}
-        >
-          Log In
-        </Link>
-        <Link
-          to="/register"
-          className="btn btn-info rounded-pill w-100 mt-2 text-white fw-bold"
-          onClick={() => setDrawerOpen(false)}
-        >
-          Sign Up
-        </Link>
-      </>
-    )}
-  </div>
-</div>
-
-      {/* Mobile Search Popup */}
-     {mobileSearchOpen && (
-      <div
-        className="position-fixed top-0 start-0 w-100 h-100 bg-white p-3"
-        style={{ zIndex: 1050 }}
-      >
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <div className="input-group rounded-pill custom-search w-100" style={{ overflow: "hidden", height: "48px" }}>
-            <input
-              type="search"
-              className="form-control border-0"
-              placeholder="What would you like to learn?"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              autoFocus
-            />
-            <button
-              className="btn btn-info d-flex align-items-center justify-content-center search-btn"
-              type="submit"
-              aria-label="Open search"
-              onClick={(e) => e.preventDefault()}
-            >
-              <IoSearch size={20} className="text-white" />
-            </button>
-          </div>
-          <button
-            className="filter-close-btn ms-2"
-            aria-label="Close search"
-            onClick={() => {
-              setMobileSearchOpen(false);
-              setSearchQuery("");
-              setSearchResults([]);
-            }}
-          >
+      {drawerOpen && <div className="overlay" onClick={() => setDrawerOpen(false)} />}
+      <div className={`sidebar-drawer ${drawerOpen ? "open" : ""}`}>
+        <div className="category-drawer-header">
+          <a href="/">
+            <img src={logo} alt="logo" className="logo" />
+          </a>
+          <button className="filter-close-btn"
+            aria-label="Close menu"
+            onClick={() => setDrawerOpen(false)}>
             ✕
           </button>
         </div>
+        <div className="drawer-body">
+          {isLoggedIn ? (
+            <>
+              <div className="d-flex align-items-center mb-3">
+                {userData?.picture ? (
+                  <ProfileAvatar src={userData.picture} alt="user avatar" />
+                ) : (
+                  <ProfileAvatar>
+                    <FaUserAlt size={20} color="#b3b3b3" />
+                  </ProfileAvatar>
+                )}
+                <span className="ms-2">{userData?.name || "User"}</span>
+              </div>
 
-        <div className="overflow-auto" style={{ maxHeight: "85vh" }}>
-          {searchResults.map((item) => (
-            <div
-              key={item._id || item.id}
-              className="p-2 border-bottom d-flex align-items-center"
-              onClick={() => handleCourseClick(item)}
-              style={{ cursor: "pointer" }}
-            >
-              <img
-                src={resolveImageUrl(item.courseImage)}
-                alt=""
-                style={{ width: 40, height: 40, marginRight: 10 }}
-              />
-              {item.courseName || item.title}
-            </div>
-          ))}
+              <div className="drawer-item" onClick={() => { navigate("/userdashboard/dashboard"); setDrawerOpen(false); }}>
+                <RxDashboard /> Dashboard
+              </div>
+              <div className="drawer-item" onClick={() => { navigate("/userdashboard/profile"); setDrawerOpen(false); }}>
+                <GoPerson /> Profile
+              </div>
+              <div className="drawer-item" onClick={() => { navigate("/userdashboard/enrolls"); setDrawerOpen(false); }}>
+                <PiNotePencilBold /> Enrolls
+              </div>
+              <div className="drawer-item" onClick={() => { navigate("/userdashboard/wishlist"); setDrawerOpen(false); }}>
+                <BsBookmarkHeart /> Wishlist
+              </div>
+              <div className="drawer-item" onClick={() => { navigate("/userdashboard/order_history"); setDrawerOpen(false); }}>
+                <BsCart2 /> Orders
+              </div>
+              <div className="drawer-item" onClick={() => { navigate("/userdashboard/certificate"); setDrawerOpen(false); }}>
+                <PiCertificateBold /> Certificates
+              </div>
+              <div className="drawer-item" onClick={() => { navigate("/userdashboard/review"); setDrawerOpen(false); }}>
+                <MdOutlineRateReview /> Review
+              </div>
+              <div className="drawer-item" onClick={() => { navigate("/userdashboard/pathfinder"); setDrawerOpen(false); }}>
+                <CgPathOutline /> Pathfinder
+              </div>
+
+              <div className="drawer-item" onClick={() => { navigate("/coursedetails"); setDrawerOpen(false); }}>
+                Explore Courses
+              </div>
+              <div className="drawer-item" onClick={() => { navigate("/corporate"); setDrawerOpen(false); }}>
+                Corporate Training
+              </div>
+
+              <button
+                className="btn btn-info rounded-pill w-100 text-white mt-3"
+                onClick={() => { setDrawerOpen(false); handleLogout(); }}
+              >
+                <MdLogout /> Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="drawer-item" onClick={() => { navigate("/coursedetails"); setDrawerOpen(false); }}>
+                Explore Courses
+              </div>
+              <div className="drawer-item" onClick={() => { navigate("/corporate"); setDrawerOpen(false); }}>
+                Corporate Training
+              </div>
+              <Link
+                to="/login"
+                className="btn btn-outline-info rounded-pill w-100 mt-3 fw-bold"
+                onClick={() => setDrawerOpen(false)}
+              >
+                Log In
+              </Link>
+              <Link
+                to="/register"
+                className="btn btn-info rounded-pill w-100 mt-2 text-white fw-bold"
+                onClick={() => setDrawerOpen(false)}
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       </div>
-    )}
+
+      {/* Mobile Search Popup */}
+      {mobileSearchOpen && (
+        <div
+          className="position-fixed top-0 start-0 w-100 h-100 bg-white p-3"
+          style={{ zIndex: 1050 }}
+        >
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <div className="input-group rounded-pill custom-search w-100" style={{ overflow: "hidden", height: "48px" }}>
+              <input
+                type="search"
+                className="form-control border-0"
+                placeholder="What would you like to learn?"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                autoFocus
+              />
+              <button
+                className="btn btn-info d-flex align-items-center justify-content-center search-btn"
+                type="submit"
+                aria-label="Open search"
+                onClick={(e) => e.preventDefault()}
+              >
+                <IoSearch size={20} className="text-white" />
+              </button>
+            </div>
+            <button
+              className="filter-close-btn ms-2"
+              aria-label="Close search"
+              onClick={() => {
+                setMobileSearchOpen(false);
+                setSearchQuery("");
+                setSearchResults([]);
+              }}
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="overflow-auto" style={{ maxHeight: "85vh" }}>
+            {searchResults.map((item) => (
+              <div
+                key={item._id || item.id}
+                className="p-2 border-bottom d-flex align-items-center"
+                onClick={() => handleCourseClick(item)}
+                style={{ cursor: "pointer" }}
+              >
+                <img
+                  src={resolveImageUrl(item.courseImage)}
+                  alt=""
+                  style={{ width: 40, height: 40, marginRight: 10 }}
+                />
+                {item.courseName || item.title}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </>
   );
 };

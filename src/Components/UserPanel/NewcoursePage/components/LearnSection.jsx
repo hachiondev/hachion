@@ -7,17 +7,6 @@ import { useCourseByName } from "../../../../Api/hooks/CourseApi/useCourseByName
 import { useParams } from "react-router-dom";
 import { useToolsByCourse } from "../../../../Api/hooks/CourseApi/useToolsByCourse";
 import CardsPagination from "../../../UserPanel/Common/CardsPagination";
-import EnquiryForm from "./EnquiryForm";
-
-const CheckCircle = () => (
-    <img src={checkMark} alt="check" className={styles.lsicon} />
-);
-const UserGroup = () => (
-    <img src={person} alt="person" className={styles.lsicon} />
-);
-const Briefcase = () => (
-    <img src={job} alt="job" className={styles.lsicon} />
-);
 
 export default function LearnSection() {
     const { courseName: courseNameSlug } = useParams();
@@ -31,21 +20,23 @@ export default function LearnSection() {
         career: false,
     });
 
-   const courseName = courseNameSlug
-  ? decodeURIComponent(courseNameSlug)
-      .replace(/---+/g, " - ")
-      .replace(/\b([a-zA-Z]{2,3})-(\d{3})\b/g, "$1@@$2")
-      .replace(/[-_]+/g, " ")
-      .replace(/@@/g, "-")
-      .replace(/\s+/g, " ")
-      .trim()
-      .toLowerCase()
-  : "";
-
-
+    const courseName = courseNameSlug
+        ? decodeURIComponent(courseNameSlug)
+            .replace(/---+/g, " - ")
+            .replace(/\b([a-zA-Z]{2,3})-(\d{3})\b/g, "$1@@$2")
+            .replace(/[-_]+/g, " ")
+            .replace(/@@/g, "-")
+            .replace(/\s+/g, " ")
+            .trim()
+            .toLowerCase()
+        : "";
     const { data: course } = useCourseByName(courseName);
     const { data: allTools = [], isLoading } = useToolsByCourse(courseName);
 
+    useEffect(() => {
+        setActiveTab("learn");
+    }, [courseName]);
+    
     useEffect(() => {
         const update = () => {
             const w = window.innerWidth;
@@ -159,7 +150,7 @@ export default function LearnSection() {
                         <div className={styles.tabPane}>
                             <ul className={styles.lsbullets}>
                                 {(showAll.learn ? whatYouWillLearnItems : whatYouWillLearnItems.slice(0, 5)).map((item, index) => (
-                                    <li key={item}  style={{ "--i": index }}>
+                                    <li key={item} style={{ "--i": index }}>
                                         {item}
                                     </li>
                                 ))}

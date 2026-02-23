@@ -1421,7 +1421,7 @@ const EmployeesDetailForm = () => {
                     />
                   </StyledTableCell>
                   <StyledTableCell align="center" style={{ width: '60px' }}>S.No.</StyledTableCell>
-                  <StyledTableCell align="center" style={{ width: '80px' }}>Image</StyledTableCell>
+                  {/* <StyledTableCell align="center" style={{ width: '80px' }}>Image</StyledTableCell> */}
                   <StyledTableCell align="center" style={{ width: '100px' }}>
                     Employee ID
                   </StyledTableCell>
@@ -1460,7 +1460,7 @@ const EmployeesDetailForm = () => {
                       <StyledTableCell align="center">
                         {index + 1 + (currentPage - 1) * rowsPerPage}
                       </StyledTableCell>
-                      <StyledTableCell align="center">
+                      {/* <StyledTableCell align="center">
                         {emp.companyImage ? (
                           <img
                             src={
@@ -1479,7 +1479,7 @@ const EmployeesDetailForm = () => {
                         ) : (
                           <div className="no-image">No Image</div>
                         )}
-                      </StyledTableCell>
+                      </StyledTableCell> */}
                       <StyledTableCell align="center">
                         <strong>{emp.employeeId || "—"}</strong>
                       </StyledTableCell>

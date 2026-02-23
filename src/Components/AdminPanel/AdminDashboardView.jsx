@@ -23,8 +23,8 @@ import StudentInterests from './StudentInterests';
 import AdminUploadImage from './AdminUploadImage';
 import AdminDiscount from './AdminDiscount';
 import GeneralFaq from './GeneralFaq';
-import Employees from './Employees';
 import Interview from './Interview';
+import EmployeesPage from './Employee/EmployeesPage';
 const componentMap = {
   'Dashboard': <AdminDashboard />,
   'Course Category': <CourseCategory />,
@@ -47,7 +47,7 @@ const componentMap = {
   'Upload Images': <AdminUploadImage />,
   'Other': <Other />,
   'Discount Courses': <AdminDiscount />,
-  'Employees': <Employees />,
+  'Employees': <EmployeesPage />,
   'Support': <Support />,
   'Interview': <Interview />,
 };

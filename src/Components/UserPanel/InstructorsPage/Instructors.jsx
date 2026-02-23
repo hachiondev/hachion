@@ -410,7 +410,7 @@ const Instructors = () => {
                           </div>
                         </div>
 
-                        <button
+                        {/* <button
                           className="view-profile-btn"
                           onClick={() =>
                             navigate(
@@ -425,7 +425,7 @@ const Instructors = () => {
                           }
                         >
                           View Profile
-                        </button>
+                        </button> */}
                       </div>
                     </div>
                   </div>

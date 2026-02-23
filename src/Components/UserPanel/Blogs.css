@@ -2818,6 +2818,7 @@ background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
 .search-input {
   position: relative;
   margin-bottom: 24px;
+  padding-left: 0 !important;
 }
 
 .search-input-wrapper {
@@ -2826,8 +2827,8 @@ background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
   background: #fff;
   border: 1.5px solid #e0e0e0;
   border-radius: 12px;
-  padding: 12px 16px;
-  gap: 12px;
+  padding: 2px 16px;
+  gap: 0px;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }

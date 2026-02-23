@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import "./Admin.css";
+import "../Admin.css";
 import { styled } from "@mui/material/styles";
 import {
   Table,
@@ -22,8 +22,8 @@ import { FiPlus } from "react-icons/fi";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import Flag from "react-world-flags";
 import { AiFillCaretDown } from "react-icons/ai";
-import AdminPagination from "./AdminPagination";
-import { countries, getDefaultCountry } from "../../countryUtils";
+import AdminPagination from "../AdminPagination";
+import { countries, getDefaultCountry } from "../../../countryUtils";
 
 const API_BASE = "https://api.test.hachion.co";
 

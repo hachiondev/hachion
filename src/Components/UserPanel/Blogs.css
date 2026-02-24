@@ -541,7 +541,7 @@ background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
 .breadcrumb-item {
   display: flex;
   align-items: center;
-  font-size: small;
+  font-size: 12px;
 }
 
 .breadcrumb-item a {
@@ -553,7 +553,7 @@ background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
 
 .breadcrumb-item.active {
   color: #00AEEF !important;
-  font-size: small;
+  font-size: 12px;
   padding-left: 0;
   white-space: nowrap;
   /* overflow: hidden; */

@@ -5,6 +5,8 @@ import CourseCard from './CourseCard';
 import './Home.css';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { BiSearch, BiX } from 'react-icons/bi';
+import Pagination from './Common/Pagination';
 dayjs.extend(customParseFormat);
 
 const countryToCurrencyMap = {
@@ -18,8 +20,6 @@ const ExploreDeals = () => {
 
   const [allCourses, setAllCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [viewAll, setViewAll] = useState(false);
-  const [cardsToShow, setCardsToShow] = useState(8);
   const [currency, setCurrency] = useState('INR');
   const [fxFromUSD, setFxFromUSD] = useState(1);
   const [country, setCountry] = useState('IN');
@@ -27,26 +27,17 @@ const ExploreDeals = () => {
 
   const [discountRules, setDiscountRules] = useState([]);
   const [countdowns, setCountdowns] = useState({});
+  
+  // 🔴 NEW: Search and Pagination states
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const cardsPerPage = 12;
 
   // const fmt = (n) =>
   //   (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
 
   const fmt = (n) => Math.round(Number(n) || 0).toLocaleString();
 
-  const updateCardsToShow = () => {
-    const width = window.innerWidth;
-    if (width <= 768) setCardsToShow(1);
-    else if (width <= 1024) setCardsToShow(4);
-    else setCardsToShow(8);
-  };
-
-  useEffect(() => {
-    updateCardsToShow();
-    window.addEventListener('resize', updateCardsToShow);
-    return () => window.removeEventListener('resize', updateCardsToShow);
-  }, []);
-
-  
   useEffect(() => {
     (async () => {
       setLoading(true);
@@ -310,9 +301,53 @@ const ExploreDeals = () => {
     return [...withRuleActive, ...withPerCourseDiscount];
   }, [withRuleActive, withPerCourseDiscount]);
 
-  const displayedCourses = viewAll
-    ? orderedCourses
-    : orderedCourses.slice(0, cardsToShow);
+  // 🔴 CHANGE: Only show courses that have timeLeftLabel (active countdown)
+  const activeDealCourses = useMemo(() => {
+    return orderedCourses.filter(course => 
+      countdowns[keyOf(course)] && countdowns[keyOf(course)] !== ''
+    );
+  }, [orderedCourses, countdowns]);
+
+  // 🔴 NEW: Search filter
+  const filteredCourses = useMemo(() => {
+    if (!searchQuery.trim()) return activeDealCourses;
+    
+    const query = searchQuery.toLowerCase().trim();
+    return activeDealCourses.filter(course => 
+      course.courseName?.toLowerCase().includes(query) ||
+      course.category?.toLowerCase().includes(query) ||
+      course.trainerName?.toLowerCase().includes(query) ||
+      course.level?.toLowerCase().includes(query)
+    );
+  }, [activeDealCourses, searchQuery]);
+
+  // 🔴 NEW: Pagination
+  const totalPages = Math.ceil(filteredCourses.length / cardsPerPage);
+  const indexOfLastCard = currentPage * cardsPerPage;
+  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+  const displayedCourses = filteredCourses.slice(indexOfFirstCard, indexOfLastCard);
+
+  // 🔴 NEW: Reset to first page when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    // Scroll to top of deals section
+    document.querySelector('.association-head')?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+  };
 
   useEffect(() => {
     let stopped = false;
@@ -365,7 +400,7 @@ const ExploreDeals = () => {
     <div className="container">
       <div className="home-spacing">
         <h2 className="association-head">
-          Explore all deals and discounts
+          Explore all deals and discounts {!loading && filteredCourses.length > 0 && `(${filteredCourses.length})`}
         </h2>
         <p className="association-head-tag">
           Handpicked courses across various categories to help you
@@ -373,9 +408,31 @@ const ExploreDeals = () => {
         </p>
       </div>
 
+      {/* 🔴 NEW: Search Bar with React Icons */}
+      <div className="search-input" style={{ marginBottom: '30px', maxWidth: '600px', marginLeft: 'auto', marginRight: 'auto' }}>
+        <div className="search-input-wrapper">
+          <BiSearch className="search-icon" />
+          <input
+            type="text"
+            placeholder="Search courses by name, category, trainer, or level..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+          {searchQuery && (
+            <button
+              className="search-clear-btn"
+              onClick={clearSearch}
+              aria-label="Clear search"
+            >
+              <BiX />
+            </button>
+          )}
+        </div>
+      </div>
+
       <div className="training-card-holder">
         {loading ? (
-          Array.from({ length: cardsToShow }).map((_, i) => (
+          Array.from({ length: 8 }).map((_, i) => (
             <div className="skeleton-card" key={i}></div>
           ))
         ) : displayedCourses.length > 0 ? (
@@ -453,30 +510,39 @@ const ExploreDeals = () => {
             );
           })
         ) : (
-          <p>No courses available.</p>
+          <div style={{ textAlign: 'center', padding: '40px', width: '100%' }}>
+            <p style={{ fontSize: '1.1rem', color: '#666' }}>
+              {searchQuery ? `No courses found matching "${searchQuery}"` : 'No active deals available.'}
+            </p>
+            {searchQuery && (
+              <button 
+                onClick={clearSearch}
+                style={{
+                  background: '#00AEEF',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 20px',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  marginTop: '10px'
+                }}
+              >
+                Clear Search
+              </button>
+            )}
+          </div>
         )}
       </div>
 
-      {allCourses.length > cardsToShow && (
-        <div className="home-faq-banner container">
-          <div className="card-pagination-container">
-            <button
-              className="home-start-button"
-              onClick={() => {
-                if (viewAll) {
-                  document
-                    .querySelector('.association-head')
-                    ?.scrollIntoView({
-                      behavior: 'smooth',
-                      block: 'start',
-                    });
-                }
-                setViewAll(!viewAll);
-              }}
-            >
-              {viewAll ? 'View Less' : 'View More'}
-            </button>
-          </div>
+      {/* 🔴 NEW: Pagination - Only show if more than 12 courses */}
+      {!loading && filteredCourses.length > cardsPerPage && (
+        <div className="pagination-container">
+          <Pagination
+            currentPage={currentPage}
+            totalCards={filteredCourses.length}
+            cardsPerPage={cardsPerPage}
+            onPageChange={handlePageChange}
+          />
         </div>
       )}
     </div>

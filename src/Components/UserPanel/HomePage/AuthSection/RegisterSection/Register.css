@@ -521,6 +521,7 @@
 .input-group .form-control {
   width: 360px;
   height: 48px;
+  font-size: 14px;
   border-radius: 6px;
   border: none;
   margin: 0 1vh;
@@ -1168,7 +1169,7 @@
 
   /* Fix country code display */
   .country-code-display {
-    font-size: 15px;
+    font-size: 12px;
     margin: 0 4px;
   }
 
@@ -1345,7 +1346,7 @@
     font-weight: 500;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 12.5px;
+    font-size: 8.5px;
   }
 
   .country-select-button svg {

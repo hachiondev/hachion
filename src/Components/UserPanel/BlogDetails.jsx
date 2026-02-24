@@ -20,6 +20,7 @@ import TableOfContents from "./BlogDetailComponents/TableOfContents";
 import ReadingProgress from "./BlogDetailComponents/ReadingProgress";
 import processBlogContent from "./BlogDetailComponents/processBlogContent";
 import MobileShareButton from "./BlogDetailComponents/MobileShareButton";
+import BlogInquiryForm from "./BlogInquiryForm";
 
 const BlogDetails = () => {
   const { category_name } = useParams();
@@ -442,6 +443,9 @@ const BlogDetails = () => {
                   </div>
                 ))
                 : <p className="no-blogs-message">📭 No blogs available</p>}
+                  {selectedBlog && !loading && (
+    <BlogInquiryForm blogTitle={selectedBlog?.title} />
+  )}
           </div>
         </div>
 

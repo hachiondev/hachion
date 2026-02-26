@@ -43,21 +43,42 @@ export function useCheckEnrollmentForSessions(
                 batchId: sess.batchId || "",
               },
             });
+const enrolled = res.data?.enrolled ?? false;
+const amount = Number(res.data?.amount ?? 0);
 
-            const enrolled = res.data?.enrolled ?? false;
-            const amount = Number(res.data?.amount ?? 0);
+// ✅ FIX: Handle LIVE DEMO separately
+if (sess.mode === "Live Demo") {
+  if (!enrolled) {
+    // Not enrolled in demo → show Enroll
+    return {
+      ...sess,
+      _isEnrolled: false,
+      amount: 0,
+    };
+  }
 
-            
-            if (enrolled && amount > 0) {
-              return {
-                ...sess,
-               _isEnrolled: true,
-                amount,
-              };
-            }
+  // Enrolled in demo → show Enrolled
+  return {
+    ...sess,
+    _isEnrolled: true,
+    amount: 0,
+  };
+}
 
-            // 🟡 Case B: Enrolled but amount = 0 → check installments
-           if (enrolled && amount === 0) {
+// =========================
+// ⬇️ BELOW: KEEP LIVE CLASS LOGIC SAME
+// =========================
+
+if (enrolled && amount > 0) {
+  return {
+    ...sess,
+    _isEnrolled: true,
+    amount,
+  };
+}
+
+// 🟡 Case B: Enrolled but amount = 0 → check installments
+if (enrolled && amount === 0) {
   try {
     const progressRes = await axios.get(
       `${API_BASE}/enroll/installment-progress`,
@@ -76,20 +97,18 @@ export function useCheckEnrollmentForSessions(
     const total = Number(progress?.numberOfInstallments ?? 0);
     const allPaid = progress?.allInstallmentsPaid === true;
 
-    
     if ((total > 0 && clicked === total) || allPaid) {
       return {
         ...sess,
-       _isEnrolled: true,   
+        _isEnrolled: true,
         amount: 0,
         _installmentsCompleted: true,
       };
     }
 
-    
     return {
       ...sess,
-     _isEnrolled: true,  
+      _isEnrolled: true,
       amount: 0,
       _installmentsCompleted: false,
     };
@@ -100,19 +119,89 @@ export function useCheckEnrollmentForSessions(
       e
     );
 
-    
     return {
       ...sess,
-     _isEnrolled: true,
+      _isEnrolled: true,
       amount: 0,
     };
   }
 }
-            return {
-              ...sess,
-             _isEnrolled: true,
-              amount: 0,
-            };
+
+// Default fallback for Live Class
+return {
+  ...sess,
+  _isEnrolled: false,
+  amount: 0,
+};
+//             const enrolled = res.data?.enrolled ?? false;
+//             const amount = Number(res.data?.amount ?? 0);
+
+            
+//             if (enrolled && amount > 0) {
+//               return {
+//                 ...sess,
+//                _isEnrolled: true,
+//                 amount,
+//               };
+//             }
+
+//             // 🟡 Case B: Enrolled but amount = 0 → check installments
+//            if (enrolled && amount === 0) {
+//   try {
+//     const progressRes = await axios.get(
+//       `${API_BASE}/enroll/installment-progress`,
+//       {
+//         params: {
+//           studentId,
+//           courseName,
+//           batchId: sess.batchId || "",
+//         },
+//       }
+//     );
+
+//     const progress = progressRes.data;
+
+//     const clicked = Number(progress?.checkboxClicked ?? 0);
+//     const total = Number(progress?.numberOfInstallments ?? 0);
+//     const allPaid = progress?.allInstallmentsPaid === true;
+
+    
+//     if ((total > 0 && clicked === total) || allPaid) {
+//       return {
+//         ...sess,
+//        _isEnrolled: true,   
+//         amount: 0,
+//         _installmentsCompleted: true,
+//       };
+//     }
+
+    
+//     return {
+//       ...sess,
+//      _isEnrolled: true,  
+//       amount: 0,
+//       _installmentsCompleted: false,
+//     };
+//   } catch (e) {
+//     console.error(
+//       "Error checking installment progress for session",
+//       sess.id,
+//       e
+//     );
+
+    
+//     return {
+//       ...sess,
+//      _isEnrolled: true,
+//       amount: 0,
+//     };
+//   }
+// }
+//             return {
+//               ...sess,
+//              _isEnrolled: true,
+//               amount: 0,
+//             };
           } catch (e) {
             console.error("Error checking enrollment for session", sess.id, e);
 

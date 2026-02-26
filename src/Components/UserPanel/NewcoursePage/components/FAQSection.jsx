@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./FAQSection.module.css";
 import { cn } from "../../../../utils";
 import { useParams } from "react-router-dom";
@@ -64,6 +64,12 @@ export default function FAQSection({
     isError: error,
   } = useFaqsByCourse(courseNameForApi);
 
+  useEffect(() => {
+    // Reset all expanded FAQs
+    setExpandedTopics({});
+    // Reset to show only first 4
+    setShowAll(false);
+  }, [courseNameForApi]);
 
   if (courseLoading || loading) {
     return (

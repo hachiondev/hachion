@@ -304,8 +304,8 @@ const BlogDetails = () => {
 
           {/* ✅ RECENT POSTS with Skeleton Loader - Kept exactly as is */}
           <div className="detail-blog-left">
-            <div className="search-input">
-              <div className="search-input-wrapper">
+            <div className="search-input-blog">
+              <div className="search-input-wrapper-blog">
                 <BiSearch className="search-icon" />
                 <input
                   type="text"

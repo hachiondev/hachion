@@ -4,12 +4,13 @@ import { IoCloseSharp } from "react-icons/io5";
 import { Menu, MenuItem } from "@mui/material";
 import Flag from "react-world-flags";
 import { AiFillCaretDown } from "react-icons/ai";
+import { TbRefresh } from "react-icons/tb";
 import axios from "axios";
 import { countries, getDefaultCountry } from "../../countryUtils";
 
-
 const CorporateTrainingForm = ({ onClose }) => {
   const popupRef = useRef();
+  const canvasRef = useRef(null);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,17 +21,16 @@ const CorporateTrainingForm = ({ onClose }) => {
   const [comment, setComment] = useState("");
   const [courses, setCourses] = useState([]);
   const [errors, setErrors] = useState({});
-  const [mobileError, setMobileError] = useState("");
-const [mobileTouched, setMobileTouched] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
   const mobileInputRef = useRef(null);
   const [successMessage, setSuccessMessage] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   
-const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // Captcha states
+  const [captchaText, setCaptchaText] = useState('');
+  const [userInput, setUserInput] = useState('');
 
-
-  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
@@ -40,18 +40,27 @@ const [isLoggedIn, setIsLoggedIn] = useState(false);
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
-useEffect(() => {
-  fetch("https://api.country.is")
-    .then((res) => res.json())
-    .then((data) => {
-      data.country_code = (data.country || "").toUpperCase();
-      const matchedCountry = countries.find((c) => c.flag === data?.country_code);
-      if (matchedCountry) setSelectedCountry(matchedCountry);
-    })
-    .catch(() => {});
-}, []);
 
-const onlyDigits = (v) => v.replace(/\D/g, "").slice(0, 10);
+  useEffect(() => {
+    fetch("https://api.country.is")
+      .then((res) => res.json())
+      .then((data) => {
+        data.country_code = (data.country || "").toUpperCase();
+        const matchedCountry = countries.find((c) => c.flag === data?.country_code);
+        if (matchedCountry) setSelectedCountry(matchedCountry);
+      })
+      .catch(() => {});
+  }, []);
+
+  // Initialize captcha
+  useEffect(() => {
+    if (canvasRef.current) {
+      const ctx = canvasRef.current.getContext('2d');
+      initializeCaptcha(ctx);
+    }
+  }, []);
+
+  const onlyDigits = (v) => v.replace(/\D/g, "").slice(0, 10);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -65,175 +74,222 @@ const onlyDigits = (v) => v.replace(/\D/g, "").slice(0, 10);
     fetchCourses();
   }, []);
 
-const handleMobileChange = (e) => {
-  const digits = onlyDigits(e.target.value);
-  setMobile(digits);
+  // Captcha functions
+  const generateRandomChar = (min, max) =>
+    String.fromCharCode(Math.floor(Math.random() * (max - min + 1) + min));
 
-  
-  setErrors((prev) => {
-    if (prev.mobile && digits.length === 10) {
-      const { mobile, ...rest } = prev;
-      return rest;
+  const generateCaptchaText = () => {
+    let captcha = '';
+    for (let i = 0; i < 2; i++) {
+      captcha += generateRandomChar(65, 90);
+      captcha += generateRandomChar(97, 122);
+      captcha += generateRandomChar(48, 57);
     }
-    return prev;
-  });
-};
-
-const handleMobileBlur = () => {
-  const digits = onlyDigits(mobile);
-  setMobile(digits); 
-
-  if (digits.length !== 10) {
-    setErrors((prev) => ({ ...prev, mobile: "Please enter exactly 10 digits." }));
-  } else {
-    setErrors((prev) => {
-      const { mobile, ...rest } = prev;
-      return rest;
-    });
-  }
-};
-
-const validateForm = () => {
-  const newErrors = {};
-
-  if (!name.trim()) newErrors.name = "Name is required.";
-  if (!email.trim()) newErrors.email = "Email is required.";
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = "Invalid email.";
-
-  const mobileDigits = onlyDigits(mobile);
-  if (mobileDigits.length !== 10) newErrors.mobile = "Please enter exactly 10 digits.";
-
-  if (!company.trim()) newErrors.company = "Company name is required.";
-  if (!experience.trim()) newErrors.experience = "Please select number of people.";
-  if (!courseName.trim()) newErrors.courseName = "Please select a course.";
-  if (!comment.trim()) newErrors.comment = "Comment is required.";
-  else if (comment.trim().length < 10) newErrors.comment = "Comment must be at least 10 characters.";
-
-  setErrors(newErrors);
-  return Object.keys(newErrors).length === 0;
-};
-
-  
-const formatMobileWithCode = (code, mobile) => {
-  const digits = String(mobile || "").trim().replace(/\s+/g, ""); 
-  const dial = String(code || "").trim(); 
-  return `${dial} ${digits}`;
-};
-
-const toIntFromRange = (val) => {
-  if (!val) return 0;
-  const v = String(val).trim();
-  if (v.endsWith("+")) return parseInt(v.slice(0, -1).trim(), 10) || 0;
-  if (v.includes("-")) {
-    const [a, b] = v.split("-").map(s => parseInt(s.trim(), 10) || 0);
-    return Math.max(a, b);
-  }
-  const n = parseInt(v, 10);
-  return Number.isNaN(n) ? 0 : n;
-};
-
-  const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!validateForm()) return;
-
-  const requestData = {
-    fullName: name,
-    emailId: email,
-    mobileNumber: formatMobileWithCode(selectedCountry?.code, mobile),
-    companyName: company,
-    trainingCourse: courseName,
-    noOfPeople: experience,
-    comments: comment,
-    country: selectedCountry.name,
+    return captcha.split('').sort(() => Math.random() - 0.5).join('');
   };
 
-  try {
-    const response = await axios.post("https://api.test.hachion.co/advisors", requestData, {
-      headers: { "Content-Type": "application/json" },
+  const drawCaptchaOnCanvas = (ctx, captcha) => {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const textColors = ['rgb(0,0,0)', 'rgb(130,130,130)'];
+    const letterSpace = 150 / captcha.length;
+    for (let i = 0; i < captcha.length; i++) {
+      const xInitialSpace = 25;
+      ctx.font = '20px Roboto Mono';
+      ctx.fillStyle = textColors[Math.floor(Math.random() * 2)];
+      ctx.fillText(
+        captcha[i],
+        xInitialSpace + i * letterSpace,
+        Math.floor(Math.random() * 16 + 25),
+        100
+      );
+    }
+  };
+
+  const initializeCaptcha = (ctx) => {
+    setUserInput('');
+    const newCaptcha = generateCaptchaText();
+    setCaptchaText(newCaptcha);
+    drawCaptchaOnCanvas(ctx, newCaptcha);
+  };
+
+  const handleRefreshCaptcha = () => {
+    if (canvasRef.current) {
+      const ctx = canvasRef.current.getContext('2d');
+      initializeCaptcha(ctx);
+    }
+  };
+
+  const handleMobileChange = (e) => {
+    const digits = onlyDigits(e.target.value);
+    setMobile(digits);
+    
+    setErrors((prev) => {
+      if (prev.mobile && digits.length === 10) {
+        const { mobile, ...rest } = prev;
+        return rest;
+      }
+      return prev;
     });
+  };
 
-    if (response.status === 200) {
-      setSuccessMessage("Thank you! Our team will contact you soon.");
+  const handleMobileBlur = () => {
+    const digits = onlyDigits(mobile);
+    setMobile(digits);
 
-      
-      if (isLoggedIn) {
-        setCompany("");
-        setCourseName("");
-        setExperience("");
-        setComment("");
-        setErrors({});
-        setAnchorEl(null);
-      } else {
-        
-        setName("");
-        setEmail("");
-        setMobile("");
-        setCompany("");
-        setCourseName("");
-        setExperience("");
-        setComment("");
-        setErrors({});
-        setAnchorEl(null);
+    if (digits.length !== 10) {
+      setErrors((prev) => ({ ...prev, mobile: "Please enter exactly 10 digits." }));
+    } else {
+      setErrors((prev) => {
+        const { mobile, ...rest } = prev;
+        return rest;
+      });
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!name.trim()) newErrors.name = "Name is required.";
+    if (!email.trim()) newErrors.email = "Email is required.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = "Invalid email.";
+
+    const mobileDigits = onlyDigits(mobile);
+    if (mobileDigits.length !== 10) newErrors.mobile = "Please enter exactly 10 digits.";
+
+    if (!company.trim()) newErrors.company = "Company name is required.";
+    if (!experience.trim()) newErrors.experience = "Please select number of people.";
+    if (!courseName.trim()) newErrors.courseName = "Please select a course.";
+    if (!comment.trim()) newErrors.comment = "Comment is required.";
+    else if (comment.trim().length < 10) newErrors.comment = "Comment must be at least 10 characters.";
+
+    // Captcha validation
+    if (!userInput.trim()) {
+      newErrors.captcha = "Captcha is required.";
+    } else if (userInput !== captchaText) {
+      newErrors.captcha = "Captcha does not match.";
+      // Refresh captcha on mismatch
+      if (canvasRef.current) {
+        const ctx = canvasRef.current.getContext('2d');
+        initializeCaptcha(ctx);
       }
     }
-  } catch (err) {
-    console.error("Error submitting form:", err);
-    setSuccessMessage("Submission failed. Please try again.");
-  }
-};
 
-  
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const formatMobileWithCode = (code, mobile) => {
+    const digits = String(mobile || "").trim().replace(/\s+/g, "");
+    const dial = String(code || "").trim();
+    return `${dial} ${digits}`;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    const requestData = {
+      fullName: name,
+      emailId: email,
+      mobileNumber: formatMobileWithCode(selectedCountry?.code, mobile),
+      companyName: company,
+      trainingCourse: courseName,
+      noOfPeople: experience,
+      comments: comment,
+      country: selectedCountry.name,
+    };
+
+    try {
+      const response = await axios.post("https://api.test.hachion.co/advisors", requestData, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (response.status === 200) {
+        setSuccessMessage("Thank you! Our team will contact you soon.");
+
+        if (isLoggedIn) {
+          setCompany("");
+          setCourseName("");
+          setExperience("");
+          setComment("");
+          setErrors({});
+          setAnchorEl(null);
+        } else {
+          setName("");
+          setEmail("");
+          setMobile("");
+          setCompany("");
+          setCourseName("");
+          setExperience("");
+          setComment("");
+          setErrors({});
+          setAnchorEl(null);
+        }
+        
+        // Reset captcha
+        setUserInput("");
+        if (canvasRef.current) {
+          const ctx = canvasRef.current.getContext('2d');
+          initializeCaptcha(ctx);
+        }
+      }
+    } catch (err) {
+      console.error("Error submitting form:", err);
+      setSuccessMessage("Submission failed. Please try again.");
+    }
+  };
+
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
     setAnchorEl(null);
     mobileInputRef.current?.focus();
   };
 
-useEffect(() => {
-  const userData = JSON.parse(localStorage.getItem("loginuserData") || "{}");
-  const userEmail = (userData.email || "").trim();
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("loginuserData") || "{}");
+    const userEmail = (userData.email || "").trim();
 
-  if (userEmail) {
-    setEmail(userEmail);
-    setIsLoggedIn(true);              
-  }
-
-  if (!userEmail) return;
-
-  const ctrl = new AbortController();
-  (async () => {
-    try {
-      const res = await fetch(
-        `https://api.test.hachion.co/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`,
-        { signal: ctrl.signal }
-      );
-      if (!res.ok) throw new Error("Failed to fetch profile data");
-      const data = await res.json();
-
-      if (data?.name) setName(String(data.name));
-      if (data?.email && !email) setEmail(String(data.email));
-
-      if (data?.mobile) {
-        const digits = String(data.mobile).replace(/\D/g, "");
-        setMobile(digits.slice(-10));
-      }
-
-      if (data?.country) {
-        const countryMatch =
-          countries.find(
-            (c) => String(c.name).toLowerCase() === String(data.country).toLowerCase()
-          ) || null;
-        if (countryMatch) setSelectedCountry(countryMatch);
-      }
-    } catch (err) {
-      if (err.name !== "AbortError") {
-        console.error("Profile autofill failed:", err);
-      }
+    if (userEmail) {
+      setEmail(userEmail);
+      setIsLoggedIn(true);
     }
-  })();
 
-  return () => ctrl.abort();
-}, []); 
+    if (!userEmail) return;
+
+    const ctrl = new AbortController();
+    (async () => {
+      try {
+        const res = await fetch(
+          `https://api.test.hachion.co/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`,
+          { signal: ctrl.signal }
+        );
+        if (!res.ok) throw new Error("Failed to fetch profile data");
+        const data = await res.json();
+
+        if (data?.name) setName(String(data.name));
+        if (data?.email && !email) setEmail(String(data.email));
+
+        if (data?.mobile) {
+          const digits = String(data.mobile).replace(/\D/g, "");
+          setMobile(digits.slice(-10));
+        }
+
+        if (data?.country) {
+          const countryMatch =
+            countries.find(
+              (c) => String(c.name).toLowerCase() === String(data.country).toLowerCase()
+            ) || null;
+          if (countryMatch) setSelectedCountry(countryMatch);
+        }
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          console.error("Profile autofill failed:", err);
+        }
+      }
+    })();
+
+    return () => ctrl.abort();
+  }, []);
 
   return (
     <div className="popup-overlay">
@@ -310,21 +366,21 @@ useEffect(() => {
                       </MenuItem>
                     ))}
                   </Menu>
-                 
                   
- <input
-  type="tel"
-  className="form-control"
-  ref={mobileInputRef}
-  value={mobile}
-  onChange={handleMobileChange}
-  onBlur={handleMobileBlur}
-  placeholder="Enter your mobile number"
-  style={{ paddingLeft: "120px", border: "none" }}
-  maxLength={10}
-  inputMode="numeric"
-  pattern="\d*"
-/>                </div>
+                  <input
+                    type="tel"
+                    className="form-control"
+                    ref={mobileInputRef}
+                    value={mobile}
+                    onChange={handleMobileChange}
+                    onBlur={handleMobileBlur}
+                    placeholder="Enter your mobile number"
+                    style={{ paddingLeft: "120px", border: "none" }}
+                    maxLength={10}
+                    inputMode="numeric"
+                    pattern="\d*"
+                  />
+                </div>
                 {errors.mobile && <p className="error-field-message">{errors.mobile}</p>}
               </div>
             </div>
@@ -349,56 +405,56 @@ useEffect(() => {
           </div>
 
           <div className="instructor-fields">
-          <div>
-            <label className="login-label">
-              No. of People<span className="star">*</span>
-            </label>
-            <div className="register-field">
-              <div className="password-field">
-                <select
-                  className="form-select"
-                  value={experience}
-                  onChange={(e) => setExperience(e.target.value)}
-                >
-                  <option value="">Choose Number</option>
-                  <option value="1-5">1-5</option>
-                  <option value="6-10">6-10</option>
-                  <option value="11-15">11-15</option>
-                  <option value="16-20">16-20</option>
-                  <option value="20+">20+</option>
-                </select>
+            <div>
+              <label className="login-label">
+                No. of People<span className="star">*</span>
+              </label>
+              <div className="register-field">
+                <div className="password-field">
+                  <select
+                    className="form-select"
+                    value={experience}
+                    onChange={(e) => setExperience(e.target.value)}
+                  >
+                    <option value="">Choose Number</option>
+                    <option value="1-5">1-5</option>
+                    <option value="6-10">6-10</option>
+                    <option value="11-15">11-15</option>
+                    <option value="16-20">16-20</option>
+                    <option value="20+">20+</option>
+                  </select>
+                </div>
+                {errors.experience && (
+                  <p className="error-field-message">{errors.experience}</p>
+                )}
               </div>
-              {errors.experience && (
-                <p className="error-field-message">{errors.experience}</p>
-              )}
             </div>
-          </div>
 
-          <div>
-            <label className="login-label">
-              Training Course<span className="star">*</span>
-            </label>
-            <div className="register-field">
-              <div className="password-field">
-                <select
-                  className="form-select"
-                  value={courseName}
-                  onChange={(e) => setCourseName(e.target.value)}
-                >
-                  <option value="">Choose Course</option>
-                  {courses.map((course, idx) => (
-                    <option key={idx} value={course}>
-                      {course}
-                    </option>
-                  ))}
-                </select>
+            <div>
+              <label className="login-label">
+                Training Course<span className="star">*</span>
+              </label>
+              <div className="register-field">
+                <div className="password-field">
+                  <select
+                    className="form-select"
+                    value={courseName}
+                    onChange={(e) => setCourseName(e.target.value)}
+                  >
+                    <option value="">Choose Course</option>
+                    {courses.map((course, idx) => (
+                      <option key={idx} value={course}>
+                        {course}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {errors.courseName && (
+                  <p className="error-field-message">{errors.courseName}</p>
+                )}
               </div>
-              {errors.courseName && (
-                <p className="error-field-message">{errors.courseName}</p>
-              )}
             </div>
           </div>
-        </div>
 
           <div>
             <label className="login-label">
@@ -418,13 +474,49 @@ useEffect(() => {
             </div>
           </div>
 
-          <button type="submit" className="expert-popup-btn">
+          {/* Captcha Field - With different class names */}
+          <div className="corporate-captcha-section">
+            <label className="corporate-captcha-label">
+              Enter Captcha<span className="corporate-star">*</span>
+            </label>
+            <div className="corporate-captcha-container">
+              <canvas
+                ref={canvasRef}
+                className="corporate-captcha-canvas"
+                height="40"
+                width="200"
+              />
+              <button
+                type="button"
+                className="corporate-captcha-refresh"
+                onClick={handleRefreshCaptcha}
+              >
+                <TbRefresh />
+              </button>
+            </div>
+            <div className="corporate-captcha-input-wrapper">
+              <input
+                type="text"
+                className={`corporate-captcha-input ${errors.captcha ? 'corporate-captcha-error' : ''}`}
+                placeholder="Enter captcha here"
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+              />
+              {errors.captcha && (
+                <p className="corporate-captcha-error-message">
+                  {errors.captcha}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <button type="submit" className="expert-popup-btn" style={{ marginTop: "20px" }}>
             Submit
           </button>
 
-          {/* Inline Success / Error Message */}
+          {/* Inline Success Message */}
           {successMessage && (
-            <p className="success-message" style={{ color: "green", marginTop: "10px", textAlign: "center" }}>
+            <p className="corporate-success-message">
               {successMessage}
             </p>
           )}

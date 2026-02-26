@@ -409,8 +409,8 @@ const ExploreDeals = () => {
       </div>
 
       {/* 🔴 NEW: Search Bar with React Icons */}
-      <div className="search-input" style={{ marginBottom: '30px', maxWidth: '600px', marginLeft: 'auto', marginRight: 'auto' }}>
-        <div className="search-input-wrapper">
+      <div className="search-input-blog" style={{ marginBottom: '30px', maxWidth: '600px', marginLeft: 'auto', marginRight: 'auto' }}>
+        <div className="search-input-wrapper-blog">
           <BiSearch className="search-icon" />
           <input
             type="text"

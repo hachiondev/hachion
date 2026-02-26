@@ -497,7 +497,7 @@ a:not([href]):not([class]) {
 
 .search-input-wrapper input {
   width: 100%;
-  padding: 8px 10px 8px 35px;
+  padding: 8px 10px 8px 35px !important;
   /* left padding for icon */
   border: 1px solid #ccc;
   border-radius: 4px;

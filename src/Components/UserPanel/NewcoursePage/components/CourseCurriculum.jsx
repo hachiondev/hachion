@@ -102,6 +102,32 @@ export default function CourseCurriculum({ onViewDemoClass }) {
   } = useAssessmentAccess(checkParams);
 
   useEffect(() => {
+  // Close any opened curriculum accordion
+  setOpenId(null);
+
+  // Reset selected tab (Topics / Assignment / Video)
+  setSelectedTab({ curriculumId: null, tab: null });
+
+  // Reset View More button
+  setShowAll(false);
+
+  // Reset expanded project descriptions (Read More)
+  setExpandedProjects({});
+
+  // Close video modal
+  setShowVideo(false);
+  setVideoUrl("");
+
+  // Clear assessment errors
+  setAssessmentError({ curriculumId: null, message: "" });
+
+  // Close any prompts
+  setShowRegisterPrompt(false);
+  setShowEnrollPrompt(false);
+
+}, [courseName]);
+
+  useEffect(() => {
     if (accessData?.canDownload) {
       const fileUrl = `https://api.test.hachion.co/curriculum/assessments/${checkParams.assessmentFileName}`;
       window.open(fileUrl, "_blank", "noopener,noreferrer");

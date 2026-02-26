@@ -82,6 +82,16 @@ const BlogList = ({
     e.target.src = Blogimageplaceholder;
   };
 
+  const handleCardClick = (blog) => {
+    const blogUrl = `/blogs/${blog.category_name
+      ?.replace(/\s+/g, "-")
+      .toLowerCase()}/${blog.title
+      ?.replace(/\s+/g, "-")
+      .replace(/[^\w-]+/g, "")
+      .toLowerCase()}-${blog.id}`;
+    window.location.href = blogUrl;
+  };
+
   return (
     <div className="blog-list p-2">
       {loading ? (
@@ -90,7 +100,12 @@ const BlogList = ({
         ))
       ) : currentBlogs.length > 0 ? (
         currentBlogs.map((blog) => (
-          <div key={blog.id} className="bloglist-card">
+          <div 
+            key={blog.id} 
+            className="bloglist-card"
+            onClick={() => handleCardClick(blog)}
+            style={{ cursor: "pointer" }}
+          >
             <img
               src={blog.blog_image}
               alt={blog.title}
@@ -138,6 +153,7 @@ const BlogList = ({
                 .replace(/[^\w-]+/g, "")
                 .toLowerCase()}-${blog.id}`}
               className="txtReadmore"
+              onClick={(e) => e.stopPropagation()}
             >
               Read More
             </a>

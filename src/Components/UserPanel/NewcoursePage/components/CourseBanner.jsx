@@ -367,10 +367,14 @@ export default function CourseBanner({ onEnroll }) {
   let originalPrice = 0;
 
 
-  if (convertedTotalFee && convertedOriginalFee) {
-    finalPrice = convertedTotalFee;
-    originalPrice = convertedOriginalFee;
-  }
+  // if (convertedTotalFee && convertedOriginalFee) {
+  //   finalPrice = convertedTotalFee;
+  //   originalPrice = convertedOriginalFee;
+  // }
+  if (convertedTotalFee != null && !isNaN(convertedTotalFee) && Number(convertedTotalFee) > 0) {
+  finalPrice = Number(convertedTotalFee);
+  originalPrice = Number(convertedOriginalFee) || 0; // keep oldPrice logic safe
+}
   const hasValidPrice =
     finalPrice !== null &&
     finalPrice !== undefined &&

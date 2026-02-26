@@ -8,7 +8,8 @@ import { useCourseByName } from "../../../Api/hooks/CourseApi/useCourseByName";
 import { useCurrency } from "../../../Api/hooks/CourseApi/useCurrency";
 import { useCourseDiscountRule } from "../../../Api/hooks/CourseApi/useCourseDiscountRule";
 import { useCouponDiscount } from "../../../Api/hooks/CourseApi/useCouponDiscount";
-import { useDemoLivePayment } from "../../../Api/hooks/CourseApi/useDemoLivePayment";
+import { useDemoLivePaymentForNewEnroll } from "../../../Api/hooks/CourseApi/useDemoLivePaymentForNewEnroll";
+
 import { Link } from "react-router-dom";
 import RequestInstallment from "../EnrollmentPage/components/RequestInstallment";
 import { Dialog, DialogContent } from "@mui/material";
@@ -17,8 +18,8 @@ import { Dialog, DialogContent } from "@mui/material";
 import { useStudentDetails } from "../../../Api/hooks/CourseApi/useStudentDetails";
 import { useInstallmentStatus } from "../../../Api/hooks/CourseApi/useInstallmentStatus";
 
-import { useCheckEnrollmentForSessions }
-  from "../../../Api/hooks/CourseApi/useCheckEnrollmentForSessions";
+import { useCheckEnrollmentForSessionsForNewEnroll }
+  from "../../../Api/hooks/CourseApi/useCheckEnrollmentForSessionsForNewEnroll";
 import { useNavigate } from "react-router-dom";
 
 
@@ -97,15 +98,15 @@ export default function NewEnrollNow() {
   const { data: course } = useCourseByName(courseSlug);
 
   const selectedSessions = selectedBatch?.sessions || [];
-
-  const {
-    data: enrollmentCheckResults = [],
-    isLoading: enrollmentCheckLoading,
-  } = useCheckEnrollmentForSessions(
-    selectedSessions,
-    studentData?.studentId,
-    course?.courseName
-  );
+const {
+  data: enrollmentCheckResults = [],
+  isLoading: enrollmentCheckLoading,
+  refetch: refetchEnrollmentStatus,   // ✅ add this
+} = useCheckEnrollmentForSessionsForNewEnroll(
+  selectedSessions,
+  studentData?.studentId,
+  course?.courseName
+);
 
   const isAlreadyEnrolledForBatch = enrollmentCheckResults.some(
     (s) => s._isEnrolled === true
@@ -189,7 +190,10 @@ export default function NewEnrollNow() {
     navigate,
   ]);
 
-
+useEffect(() => {
+  // 🔓 Unlock buttons whenever selected batch changes or on initial load
+  setLockButtonsUntilBatchChange(false);
+}, [selectedBatch]);
   useEffect(() => {
     if (!couponSuccess) return;
 
@@ -437,7 +441,7 @@ export default function NewEnrollNow() {
   const {
     handleLiveEnrollPayment,
     handleEnrollPayLater,
-  } = useDemoLivePayment({
+  } = useDemoLivePaymentForNewEnroll({
     courseData: {
       itotal: Math.round(finalPrice),
       originalAmount: Math.round(basePrice),
@@ -460,6 +464,7 @@ export default function NewEnrollNow() {
     !isTermsAccepted ||
     isEnrollmentBlocked ||
     lockButtonsUntilBatchChange ||
+    enrollmentCheckLoading || 
     isAlreadyEnrolledForBatch;
   const isInstallmentEnabled =
     isTermsAccepted &&          // ✅ condition 1: checkbox checked
@@ -591,7 +596,15 @@ export default function NewEnrollNow() {
                 id="terms"
                 className={styles.enCheckbox}
                 checked={isTermsAccepted}
-                onChange={(e) => setIsTermsAccepted(e.target.checked)}
+                onChange={(e) => {
+  const checked = e.target.checked;
+  setIsTermsAccepted(checked);
+
+  // ✅ When user agrees, re-check enrollment from backend
+  if (checked) {
+    refetchEnrollmentStatus();
+  }
+}}
               />
               <label htmlFor="terms" className={styles.enTermsLabel}>
                 I agree to the{" "}
@@ -659,6 +672,7 @@ export default function NewEnrollNow() {
                   }
                   onClick={() => {
                     setLastAction("PAY_LATER");
+                     setLockButtonsUntilBatchChange(true);
                     selectedBatch &&
                       handleEnrollPayLater({
                         ...selectedBatch.sessions[0],

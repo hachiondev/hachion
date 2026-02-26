@@ -51,7 +51,7 @@ export function useCheckEnrollmentForSessions(
             if (enrolled && amount > 0) {
               return {
                 ...sess,
-                _isEnrolled: true,
+               _isEnrolled: true,
                 amount,
               };
             }
@@ -80,7 +80,7 @@ export function useCheckEnrollmentForSessions(
     if ((total > 0 && clicked === total) || allPaid) {
       return {
         ...sess,
-        _isEnrolled: true,   
+       _isEnrolled: true,   
         amount: 0,
         _installmentsCompleted: true,
       };
@@ -89,7 +89,7 @@ export function useCheckEnrollmentForSessions(
     
     return {
       ...sess,
-      _isEnrolled: true,  
+     _isEnrolled: true,  
       amount: 0,
       _installmentsCompleted: false,
     };
@@ -103,14 +103,14 @@ export function useCheckEnrollmentForSessions(
     
     return {
       ...sess,
-      _isEnrolled: true,
+     _isEnrolled: true,
       amount: 0,
     };
   }
 }
             return {
               ...sess,
-              _isEnrolled: true,
+             _isEnrolled: true,
               amount: 0,
             };
           } catch (e) {
@@ -118,7 +118,7 @@ export function useCheckEnrollmentForSessions(
 
             return {
               ...sess,
-              _isEnrolled: true,
+             _isEnrolled: true,
               amount: 0,
             };
           }

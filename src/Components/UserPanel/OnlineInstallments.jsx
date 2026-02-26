@@ -271,10 +271,34 @@ const OnlineInstallments = () => {
       document.body.removeChild(script);
     };
   }, []);
+  const netPayableAmount = (() => {
+  if (!selectedInstallments || paidInstallment.length === 0) return 0;
+
+  const selectedInstallmentsTotal =
+    (courseData.iamount / selectedInstallments) * paidInstallment.length;
+
+  const totalDiscountPercent =
+    Number(courseData.idiscount) +
+    (appliedDiscount && appliedDiscount.discountType === "percent"
+      ? Number(appliedDiscount.discountValue)
+      : 0);
+
+  const discountAmount = appliedDiscount
+    ? appliedDiscount.discountType === "percent"
+      ? (selectedInstallmentsTotal * totalDiscountPercent) / 100
+      : (selectedInstallmentsTotal * Number(courseData.idiscount)) / 100 +
+        Number(appliedDiscount.discountValue)
+    : (selectedInstallmentsTotal * Number(courseData.idiscount)) / 100;
+
+  const netPayable = selectedInstallmentsTotal + 500 - discountAmount + 0;
+
+  return Math.max(netPayable, 0);
+})();
   const handlePaymentForRazorPay = async () => {
     try {
 
-      const amount = 1.00;
+      // const amount = 1.00;
+      const amount = netPayableAmount;
       const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
 
       if (!user || !user.email) {
@@ -415,24 +439,7 @@ const OnlineInstallments = () => {
       setSuccessMessage("");
     }
   };
-  useEffect(() => {
-    const studentId = localStorage.getItem("studentId");
-    const courseName = localStorage.getItem("courseName");
-    const batchId = localStorage.getItem("batchId");
-
-    if (!studentId || !courseName || !batchId) return;
-
-    axios.get("https://api.test.hachion.co/razorpay/checkbox-status", {
-      params: { studentId, courseName, batchId }
-    })
-      .then(res => {
-
-        const disabledArray = Array.from({ length: res.data }, (_, i) => i + 1);
-        setPaidCheckBoxInstallment(disabledArray);
-      })
-      .catch(err => console.error("Error fetching checkbox status:", err));
-  }, []);
-
+  
   const handleApplyCoupon = async () => {
     if (!couponCode) return;
 

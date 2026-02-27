@@ -80,6 +80,8 @@ const NavbarTop = () => {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // Add state for logout message
+  const [showLogoutMessage, setShowLogoutMessage] = useState(false);
   const dropdownRef = useRef();
   const navigate = useNavigate();
   const userDropdownRef = useRef();
@@ -178,6 +180,12 @@ const NavbarTop = () => {
       deleteCookieEverywhere("flow");
       setIsLoggedIn(false);
       setUserData(null);
+      // Show logout success message
+      setShowLogoutMessage(true);
+      // Hide message after 3 seconds
+      setTimeout(() => {
+        setShowLogoutMessage(false);
+      }, 3000);
       navigate("/");
     }
   };
@@ -377,6 +385,12 @@ const NavbarTop = () => {
               aria-label="Open search">
               <IoSearch size={26} color="#00AEEF" />
             </button>
+            {/* Show logout message for non-logged in users when they try to click cart */}
+            {!isLoggedIn && showLogoutMessage && (
+              <div className="position-absolute top-100 start-50 translate-middle-x bg-success text-white px-3 py-2 rounded shadow-sm mt-2" style={{ zIndex: 1060, whiteSpace: 'nowrap' }}>
+                You are logged out successfully
+              </div>
+            )}
             {isLoggedIn && (
               <button className="btn ms-2"
                 aria-label="View cart"
@@ -407,6 +421,12 @@ const NavbarTop = () => {
                 >
                   Sign up
                 </Link>
+                {/* Show logout message for desktop when not logged in */}
+                {showLogoutMessage && (
+                  <div className="bg-success text-white px-3 py-2 rounded shadow-sm" style={{ position: 'fixed', top: '67px', right: '270px', zIndex: 99999 }}>
+                    You are logged out successfully
+                  </div>
+                )}
               </>
             ) : (
               <div className="d-flex align-items-center gap-3">

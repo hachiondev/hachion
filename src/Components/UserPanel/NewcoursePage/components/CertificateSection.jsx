@@ -99,7 +99,7 @@ export default function CertificateSection({
           {/* RIGHT */}
           <div className={styles.cfright}>
             <div className={styles.cfcert}>
-              <img src="/cer.png" alt="Certificate preview" />
+              <img src="/Certificate_Of_Hachion.jpg" alt="Certificate preview" />
               {/* Top callout */}
               <div className={cn(styles.cfbubble, styles.cfshare)}>
                 <span className={styles.cfbico}><Share /></span>

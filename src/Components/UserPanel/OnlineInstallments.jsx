@@ -297,8 +297,8 @@ const OnlineInstallments = () => {
   const handlePaymentForRazorPay = async () => {
     try {
 
-      // const amount = 1.00;
-      const amount = netPayableAmount;
+      const amount = 1.00;
+      // const amount = netPayableAmount;
       const user = JSON.parse(localStorage.getItem('loginuserData')) || null;
 
       if (!user || !user.email) {

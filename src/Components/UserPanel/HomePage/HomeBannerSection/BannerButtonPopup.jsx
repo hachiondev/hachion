@@ -39,7 +39,7 @@ const BannerButtonPopup = ({ onClose }) => {
 
         {/* Footer/Actions */}
         <div className="popup-bottom">
-        <div className="popup-badge">NEW</div>
+        {/* <div className="popup-badge">NEW</div> */}
           <p className="popup-bottom-text">
             {/* Discount available on these courses, hurry up to enroll and grab the
             discount price, it’s a very limited offer. */}

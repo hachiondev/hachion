@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import "../../Home.css";
 import { IoCloseSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import BannerDeals from "./BannerDeals";
+import BannerDeals from "../../BannerButtonPopupPage/BannerDeals";
 
 const BannerButtonPopup = ({ onClose }) => {
   const navigate = useNavigate();

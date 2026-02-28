@@ -2,14 +2,143 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import styles from './BlogInquiryForm.module.css';
 
+// react-icons imports
+import { FaRocket, FaStar, FaUsers, FaFlag, FaLock, FaExclamationTriangle } from 'react-icons/fa';
+import { MdCheckCircle } from 'react-icons/md';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+
+// ── Shared form content (used in both desktop & mobile) ──
+const FormContent = ({ blogTitle, formData, loading, error, success, handleChange, handleSubmit }) => {
+  const checklistItems = ['Resume Preparation', 'Mock Interviews', 'Placement Assistance'];
+
+  return (
+    <>
+      {/* Hero Banner */}
+      <div className={styles.heroBanner}>
+        {/* <FaRocket className={styles.heroIcon} />*/}🚀
+        <div className={styles.heroText}>
+          <h2 className={styles.heroTitle}>{`Start Your ${blogTitle} Career`}</h2>
+          <p className={styles.heroSubtitle}>Live Online Training &nbsp;|&nbsp; Real Projects</p>
+        </div>
+      </div>
+
+      {/* Stats Bar */}
+      <div className={styles.statsBar}>
+        <div className={styles.statItem}>
+          <FaStar className={styles.statIconStar} />
+          <span className={styles.statValue}>4.8</span>
+          <span className={styles.statLabel}>Rating</span>
+        </div>
+        <div className={styles.statDivider} />
+        <div className={styles.statItem}>
+          <FaUsers className={styles.statIconUsers} />
+          <span className={styles.statValue}>5000+</span>
+          <span className={styles.statLabel}>Students</span>
+        </div>
+        <div className={styles.statDivider} />
+        <div className={styles.statItem}>
+          <FaFlag className={styles.statIconFlag} />
+          <span className={styles.statValue}>USA</span>
+          <span className={styles.statLabel}>Focused</span>
+        </div>
+      </div>
+
+      {/* Checklist */}
+      <ul className={styles.checklist}>
+        {checklistItems.map(item => (
+          <li key={item} className={styles.checkItem}>
+            <MdCheckCircle className={styles.checkIcon} />
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+
+      {/* Form */}
+      <form onSubmit={handleSubmit}>
+        <div className={styles.formGroup}>
+          <input
+            type="text"
+            className={`form-control ${styles.formControl}`}
+            name="name"
+            placeholder="Your Name *"
+            value={formData.name}
+            onChange={handleChange}
+            disabled={loading}
+            required
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <input
+            type="email"
+            className={`form-control ${styles.formControl}`}
+            name="email"
+            placeholder="Email *"
+            value={formData.email}
+            onChange={handleChange}
+            disabled={loading}
+            required
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <input
+            type="tel"
+            className={`form-control ${styles.formControl}`}
+            name="phone"
+            placeholder="Phone *"
+            value={formData.phone}
+            onChange={handleChange}
+            disabled={loading}
+            required
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <textarea
+            className={`form-control ${styles.formControl} ${styles.textarea}`}
+            name="query"
+            placeholder="Your Query"
+            value={formData.query}
+            onChange={handleChange}
+            disabled={loading}
+            rows="2"
+          />
+        </div>
+
+        {error && (
+          <div className={styles.errorAlert}>
+            <FaExclamationTriangle className={styles.alertIcon} />
+            {error}
+          </div>
+        )}
+        {success && (
+          <div className={styles.successAlert}>
+            <MdCheckCircle className={styles.alertIcon} />
+            Thanks! We'll contact you soon.
+          </div>
+        )}
+
+        <button type="submit" className={styles.submitBtn} disabled={loading}>
+          {loading ? (
+            <><AiOutlineLoading3Quarters className={styles.spinnerIcon} /> Sending...</>
+          ) : (
+            <>
+            {/* <FaRocket className={styles.btnIcon} /> */}
+             🚀 Book Free Demo
+             </>
+          )}
+        </button>
+
+        <p className={styles.privacyNote}>
+          <FaLock className={styles.privacyIcon} />
+          100% Privacy Guaranteed
+        </p>
+      </form>
+    </>
+  );
+};
+
+// ── Main component ──
 const BlogInquiryForm = ({ blogTitle }) => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    query: ''
-  });
-  
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', query: '' });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -18,11 +147,9 @@ const BlogInquiryForm = ({ blogTitle }) => {
   const formRef = useRef(null);
   const placeholderRef = useRef(null);
   const ticking = useRef(false);
-
-  // ✅ Use refs to track current state inside scroll handler
-  // This avoids re-registering the listener on every state change
   const isStickyRef = useRef(false);
   const isAtBottomRef = useRef(false);
+  const errorTimerRef = useRef(null);
 
   const handleScroll = useCallback(() => {
     if (!ticking.current) {
@@ -30,25 +157,16 @@ const BlogInquiryForm = ({ blogTitle }) => {
         if (formRef.current && placeholderRef.current) {
           const placeholderRect = placeholderRef.current.getBoundingClientRect();
           const windowHeight = window.innerHeight;
-          
           const blogBottom = document.querySelector('.blog-bottom');
           const blogBottomRect = blogBottom?.getBoundingClientRect();
-          
-          const reachedBottom = blogBottomRect && 
-            blogBottomRect.top <= windowHeight - 50;
-          
-          const shouldBeSticky = placeholderRect.top <= 90 && 
-            window.scrollY > 200 && 
-            !reachedBottom;
-
+          const reachedBottom = blogBottomRect && blogBottomRect.top <= windowHeight - 50;
+          const shouldBeSticky = placeholderRect.top <= 90 && window.scrollY > 200 && !reachedBottom;
           const atBottom = reachedBottom && placeholderRect.top <= 90;
 
-          // ✅ Compare against refs, not stale state closure values
           if (shouldBeSticky !== isStickyRef.current) {
             isStickyRef.current = shouldBeSticky;
             setIsSticky(shouldBeSticky);
           }
-          
           if (atBottom !== isAtBottomRef.current) {
             isAtBottomRef.current = atBottom;
             setIsAtBottom(atBottom);
@@ -56,30 +174,23 @@ const BlogInquiryForm = ({ blogTitle }) => {
         }
         ticking.current = false;
       });
-      
       ticking.current = true;
     }
-  }, []); // ✅ Empty deps — stable reference, no re-registration
+  }, []);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleScroll, { passive: true });
-    
-    // Initial check
     handleScroll();
-
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
     };
-  }, [handleScroll]); // ✅ handleScroll is stable due to useCallback([])
+  }, [handleScroll]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
     setSuccess(false);
     setError('');
   };
@@ -97,36 +208,31 @@ const BlogInquiryForm = ({ blogTitle }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     const validationError = validateForm();
     if (validationError) {
       setError(validationError);
+      if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
+      errorTimerRef.current = setTimeout(() => setError(''), 3000);
       return;
     }
-
     setLoading(true);
     setError('');
-
     try {
       const response = await axios.post('https://api.test.hachion.co/blog/inquiry', {
         ...formData,
         blogTitle,
         timestamp: new Date().toISOString()
       });
-      
       if (response.status === 200 || response.status === 201) {
         setSuccess(true);
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          query: ''
-        });
-        
+        setFormData({ name: '', email: '', phone: '', query: '' });
         setTimeout(() => setSuccess(false), 5000);
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to submit. Please try again.');
+      const errMsg = err.response?.data?.message || 'Failed to submit. Please try again.';
+      setError(errMsg);
+      if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
+      errorTimerRef.current = setTimeout(() => setError(''), 3000);
       console.error('Form submission error:', err);
     } finally {
       setLoading(false);
@@ -140,103 +246,22 @@ const BlogInquiryForm = ({ blogTitle }) => {
     return classes;
   };
 
+  const sharedProps = { blogTitle, formData, loading, error, success, handleChange, handleSubmit };
+
   return (
-    <div ref={placeholderRef} className={styles.formPlaceholder}>
-      <div 
-        ref={formRef}
-        className={getFormClasses()}
-      >
-        <div className={styles.formHeader}>
-          <h3>Quick Inquiry</h3>
-          <p>Get expert guidance</p>
+    <>
+      {/* ── DESKTOP: sticky sidebar form (hidden on mobile) ── */}
+      <div ref={placeholderRef} className={styles.formPlaceholder}>
+        <div ref={formRef} className={getFormClasses()}>
+          <FormContent {...sharedProps} />
         </div>
-
-        <form onSubmit={handleSubmit}>
-          <div className={styles.formGroup}>
-            <input
-              type="text"
-              className={`form-control ${styles.formControl}`}
-              name="name"
-              placeholder="Your Name *"
-              value={formData.name}
-              onChange={handleChange}
-              disabled={loading}
-              required
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <input
-              type="email"
-              className={`form-control ${styles.formControl}`}
-              name="email"
-              placeholder="Email *"
-              value={formData.email}
-              onChange={handleChange}
-              disabled={loading}
-              required
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <input
-              type="tel"
-              className={`form-control ${styles.formControl}`}
-              name="phone"
-              placeholder="Phone *"
-              value={formData.phone}
-              onChange={handleChange}
-              disabled={loading}
-              required
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <textarea
-              className={`form-control ${styles.formControl} ${styles.textarea}`}
-              name="query"
-              placeholder="Your Query"
-              value={formData.query}
-              onChange={handleChange}
-              disabled={loading}
-              rows="2"
-            />
-          </div>
-
-          {error && (
-            <div className={styles.errorAlert}>
-              <i className="bi bi-exclamation-triangle-fill me-2"></i>
-              {error}
-            </div>
-          )}
-          
-          {success && (
-            <div className={styles.successAlert}>
-              <i className="bi bi-check-circle-fill me-2"></i>
-              ✓ Thanks! We'll contact you soon.
-            </div>
-          )}
-
-          <button 
-            type="submit" 
-            className={styles.submitBtn}
-            disabled={loading}
-          >
-            {loading ? (
-              <>
-                <span className={styles.spinner}></span>
-                Sending...
-              </>
-            ) : (
-              <>
-                <i className="bi bi-send me-2"></i>
-                Submit
-              </>
-            )}
-          </button>
-        </form>
       </div>
-    </div>
+
+      {/* ── MOBILE: static inline form (hidden on desktop) ── */}
+      <div className={styles.mobileFormWrapper}>
+        <FormContent {...sharedProps} />
+      </div>
+    </>
   );
 };
 

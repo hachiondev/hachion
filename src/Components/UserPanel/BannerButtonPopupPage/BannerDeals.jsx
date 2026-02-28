@@ -1,5 +1,5 @@
 import React from "react";
-import "./Home.css";
+import "../Home.css";
 import PopupCourseCards from "./PopupCourseCards";
 import {  useNavigate } from 'react-router-dom';
 

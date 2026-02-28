@@ -26,7 +26,7 @@ const CorporateTrainingForm = ({ onClose }) => {
   const mobileInputRef = useRef(null);
   const [successMessage, setSuccessMessage] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
+
   // Captcha states
   const [captchaText, setCaptchaText] = useState('');
   const [userInput, setUserInput] = useState('');
@@ -49,7 +49,7 @@ const CorporateTrainingForm = ({ onClose }) => {
         const matchedCountry = countries.find((c) => c.flag === data?.country_code);
         if (matchedCountry) setSelectedCountry(matchedCountry);
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   // Initialize captcha
@@ -122,7 +122,7 @@ const CorporateTrainingForm = ({ onClose }) => {
   const handleMobileChange = (e) => {
     const digits = onlyDigits(e.target.value);
     setMobile(digits);
-    
+
     setErrors((prev) => {
       if (prev.mobile && digits.length === 10) {
         const { mobile, ...rest } = prev;
@@ -225,7 +225,7 @@ const CorporateTrainingForm = ({ onClose }) => {
           setErrors({});
           setAnchorEl(null);
         }
-        
+
         // Reset captcha
         setUserInput("");
         if (canvasRef.current) {
@@ -366,7 +366,7 @@ const CorporateTrainingForm = ({ onClose }) => {
                       </MenuItem>
                     ))}
                   </Menu>
-                  
+
                   <input
                     type="tel"
                     className="form-control"
@@ -454,26 +454,9 @@ const CorporateTrainingForm = ({ onClose }) => {
                 )}
               </div>
             </div>
-          </div>
 
-          <div>
-            <label className="login-label">
-              Additional Comments<span className="star">*</span>
-            </label>
-            <div className="register-field">
-              <div className="password-field">
-                <textarea
-                  className="form-control"
-                  placeholder="Type additional Comments...."
-                  rows={4}
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                />
-              </div>
-              {errors.comment && <p className="error-field-message">{errors.comment}</p>}
-            </div>
-          </div>
 
+          </div>
           {/* Captcha Field - With different class names */}
           <div className="corporate-captcha-section">
             <label className="corporate-captcha-label">
@@ -509,6 +492,25 @@ const CorporateTrainingForm = ({ onClose }) => {
               )}
             </div>
           </div>
+          <div>
+            <label className="login-label">
+              Additional Comments<span className="star">*</span>
+            </label>
+            <div className="register-field">
+              <div className="password-field">
+                <textarea
+                  className="form-control"
+                  placeholder="Type additional Comments...."
+                  rows={4}
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                />
+              </div>
+              {errors.comment && <p className="error-field-message">{errors.comment}</p>}
+            </div>
+          </div>
+
+
 
           <button type="submit" className="expert-popup-btn" style={{ marginTop: "20px" }}>
             Submit

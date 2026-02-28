@@ -443,9 +443,9 @@ const BlogDetails = () => {
                   </div>
                 ))
                 : <p className="no-blogs-message">📭 No blogs available</p>}
-                  {selectedBlog && !loading && (
-    <BlogInquiryForm blogTitle={selectedBlog?.title} />
-  )}
+            {selectedBlog && !loading && (
+              <BlogInquiryForm blogTitle={selectedBlog?.category_name} />
+            )}
           </div>
         </div>
 

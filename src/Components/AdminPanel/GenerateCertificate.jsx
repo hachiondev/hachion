@@ -176,6 +176,7 @@ export default function CandidateCertificate() {
     setPreviewUrl(null);
   };
 
+  
   const handleGenerate = async () => {
     if (
       !certificateData.student_id ||
@@ -195,7 +196,8 @@ export default function CandidateCertificate() {
       studentId: certificateData.student_id,
       studentName: certificateData.student_name,
       courseName: certificateData.course_name,
-      completionDate: dayjs(certificateData.completed_date, 'DD-MM-YYYY').format('YYYY-MM-DD'),
+      // completionDate: dayjs(certificateData.completed_date, 'DD-MM-YYYY').format('YYYY-MM-DD'),
+      completionDate: certificateData.completed_date,
       studentEmail: certificateData.email,
       status: certificateData.status,
       grade: certificateData.grade

@@ -1,4 +1,3 @@
-// src/Components/DiscountCards.jsx
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
@@ -7,13 +6,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import DiscountCourseCard from "./DiscountCourseCard";
 import Nodiscount from "../../../../../Assets/nodiscount.webp";
 
-// === SHARED HOOKS ===
-import { useTrendingData } from "../../../../../Api/hooks/HomePageApi/TrendingApi/useTrendingData";
 import { useGeoData } from "../../../../../Api/hooks/HomePageApi/TrendingApi/useGeoData";
 import { useDiscountRules } from "../../../../../Api/hooks/HomePageApi/TrendingApi/useDiscountRules";
 import { useCountdowns } from "../../../../../Api/hooks/HomePageApi/TrendingApi/useCountdowns";
+import { useCoursesSummary } from "../../../../../Api/hooks/HomePageApi/TrainingApi/useCoursesSummary";
 
-// === SHARED UTILITIES ===
+
 import { 
   getRuleDiscountPct, 
   getActiveRuleFor 
@@ -22,43 +20,33 @@ import {
 import "../../../Corporate.css";
 import "../../../Blogs.css";
 
-// const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
+
 const fmt = (n) => Math.round(Number(n) || 0).toLocaleString();
 
 
 const DiscountCards = () => {
   const navigate = useNavigate();
 
-  // --------------------------
-  // Fetch shared data
-  // --------------------------
-  const { data: trendingCourses = [], isLoading: loadingCourses } = useTrendingData();
+  
   const { data: geo = {}, isLoading: loadingGeo } = useGeoData();
   const { data: discountRules = [] } = useDiscountRules();
-
+const { data: allCourses = [], isLoading: loadingCourses } = useCoursesSummary();
   const { country = "US", currency = "USD", fxFromUSD = 1 } = geo;
 
   const loading = loadingCourses || loadingGeo;
 
-  // --------------------------
-  // Local UI state
-  // --------------------------
   const [currentPage, setCurrentPage] = useState(0);
   const [cardsPerRow, setCardsPerRow] = useState(2);
   const [showIndicators, setShowIndicators] = useState(true);
 
-  // --------------------------
-  // Region names for discount matching (stable reference)
-  // --------------------------
+  
   const regionNames = useMemo(() => {
     return Intl.DisplayNames
       ? new Intl.DisplayNames([navigator.language || "en"], { type: "region" })
       : { of: () => "" };
   }, []);
 
-  // --------------------------
-  // Responsive cards per row
-  // --------------------------
+  
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 576) setCardsPerRow(1);
@@ -70,36 +58,40 @@ const DiscountCards = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // --------------------------
-  // Filter courses with active discount rules
-  // Sort by soonest ending discount
-  // --------------------------
-  const orderedCourses = useMemo(() => {
-    if (!trendingCourses.length || !discountRules.length) return [];
+  
 
-    const getSaleEndsAtMs = (courseName) => {
-      const rule = getActiveRuleFor(courseName, country, discountRules, regionNames);
-      if (!rule) return Infinity;
-      const end = rule.endDate ? new Date(rule.endDate) : null;
-      if (!end) return Infinity;
-      const endsAt = new Date(end.getFullYear(), end.getMonth(), end.getDate(), 23, 59, 59);
-      return endsAt.getTime();
-    };
 
-    const withRuleActive = trendingCourses
-      .map((course) => ({
-        course,
-        endMs: getSaleEndsAtMs(course.courseName),
-      }))
-      .filter((x) => x.endMs !== Infinity)
-      .sort((a, b) => a.endMs - b.endMs)
-      .map((x) => x.course);
-    return withRuleActive;
-  }, [trendingCourses, country, discountRules, regionNames]);
+const orderedCourses = useMemo(() => {
+  if (!allCourses.length || !discountRules.length) return [];
 
-  // --------------------------
-  // Pagination
-  // --------------------------
+  const getSaleEndsAtMs = (courseName) => {
+    const rule = getActiveRuleFor(courseName, country, discountRules, regionNames);
+    if (!rule) return Infinity;
+
+    const end = rule.endDate ? new Date(rule.endDate) : null;
+    if (!end) return Infinity;
+
+    const endsAt = new Date(
+      end.getFullYear(),
+      end.getMonth(),
+      end.getDate(),
+      23, 59, 59
+    );
+
+    return endsAt.getTime();
+  };
+
+  return allCourses
+    .map((course) => ({
+      course,
+      endMs: getSaleEndsAtMs(course.courseName),
+    }))
+    .filter((x) => x.endMs !== Infinity)
+    .sort((a, b) => a.endMs - b.endMs)
+    .map((x) => x.course);
+}, [allCourses, country, discountRules, regionNames]);
+
+  
   const totalPages = useMemo(
     () => Math.max(1, orderedCourses.length - cardsPerRow + 1),
     [orderedCourses.length, cardsPerRow]
@@ -124,9 +116,7 @@ const DiscountCards = () => {
     });
   }, [totalPages]);
 
-  // --------------------------
-  // Countdowns using shared hook with stable getEndsAt
-  // --------------------------
+  
   const getEndsAt = useCallback((item) => {
     const rule = getActiveRuleFor(
       item.courseName,
@@ -145,19 +135,13 @@ const DiscountCards = () => {
 
   const countdowns = useCountdowns(currentCourses, getEndsAt);
 
-  // --------------------------
-  // Handlers
-  // --------------------------
+  
   const handleCardClick = useCallback((course) => {
     if (!course?.courseName) return;
     const courseSlug = course.courseName.toLowerCase().replace(/\s+/g, "-");
     navigate(`/coursedetails/${courseSlug}`);
   }, [navigate]);
 
-
-  // --------------------------
-  // Render
-  // --------------------------
   return (
     <div className="position-relative text-center">
       {orderedCourses.length > 1 && (
@@ -198,7 +182,7 @@ const DiscountCards = () => {
             const baseMrp = Number(mrp) || 0;
             const displayMrp = isIN ? baseMrp : baseMrp * fxFromUSD;
 
-            // Get rule-based discount percentage
+            
             const rulePct = getRuleDiscountPct(
               course.courseName,
               country,
@@ -206,7 +190,7 @@ const DiscountCards = () => {
               regionNames
             );
 
-            // Calculate discounted price
+            
             const effectiveNow = displayMrp * (1 - rulePct / 100);
 
             return (

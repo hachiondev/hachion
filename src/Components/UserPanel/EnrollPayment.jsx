@@ -19,6 +19,7 @@ const initialValues = {
   country: ""
 };
 
+
 const EnrollPayment = () => {
   const location = useLocation();
 
@@ -40,9 +41,13 @@ const EnrollPayment = () => {
     "";
 
 
-  const selectedBatchData = rawBatchData || {};
+  // const selectedBatchData = rawBatchData || {};
+  const localBatchData = JSON.parse(localStorage.getItem("selectedBatchData") || "{}");
 
-
+const selectedBatchData =
+  rawBatchData && Object.keys(rawBatchData).length > 2
+    ? rawBatchData
+    : localBatchData;
 
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -59,6 +64,18 @@ const EnrollPayment = () => {
   const [loading, setLoading] = useState(true);
   const [isGeneratingInvoice, setIsGeneratingInvoice] = useState(false);
   const [invoiceMessage, setInvoiceMessage] = useState("");
+
+console.log("📥 location.state received:", location.state);
+
+console.log(
+  "📦 selectedBatchData from state:",
+  location.state?.selectedBatchData
+);
+
+console.log(
+  "📦 selectedBatchData from localStorage:",
+  JSON.parse(localStorage.getItem("selectedBatchData") || "{}")
+);
 
   const [paymentData, setPaymentData] = useState({
     orderId: "",
@@ -167,19 +184,19 @@ const EnrollPayment = () => {
   }, []);
 
 
-  useEffect(() => {
-    if (mobileNumber) {
-      const dialCodeMatch = countries.find((c) =>
-        mobileNumber.replace(/\s+/g, '').startsWith(c.code)
-      );
-      if (dialCodeMatch) {
-        setStudentData((prev) => ({
-          ...prev,
-          country: dialCodeMatch.name,
-        }));
-      }
-    }
-  }, [mobileNumber]);
+  // useEffect(() => {
+  //   if (mobileNumber) {
+  //     const dialCodeMatch = countries.find((c) =>
+  //       mobileNumber.replace(/\s+/g, '').startsWith(c.code)
+  //     );
+  //     if (dialCodeMatch) {
+  //       setStudentData((prev) => ({
+  //         ...prev,
+  //         country: dialCodeMatch.name,
+  //       }));
+  //     }
+  //   }
+  // }, [mobileNumber]);
 
   useEffect(() => {
     const detectCurrency = async () => {
@@ -252,10 +269,13 @@ const EnrollPayment = () => {
 
         const matchedStudent = allStudents.find((student) => student.email === email);
 
-        if (matchedStudent) {
-          setStudentData(matchedStudent);
-          setMobileNumber(matchedStudent.mobile || '');
-        }
+      if (matchedStudent) {
+  setStudentData(prev => ({
+    ...prev,
+    ...matchedStudent
+  }));
+  setMobileNumber(matchedStudent.mobile || '');
+}
       } catch (err) {
 
       }
@@ -394,7 +414,7 @@ const EnrollPayment = () => {
           const mappedCourse = {
             courseName: course.courseName,
             courseImage: course.courseImage,
-            duration: course.numberOfClasses,
+            duration: selectedBatchData.duration,
             iamount: course.iamount,
             idiscount: course.idiscount,
           };
@@ -416,15 +436,16 @@ const EnrollPayment = () => {
 
     const fetchPaymentData = async () => {
       try {
-        const response = await axios.get(
-          `https://api.test.hachion.co/razorpay/getByEmailAndCourse`,
-          {
-            params: {
-              email,
-              courseName: selectedBatchData.schedule_course_name,
-            },
-          }
-        );
+       const response = await axios.get(
+  `https://api.test.hachion.co/razorpay/getByEmailAndCourse`,
+  {
+    params: {
+      email,
+      courseName: selectedBatchData.schedule_course_name,
+      batchId: selectedBatchData.batchId, // ✅ NEW PARAM ADDED
+    },
+  }
+);
 
         const payment = Array.isArray(response.data)
           ? response.data[0]
@@ -555,15 +576,28 @@ const EnrollPayment = () => {
       setIsGeneratingInvoice(false);
     }
   };
-  if (loading || !paymentData) {
-    return <Loader />;
-  }
-
+  // if (loading || !paymentData) {
+  //   return <Loader />;
+  // }
+if (loading || !studentData) {
+  return <Loader />;
+}
   if (!courseData) {
     return <p>No course found</p>;
   }
 
+const formatDate = (dateString) => {
+  if (!dateString) return "—";
 
+  const date = new Date(dateString);
+
+  return date.toLocaleDateString("en-US", {
+    // weekday: "short",   // Fri
+    month: "short",     // Mar
+    day: "2-digit",     // 09
+    year: "numeric",    // 2026
+  });
+};
   return (
     <>
       <div className="enrollpayment">
@@ -649,7 +683,7 @@ const EnrollPayment = () => {
                 <span className="detail-value">
                   <img
                     src={`https://api.test.hachion.co/${courseData.courseImage}`}
-                    alt="Course"
+                    // alt="Course"
                     style={{ width: "40px", height: "40px", marginRight: "10px" }}
                   />
                   {/* {selectedBatchData.schedule_course_name} */}
@@ -658,7 +692,7 @@ const EnrollPayment = () => {
                 </span></div>
               <div className="pay-row">
                 <span className="detail-label">Trainer : </span>
-                <span className="detail-value">{selectedBatchData.trainer_name}</span>
+                <span className="detail-value"> {selectedBatchData.trainer_name || selectedBatchData.trainer || "—"}</span>
               </div>
               <div className="pay-row">
                 <span className="detail-label">Duration : </span>
@@ -666,12 +700,15 @@ const EnrollPayment = () => {
               </div>
               <div className="pay-row">
                 <span className="detail-label">Mode : </span>
-                <span className="detail-value">{selectedBatchData.schedule_mode}</span>
+                <span className="detail-value">{selectedBatchData.schedule_mode || selectedBatchData.mode || "—"}</span>
               </div>
-              <div className="pay-row">
-                <span className="detail-label">Batch Start Date : </span>
-                <span className="detail-value">{selectedBatchData.schedule_date} @ {selectedBatchData.schedule_time}</span>
-              </div>
+            <div className="pay-row">
+  <span className="detail-label">Batch Start Date : </span>
+  <span className="detail-value">
+    {formatDate(selectedBatchData.schedule_date || selectedBatchData.date)} @{" "}
+    {selectedBatchData.schedule_time || selectedBatchData.time}
+  </span>
+</div>
             </div>
           </div>
         </div>

@@ -112,7 +112,7 @@ export default function OnlinePayment() {
         if (res.data) {
           // Map backend response to match your existing table field names
           const mappedData = res.data.map((item, index) => ({
-            id: item.paymentId || item.id || index, // Use paymentId as unique identifier
+             id: item.id,
             student_ID: item.studentId,
             userName: item.studentName,
             email: item.email,
@@ -126,7 +126,7 @@ export default function OnlinePayment() {
             status: item.status,
             method: item.paymentMethod,
             date: dayjs(item.createdDate).format("YYYY-MM-DD")
-          }));
+          })) .filter(item => item.id !== undefined && item.id !== null);;
 
           setOnlinePayment(mappedData);
           setFilteredRows(mappedData);
@@ -359,7 +359,7 @@ export default function OnlinePayment() {
           <TableBody>
             {displayedData.length > 0 ? (
               displayedData.map((row, index) => (
-                <StyledTableRow key={row.id || index}>
+                <StyledTableRow key={row.id}>
                   {/* ADDED: Individual Checkbox */}
                   <StyledTableCell align="center">
                     <Checkbox 

@@ -27,6 +27,7 @@ const initialValues = {
   country: ""
 };
 
+
 const Enrollment = () => {
   const [couponData, setCouponData] = useState(null);
   const [couponCode, setCouponCode] = useState("");
@@ -35,9 +36,13 @@ const Enrollment = () => {
   const { selectedBatchData, enrollText, modeType, sendEmail,
     sendWhatsApp, requestStatus,
     sendText } = location.state || {};
-  // console.log("location.state:", location.state);
-  // console.log("requestStatus from location.state:", requestStatus);
-  // console.log("requestStatus from localStorage:", localStorage.getItem("requestStatus"));
+  console.log("location.state:", location.state);
+  console.log("requestStatus from location.state:", requestStatus);
+  console.log("requestStatus from localStorage:", localStorage.getItem("requestStatus"));
+  console.log(
+  "selectedBatchData from localStorage:",
+  JSON.parse(localStorage.getItem("selectedBatchData") || "{}")
+);
 
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
@@ -568,18 +573,108 @@ const Enrollment = () => {
 
               const slug = courseName.toLowerCase().replace(/\s+/g, '-');
 
-              navigate(`/payment/${slug}`, {
-                state: {
-                  selectedBatchData,
-                  enrollText,
-                  modeType,
-                  sendEmail,
-                  sendWhatsApp,
-                  sendText,
-                  email: user.email,
-                },
-              });
+const paymentRes = await axios.get(
+  "https://api.test.hachion.co/razorpay/getByEmailAndCourse",
+  {
+    params: {
+      email: user.email,
+      courseName,
+    },
+  }
+);
 
+console.log("✅ Razorpay Capture Success");
+console.log("studentId:", studentId);
+console.log("courseName:", courseName);
+console.log("batchId:", batchId);
+
+console.log("🧾 selectedBatchData BEFORE navigate:", selectedBatchData);
+
+console.log("🚀 Data being sent to payment page:", {
+  schedule_course_name: courseName,
+  trainer_name:
+    selectedBatchData?.trainer_name ||
+    selectedBatchData?.trainer ||
+    "",
+  schedule_mode:
+    selectedBatchData?.schedule_mode ||
+    selectedBatchData?.mode ||
+    "",
+  schedule_date:
+    selectedBatchData?.schedule_date ||
+    selectedBatchData?.date ||
+    "",
+  schedule_time:
+    selectedBatchData?.schedule_time ||
+    selectedBatchData?.time ||
+    "",
+  schedule_week:
+    selectedBatchData?.schedule_week ||
+    selectedBatchData?.week ||
+    "",
+  schedule_duration:
+    selectedBatchData?.schedule_duration ||
+    selectedBatchData?.duration ||
+    "",
+  meeting_link: selectedBatchData?.meeting_link || "",
+  batchId: selectedBatchData?.batchId,
+});
+
+const paymentData = Array.isArray(paymentRes.data)
+  ? paymentRes.data[0]
+  : paymentRes.data;
+navigate(`/payment/${slug}`, {
+  state: {
+    selectedBatchData: {
+      schedule_course_name: courseName,
+
+      // 🔥 FIX TRAINER
+      trainer_name:
+        selectedBatchData?.trainer_name ||
+        selectedBatchData?.trainer ||
+        "",
+
+      // 🔥 FIX MODE
+      schedule_mode:
+        selectedBatchData?.schedule_mode ||
+        selectedBatchData?.mode ||
+        "",
+
+      // 🔥 FIX DATE
+      schedule_date:
+        selectedBatchData?.schedule_date ||
+        selectedBatchData?.date ||
+        "",
+
+      // 🔥 FIX TIME
+      schedule_time:
+        selectedBatchData?.schedule_time ||
+        selectedBatchData?.time ||
+        "",
+
+      // optional fields
+      schedule_week:
+        selectedBatchData?.schedule_week ||
+        selectedBatchData?.week ||
+        "",
+
+      schedule_duration:
+        selectedBatchData?.schedule_duration ||
+        selectedBatchData?.duration ||
+        "",
+
+      meeting_link: selectedBatchData?.meeting_link || "",
+      batchId: selectedBatchData?.batchId,
+    },
+
+    enrollText,
+    modeType,
+    sendEmail,
+    sendWhatsApp,
+    sendText,
+    email: user.email,
+  },
+});
 
               setSuccessMessage("✅ " + captureRes.data);
               setErrorMessage("");

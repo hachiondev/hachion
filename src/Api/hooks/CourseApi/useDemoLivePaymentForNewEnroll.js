@@ -90,6 +90,7 @@ export function useDemoLivePaymentForNewEnroll({
 
       navigate(`/payment/${slug}`, {
         state: {
+          
           selectedBatchData,
           modeType: "live",
           sendEmail: true,

@@ -101,7 +101,7 @@ export default function NewEnrollNow() {
 const {
   data: enrollmentCheckResults = [],
   isLoading: enrollmentCheckLoading,
-  refetch: refetchEnrollmentStatus,   // ✅ add this
+  refetch: refetchEnrollmentStatus,   
 } = useCheckEnrollmentForSessionsForNewEnroll(
   selectedSessions,
   studentData?.studentId,
@@ -125,10 +125,7 @@ const {
     selectedBatchIdForEnroll
   );
 
-  //   const selectedBatchIdForEnroll =
-  // selectedBatch?.sessions?.[0]?.batchId || "";
-
-
+  
   const hasInstallmentRequest =
     installmentStatusData?.numSelectedInstallments === 2 ||
     installmentStatusData?.numSelectedInstallments === 3;
@@ -149,6 +146,7 @@ const {
 
   const { currency } = useCurrency();
   const { data: discountRule } = useCourseDiscountRule(courseSlug);
+  
   useEffect(() => {
     if (
       installmentStatusLoading ||
@@ -166,18 +164,16 @@ const {
 
     navigate(`/installments/${slug}`, {
       state: {
-        // 🔑 IMPORTANT: send what OnlineInstallments EXPECTS
+        
         selectedBatchData: {
           ...selectedBatch.sessions[0],
 
-          // required for pricing fetch
+          
           schedule_course_name: course.courseName,
-
-          // optional but safe
           courseName: course.courseName,
         },
 
-        // already approved value (2 or 3)
+        
         numSelectedInstallments:
           installmentStatusData.numSelectedInstallments,
       },
@@ -191,27 +187,18 @@ const {
   ]);
 
 useEffect(() => {
-  // 🔓 Unlock buttons whenever selected batch changes or on initial load
+  
   setLockButtonsUntilBatchChange(false);
 }, [selectedBatch]);
-  useEffect(() => {
-    if (!couponSuccess) return;
+useEffect(() => {
+  if (!couponSuccess) return;
+  const timer = setTimeout(() => {
+    setCouponSuccess("");
+  }, 20000);
 
-    setSelectedBatch(null);
-    setIsTermsAccepted(false);
-    setFormData((prev) => ({
-      ...prev,
-      coupon: "",
-    }));
-    setCouponData(null);
-    setCouponError("");
-
-    const timer = setTimeout(() => {
-      setCouponSuccess("");
-    }, 4000);
-
-    return () => clearTimeout(timer);
-  }, [couponSuccess]);
+  return () => clearTimeout(timer);
+}, [couponSuccess]);
+  
 
   useEffect(() => {
     if (!preselectedSession || !liveGroups?.length) return;
@@ -467,8 +454,8 @@ useEffect(() => {
     enrollmentCheckLoading || 
     isAlreadyEnrolledForBatch;
   const isInstallmentEnabled =
-    isTermsAccepted &&          // ✅ condition 1: checkbox checked
-    isPayLaterDisabled &&       // ✅ condition 2: pay-later button is disabled
+    isTermsAccepted &&          
+    isPayLaterDisabled &&       
     currentRequestStatus === "none" &&
     !installmentStatusLoading;
 
@@ -600,7 +587,7 @@ useEffect(() => {
   const checked = e.target.checked;
   setIsTermsAccepted(checked);
 
-  // ✅ When user agrees, re-check enrollment from backend
+  
   if (checked) {
     refetchEnrollmentStatus();
   }

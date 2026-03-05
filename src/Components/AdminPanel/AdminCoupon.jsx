@@ -73,7 +73,7 @@ const AdminCoupon = ({ onChange }) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [allCoupon, setAllCoupon] = useState([]);
 
-  // New state for checkbox selection
+
   const [selectedIds, setSelectedIds] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
 
@@ -409,7 +409,7 @@ const AdminCoupon = ({ onChange }) => {
     }));
   };
 
-  // Handle Select All checkbox
+  
   const handleSelectAll = (event) => {
     if (event.target.checked) {
       const allIds = displayedCoupon.map(coupon => coupon.couponId);
@@ -421,7 +421,7 @@ const AdminCoupon = ({ onChange }) => {
     }
   };
 
-  // Handle individual checkbox
+  
   const handleSelectOne = (id) => {
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
@@ -429,14 +429,13 @@ const AdminCoupon = ({ onChange }) => {
     } else {
       const newSelectedIds = [...selectedIds, id];
       setSelectedIds(newSelectedIds);
-      // Check if all items are selected
+      
       if (newSelectedIds.length === displayedCoupon.length) {
         setSelectAll(true);
       }
     }
   };
 
-  // Update selectAll state when page changes
   useEffect(() => {
     const allCurrentPageIds = displayedCoupon.map(coupon => coupon.couponId);
     const allSelected = allCurrentPageIds.length > 0 &&
@@ -444,7 +443,7 @@ const AdminCoupon = ({ onChange }) => {
     setSelectAll(allSelected);
   }, [currentPage, displayedCoupon, selectedIds]);
 
-  // Handle bulk delete
+
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) {
       setErrorMessage("Please select at least one coupon to delete");
@@ -456,14 +455,12 @@ const AdminCoupon = ({ onChange }) => {
 
     if (window.confirm(confirmMessage)) {
       try {
-        // Delete all selected coupons
+        
         await Promise.all(
           selectedIds.map(id =>
             axios.delete(`https://api.test.hachion.co/coupon-code/delete/${id}`)
           )
         );
-
-        // Update state
         setCoupon(prev => prev.filter(item => !selectedIds.includes(item.couponId)));
         setAllCoupon(prev => prev.filter(item => !selectedIds.includes(item.couponId)));
         setFilteredCoupon(prev => prev.filter(item => !selectedIds.includes(item.couponId)));
@@ -528,7 +525,8 @@ const AdminCoupon = ({ onChange }) => {
                           (formData.selectedCourses || []).includes(opt.value)
                         )}
                         placeholder="Search or select courses..."
-                        isDisabled={formMode === "Edit" && !isEditing}
+                        
+                        isDisabled={false}
                       />
                       <div
                         className="border rounded p-3 mt-2"

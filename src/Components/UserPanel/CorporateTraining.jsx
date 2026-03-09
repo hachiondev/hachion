@@ -54,7 +54,8 @@ const CorporateTraining = () => {
         {/* <Hachion /> */}
         <LeadingExpert />
         <CustomizeTraining />
-        <Learners page="home,instructor" />
+        {/* <Learners page="home,instructor" /> */}
+        <Learners page="corporate" />
         <CorporateContactUs />
         <HomeFaq />
         {/* <div ref={advisorRef}>

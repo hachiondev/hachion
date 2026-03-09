@@ -491,7 +491,8 @@ const courseCount = trainer.courses
         </div>
 
         <TrainingEvents />
-        <Learners />
+        
+        <Learners page="corporate" />
       </div>
     </div>
   );

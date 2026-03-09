@@ -38,14 +38,21 @@ const Learners = ({ page }) => {
     setStartIndex((prev) => (prev === 0 ? reviews.length - 1 : prev - 1));
   };
 
+  let currentReviews;
+
+if (reviews.length <= cardsPerRow) {
+  currentReviews = reviews;
+} else {
   let endIndex = startIndex + cardsPerRow;
-  let currentReviews =
+
+  currentReviews =
     endIndex <= reviews.length
       ? reviews.slice(startIndex, endIndex)
       : [
           ...reviews.slice(startIndex, reviews.length),
           ...reviews.slice(0, endIndex - reviews.length),
         ];
+}
 
   // 🔥 Responsive cards count
   useEffect(() => {

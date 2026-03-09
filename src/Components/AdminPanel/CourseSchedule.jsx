@@ -106,7 +106,7 @@ export default function CourseSchedule() {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // New state for checkbox selection
+  
   const [selectedIds, setSelectedIds] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
 
@@ -314,7 +314,8 @@ export default function CourseSchedule() {
         schedule_date: dayjs(row.schedule_date, "MM-DD-YYYY").format("YYYY-MM-DD"),
         schedule_week: row.schedule_week,
         schedule_time: row.schedule_time,
-        schedule_duration: row.schedule_duration,
+        
+        schedule_duration: row.schedule_duration ? `${row.schedule_duration} min` : "",
         schedule_mode: row.schedule_mode,
         trainer_name: courseData.trainer_name || "",
         created_date: courseData.created_date,
@@ -448,7 +449,7 @@ export default function CourseSchedule() {
           (course) => course.course_schedule_id !== course_schedule_id
         )
       );
-      // Remove from selectedIds if present
+      
       setSelectedIds(prev => prev.filter(id => id !== course_schedule_id));
     } catch (error) {
     }
@@ -465,7 +466,7 @@ export default function CourseSchedule() {
 
   const handleSave = async () => {
     try {
-      // const formattedDateForBackend = dayjs(editedRow.schedule_date, "MM-DD-YYYY").format("YYYY-MM-DD");
+      
       const formattedDateForBackend = dayjs(
         editedRow.schedule_date,
         ["MM-DD-YYYY", "YYYY-MM-DD"]
@@ -570,7 +571,7 @@ export default function CourseSchedule() {
     return !(hasMainErrors || hasRowErrors);
   };
 
-  // Handle Select All checkbox
+  
   const handleSelectAll = (event) => {
     if (event.target.checked) {
       const allIds = displayedCategories.map(schedule => schedule.course_schedule_id);
@@ -582,7 +583,7 @@ export default function CourseSchedule() {
     }
   };
 
-  // Handle individual checkbox
+  
   const handleSelectOne = (id) => {
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
@@ -590,14 +591,14 @@ export default function CourseSchedule() {
     } else {
       const newSelectedIds = [...selectedIds, id];
       setSelectedIds(newSelectedIds);
-      // Check if all items are selected
+      
       if (newSelectedIds.length === displayedCategories.length) {
         setSelectAll(true);
       }
     }
   };
 
-  // Update selectAll state when page changes
+  
   useEffect(() => {
     const allCurrentPageIds = displayedCategories.map(schedule => schedule.course_schedule_id);
     const allSelected = allCurrentPageIds.length > 0 &&
@@ -605,7 +606,7 @@ export default function CourseSchedule() {
     setSelectAll(allSelected);
   }, [currentPage, displayedCategories, selectedIds]);
 
-  // Handle bulk delete
+  
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) {
       alert("Please select at least one schedule to delete");
@@ -616,14 +617,14 @@ export default function CourseSchedule() {
 
     if (window.confirm(confirmMessage)) {
       try {
-        // Delete all selected schedules
+        
         await Promise.all(
           selectedIds.map(id =>
             axios.delete(`https://api.test.hachion.co/schedulecourse/delete/${id}`)
           )
         );
 
-        // Update state
+        
         setCourses(prev => prev.filter(item => !selectedIds.includes(item.course_schedule_id)));
         setFilteredCourses(prev => prev.filter(item => !selectedIds.includes(item.course_schedule_id)));
 
@@ -671,7 +672,7 @@ export default function CourseSchedule() {
                 <div className="course-row">
                   <div className="col-md-3">
                     <label htmlFor="inputState" className="form-label">
-                      Category Name
+                      Category Name <span className="required-star">*</span>
                     </label>
                     <select
                       id="inputState"
@@ -695,7 +696,7 @@ export default function CourseSchedule() {
                   </div>
                   <div className="col-md-3">
                     <label htmlFor="course" className="form-label">
-                      Course Name
+                      Course Name <span className="required-star">*</span>
                     </label>
                     <select
                       id="course"
@@ -717,7 +718,7 @@ export default function CourseSchedule() {
                   </div>
                   <div className="col-md-3">
                     <label htmlFor="inputState" className="form-label">
-                      Trainer Name
+                      Trainer Name <span className="required-star">*</span>
                     </label>
                     <select
                       id="inputState"
@@ -746,25 +747,25 @@ export default function CourseSchedule() {
                       <TableHead>
                         <TableRow>
                           <StyledTableCell align="center" sx={{ fontSize: "16px" }}>
-                            Date
+                            Date <span className="required-star">*</span>
                           </StyledTableCell>
                           <StyledTableCell align="center" sx={{ fontSize: "16px" }}>
-                            Frequency
+                            Frequency <span className="required-star">*</span>
                           </StyledTableCell>
                           <StyledTableCell align="center" sx={{ fontSize: "16px" }}>
-                            Time
+                            Time <span className="required-star">*</span>
                           </StyledTableCell>
                           <StyledTableCell align="center" sx={{ fontSize: "16px" }}>
-                            Duration
+                            Duration <span className="required-star">*</span>
                           </StyledTableCell>
                           <StyledTableCell align="center" sx={{ fontSize: "16px" }}>
-                            Mode
+                            Mode <span className="required-star">*</span>
                           </StyledTableCell>
                           <StyledTableCell align="center" sx={{ fontSize: "16px" }}>
-                            Pattern
+                            Pattern <span className="required-star">*</span>
                           </StyledTableCell>
                           <StyledTableCell align="center" sx={{ fontSize: "16px", width: "500px" }}>
-                            Meeting
+                            Meeting <span className="required-star">*</span>
                           </StyledTableCell>
                           <StyledTableCell align="center" sx={{ fontSize: "16px" }}>
                             Add/Delete Row
@@ -856,7 +857,7 @@ export default function CourseSchedule() {
                                   step="1"
                                   placeholder="0"
                                   onKeyDown={(e) => {
-                                    // Prevent entering negative numbers
+                                    
                                     if (e.key === '-' || e.key === 'e') {
                                       e.preventDefault();
                                     }
@@ -1354,7 +1355,7 @@ export default function CourseSchedule() {
                   step="1"
                   placeholder="Enter duration"
                   onKeyDown={(e) => {
-                    // Prevent entering negative numbers or 'e'
+                    
                     if (e.key === '-' || e.key === 'e' || e.key === 'E') {
                       e.preventDefault();
                     }

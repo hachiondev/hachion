@@ -230,11 +230,35 @@ const Instructors = () => {
   if (isLoading) return <Loader />;
   if (isError) return <div>{error?.message || "Something went wrong"}</div>;
 
-  const indexOfLastCard = currentPage * cardsPerPage;
-  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  const currentCards = filteredTrainers.slice(indexOfFirstCard, indexOfLastCard);
-  const totalCards = filteredTrainers.length;
+  // const indexOfLastCard = currentPage * cardsPerPage;
+  // const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+  // const currentCards = filteredTrainers.slice(indexOfFirstCard, indexOfLastCard);
+  // const totalCards = filteredTrainers.length;
 
+  // Group trainers so each trainer appears only once
+const groupedTrainers = Object.values(
+  filteredTrainers.reduce((acc, trainer) => {
+    const name = trainer.trainer_name?.trim().toLowerCase();
+
+    if (!acc[name]) {
+      acc[name] = {
+        ...trainer,
+        courses: [trainer.course_name],
+      };
+    } else {
+      if (!acc[name].courses.includes(trainer.course_name)) {
+        acc[name].courses.push(trainer.course_name);
+      }
+    }
+
+    return acc;
+  }, {})
+);
+
+const indexOfLastCard = currentPage * cardsPerPage;
+const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+const currentCards = groupedTrainers.slice(indexOfFirstCard, indexOfLastCard);
+const totalCards = groupedTrainers.length;
   /* -----------------------------
      UI
   ----------------------------- */
@@ -333,11 +357,13 @@ const Instructors = () => {
           <div className="profiles-grid">
             {currentCards.length > 0 ? (
               currentCards.map((trainer) => {
-                const courseCount = getTrainerCourseCount(
-                  trainers,
-                  trainer.trainer_name
-                );
-
+                // const courseCount = getTrainerCourseCount(
+                //   trainers,
+                //   trainer.trainer_name
+                // );
+const courseCount = trainer.courses
+  ? trainer.courses.length
+  : getTrainerCourseCount(trainers, trainer.trainer_name);
                 const enrollKey = makeEnrollKey(
                   trainer.trainer_name,
                   trainer.course_name
@@ -366,7 +392,21 @@ const Instructors = () => {
 
                       <div className="instrctor-content">
                         <p className="expert-name">{trainer.trainer_name}</p>
-                        <p className="expert-course">{trainer.course_name}</p>
+                        {/* <p className="expert-course">{trainer.course_name}</p> */}
+                        {/* <p className="expert-course">
+  {trainer.courses ? trainer.courses.join(", ") : trainer.course_name}
+</p> */}
+<p
+  className="expert-course"
+  style={{
+    whiteSpace: "normal",
+    overflow: "visible",
+    textOverflow: "unset",
+    display: "block",
+  }}
+>
+  {trainer.courses ? trainer.courses.join(", ") : trainer.course_name}
+</p>
 
                         <div className="expert-about">
                           <p className="expert-me">About Me</p>

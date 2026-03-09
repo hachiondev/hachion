@@ -96,6 +96,195 @@ const OnlineInstallments = () => {
     fetchCoursePricing();
   }, [selectedBatchData]);
 
+const handlePayNowWithoutInstallment = async () => {
+  try {
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    const user = JSON.parse(localStorage.getItem("loginuserData"));
+
+    if (!user || !user.email) {
+      setErrorMessage("Please login to continue.");
+      return;
+    }
+
+    const profileResponse = await axios.get(
+      "https://api.test.hachion.co/api/v1/user/myprofile",
+      { params: { email: user.email } }
+    );
+
+    const studentId = profileResponse.data?.studentId;
+    const mobile = profileResponse.data?.mobile || "";
+
+    const batchId = selectedBatchData?.batchId;
+    const courseName = selectedBatchData?.schedule_course_name;
+
+    if (!studentId || !batchId || !courseName) {
+      setErrorMessage("Missing required details.");
+      return;
+    }
+
+    const slug = courseName.toLowerCase().replace(/\s+/g, "-");
+
+    // const amount = courseData?.iamount || 0;
+    // const amount = Number(netPayableAmount.toFixed(2));
+
+    const discountAmount =
+  (Number(courseData.iamount) * Number(courseData.idiscount)) / 100;
+
+const netCourseAmount =
+  Number(courseData.iamount) - discountAmount;
+
+const baseInstallment =
+  selectedInstallments > 0 ? netCourseAmount / selectedInstallments : 0;
+
+  let amount = baseInstallment * selectedInstallments;
+
+/* ✅ APPLY COUPON LOGIC */
+if (appliedDiscount) {
+  const { discountType, discountValue } = appliedDiscount;
+
+  if (discountType === "percent") {
+    const couponDiscount = (amount * discountValue) / 100;
+    amount = amount - couponDiscount;
+  } else if (discountType === "fixed") {
+    amount = amount - discountValue;
+  }
+}
+
+// amount = Number(amount.toFixed(2));
+
+amount = Math.round(amount);
+    if (mobile.startsWith("+91")) {
+
+      /* ===============================
+         RAZORPAY FLOW
+      =============================== */
+
+      const orderRes = await axios.post(
+        "https://api.test.hachion.co/razorpay/create-razorpay-order",
+        null,
+        {
+          params: {
+            amount,
+            studentId,
+            courseName,
+            batchId,
+          },
+        }
+      );
+
+      const razorpayOrder = orderRes.data;
+
+      const options = {
+        key: "rzp_live_1g4Axfq4KHi3kl",
+        amount: razorpayOrder.amount,
+        currency: razorpayOrder.currency,
+        name: "Hachion",
+        description: `Payment for ${courseName}`,
+        order_id: razorpayOrder.id,
+
+        handler: async function (response) {
+          try {
+
+            /* VERIFY PAYMENT */
+
+            await axios.post(
+              "https://api.test.hachion.co/razorpay/capture-razorpay",
+              null,
+              {
+                params: {
+                  paymentId: response.razorpay_payment_id,
+                  orderId: response.razorpay_order_id,
+                  signature: response.razorpay_signature,
+                  studentId,
+                  courseName,
+                  batchId,
+                },
+              }
+            );
+
+            /* 🔵 UPDATE PAYMENT */
+
+            await axios.put(
+              "https://api.test.hachion.co/enroll/update-payment",
+              {
+                studentId,
+                courseName,
+                batchId,
+                amount,
+              }
+            );
+
+            setSuccessMessage("✅ Payment successful!");
+
+            navigate(`/payment/${slug}`, {
+              state: {
+                selectedBatchData: {
+                  schedule_course_name: courseName,
+                  batchId,
+                },
+                modeType: "live",
+                email: user.email,
+              },
+            });
+
+          } catch (err) {
+            console.error(err);
+            setErrorMessage("❌ Payment verification failed.");
+          }
+        },
+
+        prefill: {
+          name: user.name,
+          email: user.email,
+          contact: mobile.replace("+91", ""),
+        },
+
+        theme: { color: "#3399cc" },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+
+    } else {
+
+      /* ===============================
+         PAYPAL FLOW
+      =============================== */
+
+      localStorage.setItem("studentId", studentId);
+      localStorage.setItem("courseName", courseName);
+      localStorage.setItem("batchId", batchId);
+
+      const returnUrl = `https://hachion.co/enroll/${slug}`;
+
+      const paypalRes = await axios.post(
+        "https://api.test.hachion.co/create-order",
+        null,
+        {
+          params: {
+            amount,
+            returnUrl,
+          },
+        }
+      );
+
+      const approvalUrl = paypalRes.data;
+
+      if (approvalUrl.startsWith("https://www.paypal.com")) {
+        window.location.href = approvalUrl;
+      } else {
+        setErrorMessage("Unexpected PayPal response.");
+      }
+    }
+
+  } catch (err) {
+    console.error(err);
+    setErrorMessage("❌ Failed to start payment.");
+  }
+};
+
   useEffect(() => {
     if (mobileNumber) {
       const dialCodeMatch = countries.find((c) =>
@@ -912,11 +1101,7 @@ const OnlineInstallments = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-              {/* <div>
-                {successMessage && (<p style={{ color: "green", fontWeight: "bold", margin: 0 }}>{successMessage}</p>)}
-                {errorMessage && (<p style={{ color: "red", fontWeight: "bold", margin: 0 }}>{errorMessage}</p>)}
-                <button className="payment-btn" onClick={handlePaymentForRazorPay}>Proceed to Pay</button>
-              </div> */}
+            
               <div>
                 {successMessage && (
                   <p style={{ color: "green", fontWeight: "bold", margin: 0 }}>
@@ -929,17 +1114,51 @@ const OnlineInstallments = () => {
                   </p>
                 )}
 
-                <button
-                  className="payment-btn"
-                  onClick={handlePaymentForRazorPay}
-                  disabled={!!errorMessage || !!errorMessageForCoupon}
-                  style={{
-                    opacity: errorMessage || errorMessageForCoupon ? 0.6 : 1,
-                    cursor: errorMessage || errorMessageForCoupon ? "not-allowed" : "pointer",
-                  }}
-                >
-                  Proceed to Pay
-                </button>
+               <div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    marginTop: "12px"
+  }}
+>
+
+  {/* LEFT BUTTON */}
+  <button
+    className="payment-btn"
+    onClick={handlePaymentForRazorPay}
+    disabled={!!errorMessage || !!errorMessageForCoupon}
+    style={{
+      opacity: errorMessage || errorMessageForCoupon ? 0.6 : 1,
+      cursor: errorMessage || errorMessageForCoupon ? "not-allowed" : "pointer",
+    }}
+  >
+    Proceed to Pay
+  </button>
+
+  {/* RIGHT SIDE MESSAGE + CENTERED BUTTON */}
+  <div style={{ textAlign: "center" }}>
+    <p
+      style={{
+        fontSize: "13px",
+        marginBottom: "6px",
+        color: "red",
+        fontWeight: "500"
+      }}
+    >
+      If you want to go without installment click <b>Pay Now</b> button
+    </p>
+
+    <button
+  className="payment-btn"
+  onClick={handlePayNowWithoutInstallment}
+  style={{ display: "block", margin: "0 auto" }}
+>
+  Pay Now
+</button>
+  </div>
+
+</div>
               </div>
 
             </div>

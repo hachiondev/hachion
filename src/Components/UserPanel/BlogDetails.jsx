@@ -22,6 +22,7 @@ import processBlogContent from "./BlogDetailComponents/processBlogContent";
 import MobileShareButton from "./BlogDetailComponents/MobileShareButton";
 import BlogInquiryForm from "./BlogInquiryForm";
 
+
 const BlogDetails = () => {
   const { category_name } = useParams();
   const { title } = useParams();
@@ -345,11 +346,17 @@ const BlogDetails = () => {
                           className="search-dropdown-item"
                           style={{ animationDelay: `${index * 0.03}s` }}
                           onClick={() => {
-                            navigate(
-                              `/blogs/${blog.category_name
-                                .replace(/\s+/g, "-")
-                                .toLowerCase()}/${blog.id}`
-                            );
+                           
+                          navigate(
+  `/blogs/${blog.category_name
+    .toLowerCase()
+    .replace(/\s+/g, "-")}/${
+    blog.title
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, "-")
+  }-${blog.id}`
+);
                             setSearchQuery("");
                             window.scrollTo(0, 0);
                           }}
@@ -409,11 +416,16 @@ const BlogDetails = () => {
                     key={blog.id}
                     className="recent-post-item"
                     onClick={() => {
-                      navigate(
-                        `/blogs/${blog.category_name
-                          .replace(/\s+/g, "-")
-                          .toLowerCase()}/${blog.id}`
-                      );
+                    navigate(
+  `/blogs/${blog.category_name
+    .toLowerCase()
+    .replace(/\s+/g, "-")}/${
+    blog.title
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, "-")
+  }-${blog.id}`
+);
                       window.scrollTo(0, 0);
                     }}
                   >

@@ -130,14 +130,19 @@ const MoreBlogs = ({ scrollToTop = false }) => {
                     };
                     return d.toLocaleDateString("en-US", options);
                   })()}
-                  onClick={() => {
-                    navigate(
-                      `/blogs/${blog.category_name
-                        ?.replace(/\s+/g, "-")
-                        .toLowerCase()}/${blog.id}`
-                    );
-                    window.scrollTo(0, 0);
-                  }}
+                 onClick={() => {
+  navigate(
+    `/blogs/${blog.category_name
+      ?.replace(/\s+/g, "-")
+      .toLowerCase()}/${
+      blog.title
+        ?.toLowerCase()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, "-")
+    }-${blog.id}`
+  );
+  window.scrollTo(0, 0);
+}}
                 />
               ))
             ) : (

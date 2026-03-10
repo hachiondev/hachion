@@ -110,7 +110,7 @@ export default function RequestInstallment() {
   useEffect(() => {
     const fetchRequestInstallments = async () => {
       try {
-        const response = await axios.get('http://localhost:8081/razorpay/request-installments');
+        const response = await axios.get('https://api.test.hachion.co/razorpay/request-installments');
 
         const mappedData = response.data.map((item) => ({
           id: item.id,
@@ -144,7 +144,7 @@ export default function RequestInstallment() {
   
   //     try {
   //       // Note: This assumes there's a delete endpoint. If not, you may need to adjust this.
-  //       await axios.delete(`http://localhost:8081/razorpay/payments/${id}`);
+  //       await axios.delete(`https://api.test.hachion.co/razorpay/payments/${id}`);
         
   //       const updatedPayments = onlinePayment.filter(item => item.id !== id);
   //       setOnlinePayment(updatedPayments);
@@ -170,7 +170,7 @@ export default function RequestInstallment() {
 
   try {
 
-    const response = await axios.delete(`http://localhost:8081/razorpay/delete-installment-request`, {
+    const response = await axios.delete(`https://api.test.hachion.co/razorpay/delete-installment-request`, {
       params: {
         studentId: row.student_ID,
         email: row.email,
@@ -265,7 +265,7 @@ export default function RequestInstallment() {
         // Approve all selected requests
         await Promise.all(
           selectedIds.map(id =>
-            axios.put(`http://localhost:8081/razorpay/update-status/${id}`, null, {
+            axios.put(`https://api.test.hachion.co/razorpay/update-status/${id}`, null, {
               params: { requestStatus: "approved" },
             })
           )
@@ -314,7 +314,7 @@ export default function RequestInstallment() {
         // Reject all selected requests
         await Promise.all(
           selectedIds.map(id =>
-            axios.put(`http://localhost:8081/razorpay/update-status/${id}`, null, {
+            axios.put(`https://api.test.hachion.co/razorpay/update-status/${id}`, null, {
               params: { requestStatus: "rejected" },
             })
           )
@@ -495,7 +495,7 @@ export default function RequestInstallment() {
                             style={{ cursor: 'pointer', color: 'green' }}
                             onClick={async () => {
                               try {
-                                await axios.put(`http://localhost:8081/razorpay/update-status/${row.id}`, null, {
+                                await axios.put(`https://api.test.hachion.co/razorpay/update-status/${row.id}`, null, {
                                   params: { requestStatus: "approved" },
                                 });
 
@@ -517,7 +517,7 @@ export default function RequestInstallment() {
                             style={{ cursor: 'pointer', color: 'red' }}
                             onClick={async () => {
                               try {
-                                await axios.put(`http://localhost:8081/razorpay/update-status/${row.id}`, null, {
+                                await axios.put(`https://api.test.hachion.co/razorpay/update-status/${row.id}`, null, {
                                   params: { requestStatus: "rejected" },
                                 });
 

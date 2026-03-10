@@ -33,18 +33,34 @@ export function useDemoLivePaymentForNewEnroll({
   const navigate = useNavigate();
 
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const status = urlParams.get("status");
-    const orderId = urlParams.get("token");
+  // useEffect(() => {
+  //   const urlParams = new URLSearchParams(window.location.search);
+  //   const status = urlParams.get("status");
+  //   const orderId = urlParams.get("token");
 
-    if (status === "success" && orderId) {
-      handleCapturePayPalOrder(orderId);
-    } else if (status === "cancel") {
-      setEnrollErrorMessage("❌ Payment was cancelled.");
-      setEnrollSuccessMessage("");
-    }
-  }, []);
+  //   if (status === "success" && orderId) {
+  //     handleCapturePayPalOrder(orderId);
+  //   } else if (status === "cancel") {
+  //     setEnrollErrorMessage("❌ Payment was cancelled.");
+  //     setEnrollSuccessMessage("");
+  //   }
+  // }, []);
+  useEffect(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const status = urlParams.get("status");
+  const orderId = urlParams.get("token");
+
+  if (status === "success" && orderId) {
+    (async () => {
+      await handleCapturePayPalOrder(orderId);
+    })();
+  }
+
+  if (status === "cancel") {
+    setEnrollErrorMessage("❌ Payment was cancelled.");
+    setEnrollSuccessMessage("");
+  }
+}, []);
 
   const amount = useMemo(() => {
     return (
@@ -55,56 +71,54 @@ export function useDemoLivePaymentForNewEnroll({
       0
     );
   }, [courseData]);
+const handleCapturePayPalOrder = async (orderId) => {
+  try {
+    const studentId = localStorage.getItem("studentId");
+    const courseName = localStorage.getItem("courseName");
+    const batchId = localStorage.getItem("batchId");
+    const selectedBatchData = JSON.parse(localStorage.getItem("selectedBatchData") || "{}");
 
-    const handleCapturePayPalOrder = async (orderId) => {
-    try {
-      const studentId = localStorage.getItem("studentId");
-      const courseName = localStorage.getItem("courseName");
-      const batchId = localStorage.getItem("batchId");
-      const selectedBatchData = JSON.parse(localStorage.getItem("selectedBatchData") || "{}");
-
-      if (!studentId || !courseName || !batchId) {
-        setEnrollErrorMessage("❌ Missing payment info. Please try again.");
-        return;
-      }
-
-      await axios.post(`${API_BASE}/capture-order`, null, {
-        params: {
-          orderId,
-          studentId,
-          courseName,
-          batchId,
-          discount: selectedBatchData?.discount ?? 0,
-        },
-      });
-
-      // cleanup
-      localStorage.removeItem("studentId");
-      localStorage.removeItem("courseName");
-      localStorage.removeItem("batchId");
-      localStorage.removeItem("selectedBatchData");
-
-      setEnrollSuccessMessage("✅ Payment successful!");
-
-      const slug = courseName.toLowerCase().replace(/\s+/g, "-");
-
-      navigate(`/payment/${slug}`, {
-        state: {
-          
-          selectedBatchData,
-          modeType: "live",
-          sendEmail: true,
-          sendWhatsApp: true,
-          sendText: false,
-          email: userProfile?.email,
-        },
-      });
-    } catch (err) {
-      console.error(err);
-      setEnrollErrorMessage("❌ Failed to complete PayPal payment.");
+    if (!studentId || !courseName || !batchId) {
+      setEnrollErrorMessage("❌ Missing payment info. Please try again.");
+      return;
     }
-  };
 
+    await axios.post(`${API_BASE}/capture-order`, null, {
+      params: {
+        orderId,
+        studentId,
+        courseName,
+        batchId,
+        discount: selectedBatchData?.discount ?? 0,
+      },
+    });
+
+    // cleanup storage
+    localStorage.removeItem("studentId");
+    localStorage.removeItem("courseName");
+    localStorage.removeItem("batchId");
+    localStorage.removeItem("selectedBatchData");
+
+    const slug = courseName.toLowerCase().replace(/\s+/g, "-");
+
+    // 🔥 DIRECT NAVIGATION (no temporary screen)
+    navigate(`/payment/${slug}`, {
+      replace: true,
+      state: {
+        selectedBatchData,
+        modeType: "live",
+        sendEmail: true,
+        sendWhatsApp: true,
+        sendText: false,
+        email: userProfile?.email,
+      },
+    });
+
+  } catch (err) {
+    console.error(err);
+    setEnrollErrorMessage("❌ Failed to complete PayPal payment.");
+  }
+};
 
   const handleLiveEnrollPayment = async (session, notifyVia) => {
     setEnrollSuccessMessage("");

@@ -110,7 +110,7 @@ export default function RequestInstallment() {
   useEffect(() => {
     const fetchRequestInstallments = async () => {
       try {
-        const response = await axios.get('https://api.test.hachion.co/razorpay/request-installments');
+        const response = await axios.get('http://localhost:8081/razorpay/request-installments');
 
         const mappedData = response.data.map((item) => ({
           id: item.id,
@@ -119,7 +119,7 @@ export default function RequestInstallment() {
           email: item.payerEmail,
           mobile: item.mobile,
           course_name: item.courseName,
-          batch_id: item.batchId,
+          batchId: item.batchId,
           fee: item.courseFee,
           requestInstallments: item.numSelectedInstallments,
           date: item.requestDate,
@@ -137,6 +137,83 @@ export default function RequestInstallment() {
     fetchRequestInstallments();
   }, []);
 
+
+  // const handleDelete = async (id) => {
+  //     const confirmed = window.confirm("Are you sure you want to delete this payment?");
+  //     if (!confirmed) return;
+  
+  //     try {
+  //       // Note: This assumes there's a delete endpoint. If not, you may need to adjust this.
+  //       await axios.delete(`http://localhost:8081/razorpay/payments/${id}`);
+        
+  //       const updatedPayments = onlinePayment.filter(item => item.id !== id);
+  //       setOnlinePayment(updatedPayments);
+  //       setFilteredRows(updatedPayments);
+        
+  //       // Remove from selectedIds if present
+  //       setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
+        
+  //       setSuccessMessage("✅ Payment deleted successfully.");
+  //       setErrorMessage("");
+  //       setTimeout(() => setSuccessMessage(""), 3000);
+  //     } catch (error) {
+  //       console.error("Error deleting payment:", error);
+  //       setErrorMessage("❌ Failed to delete payment.");
+  //       setSuccessMessage("");
+  //       setTimeout(() => setErrorMessage(""), 3000);
+  //     }
+  //   };
+  
+ const handleDelete = async (row) => {
+  const confirmed = window.confirm("Are you sure you want to delete this installment request?");
+  if (!confirmed) return;
+
+  try {
+
+    const response = await axios.delete(`http://localhost:8081/razorpay/delete-installment-request`, {
+      params: {
+        studentId: row.student_ID,
+        email: row.email,
+        courseName: row.course_name,
+        batchId: row.batchId
+      }
+    });
+
+    const message = response.data;
+
+    if (message && message.toLowerCase().includes("success")) {
+
+      const updatedData = requestInstallment.filter(item => item.id !== row.id);
+
+      setRequestInstallment(updatedData);
+      setFilteredRows(updatedData);
+
+      setSelectedIds(prev => prev.filter(selectedId => selectedId !== row.id));
+
+      setSuccessMessage("✅ " + message);
+      setErrorMessage("");
+
+    } else {
+
+      setErrorMessage("❌ " + message);
+      setSuccessMessage("");
+
+    }
+
+    setTimeout(() => {
+      setSuccessMessage("");
+      setErrorMessage("");
+    }, 4000);
+
+  } catch (error) {
+    console.error("Error deleting installment request:", error);
+
+    setErrorMessage("❌ Failed to delete installment request.");
+    setSuccessMessage("");
+
+    setTimeout(() => setErrorMessage(""), 4000);
+  }
+};
   // ADDED: Handle Select All checkbox
   const handleSelectAll = (event) => {
     if (event.target.checked) {
@@ -188,7 +265,7 @@ export default function RequestInstallment() {
         // Approve all selected requests
         await Promise.all(
           selectedIds.map(id =>
-            axios.put(`https://api.test.hachion.co/razorpay/update-status/${id}`, null, {
+            axios.put(`http://localhost:8081/razorpay/update-status/${id}`, null, {
               params: { requestStatus: "approved" },
             })
           )
@@ -237,7 +314,7 @@ export default function RequestInstallment() {
         // Reject all selected requests
         await Promise.all(
           selectedIds.map(id =>
-            axios.put(`https://api.test.hachion.co/razorpay/update-status/${id}`, null, {
+            axios.put(`http://localhost:8081/razorpay/update-status/${id}`, null, {
               params: { requestStatus: "rejected" },
             })
           )
@@ -277,9 +354,7 @@ export default function RequestInstallment() {
           <div className='category-header'><p style={{ marginBottom: 0 }}>View Installment requests</p></div>
           
           {/* ADDED: Success and Error Messages */}
-          {successMessage && <p style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</p>}
-          {errorMessage && <p style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</p>}
-          
+       
           <div className='date-schedule'>
             Start Date
             <DatePicker
@@ -380,6 +455,7 @@ export default function RequestInstallment() {
               <StyledTableCell align="center">Requested Installments</StyledTableCell>
               <StyledTableCell align="center">Created Date </StyledTableCell>
               <StyledTableCell align="center">Status</StyledTableCell>
+              <StyledTableCell align="center">Action</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -397,7 +473,7 @@ export default function RequestInstallment() {
                     {(currentPage - 1) * rowsPerPage + index + 1}
                   </StyledTableCell>
                   <StyledTableCell align="left">{row.student_ID}</StyledTableCell>
-                  <StyledTableCell align="left">{row.batch_ID}</StyledTableCell>
+                  <StyledTableCell align="left">{row.batchId}</StyledTableCell>
                   <StyledTableCell align="left">{row.userName}</StyledTableCell>
                   <StyledTableCell align="left">{row.email}</StyledTableCell>
                   <StyledTableCell align="center">{row.mobile}</StyledTableCell>
@@ -419,7 +495,7 @@ export default function RequestInstallment() {
                             style={{ cursor: 'pointer', color: 'green' }}
                             onClick={async () => {
                               try {
-                                await axios.put(`https://api.test.hachion.co/razorpay/update-status/${row.id}`, null, {
+                                await axios.put(`http://localhost:8081/razorpay/update-status/${row.id}`, null, {
                                   params: { requestStatus: "approved" },
                                 });
 
@@ -441,7 +517,7 @@ export default function RequestInstallment() {
                             style={{ cursor: 'pointer', color: 'red' }}
                             onClick={async () => {
                               try {
-                                await axios.put(`https://api.test.hachion.co/razorpay/update-status/${row.id}`, null, {
+                                await axios.put(`http://localhost:8081/razorpay/update-status/${row.id}`, null, {
                                   params: { requestStatus: "rejected" },
                                 });
 
@@ -462,6 +538,14 @@ export default function RequestInstallment() {
                       )}
                     </div>
                   </StyledTableCell>
+                   <StyledTableCell align="center">
+                                      <RiDeleteBin6Line
+                                        className="delete"
+                                        style={{ cursor: 'pointer', color: 'red' }}
+                                        // onClick={() => handleDelete(row.id)}
+                                        onClick={() => handleDelete(row)}
+                                      />
+                                    </StyledTableCell>
                 </StyledTableRow>
               ))
             ) : (
@@ -475,7 +559,9 @@ export default function RequestInstallment() {
           </TableBody>
         </Table>
       </TableContainer>
-
+   {successMessage && <p style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</p>}
+          {errorMessage && <p style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</p>}
+          
       <div className='pagination-container'>
         <AdminPagination
           currentPage={currentPage}

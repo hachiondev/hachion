@@ -51,6 +51,10 @@ export default function OnlineEnroll() {
   const [errorMessage, setErrorMessage] = useState("");
   const [filteredData, setFilteredData] = useState([]);
 
+  // ADDED: State for time period and mode filters
+  const [selectedPeriod, setSelectedPeriod] = useState('');
+  const [selectedMode, setSelectedMode] = useState('');
+
   // ADDED: State for checkbox selection
   const [selectedIds, setSelectedIds] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
@@ -67,6 +71,72 @@ export default function OnlineEnroll() {
         console.error("Error fetching enrollment data:", error);
       });
   }, []);
+
+  // ADDED: Handle period change
+  const handlePeriodChange = (period) => {
+    setSelectedPeriod(period);
+    applyFilters(period, selectedMode, startDate, endDate);
+  };
+
+  // ADDED: Handle mode change
+  const handleModeChange = (mode) => {
+    setSelectedMode(mode);
+    applyFilters(selectedPeriod, mode, startDate, endDate);
+  };
+
+  // ADDED: Apply all filters
+  const applyFilters = (period, mode, start, end) => {
+    let filtered = [...enrollData];
+
+    // Apply date range filter
+    if (start || end) {
+      filtered = filtered.filter((item) => {
+        const enrollDate = new Date(item.date || item.enroll_date);
+        const startTime = start ? new Date(start).setHours(0, 0, 0, 0) : null;
+        const endTime = end ? new Date(end).setHours(23, 59, 59, 999) : null;
+        return (
+          (!startTime || enrollDate >= startTime) &&
+          (!endTime || enrollDate <= endTime)
+        );
+      });
+    }
+
+    // Apply period filter
+    if (period) {
+      const today = new Date();
+      const startOfWeek = new Date(today);
+      startOfWeek.setDate(today.getDate() - today.getDay()); // Sunday as first day
+      startOfWeek.setHours(0, 0, 0, 0);
+      
+      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      const startOfYear = new Date(today.getFullYear(), 0, 1);
+
+      filtered = filtered.filter((item) => {
+        const enrollDate = new Date(item.date || item.enroll_date);
+        
+        switch(period) {
+          case 'thisWeek':
+            return enrollDate >= startOfWeek;
+          case 'thisMonth':
+            return enrollDate >= startOfMonth;
+          case 'thisYear':
+            return enrollDate >= startOfYear;
+          default:
+            return true;
+        }
+      });
+    }
+
+    // Apply mode filter
+    if (mode) {
+      filtered = filtered.filter((item) => 
+        item.mode?.toLowerCase() === mode.toLowerCase()
+      );
+    }
+
+    setFilteredData(filtered);
+    setCurrentPage(1); // Reset to first page
+  };
 
   const handleDeleteConfirmation = (id) => {
     const confirmed = window.confirm("Are you sure you want to delete this enrollment?");
@@ -103,22 +173,14 @@ export default function OnlineEnroll() {
   });
 
   const handleDateFilter = () => {
-    const filtered = enrollData.filter((item) => {
-      const enrollDate = new Date(item.date || item.enroll_date);
-      const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
-      const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
-      return (
-        (!start || enrollDate >= start) &&
-        (!end || enrollDate <= end)
-      );
-    });
-    setFilteredData(filtered);
-    setCurrentPage(1); // Reset to first page
+    applyFilters(selectedPeriod, selectedMode, startDate, endDate);
   };
 
   const handleDateReset = () => {
     setStartDate(null);
     setEndDate(null);
+    setSelectedPeriod('');
+    setSelectedMode('');
     setFilteredData(enrollData);
     setCurrentPage(1); // Reset to first page
   };
@@ -232,7 +294,7 @@ export default function OnlineEnroll() {
               {successMessage && <div style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</div>}
               {errorMessage && <div style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</div>}
 
-              <div className='date-schedule'>
+              <div className='date-schedule' style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px' }}>
                 Start Date
                 <DatePicker
                   value={startDate}
@@ -251,6 +313,33 @@ export default function OnlineEnroll() {
                     '& .MuiIconButton-root': { color: '#00aeef' }
                   }}
                 />
+                
+                {/* ADDED: Time Period Dropdown */}
+                <select
+                  className="form-select period-select"
+                  onChange={(e) => handlePeriodChange(e.target.value)}
+                  value={selectedPeriod}
+                  style={{ width: '150px', marginLeft: '10px' }}
+                >
+                  <option value="">Select Period</option>
+                  <option value="thisWeek">This Week</option>
+                  <option value="thisMonth">This Month</option>
+                  <option value="thisYear">This Year</option>
+                </select>
+
+                {/* ADDED: Mode Filter Dropdown */}
+                <select
+                  className="form-select mode-select"
+                  onChange={(e) => handleModeChange(e.target.value)}
+                  value={selectedMode}
+                  style={{ width: '150px' }}
+                >
+                  <option value="">All Modes</option>
+                  <option value="online">Online</option>
+                  <option value="offline">Offline</option>
+                  <option value="both">Both</option>
+                </select>
+
                 <button className='filter' onClick={handleDateFilter}>Filter</button>
                 <button className="filter" onClick={handleDateReset}>Reset</button>
               </div>
@@ -455,8 +544,8 @@ export default function OnlineEnroll() {
                 ))
               ) : (
                 <StyledTableRow>
-                  {/* UPDATED: Changed colSpan from 15 to 16 to include checkbox column */}
-                  <StyledTableCell colSpan={16} align="center">No data available</StyledTableCell>
+                  {/* UPDATED: Changed colSpan from 15 to 17 to include checkbox column */}
+                  <StyledTableCell colSpan={17} align="center">No data available</StyledTableCell>
                 </StyledTableRow>
               )}
             </TableBody>

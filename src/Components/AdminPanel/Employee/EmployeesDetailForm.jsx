@@ -78,6 +78,8 @@ const EmployeesDetailForm = () => {
     location: "",
     department: "",
     role: "",
+    expectedSalary: "", // Added expectedSalary field
+    resume: null, // Added resume field
     additionalInfo: "",
     employeeId: "",
     dateOfJoining: "",
@@ -169,7 +171,8 @@ const EmployeesDetailForm = () => {
         emp.role?.toLowerCase().includes(term) ||
         emp.employeeId?.toLowerCase().includes(term) ||
         emp.workEmail?.toLowerCase().includes(term) ||
-        emp.phone?.toLowerCase().includes(term)
+        emp.phone?.toLowerCase().includes(term) ||
+        emp.expectedSalary?.toString().toLowerCase().includes(term)
     );
     setFilteredEmployees(filtered);
     setSelectedIds([]);
@@ -276,6 +279,12 @@ const EmployeesDetailForm = () => {
     }));
   };
 
+  // Handle resume file change
+  const handleResumeChange = (e) => {
+    const file = e.target.files?.[0];
+    setFormData((prev) => ({ ...prev, resume: file || null }));
+  };
+
   const handleReset = () => {
     setFormData({
       id: "",
@@ -286,6 +295,8 @@ const EmployeesDetailForm = () => {
       location: "",
       department: "",
       role: "",
+      expectedSalary: "",
+      resume: null,
       additionalInfo: "",
       employeeId: "",
       dateOfJoining: "",
@@ -406,6 +417,7 @@ const EmployeesDetailForm = () => {
       location: formData.location,
       department: formData.department,
       role: formData.role,
+      expectedSalary: formData.expectedSalary, // Added expectedSalary to payload
       additionalInfo: formData.additionalInfo,
       employeeId: formData.employeeId,
       dateOfJoining: formData.dateOfJoining,
@@ -439,6 +451,7 @@ const EmployeesDetailForm = () => {
     const fd = new FormData();
     fd.append("employee", JSON.stringify(employeePayload));
     if (formData.image) fd.append("companyImage", formData.image);
+    if (formData.resume) fd.append("resume", formData.resume); // Added resume to FormData
     
     // Append documents
     Object.entries(formData.documents).forEach(([key, file]) => {
@@ -495,6 +508,8 @@ const EmployeesDetailForm = () => {
         location: emp.location || "",
         department: emp.department || "",
         role: emp.role || "",
+        expectedSalary: emp.expectedSalary || "", // Added expectedSalary to edit
+        resume: null, // Resume file will need to be re-uploaded
         additionalInfo: emp.additionalInfo || "",
         image: "",
         employeeId: emp.employeeId || "",
@@ -584,6 +599,16 @@ const EmployeesDetailForm = () => {
     if (!dateString) return "—";
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  };
+
+  const formatSalary = (salary) => {
+    if (!salary) return "—";
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(salary);
+  };
+
+  const getResumeLink = (resumePath) => {
+    if (!resumePath) return null;
+    return `${API_BASE}/uploads/employees/resume/${resumePath}`;
   };
 
   // Render personal information tab
@@ -866,6 +891,29 @@ const EmployeesDetailForm = () => {
             onChange={handleInputChange}
             placeholder="e.g., Senior Developer"
           />
+        </Field>
+      </div>
+
+      <div className="form-row">
+        <Field label="Expected Salary">
+          <input
+            type="number"
+            name="expectedSalary"
+            className="form-control"
+            value={formData.expectedSalary}
+            onChange={handleInputChange}
+            placeholder="e.g., 85000"
+          />
+        </Field>
+        <Field label="Resume/CV">
+          <input
+            type="file"
+            name="resume"
+            accept=".pdf,.doc,.docx"
+            className="form-control"
+            onChange={handleResumeChange}
+          />
+          <small className="file-hint">PDF, DOC, DOCX (Max 10MB)</small>
         </Field>
       </div>
 
@@ -1410,7 +1458,7 @@ const EmployeesDetailForm = () => {
           </div>
 
           <TableContainer component={Paper} style={{ maxWidth: '100%', overflowX: 'auto' }}>
-            <Table style={{ minWidth: 1200 }}>
+            <Table style={{ minWidth: 1400 }}> {/* Increased minWidth to accommodate new columns */}
               <TableHead>
                 <TableRow>
                   <StyledTableCell align="center" style={{ width: '50px' }}>
@@ -1432,7 +1480,7 @@ const EmployeesDetailForm = () => {
                     Department
                   </StyledTableCell>
                   <StyledTableCell align="center" style={{ width: '100px' }}>
-                    Role
+                    Position
                   </StyledTableCell>
                   <StyledTableCell align="center" style={{ width: '150px' }}>
                     Email
@@ -1442,6 +1490,12 @@ const EmployeesDetailForm = () => {
                   </StyledTableCell>
                   <StyledTableCell align="center" style={{ width: '100px' }}>
                     Date of Joining
+                  </StyledTableCell>
+                  <StyledTableCell align="center" style={{ width: '100px' }}>
+                    Expected Salary
+                  </StyledTableCell>
+                  <StyledTableCell align="center" style={{ width: '100px' }}>
+                    Resume
                   </StyledTableCell>
                   <StyledTableCell align="center" style={{ width: '100px' }}>Location</StyledTableCell>
                   <StyledTableCell align="center" style={{ width: '100px' }}>Action</StyledTableCell>
@@ -1485,9 +1539,9 @@ const EmployeesDetailForm = () => {
                       </StyledTableCell>
                       <StyledTableCell align="center">{emp.name}</StyledTableCell>
                       <StyledTableCell align="center">
-                        <span className="badge badge-primary">{emp.department || "—"}</span>
+                        <strong>{emp.department || "—"}</strong>
                       </StyledTableCell>
-                      <StyledTableCell align="center">{emp.role}</StyledTableCell>
+                      <StyledTableCell align="center">{emp.role || "—"}</StyledTableCell>
                       <StyledTableCell align="center">
                         <small>{emp.email}</small>
                       </StyledTableCell>
@@ -1495,23 +1549,42 @@ const EmployeesDetailForm = () => {
                       <StyledTableCell align="center">
                         {formatDate(emp.dateOfJoining)}
                       </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {emp.expectedSalary ? formatSalary(emp.expectedSalary) : "—"}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {emp.resume ? (
+                          <a
+                            href={getResumeLink(emp.resume)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="resume-link"
+                            style={{ color: '#00AEEF', textDecoration: 'none' }}
+                          >
+                            View Resume
+                          </a>
+                        ) : (
+                          "—"
+                        )}
+                      </StyledTableCell>
                       <StyledTableCell align="center">{emp.location || "—"}</StyledTableCell>
                       <StyledTableCell align="center">
                         <FaEdit
                           className="edit-icon"
                           onClick={() => handleEdit(emp.employeeId ?? emp.id)}
-                          style={{ marginRight: '8px' }}
+                          style={{ marginRight: '8px', cursor: 'pointer' }}
                         />
                         <RiDeleteBin6Line
                           className="delete-icon"
                           onClick={() => handleDelete(emp.employeeId ?? emp.id)}
+                          style={{ cursor: 'pointer' }}
                         />
                       </StyledTableCell>
                     </StyledTableRow>
                   ))
                 ) : (
                   <StyledTableRow>
-                    <StyledTableCell colSpan={12} align="center">
+                    <StyledTableCell colSpan={14} align="center"> {/* Updated colSpan to 14 */}
                       No employees found
                     </StyledTableCell>
                   </StyledTableRow>

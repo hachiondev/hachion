@@ -523,7 +523,7 @@
   height: 48px;
   font-size: 14px;
   border-radius: 6px;
-  border: none;
+  border: none !important;
   margin: 0 1vh;
   background-color: #fff !important;
 }
@@ -1339,7 +1339,7 @@
     width: 15px;
     height: 12px;
   }
-
+  
   .country-code-display {
     font-size: 10px;
     margin-right: 2px;

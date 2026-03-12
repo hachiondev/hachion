@@ -726,7 +726,7 @@ const UserProfile = () => {
             </div>
 
             <div className="instructor-fields">
-              <div>
+              <div className="date-of-birth-field">
                 <label className="login-label">Date of Birth</label>
                 <div className="register-field">
                   <div className="password-field">
@@ -740,17 +740,19 @@ const UserProfile = () => {
                         slotProps={{
                           textField: {
                             variant: 'outlined',
-                            placeholder: 'Select your DOB',
+                            placeholder: 'DD-MM-YYYY',
                             fullWidth: true,
                             InputProps: {
                               sx: {
-                                borderRadius: '8px',
-                                fontSize: '16px',
-                                width: '360px',
-                                height: '48px',
+                                borderRadius: '5px',
+                                fontSize: { xs: '14px', sm: '16px' },
+                                width: {xs:'94%', sm:"82%"},
+                                marginLeft:{xs:"10px", sm:"0"},
+                                border:{xs:"1px solid #b3b3b3",sm:"none"},
+                                height: { xs: '35px', sm: '48px' },
                                 backgroundColor: '#fff',
                                 '& input': {
-                                  padding: '10px 12px',
+                                  padding: { xs: '8px 10px', sm: '10px 12px' },
                                 },
                               },
                             },
@@ -772,6 +774,10 @@ const UserProfile = () => {
                           },
                           '& .MuiIconButton-root': {
                             color: '#00AEEF',
+                            padding: { xs: '4px', sm: '8px' },
+                          },
+                          '& .MuiInputBase-input': {
+                            padding: { xs: '8px 10px', sm: '10px 12px' },
                           },
                         }}
                       />

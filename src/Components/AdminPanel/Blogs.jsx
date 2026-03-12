@@ -46,7 +46,7 @@ const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
-    id: "", category_name: "", title: "", author: "", authorImage: "",
+    id: "", category_name: "", title: "",url:"", author: "", authorImage: "",
     blog_image: "", blog_pdf: "", description: "",
     date: new Date().toISOString().split('T')[0],
     meta_title: "", meta_keyword: "", meta_description: ""
@@ -192,7 +192,7 @@ const Blogs = () => {
 
   const handleReset = () => {
     setFormData({
-      id: "", category_name: "", title: "", author: "", authorImage: "",
+      id: "", category_name: "", url:"", title: "", author: "", authorImage: "",
       blog_image: "", blog_pdf: "", description: "",
       date: new Date().toISOString().split('T')[0],
       meta_title: "", meta_keyword: "", meta_description: ""
@@ -387,6 +387,17 @@ const Blogs = () => {
                       className="form-control"
                       placeholder="Enter Title"
                       value={formData.title}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="col-md-3">
+                    <label className="form-label">Short Blog Url</label>
+                    <input
+                      type="text"
+                      name="title"
+                      className="form-control"
+                      placeholder="Enter Url"
+                      value={formData.url}
                       onChange={handleInputChange}
                     />
                   </div>

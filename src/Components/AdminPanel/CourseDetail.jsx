@@ -1906,7 +1906,7 @@ const CourseDetail = ({
                 />
 
                 {/* First dropdown: Time Period */}
-                <select
+                {/* <select
                   className="form-select period-select"
                   onChange={(e) => handlePeriodChange(e.target.value)}
                   value={selectedPeriod}
@@ -1915,10 +1915,10 @@ const CourseDetail = ({
                   <option value="thisWeek">This Week</option>
                   <option value="thisMonth">This Month</option>
                   <option value="thisYear">This Year</option>
-                </select>
+                </select> */}
 
                 {/* Second dropdown: Mode Filter */}
-                <select
+                {/* <select
                   className="form-select mode-select"
                   onChange={(e) => handleModeChange(e.target.value)}
                   value={selectedMode}
@@ -1927,7 +1927,7 @@ const CourseDetail = ({
                   <option value="online">Online</option>
                   <option value="offline">Offline</option>
                   <option value="both">Both</option>
-                </select>
+                </select> */}
 
                 <button className="filter" onClick={handleDateFilter}>Filter</button>
                 <button className="filter" onClick={handleDateReset}>Reset</button>

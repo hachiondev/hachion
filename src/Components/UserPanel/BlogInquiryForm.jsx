@@ -5,10 +5,19 @@ import styles from './BlogInquiryForm.module.css';
 // react-icons imports
 import { FaRocket, FaStar, FaUsers, FaFlag, FaLock, FaExclamationTriangle } from 'react-icons/fa';
 import { MdCheckCircle } from 'react-icons/md';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { AiOutlineLoading3Quarters, AiFillCaretDown } from 'react-icons/ai';
+import Flag from 'react-world-flags';
+
+import { countries, getDefaultCountry } from '../../countryUtils';
+import { useTopBarApi } from '../../Api/hooks/HomePageApi/useTopBarApi';
 
 // ── Shared form content (used in both desktop & mobile) ──
-const FormContent = ({ blogTitle, formData, loading, error, success, handleChange, handleSubmit }) => {
+const FormContent = ({
+  blogTitle, formData, loading, error, success,
+  handleChange, handleSubmit, phoneError,
+  selectedCountry, isCountryMenuOpen, setIsCountryMenuOpen,
+  handleCountrySelect, countryDropdownRef, mobileInputRef, countryCode
+}) => {
   const checklistItems = ['Resume Preparation', 'Mock Interviews', 'Placement Assistance'];
 
   return (
@@ -79,18 +88,86 @@ const FormContent = ({ blogTitle, formData, loading, error, success, handleChang
             required
           />
         </div>
+
+        {/* Phone with Country Code */}
         <div className={styles.formGroup}>
-          <input
-            type="tel"
-            className={`form-control ${styles.formControl}`}
-            name="phone"
-            placeholder="Phone *"
-            value={formData.phone}
-            onChange={handleChange}
-            disabled={loading}
-            required
-          />
+          <div className={`${styles.phoneInputWrapper} ${phoneError ? styles.phoneInputWrapperError : ''}`}>
+            <div className={styles.countryDropdownWrapper} ref={countryDropdownRef}>
+              <div className={styles.countryCodeSelector}>
+                <button
+                  type="button"
+                  onClick={() => setIsCountryMenuOpen(prev => !prev)}
+                  className={styles.countrySelectButton}
+                  disabled={loading}
+                >
+                  <span className={styles.countryCodeDisplay}>
+                    {selectedCountry.code}
+                  </span>
+                  <AiFillCaretDown className={styles.selectArrow} />
+                </button>
+
+                {/* Country Dropdown Menu */}
+                {isCountryMenuOpen && (
+                  <div className={styles.countryMenu}>
+                    {countries.map((country) => (
+                      <div
+                        key={`${country.name}-${country.code}`}
+                        onClick={() => handleCountrySelect(country)}
+                        className={`${styles.countryMenuItem} ${
+                          country.flag === countryCode ? styles.detectedCountry : ''
+                        }`}
+                      >
+                        <Flag
+                          code={country.flag}
+                          className={styles.countryFlagIcon}
+                          height="14"
+                          width="20"
+                        />
+                        <span>
+                          {country.name} ({country.code})
+                          {country.flag === countryCode && (
+                            <span style={{ color: '#28a745', marginLeft: '4px' }}>(Detected)</span>
+                          )}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <input
+              type="tel"
+              ref={mobileInputRef}
+              className={`form-control ${styles.formControl} ${styles.phoneInput}`}
+              name="phone"
+              placeholder="Phone *"
+              value={formData.phone}
+              onKeyDown={(e) => {
+                if (
+                  !/[0-9]/.test(e.key) &&
+                  !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'].includes(e.key) &&
+                  !e.ctrlKey && !e.metaKey
+                ) {
+                  e.preventDefault();
+                }
+              }}
+              onChange={(e) => {
+                const digitsOnly = e.target.value.replace(/\D/g, '');
+                handleChange({ target: { name: 'phone', value: digitsOnly } });
+              }}
+              disabled={loading}
+              required
+            />
+          </div>
+          {phoneError && (
+            <span className={styles.phoneErrorMessage}>
+              <FaExclamationTriangle className={styles.phoneErrorIcon} />
+              {phoneError}
+            </span>
+          )}
         </div>
+
         <div className={styles.formGroup}>
           <textarea
             className={`form-control ${styles.formControl} ${styles.textarea}`}
@@ -116,7 +193,7 @@ const FormContent = ({ blogTitle, formData, loading, error, success, handleChang
           </div>
         )}
 
-        <button type="submit" className={styles.submitBtn} disabled={loading}>
+        <button type="submit" className={styles.submitBtn} disabled={loading || !!phoneError}>
           {loading ? (
             <><AiOutlineLoading3Quarters className={styles.spinnerIcon} /> Sending...</>
           ) : (
@@ -144,12 +221,54 @@ const BlogInquiryForm = ({ blogTitle }) => {
   const [error, setError] = useState('');
   const [isSticky, setIsSticky] = useState(false);
   const [isAtBottom, setIsAtBottom] = useState(false);
+  const [phoneError, setPhoneError] = useState('');
+  const [isCountryMenuOpen, setIsCountryMenuOpen] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
   const formRef = useRef(null);
   const placeholderRef = useRef(null);
   const ticking = useRef(false);
   const isStickyRef = useRef(false);
   const isAtBottomRef = useRef(false);
   const errorTimerRef = useRef(null);
+  const countryDropdownRef = useRef(null);
+  const mobileInputRef = useRef(null);
+
+  // Use the same top bar API as EnrollmentForm for country auto-detection
+  const {
+    countryCode,
+    isLoading: countryLoading,
+  } = useTopBarApi();
+
+  // Auto-detect country — same pattern as EnrollmentForm
+  useEffect(() => {
+    if (countryCode && !countryLoading) {
+      const matchedCountry = countries.find((c) => c.flag === countryCode);
+      if (matchedCountry) {
+        setSelectedCountry(matchedCountry);
+      }
+    }
+  }, [countryCode, countryLoading]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (countryDropdownRef.current && !countryDropdownRef.current.contains(event.target)) {
+        setIsCountryMenuOpen(false);
+      }
+    };
+    if (isCountryMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isCountryMenuOpen]);
+
+  const handleCountrySelect = (country) => {
+    setSelectedCountry(country);
+    setIsCountryMenuOpen(false);
+    mobileInputRef.current?.focus();
+  };
 
   const handleScroll = useCallback(() => {
     if (!ticking.current) {
@@ -193,6 +312,20 @@ const BlogInquiryForm = ({ blogTitle }) => {
     setFormData(prev => ({ ...prev, [name]: value }));
     setSuccess(false);
     setError('');
+
+    // Live phone digit validation
+    if (name === 'phone') {
+      const digits = value.replace(/\D/g, '');
+      if (digits.length === 0) {
+        setPhoneError('');
+      } else if (digits.length < 10) {
+        setPhoneError(`Phone number must be 10 digits (${digits.length}/10)`);
+      } else if (digits.length > 10) {
+        setPhoneError(`Phone number cannot exceed 10 digits (${digits.length}/10)`);
+      } else {
+        setPhoneError('');
+      }
+    }
   };
 
   const validateForm = () => {
@@ -218,8 +351,10 @@ const BlogInquiryForm = ({ blogTitle }) => {
     setLoading(true);
     setError('');
     try {
+      const fullPhone = `${selectedCountry.code} ${formData.phone}`;
       const response = await axios.post('https://api.test.hachion.co/blog/inquiry', {
         ...formData,
+        phone: fullPhone,
         blogTitle,
         timestamp: new Date().toISOString()
       });
@@ -246,7 +381,12 @@ const BlogInquiryForm = ({ blogTitle }) => {
     return classes;
   };
 
-  const sharedProps = { blogTitle, formData, loading, error, success, handleChange, handleSubmit };
+  const sharedProps = {
+    blogTitle, formData, loading, error, success,
+    handleChange, handleSubmit, phoneError,
+    selectedCountry, isCountryMenuOpen, setIsCountryMenuOpen,
+    handleCountrySelect, countryDropdownRef, mobileInputRef, countryCode
+  };
 
   return (
     <>

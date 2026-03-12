@@ -239,6 +239,148 @@ form {
   max-height: 70px;
 }
 
+/* ── Phone + Country Code ── */
+.phoneInputWrapper {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  overflow: visible;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.phoneInputWrapper:focus-within {
+  border-color: #00AEEF;
+  box-shadow: 0 0 0 2px rgba(0, 174, 239, 0.1);
+}
+
+.countryDropdownWrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.countryCodeSelector {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.countrySelectButton {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 32px;
+  padding: 0 6px;
+  background: #f0f9ff;
+  border: none;
+  border-right: 1px solid #e2e8f0;
+  cursor: pointer;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #0E2A46;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+  border-radius: 0;
+}
+
+.countrySelectButton:hover:not(:disabled) {
+  background: #e0f2fe;
+}
+
+.countrySelectButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.countryCodeDisplay {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #0E2A46;
+}
+
+.selectArrow {
+  font-size: 0.55rem;
+  color: #64748b;
+}
+
+.countryFlagIcon {
+  border-radius: 2px;
+  object-fit: cover;
+}
+
+/* Country dropdown menu */
+.countryMenu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 9999;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  max-height: 105px;
+  overflow-y: auto;
+  min-width: 200px;
+}
+
+.countryMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  font-size: 0.7rem;
+  color: #1e293b;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.countryMenuItem:hover {
+  background: #f0f9ff;
+}
+
+.detectedCountry {
+  background: #f0fdf4;
+}
+
+/* Phone input inside the wrapper — remove its own border since wrapper handles it */
+.phoneInput {
+  flex: 1;
+  border: none !important;
+  border-radius: 0 6px 6px 0 !important;
+  box-shadow: none !important;
+  height: 32px !important;
+  min-width: 0;
+}
+
+.phoneInput:focus {
+  outline: none;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Phone wrapper error state */
+.phoneInputWrapperError {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1) !important;
+}
+
+/* Inline phone error message */
+.phoneErrorMessage {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 3px;
+  font-size: 0.65rem;
+  color: #dc2626;
+  font-weight: 500;
+}
+
+.phoneErrorIcon {
+  font-size: 0.65rem;
+  flex-shrink: 0;
+}
+
 /* ── Submit Button ── */
 .submitBtn {
   width: 100%;
@@ -540,6 +682,37 @@ form {
     min-height: 60px;
   }
 
+  /* Phone wrapper on mobile */
+  .mobileFormWrapper .phoneInputWrapper {
+    border-radius: 8px;
+  }
+
+  .mobileFormWrapper .countrySelectButton {
+    height: 40px;
+    padding: 0 8px;
+    font-size: 14px;
+  }
+
+  .mobileFormWrapper .countryCodeDisplay {
+    font-size: 14px;
+  }
+
+  .mobileFormWrapper .phoneInput {
+    height: 40px !important;
+    font-size: 15px;
+  }
+
+  .mobileFormWrapper .countryMenu {
+    max-height: 120px;
+    min-width: 220px;
+    font-size: 13px;
+  }
+
+  .mobileFormWrapper .countryMenuItem {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+
   /* Button */
   .mobileFormWrapper .submitBtn {
     font-size: 15px;
@@ -652,6 +825,22 @@ form {
 
   .mobileFormWrapper .textarea {
     min-height: 56px;
+  }
+
+  /* Phone wrapper on small mobile */
+  .mobileFormWrapper .countrySelectButton {
+    height: 38px;
+    padding: 0 7px;
+    font-size: 13px;
+  }
+
+  .mobileFormWrapper .countryCodeDisplay {
+    font-size: 13px;
+  }
+
+  .mobileFormWrapper .phoneInput {
+    height: 38px !important;
+    font-size: 14px;
   }
 
   /* Button */
@@ -790,6 +979,32 @@ form {
 
   .mobileFormWrapper .textarea {
     min-height: 50px;
+  }
+
+  /* Phone wrapper on compact phones */
+  .mobileFormWrapper .countrySelectButton {
+    height: 36px;
+    padding: 0 6px;
+    font-size: 12px;
+  }
+
+  .mobileFormWrapper .countryCodeDisplay {
+    font-size: 12px;
+  }
+
+  .mobileFormWrapper .phoneInput {
+    height: 36px !important;
+    font-size: 13px;
+  }
+
+  .mobileFormWrapper .countryMenu {
+    min-width: 190px;
+    font-size: 12px;
+  }
+
+  .mobileFormWrapper .countryMenuItem {
+    font-size: 12px;
+    padding: 6px 10px;
   }
 
   /* Button */

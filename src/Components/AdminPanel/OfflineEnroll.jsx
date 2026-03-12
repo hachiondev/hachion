@@ -464,6 +464,37 @@ export default function OfflineEnroll() {
                       '& .MuiIconButton-root': { color: '#00aeef' }
                     }}
                   />
+                  
+                  {/* ADDED: Time Period Dropdown */}
+                  <select
+                    className="form-select period-select"
+                    onChange={(e) => {
+                      // Handle period selection if needed
+                      console.log(e.target.value);
+                    }}
+                    style={{ width: '150px', marginLeft: '10px' }}
+                  >
+                    <option value="">Select Period</option>
+                    <option value="thisWeek">This Week</option>
+                    <option value="thisMonth">This Month</option>
+                    <option value="thisYear">This Year</option>
+                  </select>
+
+                  {/* ADDED: Mode Filter Dropdown */}
+                  <select
+                    className="form-select mode-select"
+                    onChange={(e) => {
+                      // Handle mode selection if needed
+                      console.log(e.target.value);
+                    }}
+                    style={{ width: '150px' }}
+                  >
+                    <option value="">All Modes</option>
+                    <option value="online">Online</option>
+                    <option value="offline">Offline</option>
+                    <option value="both">Both</option>
+                  </select>
+                  
                   <button className='filter' onClick={handleDateFilter}>Filter</button>
                   <button className='filter' onClick={handleDateReset}>Reset</button>
                 </div>

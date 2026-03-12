@@ -67,6 +67,51 @@ export const Home = () => {
       }
     `}
         </script>
+        <script type="application/ld+json">
+{`
+{
+ "@context": "https://schema.org",
+ "@type": "ItemList",
+ "itemListElement": [
+   {
+     "@type": "SiteNavigationElement",
+     "position": 1,
+     "name": "Security Operations Center",
+     "description": "SOC Analyst Training",
+     "url": "https://www.hachion.co/coursedetails/security-operations-center-(soc)-analyst"
+   },
+   {
+     "@type": "SiteNavigationElement",
+     "position": 2,
+     "name": "Agentic AI Training",
+     "description": "Agentic AI Certification Course",
+     "url": "https://www.hachion.co/coursedetails/agentic-ai"
+   },
+   {
+     "@type": "SiteNavigationElement",
+     "position": 3,
+     "name": "Cyber Security Training",
+     "description": "Cyber Security Certification",
+     "url": "https://www.hachion.co/coursedetails/cyber-security"
+   },
+   {
+     "@type": "SiteNavigationElement",
+     "position": 4,
+     "name": "Data Science with Python",
+     "description": "Data Science Training",
+     "url": "https://www.hachion.co/coursedetails/data-science-with-python"
+   },
+   {
+     "@type": "SiteNavigationElement",
+     "position": 5,
+     "name": "Salesforce Admin Training",
+     "description": "Salesforce Administrator Training",
+     "url": "https://www.hachion.co/coursedetails/salesforce-admin"
+   }
+ ]
+}
+`}
+</script>
       </Helmet>
       <div className='home-background'>
         <PopupBanner />

@@ -208,6 +208,30 @@ export default function CourseBanner({ onEnroll }) {
 
   const canonicalUrl = `https://hachion.co/course/${encodeURIComponent(courseName)}`;
 
+  const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: "https://www.hachion.co/"
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Courses",
+      item: "https://www.hachion.co/courses"
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: title,
+      item: canonicalUrl
+    }
+  ]
+};
   const ogImage = course.courseImage
     ? `https://api.test.hachion.co/${course.courseImage}`
     : heroImage;
@@ -460,6 +484,27 @@ export default function CourseBanner({ onEnroll }) {
         <meta name="twitter:title" content={seoTitle} />
         <meta name="twitter:description" content={seoDescription} />
         <meta name="twitter:image" content={ogImage} />
+
+         <script type="application/ld+json">
+    {JSON.stringify(breadcrumbSchema)}
+  </script>
+  <script type="application/ld+json">
+{`
+{
+ "@context": "https://schema.org",
+ "@type": "Course",
+ "name": "${title}",
+ "description": "${seoDescription}",
+ "url": "${canonicalUrl}",
+ "provider": {
+   "@type": "Organization",
+   "name": "Hachion",
+   "url": "https://www.hachion.co"
+ }
+}
+`}
+</script>
+
       </Helmet>
       <section className={styles.bnwrap}>
         {showOfferStrip && (

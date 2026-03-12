@@ -29,8 +29,10 @@ const JobApplicationForm = () => {
     agreeTerms: false
   });
   const [errors, setErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
-
+  // const [submitted, setSubmitted] = useState(false);
+const [submitted, setSubmitted] = useState(false);
+const [successMessage, setSuccessMessage] = useState('');
+const [errorMessage, setErrorMessage] = useState('');
   const set = (name, value) => {
     setFormData(f => ({ ...f, [name]: value }));
     if (errors[name]) setErrors(e => ({ ...e, [name]: '' }));
@@ -56,16 +58,68 @@ const JobApplicationForm = () => {
     if (!formData.agreeTerms)        e.agreeTerms = 'Please confirm to proceed';
     return e;
   };
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const errs = validate();
-    if (Object.keys(errs).length === 0) {
-      setSubmitted(true);
-    } else {
-      setErrors(errs);
+  const errs = validate();
+
+  if (Object.keys(errs).length !== 0) {
+    setErrors(errs);
+    return;
+  }
+
+  try {
+    const form = new FormData();
+
+    const requestData = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      address: formData.address,
+      department: formData.department,
+      position: formData.position,
+      employmentType: formData.employmentType,
+      expectedSalary: formData.expectedSalary,
+      startDate: formData.startDate,
+      experience: formData.experience,
+      education: formData.education,
+      skills: formData.skills,
+      portfolio: formData.portfolio,
+      linkedin: formData.linkedin,
+      relocation: formData.relocation,
+      noticePeriod: formData.noticePeriod
+    };
+
+    form.append(
+      "data",
+      new Blob([JSON.stringify(requestData)], { type: "application/json" })
+    );
+
+    form.append("resume", formData.resume);
+
+    const res = await fetch(
+      "https://api.test.hachion.co/job-application-aboutus",
+      {
+        method: "POST",
+        body: form
+      }
+    );
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(text || "Failed to submit application");
     }
-  };
+
+    setSuccessMessage("Application submitted successfully!");
+    setErrorMessage("");
+    setSubmitted(true);
+
+  } catch (error) {
+    setErrorMessage(error.message || "Something went wrong");
+    setSuccessMessage("");
+  }
+};
 
   // Live progress: count filled required fields (max 5 steps)
   const filledCount = [
@@ -204,7 +258,17 @@ const JobApplicationForm = () => {
               />
             ))}
           </div>
+{errorMessage && (
+  <div className={styles.errorMessage} style={{marginBottom:"1rem"}}>
+    ⚠ {errorMessage}
+  </div>
+)}
 
+{successMessage && (
+  <div className={styles.successMessage} style={{marginBottom:"1rem",color:"green"}}>
+    ✅ {successMessage}
+  </div>
+)}
           {/* ── Form ── */}
           <form onSubmit={handleSubmit} className={styles.form}>
 
@@ -410,10 +474,10 @@ const JobApplicationForm = () => {
                 hint="PDF, DOC, DOCX · Max 10MB"
                 required error={errors.resume}
               />
-              <FileField
+              {/* <FileField
                 name="coverLetter" label="Cover Letter"
                 hint="PDF, DOC, DOCX · Max 5MB (optional)"
-              />
+              /> */}
             </div>
 
             {/* Submit */}

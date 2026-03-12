@@ -8,15 +8,66 @@ const departments = [
 ];
 
 const positions = {
-  Engineering:  ['Frontend Dev', 'Backend Dev', 'Full Stack', 'DevOps', 'QA Engineer'],
-  Sales:        ['Sales Rep', 'Account Exec', 'Sales Manager'],
-  Marketing:    ['Marketing Spec', 'Content Writer', 'SEO Specialist', 'Social Media'],
-  HR:           ['HR Generalist', 'Recruiter', 'HR Manager'],
-  Finance:      ['Financial Analyst', 'Accountant', 'Finance Manager'],
-  Operations:   ['Ops Manager', 'Project Manager', 'Business Analyst'],
-  Support:      ['Support Specialist', 'Customer Success'],
-  Product:      ['Product Manager', 'Product Owner', 'Product Analyst']
+  Engineering: ['Frontend Dev', 'Backend Dev', 'Full Stack', 'DevOps', 'QA Engineer'],
+  Sales: ['Sales Rep', 'Account Exec', 'Sales Manager'],
+  Marketing: ['Marketing Spec', 'Content Writer', 'SEO Specialist', 'Social Media'],
+  HR: ['HR Generalist', 'Recruiter', 'HR Manager'],
+  Finance: ['Financial Analyst', 'Accountant', 'Finance Manager'],
+  Operations: ['Ops Manager', 'Project Manager', 'Business Analyst'],
+  Support: ['Support Specialist', 'Customer Success'],
+  Product: ['Product Manager', 'Product Owner', 'Product Analyst']
 };
+
+// ── Sub-components (defined outside to prevent remount on every render) ────────────────────────────
+
+const Field = ({ label, required, error, children }) => (
+  <div className={styles.field}>
+    {label && (
+      <label className={styles.label}>
+        {label}
+        {required && <span className={styles.labelReq}> *</span>}
+      </label>
+    )}
+    {children}
+    {error && <span className={styles.errorMessage}>⚠ {error}</span>}
+  </div>
+);
+
+const Toggle = ({ name, options, value, onChange }) => (
+  <div className={styles.toggleGroup}>
+    {options.map(({ label, val }) => (
+      <button
+        key={val}
+        type="button"
+        className={`${styles.toggle} ${value === val ? styles.toggleSelected : ''}`}
+        onClick={() => onChange(name, val)}
+      >
+        {label}
+      </button>
+    ))}
+  </div>
+);
+
+const FileField = ({ name, label, hint, required, error, file, onChange }) => (
+  <Field label={label} required={required} error={error}>
+    <div className={`${styles.fileInput} ${file ? styles.fileInputActive : ''}`}>
+      <input
+        type="file"
+        name={name}
+        accept=".pdf,.doc,.docx"
+        className={styles.file}
+        onChange={onChange}
+      />
+      <div className={styles.fileIcon}>{file ? '✅' : '📄'}</div>
+      <div className={styles.fileText}>
+        <span className={styles.fileLabel}>
+          {file ? file.name : `Upload ${label}`}
+        </span>
+        <span className={styles.fileHint}>{hint}</span>
+      </div>
+    </div>
+  </Field>
+);
 
 const JobApplicationForm = () => {
   const [formData, setFormData] = useState({
@@ -30,9 +81,10 @@ const JobApplicationForm = () => {
   });
   const [errors, setErrors] = useState({});
   // const [submitted, setSubmitted] = useState(false);
-const [submitted, setSubmitted] = useState(false);
-const [successMessage, setSuccessMessage] = useState('');
-const [errorMessage, setErrorMessage] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
   const set = (name, value) => {
     setFormData(f => ({ ...f, [name]: value }));
     if (errors[name]) setErrors(e => ({ ...e, [name]: '' }));
@@ -47,79 +99,80 @@ const [errorMessage, setErrorMessage] = useState('');
 
   const validate = () => {
     const e = {};
-    if (!formData.firstName.trim())  e.firstName  = 'Required';
-    if (!formData.lastName.trim())   e.lastName   = 'Required';
-    if (!formData.email.trim())      e.email      = 'Required';
+    if (!formData.firstName.trim()) e.firstName = 'Required';
+    if (!formData.lastName.trim()) e.lastName = 'Required';
+    if (!formData.email.trim()) e.email = 'Required';
     else if (!/\S+@\S+\.\S+/.test(formData.email)) e.email = 'Invalid email';
-    if (!formData.phone.trim())      e.phone      = 'Required';
-    if (!formData.department)        e.department = 'Required';
-    if (!formData.position)          e.position   = 'Required';
-    if (!formData.resume)            e.resume     = 'Resume is required';
-    if (!formData.agreeTerms)        e.agreeTerms = 'Please confirm to proceed';
+    if (!formData.phone.trim()) e.phone = 'Required';
+    if (!formData.department) e.department = 'Required';
+    if (!formData.position) e.position = 'Required';
+    if (!formData.resume) e.resume = 'Resume is required';
+    if (!formData.agreeTerms) e.agreeTerms = 'Please confirm to proceed';
     return e;
   };
-const handleSubmit = async (e) => {
-  e.preventDefault();
 
-  const errs = validate();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  if (Object.keys(errs).length !== 0) {
-    setErrors(errs);
-    return;
-  }
+    const errs = validate();
 
-  try {
-    const form = new FormData();
-
-    const requestData = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      phone: formData.phone,
-      address: formData.address,
-      department: formData.department,
-      position: formData.position,
-      employmentType: formData.employmentType,
-      expectedSalary: formData.expectedSalary,
-      startDate: formData.startDate,
-      experience: formData.experience,
-      education: formData.education,
-      skills: formData.skills,
-      portfolio: formData.portfolio,
-      linkedin: formData.linkedin,
-      relocation: formData.relocation,
-      noticePeriod: formData.noticePeriod
-    };
-
-    form.append(
-      "data",
-      new Blob([JSON.stringify(requestData)], { type: "application/json" })
-    );
-
-    form.append("resume", formData.resume);
-
-    const res = await fetch(
-      "https://api.test.hachion.co/job-application-aboutus",
-      {
-        method: "POST",
-        body: form
-      }
-    );
-
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(text || "Failed to submit application");
+    if (Object.keys(errs).length !== 0) {
+      setErrors(errs);
+      return;
     }
 
-    setSuccessMessage("Application submitted successfully!");
-    setErrorMessage("");
-    setSubmitted(true);
+    try {
+      const form = new FormData();
 
-  } catch (error) {
-    setErrorMessage(error.message || "Something went wrong");
-    setSuccessMessage("");
-  }
-};
+      const requestData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+        department: formData.department,
+        position: formData.position,
+        employmentType: formData.employmentType,
+        expectedSalary: formData.expectedSalary,
+        startDate: formData.startDate,
+        experience: formData.experience,
+        education: formData.education,
+        skills: formData.skills,
+        portfolio: formData.portfolio,
+        linkedin: formData.linkedin,
+        relocation: formData.relocation,
+        noticePeriod: formData.noticePeriod
+      };
+
+      form.append(
+        "data",
+        new Blob([JSON.stringify(requestData)], { type: "application/json" })
+      );
+
+      form.append("resume", formData.resume);
+
+      const res = await fetch(
+        "https://api.test.hachion.co/job-application-aboutus",
+        {
+          method: "POST",
+          body: form
+        }
+      );
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Failed to submit application");
+      }
+
+      setSuccessMessage("Application submitted successfully!");
+      setErrorMessage("");
+      setSubmitted(true);
+
+    } catch (error) {
+      setErrorMessage(error.message || "Something went wrong");
+      setSuccessMessage("");
+    }
+  };
 
   // Live progress: count filled required fields (max 5 steps)
   const filledCount = [
@@ -127,60 +180,6 @@ const handleSubmit = async (e) => {
     formData.department, formData.position, formData.resume, formData.agreeTerms
   ].filter(Boolean).length;
   const progressLevel = Math.round((filledCount / 8) * 5);
-
-  // ── Sub-components ────────────────────────────
-
-  const Field = ({ label, required, error, children }) => (
-    <div className={styles.field}>
-      {label && (
-        <label className={styles.label}>
-          {label}
-          {required && <span className={styles.labelReq}> *</span>}
-        </label>
-      )}
-      {children}
-      {error && <span className={styles.errorMessage}>⚠ {error}</span>}
-    </div>
-  );
-
-  const Toggle = ({ name, options }) => (
-    <div className={styles.toggleGroup}>
-      {options.map(({ label, value }) => (
-        <button
-          key={value}
-          type="button"
-          className={`${styles.toggle} ${formData[name] === value ? styles.toggleSelected : ''}`}
-          onClick={() => set(name, value)}
-        >
-          {label}
-        </button>
-      ))}
-    </div>
-  );
-
-  const FileField = ({ name, label, hint, required, error }) => {
-    const file = formData[name];
-    return (
-      <Field label={label} required={required} error={error}>
-        <div className={`${styles.fileInput} ${file ? styles.fileInputActive : ''}`}>
-          <input
-            type="file"
-            name={name}
-            accept=".pdf,.doc,.docx"
-            className={styles.file}
-            onChange={handleChange}
-          />
-          <div className={styles.fileIcon}>{file ? '✅' : '📄'}</div>
-          <div className={styles.fileText}>
-            <span className={styles.fileLabel}>
-              {file ? file.name : `Upload ${label}`}
-            </span>
-            <span className={styles.fileHint}>{hint}</span>
-          </div>
-        </div>
-      </Field>
-    );
-  };
 
   // ── Success State ─────────────────────────────
   if (submitted) {
@@ -235,11 +234,11 @@ const handleSubmit = async (e) => {
 
             {/* Decorative SVG */}
             <svg className={styles.heroDeco} viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="60" cy="60" r="55" stroke="white" strokeWidth="1" strokeDasharray="6 4"/>
-              <circle cx="60" cy="60" r="38" stroke="white" strokeWidth="1" opacity="0.6"/>
-              <circle cx="60" cy="60" r="20" stroke="white" strokeWidth="1" opacity="0.4"/>
-              <line x1="5"  y1="60" x2="115" y2="60"  stroke="white" strokeWidth="0.6" opacity="0.4"/>
-              <line x1="60" y1="5"  x2="60"  y2="115" stroke="white" strokeWidth="0.6" opacity="0.4"/>
+              <circle cx="60" cy="60" r="55" stroke="white" strokeWidth="1" strokeDasharray="6 4" />
+              <circle cx="60" cy="60" r="38" stroke="white" strokeWidth="1" opacity="0.6" />
+              <circle cx="60" cy="60" r="20" stroke="white" strokeWidth="1" opacity="0.4" />
+              <line x1="5" y1="60" x2="115" y2="60" stroke="white" strokeWidth="0.6" opacity="0.4" />
+              <line x1="60" y1="5" x2="60" y2="115" stroke="white" strokeWidth="0.6" opacity="0.4" />
             </svg>
           </div>
 
@@ -248,27 +247,26 @@ const handleSubmit = async (e) => {
             {[...Array(5)].map((_, i) => (
               <div
                 key={i}
-                className={`${styles.progressStep} ${
-                  i < progressLevel
+                className={`${styles.progressStep} ${i < progressLevel
                     ? styles.progressDone
                     : i === progressLevel
-                    ? styles.progressActive
-                    : ''
-                }`}
+                      ? styles.progressActive
+                      : ''
+                  }`}
               />
             ))}
           </div>
-{errorMessage && (
-  <div className={styles.errorMessage} style={{marginBottom:"1rem"}}>
-    ⚠ {errorMessage}
-  </div>
-)}
+          {errorMessage && (
+            <div className={styles.errorMessage} style={{ marginBottom: "1rem" }}>
+              ⚠ {errorMessage}
+            </div>
+          )}
 
-{successMessage && (
-  <div className={styles.successMessage} style={{marginBottom:"1rem",color:"green"}}>
-    ✅ {successMessage}
-  </div>
-)}
+          {successMessage && (
+            <div className={styles.successMessage} style={{ marginBottom: "1rem", color: "green" }}>
+              ✅ {successMessage}
+            </div>
+          )}
           {/* ── Form ── */}
           <form onSubmit={handleSubmit} className={styles.form}>
 
@@ -360,11 +358,16 @@ const handleSubmit = async (e) => {
               </div>
 
               <Field label="Employment Type">
-                <Toggle name="employmentType" options={[
-                  { label: 'Full Time', value: 'full-time' },
-                  { label: 'Part Time', value: 'part-time' },
-                  { label: 'Contract',  value: 'contract'  }
-                ]} />
+                <Toggle
+                  name="employmentType"
+                  value={formData.employmentType}
+                  onChange={set}
+                  options={[
+                    { label: 'Full Time', val: 'full-time' },
+                    { label: 'Part Time', val: 'part-time' },
+                    { label: 'Contract', val: 'contract' }
+                  ]}
+                />
               </Field>
 
               <div className={styles.row}>
@@ -446,10 +449,15 @@ const handleSubmit = async (e) => {
 
               <div className={styles.row}>
                 <Field label="Open to Relocation?">
-                  <Toggle name="relocation" options={[
-                    { label: 'Yes', value: 'yes' },
-                    { label: 'No',  value: 'no'  }
-                  ]} />
+                  <Toggle
+                    name="relocation"
+                    value={formData.relocation}
+                    onChange={set}
+                    options={[
+                      { label: 'Yes', val: 'yes' },
+                      { label: 'No', val: 'no' }
+                    ]}
+                  />
                 </Field>
                 <Field label="Notice Period">
                   <input
@@ -473,6 +481,8 @@ const handleSubmit = async (e) => {
                 name="resume" label="Resume / CV"
                 hint="PDF, DOC, DOCX · Max 10MB"
                 required error={errors.resume}
+                file={formData.resume}
+                onChange={handleChange}
               />
               {/* <FileField
                 name="coverLetter" label="Cover Letter"

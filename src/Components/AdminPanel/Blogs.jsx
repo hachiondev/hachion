@@ -46,7 +46,7 @@ const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
-    id: "", category_name: "", title: "",url:"", author: "", authorImage: "",
+    id: "", category_name: "", title: "",shortTitle:"", author: "", authorImage: "",
     blog_image: "", blog_pdf: "", description: "",
     date: new Date().toISOString().split('T')[0],
     meta_title: "", meta_keyword: "", meta_description: ""
@@ -61,11 +61,12 @@ const Blogs = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [allBlogs, setAllBlogs] = useState([]);
 
-  // ADDED: State for checkbox selection
+  
   const [selectedIds, setSelectedIds] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [shortTitleError, setShortTitleError] = useState("");
 
   useEffect(() => {
     axios.get("https://api.test.hachion.co/course-categories/all")
@@ -90,7 +91,7 @@ const Blogs = () => {
       blog.author?.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredBlogs(filtered);
-    setCurrentPage(1); // Reset to first page when searching
+    setCurrentPage(1); 
   }, [blogs, searchTerm]);
 
   const displayedBlogs = filteredBlogs.slice(
@@ -98,7 +99,7 @@ const Blogs = () => {
     currentPage * rowsPerPage
   );
 
-  // ADDED: Handle Select All checkbox
+  
   const handleSelectAll = (event) => {
     if (event.target.checked) {
       const allIds = displayedBlogs.map(blog => blog.id);
@@ -110,7 +111,7 @@ const Blogs = () => {
     }
   };
 
-  // ADDED: Handle individual checkbox
+  
   const handleSelectOne = (id) => {
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
@@ -118,14 +119,14 @@ const Blogs = () => {
     } else {
       const newSelectedIds = [...selectedIds, id];
       setSelectedIds(newSelectedIds);
-      // Check if all items are selected
+      
       if (newSelectedIds.length === displayedBlogs.length) {
         setSelectAll(true);
       }
     }
   };
 
-  // ADDED: Update selectAll state when page changes
+  
   useEffect(() => {
     const allCurrentPageIds = displayedBlogs.map(blog => blog.id);
     const allSelected = allCurrentPageIds.length > 0 &&
@@ -133,7 +134,7 @@ const Blogs = () => {
     setSelectAll(allSelected);
   }, [currentPage, displayedBlogs, selectedIds]);
 
-  // ADDED: Handle bulk delete
+  
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) {
       setErrorMessage("❌ Please select at least one blog to delete");
@@ -146,14 +147,14 @@ const Blogs = () => {
 
     if (window.confirm(confirmMessage)) {
       try {
-        // Delete all selected blogs
+        
         const deletePromises = selectedIds.map(id =>
           axios.delete(`https://api.test.hachion.co/blog/delete/${id}`)
         );
 
         await Promise.all(deletePromises);
 
-        // Update state
+        
         const updatedBlogs = blogs.filter(item => !selectedIds.includes(item.id));
         setBlogs(updatedBlogs);
         setAllBlogs(updatedBlogs);
@@ -180,11 +181,43 @@ const Blogs = () => {
   };
 
   const handleInputChange = (e, field = null, value = null) => {
-    const name = field || e.target.name;
-    const val = field ? value : e.target.value;
-    setFormData(prev => ({ ...prev, [name]: val }));
-  };
+  const name = field || e.target.name;
+  const val = field ? value : e.target.value;
 
+  setFormData(prev => ({ ...prev, [name]: val }));
+
+  if (name === "shortTitle") {
+    setShortTitleError("");
+  }
+};
+
+const validateShortTitle = async () => {
+
+  
+  if (formData.id) return;
+
+  if (!formData.shortTitle) return;
+
+  try {
+
+    await axios.get(
+      "https://api.test.hachion.co/blog/shortTitle",
+      { params: { shortTitle: formData.shortTitle } }
+    );
+
+    setShortTitleError("");
+
+  } catch (error) {
+
+    const backendMessage =
+  error.response?.data?.message ||
+  error.response?.data ||
+  "Invalid Short Title";
+
+setShortTitleError(backendMessage);
+  }
+
+};
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setFormData(prev => ({ ...prev, [e.target.name]: file }));
@@ -192,7 +225,7 @@ const Blogs = () => {
 
   const handleReset = () => {
     setFormData({
-      id: "", category_name: "", url:"", title: "", author: "", authorImage: "",
+      id: "", category_name: "", shortTitle:"", title: "", author: "", authorImage: "",
       blog_image: "", blog_pdf: "", description: "",
       date: new Date().toISOString().split('T')[0],
       meta_title: "", meta_keyword: "", meta_description: ""
@@ -201,10 +234,17 @@ const Blogs = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const blogPayload = JSON.stringify({
-      category_name: formData.category_name,
-      title: formData.title,
-      author: formData.author,
+
+      if (shortTitleError) {
+    setErrorMessage(shortTitleError);
+    return;
+  }
+
+   const blogPayload = JSON.stringify({
+  category_name: formData.category_name,
+  title: formData.title,
+  shortTitle: formData.shortTitle,
+  author: formData.author,
       description: formData.description,
       date: formData.date,
       meta_keyword: formData.meta_keyword,
@@ -246,15 +286,22 @@ const Blogs = () => {
           setSuccessMessage("");
         }, 5000);
       }
-    } catch (error) {
-      const backendMessage = error.response?.data || error.message;
-      console.error("Error submitting blog:", error);
-      setSuccessMessage("");
-      setErrorMessage("❌ Error submitting blog. Please try again.");
-    }
+   } catch (error) {
+
+  console.error("Error submitting blog:", error);
+
+  const backendMessage =
+    error.response?.data?.message ||
+    error.response?.data ||
+    error.message ||
+    "Error submitting blog";
+
+  setSuccessMessage("");
+  setErrorMessage(backendMessage);
+
+}
   };
 
-  // UPDATED: handleDelete function to remove from selectedIds
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this Blog?")) return;
     try {
@@ -263,7 +310,7 @@ const Blogs = () => {
       setAllBlogs(prev => prev.filter(blog => blog.id !== id));
       setFilteredBlogs(prev => prev.filter(blog => blog.id !== id));
 
-      // Remove from selectedIds if present
+      
       setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
 
       setSuccessMessage("✅ Blog deleted successfully");
@@ -282,10 +329,11 @@ const Blogs = () => {
       const res = await axios.get(`https://api.test.hachion.co/blog/${id}`);
       const blog = res.data;
       setFormData({
-        id: blog.id,
-        category_name: blog.category_name || '',
-        title: blog.title || '',
-        author: blog.author || '',
+  id: blog.id,
+  category_name: blog.category_name || '',
+  title: blog.title || '',
+  shortTitle: blog.shortTitle || '',
+  author: blog.author || '',
         description: blog.description || '',
         blog_image: '',
         blog_pdf: '',
@@ -326,7 +374,7 @@ const Blogs = () => {
     });
     setBlogs(filtered);
     setFilteredBlogs(filtered);
-    setSelectedIds([]); // Reset selection on filter
+    setSelectedIds([]); 
     setSelectAll(false);
     setCurrentPage(1);
   };
@@ -336,7 +384,7 @@ const Blogs = () => {
     setEndDate(null);
     setBlogs(allBlogs);
     setFilteredBlogs(allBlogs);
-    setSelectedIds([]); // Reset selection on reset
+    setSelectedIds([]); 
     setSelectAll(false);
     setCurrentPage(1);
   };
@@ -361,6 +409,7 @@ const Blogs = () => {
           <div className="category">
             <div className="category-header">
               <p style={{ marginBottom: 0 }}>{formMode === 'Add' ? 'Add Blog' : 'Edit Blog'}</p>
+             
             </div>
             <form onSubmit={handleSubmit} encType="multipart/form-data">
               <div className="course-details">
@@ -391,15 +440,22 @@ const Blogs = () => {
                     />
                   </div>
                   <div className="col-md-3">
-                    <label className="form-label">Short Blog Url</label>
+                    <label className="form-label">Short Blog URL</label>
                     <input
-                      type="text"
-                      name="title"
-                      className="form-control"
-                      placeholder="Enter Url"
-                      value={formData.url}
-                      onChange={handleInputChange}
-                    />
+  type="text"
+  name="shortTitle"
+  className="form-control"
+  placeholder="Enter Short Title"
+  value={formData.shortTitle}
+  onChange={handleInputChange}
+  onBlur={validateShortTitle}
+/>
+
+{shortTitleError && (
+  <div style={{ color: "red", fontSize: "13px", marginTop: "4px" }}>
+    {shortTitleError}
+  </div>
+)}
                   </div>
                 </div>
                 <div className="course-row">
@@ -477,6 +533,19 @@ const Blogs = () => {
                   </div>
                 </div>
                 <div className="course-row">
+                  
+
+{successMessage && (
+  <div style={{ color: "green", fontWeight: "bold", margin: "10px 0" }}>
+    {successMessage}
+  </div>
+)}
+
+{errorMessage && (
+  <div style={{ color: "red", fontWeight: "bold", margin: "10px 0" }}>
+    {errorMessage}
+  </div>
+)}
                   <button type="submit" className="submit-btn">
                     {formMode === 'Add' ? 'Submit' : 'Update'}
                   </button>
@@ -498,8 +567,8 @@ const Blogs = () => {
               </div>
 
               {/* ADDED: Success and Error Messages */}
-              {successMessage && <div style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</div>}
-              {errorMessage && <div style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</div>}
+              {/* {successMessage && <div style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</div>}
+              {errorMessage && <div style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</div>} */}
 
               <div className="date-schedule">
                 Start Date

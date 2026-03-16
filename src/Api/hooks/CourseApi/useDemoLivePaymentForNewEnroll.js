@@ -300,8 +300,8 @@ const handleCapturePayPalOrder = async (orderId) => {
                   batchId: session.batchId,
                   paymentType: "PAY_NOW",
                   paymentStatus: "PAID",
-                  sendEmail: true,
-                  sendWhatsApp: true,
+                   sendEmail: !!notifyVia?.email,
+  sendWhatsApp: !!notifyVia?.whatsapp,
 
                   /* ===== ADD-ONLY OVERRIDE FOR SELF-PACED ===== */
                   ...(session.batchId?.startsWith("SELF-") && {

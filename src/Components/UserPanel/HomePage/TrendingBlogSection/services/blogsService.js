@@ -19,14 +19,15 @@ export const getRecentBlogs = async () => {
   // Transform array response to object format
   return data.map((row) => {
     const [
-      id,
-      category_name,
-      title,
-      author,
-      author_image,
-      blog_image,
-      date,
-    ] = row;
+  id,
+  category_name,
+  title,
+  short_title,
+  author,
+  author_image,
+  blog_image,
+  date,
+] = row;
 
     const avatar = author_image
       ? `https://api.test.hachion.co/uploads/test/blogs/${author_image}`
@@ -40,6 +41,7 @@ export const getRecentBlogs = async () => {
       id,
       category_name,
       title,
+      short_title,
       author,
       date,
       avatar,

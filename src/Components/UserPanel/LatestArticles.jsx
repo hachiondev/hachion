@@ -18,6 +18,7 @@ const LatestArticles = () => {
             id,
             category_name,
             title,
+            shortTitle,
             author,
             author_image,
             blog_image,
@@ -31,6 +32,7 @@ const LatestArticles = () => {
             id,
             category_name,
             title,
+            shortTitle,
             author,
             date,
             
@@ -77,13 +79,15 @@ const LatestArticles = () => {
                   return d.toLocaleDateString("en-US", options);
                 })()}
                 onClick={() => {
-                  navigate(
-                    `/blogs/${blog.category_name
-                      .replace(/\s+/g, "-")
-                      .toLowerCase()}/${blog.id}`
-                  );
-                  window.scrollTo(0, 0);
-                }}
+  navigate(
+    `/blogs/${blog.category_name
+      .replace(/\s+/g, "-")
+      .toLowerCase()}/${blog.shortTitle
+      ?.replace(/\s+/g, "-")
+      .toLowerCase()}`
+  );
+  window.scrollTo(0, 0);
+}}
               />
             ))}
           </div>

@@ -5,6 +5,7 @@ import "./Blogs.css";
 import { useNavigate } from "react-router-dom";
 import RecentEntriesCard from "./HomePage/TrendingBlogSection/components/RecentEntriesCard";
 
+
 const MoreBlogs = ({ scrollToTop = false }) => {
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState([]);
@@ -131,16 +132,15 @@ const MoreBlogs = ({ scrollToTop = false }) => {
                     return d.toLocaleDateString("en-US", options);
                   })()}
                  onClick={() => {
-  navigate(
-    `/blogs/${blog.category_name
-      ?.replace(/\s+/g, "-")
-      .toLowerCase()}/${
-      blog.title
-        ?.toLowerCase()
-        .replace(/[^\w\s-]/g, "")
-        .replace(/\s+/g, "-")
-    }-${blog.id}`
-  );
+  const categorySlug = blog.category_name
+    ?.replace(/\s+/g, "-")
+    .toLowerCase();
+
+  const shortSlug = blog.shortTitle
+    ?.replace(/\s+/g, "-")
+    .toLowerCase();
+
+  navigate(`/blogs/${categorySlug}/${shortSlug}`);
   window.scrollTo(0, 0);
 }}
                 />

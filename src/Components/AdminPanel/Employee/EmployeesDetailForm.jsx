@@ -78,7 +78,7 @@ const EmployeesDetailForm = () => {
     location: "",
     department: "",
     role: "",
-    expectedSalary: "", // Added expectedSalary field
+    expectedSalary: "", 
     resume: null, // Added resume field
     additionalInfo: "",
     employeeId: "",
@@ -147,19 +147,35 @@ const EmployeesDetailForm = () => {
     }
   }, [successMessage]);
 
-  useEffect(() => {
-    axios
-      .get(`${API_BASE}/employees`)
-      .then((res) => {
-        setEmployees(res.data || []);
-        setFilteredEmployees(res.data || []);
-      })
-      .catch((err) => {
-        console.error(err);
-        setEmployees([]);
-        setFilteredEmployees([]);
-      });
-  }, []);
+ useEffect(() => {
+  axios
+    .get(`${API_BASE}/job-application-aboutus`)
+    .then((res) => {
+
+      const formattedData = (res.data || []).map((item) => ({
+        id: item.jobApplicationId,
+        employeeId: item.jobApplicationId,
+        name: `${item.firstName} ${item.lastName}`,
+        email: item.email,
+        phone: item.phone,
+        department: item.department,
+        role: item.position,
+        location: item.address,
+        expectedSalary: item.expectedSalary,
+        resume: item.resumePath,
+        dateOfJoining: item.startDate,
+      }));
+
+      setEmployees(formattedData);
+      setFilteredEmployees(formattedData);
+
+    })
+    .catch((err) => {
+      console.error(err);
+      setEmployees([]);
+      setFilteredEmployees([]);
+    });
+}, []);
 
   useEffect(() => {
     const term = searchTerm.toLowerCase();
@@ -364,7 +380,8 @@ const EmployeesDetailForm = () => {
     if (window.confirm(confirmMessage)) {
       try {
         const deletePromises = selectedIds.map(employeeId =>
-          axios.delete(`${API_BASE}/employees/delete/${employeeId}`)
+          // axios.delete(`${API_BASE}/employees/delete/${employeeId}`)
+          axios.delete(`${API_BASE}/job-application-aboutus/${employeeId}`)
         );
 
         await Promise.all(deletePromises);
@@ -547,32 +564,38 @@ const EmployeesDetailForm = () => {
       setShowForm(true);
     }
   };
+const handleDelete = async (id) => {
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this Employee?"))
-      return;
-    try {
-      await axios.delete(`${API_BASE}/employees/delete/${id}`);
-      setEmployees((prev) =>
-        prev.filter((emp) => (emp.employeeId ?? emp.id) !== id)
-      );
-      setFilteredEmployees((prev) =>
-        prev.filter((emp) => (emp.employeeId ?? emp.id) !== id)
-      );
+  if (!window.confirm("Are you sure you want to delete this application?")) {
+    return;
+  }
 
-      setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
+  try {
 
-      setSuccessMessage("Employee details deleted successfully");
-      setErrorMessage("");
-      setTimeout(() => setSuccessMessage(""), 5000);
-    } catch (err) {
-      console.error(err);
-      setErrorMessage("Failed to delete employee");
-      setSuccessMessage("");
-      setTimeout(() => setErrorMessage(""), 5000);
-    }
-  };
+    await axios.delete(`${API_BASE}/job-application-aboutus/${id}`);
 
+    // remove from UI
+    const updatedList = employees.filter(emp => (emp.employeeId ?? emp.id) !== id);
+
+    setEmployees(updatedList);
+    setFilteredEmployees(updatedList);
+
+    setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
+
+    setSuccessMessage("Application deleted successfully");
+    setErrorMessage("");
+
+    setTimeout(() => setSuccessMessage(""), 5000);
+
+  } catch (error) {
+
+    console.error(error);
+    setErrorMessage("Failed to delete application");
+    setSuccessMessage("");
+
+    setTimeout(() => setErrorMessage(""), 5000);
+  }
+};
   const handlePageChange = (page) => setCurrentPage(page);
   
   const handleRowsPerPageChange = (rows) => {
@@ -601,15 +624,18 @@ const EmployeesDetailForm = () => {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
   };
 
-  const formatSalary = (salary) => {
-    if (!salary) return "—";
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(salary);
-  };
-
-  const getResumeLink = (resumePath) => {
-    if (!resumePath) return null;
-    return `${API_BASE}/uploads/employees/resume/${resumePath}`;
-  };
+  // const formatSalary = (salary) => {
+  //   if (!salary) return "—";
+  //   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(salary);
+  // };
+const formatSalary = (salary) => {
+  if (!salary) return "—";
+  return new Intl.NumberFormat('en-IN').format(salary);
+};
+ const getResumeLink = (resumePath) => {
+  if (!resumePath) return null;
+  return `${API_BASE}/uploads/test/${resumePath}`;
+};
 
   // Render personal information tab
   const renderPersonalTab = () => (
@@ -1370,9 +1396,9 @@ const EmployeesDetailForm = () => {
 
               {/* Form Actions */}
               <div className="form-actions">
-                <button type="submit" className="submit-btn">
+                {/* <button type="submit" className="submit-btn">
                   {formMode === "Add" ? "Add Employee" : "Update Employee"}
-                </button>
+                </button> */}
                 <button
                   type="button"
                   className="reset-btn"
@@ -1450,9 +1476,9 @@ const EmployeesDetailForm = () => {
                   </button>
                 )}
 
-                <button className="btn-category" onClick={handleAddClick}>
+                {/* <button className="btn-category" onClick={handleAddClick}>
                   <FiPlus /> Add Employee
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
@@ -1470,9 +1496,9 @@ const EmployeesDetailForm = () => {
                   </StyledTableCell>
                   <StyledTableCell align="center" style={{ width: '60px' }}>S.No.</StyledTableCell>
                   {/* <StyledTableCell align="center" style={{ width: '80px' }}>Image</StyledTableCell> */}
-                  <StyledTableCell align="center" style={{ width: '100px' }}>
+                  {/* <StyledTableCell align="center" style={{ width: '100px' }}>
                     Employee ID
-                  </StyledTableCell>
+                  </StyledTableCell> */}
                   <StyledTableCell align="center" style={{ width: '120px' }}>
                     Name
                   </StyledTableCell>
@@ -1515,28 +1541,8 @@ const EmployeesDetailForm = () => {
                         {index + 1 + (currentPage - 1) * rowsPerPage}
                       </StyledTableCell>
                       {/* <StyledTableCell align="center">
-                        {emp.companyImage ? (
-                          <img
-                            src={
-                              emp.companyImage.startsWith("http")
-                                ? emp.companyImage
-                                : `${API_BASE}/uploads/employee_company_logo/${emp.companyImage}`
-                            }
-                            alt="Employee"
-                            width="40"
-                            height="40"
-                            style={{ borderRadius: "50%", objectFit: "cover" }}
-                            onError={(e) => {
-                              e.currentTarget.src = "/default-avatar.png";
-                            }}
-                          />
-                        ) : (
-                          <div className="no-image">No Image</div>
-                        )}
-                      </StyledTableCell> */}
-                      <StyledTableCell align="center">
                         <strong>{emp.employeeId || "—"}</strong>
-                      </StyledTableCell>
+                      </StyledTableCell> */}
                       <StyledTableCell align="center">{emp.name}</StyledTableCell>
                       <StyledTableCell align="center">
                         <strong>{emp.department || "—"}</strong>
@@ -1569,11 +1575,11 @@ const EmployeesDetailForm = () => {
                       </StyledTableCell>
                       <StyledTableCell align="center">{emp.location || "—"}</StyledTableCell>
                       <StyledTableCell align="center">
-                        <FaEdit
+                        {/* <FaEdit
                           className="edit-icon"
                           onClick={() => handleEdit(emp.employeeId ?? emp.id)}
                           style={{ marginRight: '8px', cursor: 'pointer' }}
-                        />
+                        /> */}
                         <RiDeleteBin6Line
                           className="delete-icon"
                           onClick={() => handleDelete(emp.employeeId ?? emp.id)}

@@ -2,16 +2,12 @@ import React, { useState } from 'react';
 import Employees from './Employees';
 import EmployeesDetailForm from './EmployeesDetailForm';
 
-
 export default function EmployeesPage() {
-  const [activeTab, setActiveTab] = useState('employees'); // Default tab is Course Details
-
-
+  const [activeTab, setActiveTab] = useState('employees'); 
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
-
 
   return (
     <>   
@@ -33,9 +29,7 @@ export default function EmployeesPage() {
       </div>
       
       {activeTab==='employees' && <Employees/>}
-      {activeTab==='employeesdetailform' &&  <EmployeesDetailForm/>}
-     
-     
+      {activeTab==='employeesdetailform' &&  <EmployeesDetailForm/>}     
     </>
   );
 }

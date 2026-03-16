@@ -24,10 +24,15 @@ import BlogInquiryForm from "./BlogInquiryForm";
 
 
 const BlogDetails = () => {
+  // const { category_name } = useParams();
+  // const { title } = useParams();
+  // const navigate = useNavigate();
+  // const id = title?.split("-").pop();
+
   const { category_name } = useParams();
-  const { title } = useParams();
-  const navigate = useNavigate();
-  const id = title?.split("-").pop();
+const { title } = useParams(); // this will now be short_title
+const navigate = useNavigate();
+const shortTitle = decodeURIComponent(title)?.replace(/-/g, " ");
 
   const [blogs, setBlogs] = useState([]);
   const [selectedBlog, setSelectedBlog] = useState(null);
@@ -44,7 +49,11 @@ const BlogDetails = () => {
     const fetchSelectedBlog = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`https://api.test.hachion.co/blog/${id}`);
+        // const response = await axios.get(`https://api.test.hachion.co/blog/${id}`);
+        // const response = await axios.get(`https://api.test.hachion.co/blog/check/${shortTitle}`);
+        const response = await axios.get(
+  `https://api.test.hachion.co/blog/check/${encodeURIComponent(shortTitle)}`
+);
         setSelectedBlog(response.data);
       } catch (error) {
         console.error("Error fetching selected blog:", error);
@@ -53,7 +62,7 @@ const BlogDetails = () => {
       }
     };
     fetchSelectedBlog();
-  }, [id]);
+  }, [shortTitle]);
 
   // ✅ Fetch all blogs for sidebar “Recent Post”
   useEffect(() => {
@@ -347,15 +356,12 @@ const BlogDetails = () => {
                           style={{ animationDelay: `${index * 0.03}s` }}
                           onClick={() => {
                            
-                          navigate(
+                         navigate(
   `/blogs/${blog.category_name
     .toLowerCase()
-    .replace(/\s+/g, "-")}/${
-    blog.title
+    .replace(/\s+/g, "-")}/${blog.shortTitle
       .toLowerCase()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/\s+/g, "-")
-  }-${blog.id}`
+      .replace(/\s+/g, "-")}`
 );
                             setSearchQuery("");
                             window.scrollTo(0, 0);
@@ -416,15 +422,12 @@ const BlogDetails = () => {
                     key={blog.id}
                     className="recent-post-item"
                     onClick={() => {
-                    navigate(
+                  navigate(
   `/blogs/${blog.category_name
     .toLowerCase()
-    .replace(/\s+/g, "-")}/${
-    blog.title
+    .replace(/\s+/g, "-")}/${blog.shortTitle
       .toLowerCase()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/\s+/g, "-")
-  }-${blog.id}`
+      .replace(/\s+/g, "-")}`
 );
                       window.scrollTo(0, 0);
                     }}

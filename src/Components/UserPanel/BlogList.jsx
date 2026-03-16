@@ -37,6 +37,7 @@ const BlogList = ({
             id,
             category_name,
             title,
+            shortTitle,
             author,
             author_image,
             blog_image,
@@ -50,6 +51,7 @@ const BlogList = ({
             id,
             category_name,
             title,
+            shortTitle: shortTitle,
             author,
             date,
             avatar: avatarPath
@@ -83,13 +85,11 @@ const BlogList = ({
   };
 
   const handleCardClick = (blog) => {
-    const blogUrl = `/blogs/${blog.category_name
-      ?.replace(/\s+/g, "-")
-      .toLowerCase()}/${blog.title
-      ?.replace(/\s+/g, "-")
-      .replace(/[^\w-]+/g, "")
-      .toLowerCase()}-${blog.id}`;
-    window.location.href = blogUrl;
+   const blogUrl = `/blogs/${blog.category_name
+  ?.replace(/\s+/g, "-")
+  .toLowerCase()}/${blog.shortTitle
+  ?.replace(/\s+/g, "-")
+  .toLowerCase()}`;
   };
 
   return (
@@ -146,17 +146,17 @@ const BlogList = ({
               </div>
             </div>
             <a
-              href={`/blogs/${blog.category_name
-                ?.replace(/\s+/g, "-")
-                .toLowerCase()}/${blog.title
-                ?.replace(/\s+/g, "-")
-                .replace(/[^\w-]+/g, "")
-                .toLowerCase()}-${blog.id}`}
-              className="txtReadmore"
-              onClick={(e) => e.stopPropagation()}
-            >
-              Read More
-            </a>
+  href={`/blogs/${blog.category_name
+    ?.replace(/\s+/g, "-")
+    .toLowerCase()}/${(blog.shortTitle || blog.id)
+    ?.toString()
+    .replace(/\s+/g, "-")
+    .toLowerCase()}`}
+  className="txtReadmore"
+  onClick={(e) => e.stopPropagation()}
+>
+  Read More
+</a>
           </div>
         ))
       ) : (

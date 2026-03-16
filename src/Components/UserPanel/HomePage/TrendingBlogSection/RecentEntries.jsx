@@ -29,11 +29,9 @@ const RecentEntries = () => {
 const handleBlogClick = (blog) => {
   const categorySlug = toSlug(blog.category_name);
   const titleSlug = toSlug(blog.title);
-
-  navigate(`/blogs/${categorySlug}/${titleSlug}-${blog.id}`);
+  navigate(`/blogs/${categorySlug}/${blog.short_title.replace(/\s+/g, "-").toLowerCase()}`);
   window.scrollTo(0, 0);
 };
-
   
   return (
     <div className="training-events container">

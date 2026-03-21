@@ -382,7 +382,7 @@ export default function OnlinePayment() {
                   <StyledTableCell align="left">{row.method}</StyledTableCell>
                   <StyledTableCell align="center">
                     {row.date
-                      ? dayjs(row.date).format("MMM-DD-YYYY").toUpperCase()
+                      ? dayjs(row.paymentDate).format("MMM-DD-YYYY").toUpperCase()
                       : "N/A"}
                   </StyledTableCell>
                   {/* ADDED: Action Column */}

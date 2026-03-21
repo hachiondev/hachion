@@ -10,6 +10,7 @@ import Flag from 'react-world-flags';
 
 import { countries, getDefaultCountry } from '../../countryUtils';
 import { useTopBarApi } from '../../Api/hooks/HomePageApi/useTopBarApi';
+import { useUserProfile } from '../../Api/hooks/CourseApi/useUserProfile';
 
 // ── Shared form content (used in both desktop & mobile) ──
 const FormContent = ({
@@ -238,7 +239,7 @@ const BlogInquiryForm = ({ blogTitle }) => {
     countryCode,
     isLoading: countryLoading,
   } = useTopBarApi();
-
+const { data: userProfile } = useUserProfile();
   // Auto-detect country — same pattern as EnrollmentForm
   useEffect(() => {
     if (countryCode && !countryLoading) {
@@ -248,7 +249,32 @@ const BlogInquiryForm = ({ blogTitle }) => {
       }
     }
   }, [countryCode, countryLoading]);
+useEffect(() => {
+  if (userProfile) {
+    let rawMobile = userProfile.mobile || "";
 
+    // Extract country code (example: +91)
+    const countryMatch = rawMobile.match(/^\+\d+/);
+    let detectedCode = countryMatch ? countryMatch[0] : "";
+
+    // Remove country code → get only number
+    let phoneNumber = rawMobile.replace(/^\+\d+\s*/, '').replace(/\D/g, '');
+
+    // Match country from your countries list
+    const matchedCountry = countries.find(c => c.code === detectedCode);
+
+    if (matchedCountry) {
+      setSelectedCountry(matchedCountry);
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      name: prev.name || userProfile.name || "",
+      email: prev.email || userProfile.email || "",
+      phone: prev.phone || phoneNumber
+    }));
+  }
+}, [userProfile]);
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -352,15 +378,29 @@ const BlogInquiryForm = ({ blogTitle }) => {
     setError('');
     try {
       const fullPhone = `${selectedCountry.code} ${formData.phone}`;
-      const response = await axios.post('https://api.test.hachion.co/blog/inquiry', {
-        ...formData,
-        phone: fullPhone,
-        blogTitle,
-        timestamp: new Date().toISOString()
-      });
+      const response = await axios.post('http://localhost:8081/blog/inquiry', {
+  ...formData,
+  phone: fullPhone,
+  blogTitle,
+  // timestamp: new Date().toISOString().split('T')[0],
+  timestamp: new Date().toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: '2-digit'
+}),
+  source: "blog",
+  pageUrl: window.location.href
+});
       if (response.status === 200 || response.status === 201) {
         setSuccess(true);
-        setFormData({ name: '', email: '', phone: '', query: '' });
+        setFormData(prev => ({
+  name: userProfile?.name || "",
+  email: userProfile?.email || "",
+  phone: userProfile?.mobile
+    ? userProfile.mobile.replace(/^\+\d+\s*/, '').replace(/\D/g, '')
+    : "",
+  query: ""
+}));
         setTimeout(() => setSuccess(false), 5000);
       }
     } catch (err) {

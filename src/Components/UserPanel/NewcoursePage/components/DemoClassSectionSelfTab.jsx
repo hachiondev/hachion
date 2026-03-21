@@ -71,10 +71,15 @@ What's Included:
   const [sendingBatchId, setSendingBatchId] = React.useState(null);
   const [resendMessage, setResendMessage] = React.useState("");
   const [resendError, setResendError] = React.useState("");
-  const [notifyViaMap, setNotifyViaMap] = useState({});
+  // const [notifyViaMap, setNotifyViaMap] = useState({});
+  const [notifyViaMap, setNotifyViaMap] = useState({
+  email: false,
+  whatsapp: false
+});
   const [isSelfEnrolled, setIsSelfEnrolled] = useState(false);
   const [checkingSelfEnroll, setCheckingSelfEnroll] = useState(false);
   const [selfEnrollError, setSelfEnrollError] = useState("");
+  
 
   const { data: checkedSessions = [] } = useCheckEnrollmentForSessions(
     selectedGroup?.sessions || [],
@@ -128,6 +133,13 @@ What's Included:
     checkOnLoad();
   }, [userProfile?.studentId, courseName]);
 
+  const handleNotifyChange = (type, checked) => {
+  setNotifyViaMap((prev) => ({
+    ...prev,
+    email: type === "email" ? checked : prev.email ?? true,
+    whatsapp: type === "whatsapp" ? checked : prev.whatsapp ?? false,
+  }));
+};
   const checkSelfPacedEnrollment = async () => {
     if (!userProfile?.studentId || !courseName) return false;
 
@@ -188,8 +200,12 @@ What's Included:
                         return;
                       }
 
-                      onRequestClick?.("ENROLL_SELF");
-                    }}
+                    
+  onRequestClick?.("ENROLL_SELF", {
+    email: notifyViaMap.email,
+whatsapp: notifyViaMap.whatsapp,
+  });
+}}
                   >
                     Enroll Now
                   </button>
@@ -204,12 +220,22 @@ What's Included:
 
                     <div className={styles.checkboxContainer}>
                       <label className={styles.customCheckbox}>
-                        <input type="checkbox" defaultChecked />
+                        {/* <input type="checkbox" defaultChecked /> */}
+                        <input
+  type="checkbox"
+  checked={notifyViaMap.email}
+  onChange={(e) => handleNotifyChange("email", e.target.checked)}
+/>
                         <span className={styles.checkboxLabel}>Email</span>
                       </label>
 
                       <label className={styles.customCheckbox}>
-                        <input type="checkbox" />
+                        {/* <input type="checkbox" /> */}
+                        <input
+  type="checkbox"
+  checked={notifyViaMap.whatsapp}
+  onChange={(e) => handleNotifyChange("whatsapp", e.target.checked)}
+/>
                         <span className={styles.checkboxLabel}>WhatsApp</span>
                       </label>
                     </div>

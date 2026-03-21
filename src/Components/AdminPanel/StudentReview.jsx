@@ -224,11 +224,21 @@ export default function StudentReview() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected reviews
-        await Promise.all(
-          selectedIds.map(id =>
-            axios.delete(`https://api.test.hachion.co/userreview/delete/${id}`)
-          )
-        );
+       await Promise.all(
+  selectedIds.map(id => {
+    const reviewToDelete = review.find(r => r.review_id === id);
+    if (!reviewToDelete) return null;
+
+    return axios.delete(`https://api.test.hachion.co/userreview/delete`, {
+      params: {
+        name: reviewToDelete.name,
+        email: reviewToDelete.email,
+        courseName: reviewToDelete.course_name,
+        date: reviewToDelete.date
+      }
+    });
+  })
+);
 
         // Update state
         const updatedReviews = review.filter(item => !selectedIds.includes(item.review_id));
@@ -247,13 +257,42 @@ export default function StudentReview() {
       } catch (error) {
         console.error("Error deleting reviews:", error);
         setSuccessMessage("");
-        setErrorMessage("Error deleting some reviews. Please try again.");
+        setErrorMessage("Error deleting some reviews are approved/rejected. Please try again.");
         setTimeout(() => {
           setErrorMessage("");
         }, 6000);
       }
     }
   };
+const handleSingleDelete = async (reviewItem) => {
+  if (!window.confirm("Are you sure you want to delete this review?")) return;
+
+  try {
+    await axios.delete(`https://api.test.hachion.co/userreview/delete`, {
+      params: {
+        name: reviewItem.name,
+        email: reviewItem.email,
+        courseName: reviewItem.course_name,
+        date: reviewItem.date
+      }
+    });
+
+    const updatedReviews = review.filter(item => item.review_id !== reviewItem.review_id);
+    setReview(updatedReviews);
+    setFilteredReview(updatedReviews);
+
+    setSuccessMessage("Review deleted successfully!");
+    setErrorMessage("");
+
+    setTimeout(() => setSuccessMessage(""), 4000);
+
+  } catch (error) {
+    console.error("Delete failed:", error);
+    setErrorMessage("Review not deleted. It may be approved/rejected.");
+    setSuccessMessage("");
+    setTimeout(() => setErrorMessage(""), 4000);
+  }
+};
 
   return (
     <>
@@ -322,7 +361,8 @@ export default function StudentReview() {
               <StyledTableCell align="center">Technology</StyledTableCell>
               <StyledTableCell align="center">Comment</StyledTableCell>
               <StyledTableCell align="center">Date</StyledTableCell>
-              <StyledTableCell align="center" sx={{ width: '150px' }}>Action</StyledTableCell>
+              <StyledTableCell align="center" sx={{ width: '150px' }}>Status</StyledTableCell>
+              <StyledTableCell align="center">Action</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -338,7 +378,7 @@ export default function StudentReview() {
                   <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
                   <StyledTableCell align="center">
                     <img
-                      src={`https://api.test.hachion.co/uploads/test/user_review/${review.user_image}`}
+                      src={`https://api.test.hachion.co//user_review/${review.user_image}`}
                       alt="User"
                       width="50"
                       height="50"
@@ -374,6 +414,16 @@ export default function StudentReview() {
                       )}
                     </div>
                   </StyledTableCell>
+                   <StyledTableCell align="center">
+                                          <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+                                            {/* <FaEdit className="edit" onClick={() => handleClickOpen(course)} /> Open modal on edit click */}
+                                            <RiDeleteBin6Line 
+  className="delete"
+  style={{ cursor: "pointer" }}
+  onClick={() => handleSingleDelete(review)}
+/>
+                                          </div>
+                                        </StyledTableCell>
                 </StyledTableRow>
               ))
             ) : (
@@ -384,7 +434,17 @@ export default function StudentReview() {
           </TableBody>
         </Table>
       </TableContainer>
+{successMessage && (
+  <p style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>
+    {successMessage}
+  </p>
+)}
 
+{errorMessage && (
+  <p style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>
+    {errorMessage}
+  </p>
+)}
       <div className='pagination-container'>
         <AdminPagination currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={filteredReview.length} onPageChange={handlePageChange} />
       </div>

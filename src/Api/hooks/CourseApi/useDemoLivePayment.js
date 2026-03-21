@@ -32,19 +32,43 @@ export function useDemoLivePayment({
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
+useEffect(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const status = urlParams.get("status");
+  const orderId = urlParams.get("token");
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const status = urlParams.get("status");
-    const orderId = urlParams.get("token");
+  // 🔒 Hide enroll screen when returning from PayPal
+  if (status) {
+    document.body.style.display = "none";
+  }
 
-    if (status === "success" && orderId) {
-      handleCapturePayPalOrder(orderId);
-    } else if (status === "cancel") {
-      setEnrollErrorMessage("❌ Payment was cancelled.");
-      setEnrollSuccessMessage("");
-    }
-  }, []);
+  if (status === "success" && orderId) {
+    (async () => {
+      await handleCapturePayPalOrder(orderId);
+    })();
+  }
+
+  if (status === "cancel") {
+    setEnrollErrorMessage("❌ Payment was cancelled.");
+    setEnrollSuccessMessage("");
+
+    // redirect back to clean enroll page
+    const slug = window.location.pathname.split("/").pop();
+    window.location.replace(`/enroll/${slug}`);
+  }
+}, []);
+  // useEffect(() => {
+  //   const urlParams = new URLSearchParams(window.location.search);
+  //   const status = urlParams.get("status");
+  //   const orderId = urlParams.get("token");
+
+  //   if (status === "success" && orderId) {
+  //     handleCapturePayPalOrder(orderId);
+  //   } else if (status === "cancel") {
+  //     setEnrollErrorMessage("❌ Payment was cancelled.");
+  //     setEnrollSuccessMessage("");
+  //   }
+  // }, []);
 
   const amount = useMemo(() => {
     return (
@@ -244,6 +268,7 @@ export function useDemoLivePayment({
                     signature: response.razorpay_signature,
                     studentId: userProfile.studentId,
                     courseName,
+                    couponCode: courseData?.couponCode || null,
                     batchId: session.batchId,
                   },
                 }
@@ -285,8 +310,8 @@ export function useDemoLivePayment({
                   batchId: session.batchId,
                   paymentType: "PAY_NOW",
                   paymentStatus: "PAID",
-                  sendEmail: true,
-                  sendWhatsApp: true,
+                  sendEmail: !!notifyVia?.email,
+  sendWhatsApp: !!notifyVia?.whatsapp,
 
                   /* ===== ADD-ONLY OVERRIDE FOR SELF-PACED ===== */
                   ...(session.batchId?.startsWith("SELF-") && {
@@ -313,8 +338,8 @@ export function useDemoLivePayment({
                     batchId: session.batchId,
                   },
                   modeType: "live",
-                  sendEmail: true,
-                  sendWhatsApp: true,
+                   sendEmail: !!notifyVia?.email,
+    sendWhatsApp: !!notifyVia?.whatsapp,
                   sendText: false,
                   email: userProfile.email,
                 },

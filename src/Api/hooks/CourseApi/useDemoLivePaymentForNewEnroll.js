@@ -32,23 +32,31 @@ export function useDemoLivePaymentForNewEnroll({
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
+//   useEffect(() => {
+//   const urlParams = new URLSearchParams(window.location.search);
+//   const status = urlParams.get("status");
+//   const orderId = urlParams.get("token");
 
-  // useEffect(() => {
-  //   const urlParams = new URLSearchParams(window.location.search);
-  //   const status = urlParams.get("status");
-  //   const orderId = urlParams.get("token");
+//   if (status === "success" && orderId) {
+//     (async () => {
+//       await handleCapturePayPalOrder(orderId);
+//     })();
+//   }
 
-  //   if (status === "success" && orderId) {
-  //     handleCapturePayPalOrder(orderId);
-  //   } else if (status === "cancel") {
-  //     setEnrollErrorMessage("❌ Payment was cancelled.");
-  //     setEnrollSuccessMessage("");
-  //   }
-  // }, []);
-  useEffect(() => {
+//   if (status === "cancel") {
+//     setEnrollErrorMessage("❌ Payment was cancelled.");
+//     setEnrollSuccessMessage("");
+//   }
+// }, []);
+useEffect(() => {
   const urlParams = new URLSearchParams(window.location.search);
   const status = urlParams.get("status");
   const orderId = urlParams.get("token");
+
+  // 🔒 Hide enroll screen when returning from PayPal
+  if (status) {
+    document.body.style.display = "none";
+  }
 
   if (status === "success" && orderId) {
     (async () => {
@@ -59,9 +67,12 @@ export function useDemoLivePaymentForNewEnroll({
   if (status === "cancel") {
     setEnrollErrorMessage("❌ Payment was cancelled.");
     setEnrollSuccessMessage("");
+
+    // redirect back to clean enroll page
+    const slug = window.location.pathname.split("/").pop();
+    window.location.replace(`/enroll/${slug}`);
   }
 }, []);
-
   const amount = useMemo(() => {
     return (
       courseData?.itotal ??
@@ -259,6 +270,7 @@ const handleCapturePayPalOrder = async (orderId) => {
                     signature: response.razorpay_signature,
                     studentId: userProfile.studentId,
                     courseName,
+                    couponCode: courseData?.couponCode || null,
                     batchId: session.batchId,
                   },
                 }

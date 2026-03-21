@@ -90,12 +90,12 @@ const summerCourses = useMemo(() => {
       if (!course) return null;
 
       const trainer = trainers.find(
-        t => normalize(t.course_name) === nameKey
+        t => normalize(t.courseName) === nameKey
       );
 
       return {
         ...course,                  
-        trainerName: trainer?.trainer_name || "Not Assigned",
+        trainerName: trainer?.trainerName || "Not Assigned",
         courseName: course.courseName,
         category_name: se.category_name,
         summerEvent: se,             

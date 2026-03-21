@@ -33,11 +33,14 @@ export default function NewEnrollSelfPaced() {
 const preselectedBatchId = location.state?.selectedBatchId || null;
 
 
-  const notifyVia = location.state?.notifyVia || {
-    email: true,
-    whatsapp: true,
-  };
-
+// const notifyVia = location.state?.notifyVia || {
+//   email: false,
+//   whatsapp: false,
+// };
+const notifyVia = {
+  email: location.state?.email ?? true,
+  whatsapp: location.state?.whatsapp ?? true,
+};
   /* ===============================
      State
   =============================== */

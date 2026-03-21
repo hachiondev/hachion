@@ -378,7 +378,7 @@ useEffect(() => {
     setError('');
     try {
       const fullPhone = `${selectedCountry.code} ${formData.phone}`;
-      const response = await axios.post('http://localhost:8081/blog/inquiry', {
+      const response = await axios.post('https://api.test.hachion.co/blog/inquiry', {
   ...formData,
   phone: fullPhone,
   blogTitle,

@@ -131,8 +131,12 @@ const UserProfile = () => {
     }));
   };
   const [isUpdating, setIsUpdating] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  
+  const [messages, setMessages] = useState({
+  profile: { success: "", error: "" },
+  password: { success: "", error: "" },
+  social: { success: "", error: "" }
+});
   const [mobileError, setMobileError] = useState('');
   const [initialMobile, setInitialMobile] = useState('');
 
@@ -165,13 +169,20 @@ const UserProfile = () => {
 
   const handleProfileSave = async (e) => {
     e.preventDefault();
-    setSuccessMessage('');
-    setErrorMessage('');
+    setMessages(prev => ({
+  ...prev,
+  profile: { success: '', error: '' }
+}));
+     
 
     const emailEl = document.getElementById('inputEmail');
     const emailVal = emailEl?.value || email;
     if (!emailVal) {
-      setErrorMessage('❌ User email not found.');
+      
+      setMessages(prev => ({
+  ...prev,
+  profile: { success: '', error: '❌ User email not found.' }
+}));
       return;
     }
 
@@ -235,7 +246,11 @@ const UserProfile = () => {
         `${(firstName || '').trim()} ${(lastName || '').trim()}`.trim()
       );
 
-      setSuccessMessage('✅ Profile updated successfully.');
+      
+      setMessages(prev => ({
+  ...prev,
+  profile: { success: '✅ Profile updated successfully.', error: '' }
+}));
       setInitialProfile({
         name:
           r.userName ||
@@ -257,10 +272,12 @@ const UserProfile = () => {
             : profileImage,
       });
 
-      setErrorMessage('');
     } catch (err) {
-      setErrorMessage('❌ Failed to update profile.');
-      setSuccessMessage('');
+      
+     setMessages(prev => ({
+  ...prev,
+  profile: { success: '', error: '❌ Failed to update profile.' }
+}));
     }
   };
 
@@ -346,8 +363,11 @@ const UserProfile = () => {
     setAddress('');
     setBio('');
 
-    setSuccessMessage('');
-    setErrorMessage('');
+    setMessages(prev => ({
+  ...prev,
+  profile: { success: '', error: '' }
+}));
+     
   };
 
 
@@ -377,15 +397,22 @@ const UserProfile = () => {
 
   }, []);
   const handleSocialSave = async () => {
-    setSuccessMessage('');
-    setErrorMessage('');
+   setMessages(prev => ({
+  ...prev,
+  social: { success: '', error: '' }
+}));
+     
 
     const storedUserRaw = localStorage.getItem('loginuserData');
     const storedUser = storedUserRaw ? JSON.parse(storedUserRaw) : {};
     const emailVal = storedUser.email;
 
     if (!emailVal) {
-      setErrorMessage('❌ User email not found.');
+      
+      setMessages(prev => ({
+  ...prev,
+  social: { success: '', error: '❌ User email not found.' }
+}));
       return;
     }
 
@@ -404,12 +431,17 @@ const UserProfile = () => {
         { params: { email: emailVal } }
       );
 
-
-      setSuccessMessage('✅ Social links updated successfully.');
-      setErrorMessage('');
+      setMessages(prev => ({
+  ...prev,
+  social: { success: '✅ Social links updated successfully.', error: '' }
+}));
+       
     } catch (err) {
-      setErrorMessage('❌ Failed to update social links.');
-      setSuccessMessage('');
+      
+    setMessages(prev => ({
+  ...prev,
+  social: { success: '', error: '❌ Failed to update social links.' }
+}));
     }
   };
 
@@ -439,8 +471,11 @@ const UserProfile = () => {
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
-    setSuccessMessage('');
-    setErrorMessage('');
+    setMessages(prev => ({
+  ...prev,
+  password: { success: '', error: '' }
+}));
+     
 
 
     const storedUserRaw = localStorage.getItem('loginuserData');
@@ -449,7 +484,11 @@ const UserProfile = () => {
     const emailVal = email || emailFromStorage;
 
     if (!emailVal) {
-      setErrorMessage("❌ User email not found.");
+      
+      setMessages(prev => ({
+  ...prev,
+  password: { success: "", error: "❌ User email not found." }
+}));
       return;
     }
 
@@ -457,7 +496,11 @@ const UserProfile = () => {
       passwords.newPassword && passwords.oldPassword && passwords.confirmPassword;
 
     if (isPasswordChanged && passwords.newPassword !== passwords.confirmPassword) {
-      setErrorMessage("❌ New password and confirm password do not match.");
+      
+      setMessages(prev => ({
+  ...prev,
+  password: { success: "", error: "❌ New password and confirm password do not match." }
+}));
       return;
     }
 
@@ -491,7 +534,11 @@ const UserProfile = () => {
       );
 
       setIsUpdating(false);
-      setSuccessMessage("✅ Profile updated successfully.");
+      
+      setMessages(prev => ({
+  ...prev,
+  password: { success: "✅ Password updated successfully.", error: "" }
+}));
 
       const storedUserRaw2 = localStorage.getItem('loginuserData');
       const storedUser2 = storedUserRaw2 ? JSON.parse(storedUserRaw2) : {};
@@ -517,7 +564,11 @@ const UserProfile = () => {
 
     } catch {
       setIsUpdating(false);
-      setErrorMessage("❌ Failed to update profile.");
+      
+      setMessages(prev => ({
+  ...prev,
+  password: { success: "", error: "❌ Failed to update profile." }
+}));
     }
   };
 
@@ -865,9 +916,11 @@ const UserProfile = () => {
             </div>
 
             <div>
-              {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
-              {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
+              {/* {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+              {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>} */}
 
+{messages.profile.success && <p style={{ color: "green", fontWeight: "bold" }}>{messages.profile.success}</p>}
+{messages.profile.error && <p style={{ color: "red", fontWeight: "bold" }}>{messages.profile.error}</p>}
               <button className="update-profile-btn" onClick={handleProfileSave} type="button">
                 Save Changes
               </button>
@@ -941,9 +994,13 @@ const UserProfile = () => {
             </div>
           </div>
 
-          {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
-          {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
+          {/* {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+          {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>} */}
 
+{/* {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+{errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>} */}
+{messages.password.success && <p style={{ color: "green", fontWeight: "bold" }}>{messages.password.success}</p>}
+{messages.password.error && <p style={{ color: "red", fontWeight: "bold" }}>{messages.password.error}</p>}
           <button className='update-profile-btn' onClick={handleResetPassword}>Update Password</button>
         </div>
       )}
@@ -1027,9 +1084,11 @@ const UserProfile = () => {
             </div>
           </div>
 
-          {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
-          {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
+          {/* {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
+          {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>} */}
 
+{messages.social.success && <p style={{ color: "green", fontWeight: "bold" }}>{messages.social.success}</p>}
+{messages.social.error && <p style={{ color: "red", fontWeight: "bold" }}>{messages.social.error}</p>}
           <button
             className="update-profile-btn"
             type="button"

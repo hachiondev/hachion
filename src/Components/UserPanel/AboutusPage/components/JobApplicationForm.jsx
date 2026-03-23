@@ -1,4 +1,3 @@
-// JobApplicationForm.jsx
 import React, { useState } from 'react';
 import styles from './JobApplicationForm.module.css';
 
@@ -33,8 +32,8 @@ const Field = ({ label, required, error, children }) => (
   </div>
 );
 
-const Toggle = ({ name, options, value, onChange }) => (
-  <div className={styles.toggleGroup}>
+const Toggle = ({ name, options, value, onChange, error }) => (
+  <div className={`${styles.toggleGroup} ${error ? styles.errorInput : ''}`}>
     {options.map(({ label, val }) => (
       <button
         key={val}
@@ -80,7 +79,7 @@ const JobApplicationForm = () => {
     agreeTerms: false
   });
   const [errors, setErrors] = useState({});
-  // const [submitted, setSubmitted] = useState(false);
+  
   const [submitted, setSubmitted] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -99,15 +98,43 @@ const JobApplicationForm = () => {
 
   const validate = () => {
     const e = {};
-    if (!formData.firstName.trim()) e.firstName = 'Required';
-    if (!formData.lastName.trim()) e.lastName = 'Required';
-    if (!formData.email.trim()) e.email = 'Required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) e.email = 'Invalid email';
-    if (!formData.phone.trim()) e.phone = 'Required';
-    if (!formData.department) e.department = 'Required';
-    if (!formData.position) e.position = 'Required';
-    if (!formData.resume) e.resume = 'Resume is required';
-    if (!formData.agreeTerms) e.agreeTerms = 'Please confirm to proceed';
+    
+  if (!formData.firstName.trim()) e.firstName = 'First Name Required';
+  if (!formData.lastName.trim()) e.lastName = 'Last Name Required';
+
+  if (!formData.email.trim()) e.email = 'Email Required';
+  else if (!/\S+@\S+\.\S+/.test(formData.email)) e.email = 'Invalid email';
+
+  if (!formData.phone.trim()) e.phone = 'Phone Number Required';
+  if (!formData.address.trim()) e.address = 'Address Required';
+
+  
+  if (!formData.department) e.department = 'Department Required';
+  if (!formData.position) e.position = 'Position Required';
+  if (!formData.employmentType) e.employmentType = 'Required';
+
+  if (!formData.expectedSalary) e.expectedSalary = 'Salary Required';
+  if (!formData.startDate) e.startDate = 'Start Date Required';
+
+  // Professional
+  if (!formData.experience) e.experience = 'Experience Required';
+  if (!formData.education) e.education = 'Education Required';
+  if (!formData.skills.trim()) e.skills = 'Skills Required';
+
+  if (!formData.portfolio.trim()) e.portfolio = 'PortFolio Required';
+  else if (!/^https?:\/\/.+/.test(formData.portfolio)) e.portfolio = 'Invalid URL';
+
+  if (!formData.linkedin.trim()) e.linkedin = 'LinkedIn Required';
+  else if (!/^https?:\/\/.+/.test(formData.linkedin)) e.linkedin = 'Invalid URL';
+
+  if (!formData.relocation) e.relocation = 'Relocation Required';
+  if (!formData.noticePeriod.trim()) e.noticePeriod = 'Notice Period Required';
+
+  // Files
+  if (!formData.resume) e.resume = 'Resume is required';
+
+  // Terms
+  if (!formData.agreeTerms) e.agreeTerms = 'Please confirm to proceed';
     return e;
   };
 
@@ -174,14 +201,14 @@ const JobApplicationForm = () => {
     }
   };
 
-  // Live progress: count filled required fields (max 5 steps)
+  
   const filledCount = [
     formData.firstName, formData.lastName, formData.email, formData.phone,
     formData.department, formData.position, formData.resume, formData.agreeTerms
   ].filter(Boolean).length;
   const progressLevel = Math.round((filledCount / 8) * 5);
 
-  // ── Success State ─────────────────────────────
+  
   if (submitted) {
     return (
       <div className={styles.container}>
@@ -208,7 +235,7 @@ const JobApplicationForm = () => {
     );
   }
 
-  // ── Main Form ─────────────────────────────────
+  
   return (
     <div className={styles.container}>
       {/* Brand bar sits outside the card */}
@@ -232,7 +259,7 @@ const JobApplicationForm = () => {
             </h1>
             <p className={styles.heroSub}>Complete the form below — takes less than 5 minutes.</p>
 
-            {/* Decorative SVG */}
+            
             <svg className={styles.heroDeco} viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="60" cy="60" r="55" stroke="white" strokeWidth="1" strokeDasharray="6 4" />
               <circle cx="60" cy="60" r="38" stroke="white" strokeWidth="1" opacity="0.6" />
@@ -314,9 +341,9 @@ const JobApplicationForm = () => {
                 </Field>
               </div>
 
-              <Field label="Address">
+              <Field label="Address" required error={errors.address}>
                 <input
-                  className={styles.input}
+                   className={`${styles.input} ${errors.address ? styles.errorInput : ''}`}
                   name="address" placeholder="City, Country"
                   value={formData.address} onChange={handleChange}
                 />
@@ -357,7 +384,7 @@ const JobApplicationForm = () => {
                 </Field>
               </div>
 
-              <Field label="Employment Type">
+              <Field label="Employment Type" required error={errors.employmentType}>
                 <Toggle
                   name="employmentType"
                   value={formData.employmentType}
@@ -371,18 +398,18 @@ const JobApplicationForm = () => {
               </Field>
 
               <div className={styles.row}>
-                <Field label="Expected Salary ($)">
+                <Field label="Expected Salary ($)" required error={errors.expectedSalary}>
                   <input
                     type="number"
-                    className={styles.input}
+                     className={`${styles.input} ${errors.address ? styles.errorInput : ''}`}
                     name="expectedSalary" placeholder="85,000"
                     value={formData.expectedSalary} onChange={handleChange}
                   />
                 </Field>
-                <Field label="Earliest Start Date">
+                <Field label="Earliest Start Date" required error={errors.startDate}>
                   <input
                     type="date"
-                    className={styles.input}
+                     className={`${styles.input} ${errors.address ? styles.errorInput : ''}`}
                     name="startDate"
                     value={formData.startDate} onChange={handleChange}
                   />
@@ -399,17 +426,17 @@ const JobApplicationForm = () => {
               </div>
 
               <div className={styles.row}>
-                <Field label="Years of Experience">
+                <Field label="Years of Experience" required error={errors.experience}>
                   <input
                     type="number"
-                    className={styles.input}
+                     className={`${styles.input} ${errors.address ? styles.errorInput : ''}`}
                     name="experience" placeholder="5" min="0" step="0.5"
                     value={formData.experience} onChange={handleChange}
                   />
                 </Field>
-                <Field label="Highest Education">
+                <Field label="Highest Education" required error={errors.education}>
                   <select
-                    className={styles.select}
+                    className={`${styles.select} ${errors.education ? styles.errorInput : ''}`}
                     name="education"
                     value={formData.education} onChange={handleChange}
                   >
@@ -422,25 +449,25 @@ const JobApplicationForm = () => {
                 </Field>
               </div>
 
-              <Field label="Key Skills">
+              <Field label="Key Skills" required error={errors.skills}>
                 <textarea
-                  className={styles.textarea}
+                  className={`${styles.textarea} ${errors.skills ? styles.errorInput : ''}`}
                   name="skills" placeholder="React, Node.js, Figma, SQL…" rows="2"
                   value={formData.skills} onChange={handleChange}
                 />
               </Field>
 
               <div className={styles.row}>
-                <Field label="Portfolio URL">
+                <Field label="Portfolio URL" required error={errors.portfolio}>
                   <input
-                    type="url" className={styles.input}
+                    type="url"  className={`${styles.input} ${errors.address ? styles.errorInput : ''}`}
                     name="portfolio" placeholder="https://yoursite.com"
                     value={formData.portfolio} onChange={handleChange}
                   />
                 </Field>
-                <Field label="LinkedIn URL">
+                <Field label="LinkedIn URL" required error={errors.linkedin}>
                   <input
-                    type="url" className={styles.input}
+                    type="url"  className={`${styles.input} ${errors.address ? styles.errorInput : ''}`}
                     name="linkedin" placeholder="https://linkedin.com/in/…"
                     value={formData.linkedin} onChange={handleChange}
                   />
@@ -448,7 +475,7 @@ const JobApplicationForm = () => {
               </div>
 
               <div className={styles.row}>
-                <Field label="Open to Relocation?">
+                <Field label="Open to Relocation?" required error={errors.relocation}>
                   <Toggle
                     name="relocation"
                     value={formData.relocation}
@@ -459,9 +486,9 @@ const JobApplicationForm = () => {
                     ]}
                   />
                 </Field>
-                <Field label="Notice Period">
+                <Field label="Notice Period" required error={errors.noticePeriod}>
                   <input
-                    className={styles.input}
+                     className={`${styles.input} ${errors.address ? styles.errorInput : ''}`}
                     name="noticePeriod" placeholder="e.g. 30 days"
                     value={formData.noticePeriod} onChange={handleChange}
                   />

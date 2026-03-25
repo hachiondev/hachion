@@ -107,6 +107,11 @@ export default function RegisterList() {
     date: currentDate,
     visa_status: "",
     mode: "Offline",
+
+     seoTeam: "",
+  technology: "",
+  stateCity: "",
+  coordinator: ""
   });
 
   const [countries, setCountries] = useState([]);
@@ -357,6 +362,11 @@ export default function RegisterList() {
       visa_status: row.visa_status ?? "Select Visa Status",
       remarks: row.remarks ?? "",
       comments: row.comments ?? "",
+
+       seoTeam: row.seoTeam ?? "",
+  technology: row.technology ?? "",
+  stateCity: row.stateCity ?? "",
+  coordinator: row.coordinator ?? ""
     });
 
     setShowAddCourse(true);
@@ -805,7 +815,42 @@ export default function RegisterList() {
                   <option>Other</option>
                 </select>
               </div>
+              
+
             </div>
+            <div className="course-row">
+  <div class="col">
+    <label class="form-label">SEO Team</label>
+    <input type="text" class="schedule-input"
+      name="seoTeam"
+      value={studentData.seoTeam}
+      onChange={handleChange} />
+  </div>
+
+  <div class="col">
+    <label class="form-label">Technology</label>
+    <input type="text" class="schedule-input"
+      name="technology"
+      value={studentData.technology}
+      onChange={handleChange} />
+  </div>
+
+  <div class="col">
+    <label class="form-label">State / City</label>
+    <input type="text" class="schedule-input"
+      name="stateCity"
+      value={studentData.stateCity}
+      onChange={handleChange} />
+  </div>
+
+  <div class="col">
+    <label class="form-label">Coordinator</label>
+    <input type="text" class="schedule-input"
+      name="coordinator"
+      value={studentData.coordinator}
+      onChange={handleChange} />
+  </div>
+</div>
             <div className='row'>
               <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">Remarks <span className="star">*</span></label>
@@ -822,6 +867,7 @@ export default function RegisterList() {
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
                   name='comments' value={studentData.comments} onChange={handleChange}></textarea>
               </div>
+              
             </div>
             {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
             {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
@@ -977,6 +1023,10 @@ export default function RegisterList() {
                     <StyledTableCell align='center'>Source</StyledTableCell>
                     <StyledTableCell align='center'>Remark</StyledTableCell>
                     <StyledTableCell align='center'>Comment</StyledTableCell>
+                    <StyledTableCell align='center'>SEO Team</StyledTableCell>
+                    <StyledTableCell align='center'>Technology</StyledTableCell>
+                    <StyledTableCell align='center'>State/City</StyledTableCell>
+                    <StyledTableCell align='center'>Coordinator</StyledTableCell>
                     <StyledTableCell align="center">Action</StyledTableCell>
                   </TableRow>
                 </TableHead>
@@ -1008,6 +1058,10 @@ export default function RegisterList() {
                         <StyledTableCell align="center">{row.source}</StyledTableCell>
                         <StyledTableCell align="left" style={{ whiteSpace: 'wrap' }}>{row.remarks}</StyledTableCell>
                         <StyledTableCell align="left" style={{ whiteSpace: 'wrap' }}>{row.comments}</StyledTableCell>
+                        <StyledTableCell align="center">{row.seoTeam}</StyledTableCell>
+                        <StyledTableCell align="center">{row.technology}</StyledTableCell>
+                        <StyledTableCell align="center">{row.stateCity}</StyledTableCell>
+                        <StyledTableCell align="center">{row.coordinator}</StyledTableCell>
                         <StyledTableCell align="center">
                           <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                             <FaEdit className="edit" onClick={() => handleClickOpen(row)} />

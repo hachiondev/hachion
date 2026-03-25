@@ -283,11 +283,7 @@ const JobApplicationForm = () => {
               />
             ))}
           </div>
-          {errorMessage && (
-            <div className={styles.errorMessage} style={{ marginBottom: "1rem" }}>
-              ⚠ {errorMessage}
-            </div>
-          )}
+          
 
           {successMessage && (
             <div className={styles.successMessage} style={{ marginBottom: "1rem", color: "green" }}>
@@ -542,6 +538,12 @@ const JobApplicationForm = () => {
                 <span>Submit Application</span>
                 <span>→</span>
               </button>
+              {errorMessage && (
+            <div className={styles.errorMessage} style={{ marginBottom: "1rem" }}>
+              ⚠ {errorMessage}
+            </div>
+          )}
+          
             </div>
 
           </form>

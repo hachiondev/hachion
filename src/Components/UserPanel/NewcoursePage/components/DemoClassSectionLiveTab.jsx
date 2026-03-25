@@ -387,9 +387,9 @@ What's Included:
 
                         <div className={styles.dcdetailtime}>{sess.time}</div>
 
-                        <div className={styles.dcdetailmeta}>
-                          {sess.duration ? `${sess.duration} min` : "60 min"}
-                        </div>
+                       <div className={styles.dcdetailmeta}>
+  {sess.duration || "60 min"}
+</div>
                       </div>
                       {sess.mode === "Live Demo" && isEnrolled ? (
                         /* =========================

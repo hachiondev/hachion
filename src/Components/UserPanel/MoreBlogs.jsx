@@ -136,11 +136,24 @@ const MoreBlogs = ({ scrollToTop = false }) => {
     ?.replace(/\s+/g, "-")
     .toLowerCase();
 
-  const shortSlug = blog.shortTitle
-    ?.replace(/\s+/g, "-")
-    .toLowerCase();
+  const hasShortTitle =
+    blog.shortTitle && blog.shortTitle.trim() !== "";
 
-  navigate(`/blogs/${categorySlug}/${shortSlug}`);
+  const titleSlug = blog.title
+    ?.toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-");
+
+  if (hasShortTitle) {
+    navigate(
+      `/blogs/${categorySlug}/${blog.shortTitle
+        .toLowerCase()
+        .replace(/\s+/g, "-")}`
+    );
+  } else {
+    navigate(`/blogs/${categorySlug}/${titleSlug}-${blog.id}`);
+  }
+
   window.scrollTo(0, 0);
 }}
                 />

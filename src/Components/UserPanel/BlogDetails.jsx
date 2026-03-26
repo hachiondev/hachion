@@ -24,13 +24,15 @@ import BlogInquiryForm from "./BlogInquiryForm";
 
 
 const BlogDetails = () => {
-  // const { category_name } = useParams();
-  // const { title } = useParams();
+  const { category_name } = useParams();
+  const { title } = useParams();
   // const navigate = useNavigate();
   // const id = title?.split("-").pop();
+  const lastPart = title?.split("-").pop();
+const id = /^\d+$/.test(lastPart) ? lastPart : null;
 
-  const { category_name } = useParams();
-const { title } = useParams(); // this will now be short_title
+//   const { category_name } = useParams();
+// const { title } = useParams(); // this will now be short_title
 const navigate = useNavigate();
 const shortTitle = decodeURIComponent(title)?.replace(/-/g, " ");
 
@@ -46,23 +48,34 @@ const shortTitle = decodeURIComponent(title)?.replace(/-/g, " ");
 
   // ✅ Fetch single blog for details
   useEffect(() => {
-    const fetchSelectedBlog = async () => {
-      setLoading(true);
-      try {
-        // const response = await axios.get(`https://api.test.hachion.co/blog/${id}`);
-        // const response = await axios.get(`https://api.test.hachion.co/blog/check/${shortTitle}`);
-        const response = await axios.get(
-  `https://api.test.hachion.co/blog/check/${encodeURIComponent(shortTitle)}`
-);
-        setSelectedBlog(response.data);
-      } catch (error) {
-        console.error("Error fetching selected blog:", error);
-      } finally {
-        setLoading(false);
+  const fetchSelectedBlog = async () => {
+    setLoading(true);
+    try {
+      let response;
+
+      if (id) {
+        // ✅ ID based API
+        response = await axios.get(
+          `https://api.test.hachion.co/blog/${id}`
+        );
+      } else if (shortTitle) {
+        // ✅ short_title API
+        response = await axios.get(
+          `https://api.test.hachion.co/blog/check/${encodeURIComponent(shortTitle)}`
+        );
       }
-    };
-    fetchSelectedBlog();
-  }, [shortTitle]);
+
+      setSelectedBlog(response?.data || null);
+    } catch (error) {
+      console.error("Error fetching selected blog:", error);
+      setSelectedBlog(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchSelectedBlog();
+}, [id, shortTitle]);   // ✅ VERY IMPORTANT
 
   // ✅ Fetch all blogs for sidebar “Recent Post”
   useEffect(() => {
@@ -356,13 +369,32 @@ const shortTitle = decodeURIComponent(title)?.replace(/-/g, " ");
                           style={{ animationDelay: `${index * 0.03}s` }}
                           onClick={() => {
                            
-                         navigate(
-  `/blogs/${blog.category_name
+//                          navigate(
+//   `/blogs/${blog.category_name
+//     .toLowerCase()
+//     .replace(/\s+/g, "-")}/${(blog.shortTitle || blog.short_title || blog.title)
+//       .toLowerCase()
+//       .replace(/\s+/g, "-")}`
+// );
+const categorySlug = blog.category_name
+  .toLowerCase()
+  .replace(/\s+/g, "-");
+
+const hasShortTitle =
+  blog.shortTitle && blog.shortTitle.trim() !== "";
+
+const titleSlug = blog.title
+  .toLowerCase()
+  .replace(/[^\w\s-]/g, "")
+  .replace(/\s+/g, "-");
+
+if (hasShortTitle) {
+  navigate(`/blogs/${categorySlug}/${blog.shortTitle
     .toLowerCase()
-    .replace(/\s+/g, "-")}/${blog.shortTitle
-      .toLowerCase()
-      .replace(/\s+/g, "-")}`
-);
+    .replace(/\s+/g, "-")}`);
+} else {
+  navigate(`/blogs/${categorySlug}/${titleSlug}-${blog.id}`);
+}
                             setSearchQuery("");
                             window.scrollTo(0, 0);
                           }}
@@ -422,13 +454,25 @@ const shortTitle = decodeURIComponent(title)?.replace(/-/g, " ");
                     key={blog.id}
                     className="recent-post-item"
                     onClick={() => {
-                  navigate(
-  `/blogs/${blog.category_name
+                 const categorySlug = blog.category_name
+  .toLowerCase()
+  .replace(/\s+/g, "-");
+
+const hasShortTitle =
+  blog.shortTitle && blog.shortTitle.trim() !== "";
+
+const titleSlug = blog.title
+  .toLowerCase()
+  .replace(/[^\w\s-]/g, "")
+  .replace(/\s+/g, "-");
+
+if (hasShortTitle) {
+  navigate(`/blogs/${categorySlug}/${blog.shortTitle
     .toLowerCase()
-    .replace(/\s+/g, "-")}/${blog.shortTitle
-      .toLowerCase()
-      .replace(/\s+/g, "-")}`
-);
+    .replace(/\s+/g, "-")}`);
+} else {
+  navigate(`/blogs/${categorySlug}/${titleSlug}-${blog.id}`);
+}
                       window.scrollTo(0, 0);
                     }}
                   >

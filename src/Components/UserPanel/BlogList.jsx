@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { BsPersonCircle } from "react-icons/bs";
 import Blogimageplaceholder from "../../Assets/blogplaceholder.webp";
 import "./Bloglist.css";
@@ -10,6 +11,7 @@ const BlogList = ({
   cardsPerPage,
   onTotalBlogsChange,
 }) => {
+  const navigate = useNavigate();
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -84,14 +86,34 @@ const BlogList = ({
     e.target.src = Blogimageplaceholder;
   };
 
-  const handleCardClick = (blog) => {
-   const blogUrl = `/blogs/${blog.category_name
-  ?.replace(/\s+/g, "-")
-  .toLowerCase()}/${blog.shortTitle
-  ?.replace(/\s+/g, "-")
-  .toLowerCase()}`;
-  };
+  // const handleCardClick = (blog) => {
+  //  const blogUrl = `/blogs/${blog.category_name
+  // ?.replace(/\s+/g, "-")
+  // .toLowerCase()}/${blog.shortTitle
+  // ?.replace(/\s+/g, "-")
+  // .toLowerCase()}`;
+  // };
+const handleCardClick = (blog) => {
+  const categorySlug = blog.category_name
+    ?.replace(/\s+/g, "-")
+    .toLowerCase();
 
+  const hasShortTitle =
+    blog.shortTitle && blog.shortTitle.trim() !== "";
+
+  const titleSlug = blog.title
+    ?.toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-");
+
+  if (hasShortTitle) {
+    navigate(`/blogs/${categorySlug}/${blog.shortTitle
+      .toLowerCase()
+      .replace(/\s+/g, "-")}`);
+  } else {
+    navigate(`/blogs/${categorySlug}/${titleSlug}-${blog.id}`);
+  }
+};
   return (
     <div className="blog-list p-2">
       {loading ? (
@@ -147,11 +169,15 @@ const BlogList = ({
             </div>
             <a
   href={`/blogs/${blog.category_name
-    ?.replace(/\s+/g, "-")
-    .toLowerCase()}/${(blog.shortTitle || blog.id)
-    ?.toString()
-    .replace(/\s+/g, "-")
-    .toLowerCase()}`}
+  ?.replace(/\s+/g, "-")
+  .toLowerCase()}/${
+  blog.shortTitle && blog.shortTitle.trim() !== ""
+    ? blog.shortTitle.toLowerCase().replace(/\s+/g, "-")
+    : blog.title
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, "-") + "-" + blog.id
+}`}
   className="txtReadmore"
   onClick={(e) => e.stopPropagation()}
 >

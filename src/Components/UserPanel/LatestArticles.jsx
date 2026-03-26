@@ -79,13 +79,28 @@ const LatestArticles = () => {
                   return d.toLocaleDateString("en-US", options);
                 })()}
                 onClick={() => {
-  navigate(
-    `/blogs/${blog.category_name
-      .replace(/\s+/g, "-")
-      .toLowerCase()}/${blog.shortTitle
-      ?.replace(/\s+/g, "-")
-      .toLowerCase()}`
-  );
+  const categorySlug = blog.category_name
+    ?.replace(/\s+/g, "-")
+    .toLowerCase();
+
+  const hasShortTitle =
+    blog.shortTitle && blog.shortTitle.trim() !== "";
+
+  const titleSlug = blog.title
+    ?.toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-");
+
+  if (hasShortTitle) {
+    navigate(
+      `/blogs/${categorySlug}/${blog.shortTitle
+        .toLowerCase()
+        .replace(/\s+/g, "-")}`
+    );
+  } else {
+    navigate(`/blogs/${categorySlug}/${titleSlug}-${blog.id}`);
+  }
+
   window.scrollTo(0, 0);
 }}
               />

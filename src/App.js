@@ -151,10 +151,10 @@ function AppRoutes() {
           <Route path="/workshop" element={<Workshop />} />
           <Route path="/workshop/:slug" element={<WorkshopDetails />} />
           <Route path="/blogs" element={<Blogs />} />
-          <Route
-            path="/blogs/:category_name/:title"
-            element={<BlogDetails />}
-          />
+  <Route
+  path="/blogs/:category_name/:title"
+  element={<BlogDetails />}
+/>
           <Route path="/aboutus" element={<Aboutus />} />
           <Route path="/contactus" element={<ContactUs />} />
           <Route path="/enroll/:courseName" element={<Enrollment />} />

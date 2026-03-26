@@ -25,11 +25,21 @@ const RecentEntries = () => {
     .replace(/\s+/g, "-")
     .replace(/[^\w-]+/g, "")
     .toLowerCase();
-
 const handleBlogClick = (blog) => {
   const categorySlug = toSlug(blog.category_name);
   const titleSlug = toSlug(blog.title);
-  navigate(`/blogs/${categorySlug}/${blog.short_title.replace(/\s+/g, "-").toLowerCase()}`);
+
+  const shortTitleSlug =
+    blog.short_title && blog.short_title.trim() !== ""
+      ? blog.short_title.replace(/\s+/g, "-").toLowerCase()
+      : null;
+
+  if (shortTitleSlug) {
+    navigate(`/blogs/${categorySlug}/${shortTitleSlug}`);
+  } else {
+    navigate(`/blogs/${categorySlug}/${titleSlug}-${blog.id}`);
+  }
+
   window.scrollTo(0, 0);
 };
   

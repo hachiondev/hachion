@@ -113,6 +113,17 @@ export default function RegisterList() {
   stateCity: "",
   coordinator: ""
   });
+// ✅ NEW: Update Modal + History States
+const [openUpdateModal, setOpenUpdateModal] = useState(false);
+const [latestUpdate, setLatestUpdate] = useState(null);
+const [history, setHistory] = useState([]);
+
+const [updateForm, setUpdateForm] = useState({
+  remark: "",
+  status: "",
+  date: "",
+  coordinator: ""
+});
 
   const [countries, setCountries] = useState([]);
 
@@ -154,7 +165,11 @@ export default function RegisterList() {
       comments: "",
       date: currentDate,
       visa_status: "",
-      mode: "offline"
+      mode: "offline",
+ seoTeam: "",
+    technology: "",
+    stateCity: "",
+    coordinator: ""
     });
   }
 
@@ -175,6 +190,10 @@ export default function RegisterList() {
       date: currentDate,
       visa_status: "",
       mode: "Offline",
+      seoTeam: "",
+    technology: "",
+    stateCity: "",
+    coordinator: ""
     });
 
     setSelectedCountry({
@@ -200,7 +219,76 @@ export default function RegisterList() {
   const handleClose = () => {
     setOpen(false);
   };
+// ✅ OPEN MODAL
+const openModal = () => setOpenUpdateModal(true);
+const closeModal = () => setOpenUpdateModal(false);
 
+// ✅ SAVE UPDATE (FRONTEND ONLY FOR NOW)
+const handleSaveUpdate = async () => {
+  try {
+   const today = new Date();
+
+// ✅ Format: 27-March-2026
+const formattedDate = today.toLocaleDateString("en-GB", {
+  day: "2-digit",
+  month: "long",
+  year: "numeric"
+}).replace(",", "");
+
+const payload = {
+  studentId: studentData.studentId,
+  remark: updateForm.remark,
+
+  // ❌ don't send status here
+  callMadeOn: formattedDate,          // ✅ current date auto
+
+  lastCallMadeOn: updateForm.date,    // next follow-up
+
+  coordinator: updateForm.coordinator,
+
+  callStatus: updateForm.status       // ✅ correct mapping
+};
+
+    const response = await axios.post(
+      "https://api.test.hachion.co/register-student/add-remark",
+      payload
+    );
+
+    const saved = response.data;
+
+   const newUpdate = {
+  remark: saved.remark,
+  status: saved.callStatus,
+  followUpDate: saved.lastCallMadeOn,   // next follow-up
+  callDate: saved.callMadeOn,           // actual call date
+  coordinator: saved.coordinator
+};
+
+    setLatestUpdate(newUpdate);
+    setHistory(prev => [newUpdate, ...prev]);
+
+    setUpdateForm({
+      remark: "",
+      status: "",
+      date: "",
+      coordinator: ""
+    });
+
+    closeModal();
+
+  } catch (error) {
+    console.error("Error saving remark:", error);
+    alert("Failed to save update");
+  }
+};
+const isUpdateFormValid = () => {
+  return (
+    updateForm.remark.trim() !== "" &&
+    updateForm.status !== "" &&
+    updateForm.coordinator !== "" 
+    // updateForm.date !== ""   // include if date mandatory
+  );
+};
   useEffect(() => {
     const formattedCountries = staticCountries.filter(c => c.name && c.code);
     setCountries(formattedCountries);
@@ -327,51 +415,137 @@ export default function RegisterList() {
     setFilteredStudent(filtered);
   }, [searchTerm, registerStudent]);
 
-  const handleClickOpen = (row) => {
-    setFormMode("Edit");
+  // const handleClickOpen = (row) => {
+  //   setFormMode("Edit");
 
-    const [codePart, ...numberParts] = (row.mobile || "").split(" ");
-    const numberPart = numberParts.join(" ");
+  //   const [codePart, ...numberParts] = (row.mobile || "").split(" ");
+  //   const numberPart = numberParts.join(" ");
 
-    const [wCode, ...wNumberParts] = (row.whatsapp || "").split(" ");
-    const wNumberPart = wNumberParts.join(" ");
+  //   const [wCode, ...wNumberParts] = (row.whatsapp || "").split(" ");
+  //   const wNumberPart = wNumberParts.join(" ");
 
-    const matchedCountry = countries.find(
-      (c) => c.name.toLowerCase() === row.country?.toLowerCase()
+  //   const matchedCountry = countries.find(
+  //     (c) => c.name.toLowerCase() === row.country?.toLowerCase()
+  //   );
+
+  //   if (matchedCountry) {
+  //     setSelectedCountry({
+  //       value: matchedCountry.name,
+  //       code: matchedCountry.code,
+  //       flag: matchedCountry.flag,
+  //     });
+  //   }
+
+  //   setStudentData({
+  //     ...row,
+  //     userName: row.userName ?? "",
+  //     email: row.email ?? "",
+  //     mobile: numberPart ?? "",
+  //     whatsapp: wNumberPart ?? "",
+  //     country: row.country ?? "",
+  //     location: row.location ?? "",
+  //     time_zone: row.time_zone ?? "",
+  //     analyst_name: row.analyst_name ?? "",
+  //     source: row.source ?? "Select",
+  //     visa_status: row.visa_status ?? "Select Visa Status",
+  //     remarks: row.remarks ?? "",
+  //     comments: row.comments ?? "",
+
+  //      seoTeam: row.seoTeam ?? "",
+  // technology: row.course_name ?? "",
+  // stateCity: row.stateCity ?? "",
+  // coordinator: row.coordinator ?? ""
+  //   });
+
+  //   setShowAddCourse(true);
+  // };
+const handleClickOpen = async (row) => {
+  setFormMode("Edit");
+
+  const [codePart, ...numberParts] = (row.mobile || "").split(" ");
+  const numberPart = numberParts.join(" ");
+
+  const [wCode, ...wNumberParts] = (row.whatsapp || "").split(" ");
+  const wNumberPart = wNumberParts.join(" ");
+
+  const matchedCountry = countries.find(
+    (c) => c.name.toLowerCase() === row.country?.toLowerCase()
+  );
+
+  if (matchedCountry) {
+    setSelectedCountry({
+      value: matchedCountry.name,
+      code: matchedCountry.code,
+      flag: matchedCountry.flag,
+    });
+  }
+
+  setStudentData({
+    ...row,
+    userName: row.userName ?? "",
+    email: row.email ?? "",
+    mobile: numberPart ?? "",
+    whatsapp: wNumberPart ?? "",
+    country: row.country ?? "",
+    location: row.location ?? "",
+    time_zone: row.time_zone ?? "",
+    analyst_name: row.analyst_name ?? "",
+    source: row.source ?? "Select",
+    visa_status: row.visa_status ?? "Select Visa Status",
+    remarks: row.remarks ?? "",
+    comments: row.comments ?? "",
+    seoTeam: row.seoTeam ?? "",
+    technology: row.course_name ?? "",
+    stateCity: row.stateCity ?? "",
+    coordinator: row.coordinator ?? ""
+  });
+
+  // ✅ NEW CODE START (DO NOT REMOVE ABOVE CODE)
+
+  try {
+    const res = await axios.get(
+      `https://api.test.hachion.co/remarks/${row.studentId}`
     );
 
-    if (matchedCountry) {
-      setSelectedCountry({
-        value: matchedCountry.name,
-        code: matchedCountry.code,
-        flag: matchedCountry.flag,
-      });
+    const data = res.data;
+
+    if (data && data.length > 0) {
+      // ✅ PICK LATEST (LAST RECORD)
+      // const latest = data[data.length - 1];
+const latest = data.sort((a, b) => b.id - a.id)[0];
+      const latestMapped = {
+        remark: latest.remark,
+        status: latest.callStatus,
+        callDate: latest.callMadeOn,
+        followUpDate: latest.lastCallMadeOn,
+        coordinator: latest.coordinator
+      };
+
+      setLatestUpdate(latestMapped);
+      // setHistory(data); // optional (if you want full history)
+    const sortedData = data.sort((a, b) => b.id - a.id);
+
+const formattedHistory = sortedData.map(item => ({
+  remark: item.remark,
+  status: item.callStatus,
+  callDate: item.callMadeOn,
+  followUpDate: item.lastCallMadeOn,
+  coordinator: item.coordinator
+}));
+
+setHistory(formattedHistory);
+    } else {
+      setLatestUpdate(null);
     }
 
-    setStudentData({
-      ...row,
-      userName: row.userName ?? "",
-      email: row.email ?? "",
-      mobile: numberPart ?? "",
-      whatsapp: wNumberPart ?? "",
-      country: row.country ?? "",
-      location: row.location ?? "",
-      time_zone: row.time_zone ?? "",
-      analyst_name: row.analyst_name ?? "",
-      source: row.source ?? "Select",
-      visa_status: row.visa_status ?? "Select Visa Status",
-      remarks: row.remarks ?? "",
-      comments: row.comments ?? "",
+  } catch (error) {
+    console.error("Error fetching remarks:", error);
+  }
 
-       seoTeam: row.seoTeam ?? "",
-  technology: row.technology ?? "",
-  stateCity: row.stateCity ?? "",
-  coordinator: row.coordinator ?? ""
-    });
+  // ✅ NEW CODE END
 
-    setShowAddCourse(true);
-  };
-
+  setShowAddCourse(true);
+};
   const handleUpdate = async () => {
     try {
       const finalMobile = `${selectedCountry.code} ${studentData.mobile}`;
@@ -381,6 +555,7 @@ export default function RegisterList() {
         ...studentData,
         mobile: finalMobile,
         whatsapp: finalWhatsapp,
+        course_name: studentData.technology
       };
 
       const response = await axios.put(
@@ -449,6 +624,7 @@ export default function RegisterList() {
       mobile: finalMobile,
       whatsapp: finalWhatsapp,
       date: currentDate,
+       course_name: studentData.technology
     };
     console.log("Data being sent:", dataToSubmit);
 
@@ -494,11 +670,11 @@ export default function RegisterList() {
       safeTrim(studentData.mobile).length === 10 &&
       safeTrim(studentData.whatsapp).length === 10 &&
       safeTrim(studentData.country) !== "" &&
-      safeTrim(studentData.location) !== "" &&
+      // safeTrim(studentData.location) !== "" &&
       safeTrim(studentData.time_zone) !== "" &&
-      safeTrim(studentData.analyst_name) !== "" &&
-      safeTrim(studentData.remarks).length >= 15 &&
-      safeTrim(studentData.comments) !== ""
+      safeTrim(studentData.analyst_name) !== "" 
+      // safeTrim(studentData.remarks).length >= 15 &&
+      // safeTrim(studentData.comments) !== ""
     );
   };
 
@@ -851,7 +1027,7 @@ export default function RegisterList() {
       onChange={handleChange} />
   </div>
 </div>
-            <div className='row'>
+            {/* <div className='row'>
               <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">Remarks <span className="star">*</span></label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
@@ -868,15 +1044,267 @@ export default function RegisterList() {
                   name='comments' value={studentData.comments} onChange={handleChange}></textarea>
               </div>
               
-            </div>
+            </div> */}
             {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
             {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
             <div className="course-row">
-              {formMode === "Edit" ? (
-                <button className='submit-btn' onClick={handleUpdate} disabled={!isFormValid()}>
-                  Update
-                </button>
-              ) : (
+             {formMode === "Edit" ? (
+    <div style={{ width: "100%" }}>
+      <button className='submit-btn' onClick={handleUpdate} disabled={!isFormValid()}>
+        Update
+      </button>
+
+      {/* ✅ FORCE NEW LINE */}
+      <div style={{ width: "100%", marginTop: "20px" }}>
+{openUpdateModal && (
+  <div style={{
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(0,0,0,0.4)",
+    zIndex: 9999
+  }}>
+
+    <div style={{
+      width: "600px",
+      background: "#fff",
+      margin: "60px auto",
+      borderRadius: "10px",
+      padding: "20px 25px",
+      boxShadow: "0 10px 30px rgba(0,0,0,0.2)"
+    }}>
+
+      {/* HEADER */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h2 style={{ margin: 0 }}>Add Follow-up Update</h2>
+        <span style={{ cursor: "pointer", fontSize: "22px" }} onClick={closeModal}>✖</span>
+      </div>
+
+      {/* STUDENT INFO */}
+      <div style={{ display: "flex", alignItems: "center", margin: "20px 0" }}>
+        <div style={{
+          width: "45px",
+          height: "45px",
+          borderRadius: "50%",
+          background: "#d9eaf7",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          marginRight: "10px"
+        }}>
+          👤
+        </div>
+        <div>
+          <div>Student Name:</div>
+          <div style={{ fontSize: "18px", fontWeight: "500" }}>
+            {studentData.userName}
+          </div>
+        </div>
+      </div>
+
+      {/* REMARK */}
+      {/* <label>Remark *</label> */}
+      <label>
+  Remark <span style={{ color: "red", marginLeft: "3px" }}>*</span>
+</label>
+      <textarea
+        rows="3"
+        value={updateForm.remark}
+        onChange={(e) => setUpdateForm({ ...updateForm, remark: e.target.value })}
+        style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid #ccc" }}
+      />
+
+      {/* ROW */}
+      <div style={{ display: "flex", gap: "15px" }}>
+
+        <div style={{ flex: 1 }}>
+          {/* <label>Call Status *</label> */}
+          <label>
+  Call Status <span style={{ color: "red", marginLeft: "3px" }}>*</span>
+</label>
+          <select
+            value={updateForm.status}
+            onChange={(e) => setUpdateForm({ ...updateForm, status: e.target.value })}
+            style={{ width: "100%", padding: "10px", borderRadius: "6px" }}
+          >
+            <option value="" disabled>Select Call Status</option>
+            <option>Called</option>
+            <option>Not Connected</option>
+            <option>Incorrect Number</option>
+            <option>Not Picking</option>
+            <option>No Number</option>
+          </select>
+        </div>
+
+        <div style={{ flex: 1 }}>
+          <label>Next Follow-up Date</label>
+          <input
+            type="date"
+            value={updateForm.date}
+            onChange={(e) => setUpdateForm({ ...updateForm, date: e.target.value })}
+            style={{ width: "100%", padding: "10px", borderRadius: "6px" }}
+          />
+        </div>
+
+      </div>
+
+      {/* COORDINATOR */}
+      {/* <label>Coordinator *</label> */}
+      <label>
+  Coordinator <span style={{ color: "red", marginLeft: "3px" }}>*</span>
+</label>
+      <select
+        value={updateForm.coordinator}
+        onChange={(e) => setUpdateForm({ ...updateForm, coordinator: e.target.value })}
+        style={{ width: "100%", padding: "10px", borderRadius: "6px" }}
+      >
+         <option value="" disabled>Select Co-Ordinator</option>
+        <option>Arathi</option>
+        <option>Priyanka</option>
+        <option>Shoeb</option>
+      </select>
+
+      {/* BUTTONS */}
+      <div style={{ marginTop: "25px", textAlign: "right" }}>
+        <button
+          onClick={closeModal}
+          style={{
+            background: "#eee",
+            padding: "10px 18px",
+            borderRadius: "6px",
+            marginRight: "10px"
+          }}
+        >
+          Cancel
+        </button>
+
+       <button
+  onClick={handleSaveUpdate}
+  disabled={!isUpdateFormValid()}
+  style={{
+    background: isUpdateFormValid() ? "#1e88e5" : "#ccc",
+    color: "white",
+    padding: "10px 18px",
+    borderRadius: "6px",
+    cursor: isUpdateFormValid() ? "pointer" : "not-allowed",
+    opacity: isUpdateFormValid() ? 1 : 0.7
+  }}
+>
+  Save Update
+</button>
+      </div>
+
+    </div>
+  </div>
+)}
+        {/* ✅ LATEST UPDATE */}
+        <div style={{ background: "#fff", padding: "15px", borderRadius: "8px" }}>
+          <h3 style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+  Latest Update
+  <button className="submit-btn" onClick={openModal}>+ Add Update</button>
+</h3>
+
+          {latestUpdate ? (
+            <div style={{ background: "#e8f5e9", padding: "10px", borderLeft: "5px solid green" }}>
+              🟢 {latestUpdate.status} <br />
+              📞 Call Date: {latestUpdate.callDate}<br />
+              📅 Next Follow-up: {latestUpdate.followUpDate 
+  ? dayjs(latestUpdate.followUpDate).format('DD-MMMM-YYYY').toUpperCase() 
+  : ""} <br />
+              👤 {latestUpdate.coordinator} <br />
+              {latestUpdate.remark}
+            </div>
+          ) : (
+            <p>No updates yet</p>
+          )}
+        </div>
+
+        {/* ✅ HISTORY */}
+        <div style={{ marginTop: "20px", background: "#fff", padding: "15px", borderRadius: "8px" }}>
+          <h3>
+            Follow-up History
+            {/* <button className="submit-btn" onClick={openModal} style={{ marginLeft: "10px" }}>
+              + Add Update
+            </button> */}
+          </h3>
+
+         {history.length > 0 ? history.map((item, index) => (
+  <div key={index} style={{
+    display: "flex",
+    marginBottom: "15px"
+  }}>
+
+    {/* LEFT DOT + LINE */}
+    <div style={{
+      width: "20px",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center"
+    }}>
+      <div style={{
+        width: "10px",
+        height: "10px",
+        borderRadius: "50%",
+        background: "#1e88e5",
+        marginTop: "5px"
+      }}></div>
+
+      {index !== history.length - 1 && (
+        <div style={{
+          width: "2px",
+          flex: 1,
+          background: "#ccc"
+        }}></div>
+      )}
+    </div>
+
+    {/* RIGHT CONTENT */}
+    <div style={{
+      background: "#f9f9f9",
+      padding: "12px",
+      borderRadius: "8px",
+      width: "100%",
+      boxShadow: "0 2px 5px rgba(0,0,0,0.1)"
+    }}>
+
+      <div style={{ fontWeight: "600", color: "#333" }}>
+        🟢 {item.status}
+      </div>
+
+      <div style={{ fontSize: "13px", color: "#666", marginTop: "4px" }}>
+        📞 Call: {item.callDate}
+      </div>
+
+      <div style={{ fontSize: "13px", color: "#666" }}>
+        📅 Follow-up: {item.followUpDate 
+          ? dayjs(item.followUpDate).format('DD-MMMM-YYYY').toUpperCase() 
+          : "N/A"}
+      </div>
+
+      <div style={{ fontSize: "13px", color: "#666" }}>
+        👤 {item.coordinator}
+      </div>
+
+      <div style={{
+        marginTop: "8px",
+        fontSize: "14px",
+        color: "#000"
+      }}>
+        {item.remark}
+      </div>
+
+    </div>
+  </div>
+)) : (
+  <p>No history available</p>
+)}
+        </div>
+
+      </div>
+    </div>
+  ) : (
                 <button className='submit-btn' onClick={handleSubmit} disabled={!isFormValid()}>
                   Submit
                 </button>
@@ -1021,12 +1449,12 @@ export default function RegisterList() {
                     <StyledTableCell align="center">Visa Status</StyledTableCell>
                     <StyledTableCell align='center'>Entered By</StyledTableCell>
                     <StyledTableCell align='center'>Source</StyledTableCell>
-                    <StyledTableCell align='center'>Remark</StyledTableCell>
-                    <StyledTableCell align='center'>Comment</StyledTableCell>
+                    {/* <StyledTableCell align='center'>Remark</StyledTableCell> */}
+                    {/* <StyledTableCell align='center'>Comment</StyledTableCell> */}
                     <StyledTableCell align='center'>SEO Team</StyledTableCell>
                     <StyledTableCell align='center'>Technology</StyledTableCell>
                     <StyledTableCell align='center'>State/City</StyledTableCell>
-                    <StyledTableCell align='center'>Coordinator</StyledTableCell>
+                    {/* <StyledTableCell align='center'>Coordinator</StyledTableCell> */}
                     <StyledTableCell align="center">Action</StyledTableCell>
                   </TableRow>
                 </TableHead>
@@ -1056,12 +1484,12 @@ export default function RegisterList() {
                         <StyledTableCell align="center">{row.visa_status}</StyledTableCell>
                         <StyledTableCell align="center">{row.analyst_name}</StyledTableCell>
                         <StyledTableCell align="center">{row.source}</StyledTableCell>
-                        <StyledTableCell align="left" style={{ whiteSpace: 'wrap' }}>{row.remarks}</StyledTableCell>
-                        <StyledTableCell align="left" style={{ whiteSpace: 'wrap' }}>{row.comments}</StyledTableCell>
+                        {/* <StyledTableCell align="left" style={{ whiteSpace: 'wrap' }}>{row.remarks}</StyledTableCell> */}
+                        {/* <StyledTableCell align="left" style={{ whiteSpace: 'wrap' }}>{row.comments}</StyledTableCell> */}
                         <StyledTableCell align="center">{row.seoTeam}</StyledTableCell>
-                        <StyledTableCell align="center">{row.technology}</StyledTableCell>
+                        <StyledTableCell align="center">{row.course_name}</StyledTableCell>
                         <StyledTableCell align="center">{row.stateCity}</StyledTableCell>
-                        <StyledTableCell align="center">{row.coordinator}</StyledTableCell>
+                        {/* <StyledTableCell align="center">{row.coordinator}</StyledTableCell> */}
                         <StyledTableCell align="center">
                           <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                             <FaEdit className="edit" onClick={() => handleClickOpen(row)} />

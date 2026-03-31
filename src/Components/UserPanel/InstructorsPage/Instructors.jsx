@@ -46,7 +46,7 @@ const getTrainerCourseCount = (allTrainers, trainerName) => {
   ).size;
 };
 
-// ✅ Normalize helper — strips extra spaces, lowercases for comparison
+
 const normalize = (str) => str?.trim().toLowerCase() ?? "";
 
 const Instructors = () => {
@@ -64,6 +64,7 @@ const Instructors = () => {
 
   const { data: coursesData = [] } = useCourses();
   const { data: trainers = [], isLoading, isError, error } = useTrainers();
+ 
   const { data: teacherOptions = [] } = useTrainerOptions();
   const { data: trainersByCourse = [] } = useTrainersByCourse(selectedCourse);
 
@@ -80,18 +81,12 @@ const Instructors = () => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, []);
 
-  /* -----------------------------
-     Reset teacher when course changes
-  ----------------------------- */
-  // ✅ When user picks a different course, clear selected teacher
-  // so the teacher dropdown re-populates correctly and doesn't
-  // leave a stale teacher selected that doesn't belong to the new course.
   useEffect(() => {
     setSelectedTeacher("");
     setCurrentPage(1);
   }, [selectedCourse]);
 
-  // ✅ Reset page when search or teacher changes too
+  
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, selectedTeacher]);
@@ -100,16 +95,20 @@ const Instructors = () => {
      Filters
   ----------------------------- */
   const filteredTrainers = useMemo(() => {
-    return trainers.filter((trainer) => {
+    return trainers.map((t) => ({
+  ...t,
+  trainer_name: t.trainer_name || t.trainerName,
+  course_name: t.course_name || t.courseName,
+})).filter((trainer) => {
       const term = normalize(searchTerm);
 
-      // Search matches trainer name OR course name
+      
       const matchesSearch =
         term === "" ||
         normalize(trainer.trainer_name).includes(term) ||
         normalize(trainer.course_name).includes(term);
 
-      // ✅ Normalize both sides before comparing to avoid case/space mismatches
+    
       const matchesTeacher = selectedTeacher
         ? normalize(trainer.trainer_name) === normalize(selectedTeacher)
         : true;
@@ -122,15 +121,10 @@ const Instructors = () => {
     });
   }, [trainers, searchTerm, selectedTeacher, selectedCourse]);
 
-  /* -----------------------------
-     Teacher dropdown options
-  ----------------------------- */
-  // ✅ When a course is selected, derive teacher options directly from the
-  // filtered trainers list (same normalization) instead of relying solely
-  // on the trainersByCourse API which may return mismatched data.
+  
   const teacherDropdownOptions = useMemo(() => {
     if (selectedCourse) {
-      // Get unique trainer names that actually teach the selected course
+      
       const names = [
         ...new Set(
           trainers
@@ -143,7 +137,7 @@ const Instructors = () => {
       ];
       return names;
     }
-    // No course selected — use the full teacher options list
+    
     return teacherOptions.map((t) =>
       typeof t === "string" ? t : t.trainer_name
     );
@@ -164,7 +158,7 @@ const Instructors = () => {
       const width = window.innerWidth;
       if (width <= 768) setCardsPerPage(4);
       else if (width <= 1024) setCardsPerPage(12);
-      else setCardsPerPage(4); // ✅ Fixed: was hardcoded to 4 on desktop
+      else setCardsPerPage(4); 
     };
 
     updateCardsPerPage();
@@ -230,12 +224,7 @@ const Instructors = () => {
   if (isLoading) return <Loader />;
   if (isError) return <div>{error?.message || "Something went wrong"}</div>;
 
-  // const indexOfLastCard = currentPage * cardsPerPage;
-  // const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  // const currentCards = filteredTrainers.slice(indexOfFirstCard, indexOfLastCard);
-  // const totalCards = filteredTrainers.length;
-
-  // Group trainers so each trainer appears only once
+  
 const groupedTrainers = Object.values(
   filteredTrainers.reduce((acc, trainer) => {
     const name = trainer.trainer_name?.trim().toLowerCase();
@@ -357,10 +346,7 @@ const totalCards = groupedTrainers.length;
           <div className="profiles-grid">
             {currentCards.length > 0 ? (
               currentCards.map((trainer) => {
-                // const courseCount = getTrainerCourseCount(
-                //   trainers,
-                //   trainer.trainer_name
-                // );
+                
 const courseCount = trainer.courses
   ? trainer.courses.length
   : getTrainerCourseCount(trainers, trainer.trainer_name);
@@ -472,7 +458,7 @@ const courseCount = trainer.courses
                 );
               })
             ) : (
-              // ✅ Now correctly shows when filters return no results
+              
               <p className="no-results-message">No instructors found.</p>
             )}
           </div>

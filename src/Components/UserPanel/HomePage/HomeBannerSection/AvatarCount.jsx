@@ -1,10 +1,35 @@
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import AvatarGroup from "@mui/material/AvatarGroup";
+// import * as React from "react";
+// import Avatar from "@mui/material/Avatar";
+// import AvatarGroup from "@mui/material/AvatarGroup";
+// import "../../Home.css";
+
+// export default function CustomSurplusAvatars() {
+//   // Random avatar image sources
+//   const randomAvatars = [
+//     "https://i.pravatar.cc/150?img=11",
+//     "https://i.pravatar.cc/150?img=12",
+//     "https://i.pravatar.cc/150?img=13",
+//     "https://i.pravatar.cc/150?img=14",
+//     "https://i.pravatar.cc/150?img=15",
+//     "https://i.pravatar.cc/150?img=16",
+//   ];
+
+//   const shuffled = randomAvatars.sort(() => 0.5 - Math.random()).slice(0, 5);
+
+//   return (
+//     <AvatarGroup max={6} className="avatar-group">
+//       {shuffled.map((src, index) => (
+//         <Avatar key={index} src={src} alt={`Learner avatar ${index + 1}`}/>
+//       ))}
+
+//       <Avatar className="avatar-number" alt="25 thousand more learners">+25k</Avatar>
+//     </AvatarGroup>
+//   );
+// }
+import React, { useMemo } from "react";
 import "../../Home.css";
 
 export default function CustomSurplusAvatars() {
-  // Random avatar image sources
   const randomAvatars = [
     "https://i.pravatar.cc/150?img=11",
     "https://i.pravatar.cc/150?img=12",
@@ -14,15 +39,25 @@ export default function CustomSurplusAvatars() {
     "https://i.pravatar.cc/150?img=16",
   ];
 
-  const shuffled = randomAvatars.sort(() => 0.5 - Math.random()).slice(0, 5);
+  // Shuffle only once (optimized)
+  const shuffled = useMemo(() => {
+    return [...randomAvatars]
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 5);
+  }, []);
 
   return (
-    <AvatarGroup max={6} className="avatar-group">
+    <div className="avatar-group">
       {shuffled.map((src, index) => (
-        <Avatar key={index} src={src} alt={`Learner avatar ${index + 1}`}/>
+        <img
+          key={index}
+          src={src}
+          alt={`Learner avatar ${index + 1}`}
+          className="avatar-img"
+        />
       ))}
 
-      <Avatar className="avatar-number" alt="25 thousand more learners">+25k</Avatar>
-    </AvatarGroup>
+      <div className="avatar-number">+25k</div>
+    </div>
   );
 }

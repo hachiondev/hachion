@@ -1,26 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import Association from './Association';
-import TrainingEvents from './HomePage/TrainingSection/TrainingEvents';
-import TeensEvents from './HomePage/TeenSection/TeensEvents';
-import Career from './Career';
-import Learners from './HomePage/LearnerSection/Learners';
-import Corporate from './HomePage/CorporateSection/Corporate';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { Helmet } from "react-helmet-async";
-import PopupBanner from "./PopupBanner";
 import { useLocation } from 'react-router-dom';
 import { FaArrowUp } from 'react-icons/fa';
-import RecentEntries from './HomePage/TrendingBlogSection/RecentEntries';
-import MeetInstructorBanner from './MeetInstructorBanner';
-import ShareKnowledgeBanner from './ShareKnowledgeBanner';
-import WhyChoose from '././WhyChoose';
-import HomeFaq from './HomeFaq';
-import LimitedDeals from './HomePage/LimitedSection/LimitedDeals';
+import PopupBanner from "./PopupBanner";
 import Banner from './HomePage/HomeBannerSection/Banner';
-import Trending from './HomePage/TrendingSection/Trending';
-import QueryFormWidget from './HomePage/QueryFormWidget/QueryFormWidget';
+
+// 🔥 Lazy loaded components (performance optimization)
+const Association = lazy(() => import('./Association'));
+const TrainingEvents = lazy(() => import('./HomePage/TrainingSection/TrainingEvents'));
+const TeensEvents = lazy(() => import('./HomePage/TeenSection/TeensEvents'));
+const Career = lazy(() => import('./Career'));
+const Learners = lazy(() => import('./HomePage/LearnerSection/Learners'));
+const Corporate = lazy(() => import('./HomePage/CorporateSection/Corporate'));
+const RecentEntries = lazy(() => import('./HomePage/TrendingBlogSection/RecentEntries'));
+const MeetInstructorBanner = lazy(() => import('./MeetInstructorBanner'));
+const ShareKnowledgeBanner = lazy(() => import('./ShareKnowledgeBanner'));
+const WhyChoose = lazy(() => import('./WhyChoose'));
+const HomeFaq = lazy(() => import('./HomeFaq'));
+const LimitedDeals = lazy(() => import('./HomePage/LimitedSection/LimitedDeals'));
+const Trending = lazy(() => import('./HomePage/TrendingSection/Trending'));
+const QueryFormWidget = lazy(() => import('./HomePage/QueryFormWidget/QueryFormWidget'));
+
+// 🔥 Keep Banner normal (IMPORTANT for LCP performance)
+
 
 export const Home = () => {
   const location = useLocation();
+
   useEffect(() => {
     if (location.hash === '#upcoming-events') {
       const element = document.getElementById('upcoming-events');
@@ -30,10 +36,6 @@ export const Home = () => {
     }
   }, [location]);
 
-  // useEffect(() => {
-  //   window.scrollTo(0, 0);
-  // }, []);
-
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -42,106 +44,126 @@ export const Home = () => {
     <>
       <Helmet>
         <title>Online IT Training: Get Certified, Find Your Dream Job</title>
-        <meta name="description" content="Hachion offers professional certification online training courses authored by industry experts. Learn the high in-demand skills from our experts." />
-        <meta name="keywords" content="Online IT Courses, Software Training, Best Online IT Training Platform" />
+        <meta
+          name="description"
+          content="Hachion offers professional certification online training courses authored by industry experts. Learn the high in-demand skills from our experts."
+        />
+        <meta
+          name="keywords"
+          content="Online IT Courses, Software Training, Best Online IT Training Platform"
+        />
         <meta property="og:title" content="Online IT Training: Get Certified, Find Your Dream Job" />
         <meta property="og:description" content="Learn online with the best courses at Hachion." />
         <meta property="og:image" content="/Hachion-logo.png" />
         <link rel="canonical" href="https://www.hachion.co/" />
+
+        {/* Organization Schema */}
         <script type="application/ld+json">
           {`
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Hachion",
-        "url": "https://www.hachion.co",
-        "logo": "https://www.hachion.co/Hachion-logo.png",
-        "sameAs": [
-        "https://www.facebook.com/hachion.co",
-        "https://x.com/hachion_co",
-        "https://www.linkedin.com/company/hachion",
-        "https://www.instagram.com/hachion_trainings",
-        "https://www.quora.com/profile/Hachion-4",
-        "https://www.youtube.com/@hachion"
-      ]
-      }
-    `}
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Hachion",
+            "url": "https://www.hachion.co",
+            "logo": "https://www.hachion.co/Hachion-logo.png",
+            "sameAs": [
+              "https://www.facebook.com/hachion.co",
+              "https://x.com/hachion_co",
+              "https://www.linkedin.com/company/hachion",
+              "https://www.instagram.com/hachion_trainings",
+              "https://www.quora.com/profile/Hachion-4",
+              "https://www.youtube.com/@hachion"
+            ]
+          }
+          `}
         </script>
+
+        {/* Navigation Schema */}
         <script type="application/ld+json">
-{`
-{
- "@context": "https://schema.org",
- "@type": "ItemList",
- "itemListElement": [
-   {
-     "@type": "SiteNavigationElement",
-     "position": 1,
-     "name": "Security Operations Center",
-     "description": "SOC Analyst Training",
-     "url": "https://www.hachion.co/coursedetails/security-operations-center-(soc)-analyst"
-   },
-   {
-     "@type": "SiteNavigationElement",
-     "position": 2,
-     "name": "Agentic AI Training",
-     "description": "Agentic AI Certification Course",
-     "url": "https://www.hachion.co/coursedetails/agentic-ai"
-   },
-   {
-     "@type": "SiteNavigationElement",
-     "position": 3,
-     "name": "Cyber Security Training",
-     "description": "Cyber Security Certification",
-     "url": "https://www.hachion.co/coursedetails/cyber-security"
-   },
-   {
-     "@type": "SiteNavigationElement",
-     "position": 4,
-     "name": "Data Science with Python",
-     "description": "Data Science Training",
-     "url": "https://www.hachion.co/coursedetails/data-science-with-python"
-   },
-   {
-     "@type": "SiteNavigationElement",
-     "position": 5,
-     "name": "Salesforce Admin Training",
-     "description": "Salesforce Administrator Training",
-     "url": "https://www.hachion.co/coursedetails/salesforce-admin"
-   }
- ]
-}
-`}
-</script>
+          {`
+          {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "itemListElement": [
+              {
+                "@type": "SiteNavigationElement",
+                "position": 1,
+                "name": "Security Operations Center",
+                "description": "SOC Analyst Training",
+                "url": "https://www.hachion.co/coursedetails/security-operations-center-(soc)-analyst"
+              },
+              {
+                "@type": "SiteNavigationElement",
+                "position": 2,
+                "name": "Agentic AI Training",
+                "description": "Agentic AI Certification Course",
+                "url": "https://www.hachion.co/coursedetails/agentic-ai"
+              },
+              {
+                "@type": "SiteNavigationElement",
+                "position": 3,
+                "name": "Cyber Security Training",
+                "description": "Cyber Security Certification",
+                "url": "https://www.hachion.co/coursedetails/cyber-security"
+              },
+              {
+                "@type": "SiteNavigationElement",
+                "position": 4,
+                "name": "Data Science with Python",
+                "description": "Data Science Training",
+                "url": "https://www.hachion.co/coursedetails/data-science-with-python"
+              },
+              {
+                "@type": "SiteNavigationElement",
+                "position": 5,
+                "name": "Salesforce Admin Training",
+                "description": "Salesforce Administrator Training",
+                "url": "https://www.hachion.co/coursedetails/salesforce-admin"
+              }
+            ]
+          }
+          `}
+        </script>
       </Helmet>
+
       <div className='home-background'>
         <PopupBanner />
-        <main id="main-content">
-          <Banner />
-          <Association />
-          <Trending />
-          <TeensEvents />
-          <div id="upcoming-events">
-            <TrainingEvents />
-          </div>
-          <Corporate />
-          <WhyChoose />
-          <LimitedDeals />
-          <MeetInstructorBanner />
-          <ShareKnowledgeBanner />
-          {/* <Career/> */}
-          <RecentEntries />
-          <Learners page="home" />
-          <HomeFaq />
-        </main>
-        {/* Query Form Widget - Fixed at bottom right (similar to screenshot) */}
-        {/* { <QueryFormWidget /> } */}
-        {/* {showScrollButton && (
-              // <button className="scroll-to-top" onClick={scrollToTop}>
-                <FaArrowUp />
-              </button>
-            )} */}
-      </div>
 
+        <main id="main-content">
+          {/* 🔥 Load Banner first for performance */}
+          <Banner />
+
+          {/* 🔥 Lazy loaded content */}
+          <Suspense fallback={<div style={{ height: "200px" }} />}>
+            <Association />
+            <Trending />
+            <TeensEvents />
+
+            <div id="upcoming-events">
+              <TrainingEvents />
+            </div>
+
+            <Corporate />
+            <WhyChoose />
+            <LimitedDeals />
+            <MeetInstructorBanner />
+            <ShareKnowledgeBanner />
+            <RecentEntries />
+            <Learners page="home" />
+            <HomeFaq />
+
+            {/* Optional */}
+            {/* <QueryFormWidget /> */}
+          </Suspense>
+        </main>
+
+        {/* Scroll button (optional - currently disabled) */}
+        {/*
+        <button className="scroll-to-top" onClick={scrollToTop}>
+          <FaArrowUp />
+        </button>
+        */}
+      </div>
     </>
-  )
-}
+  );
+};

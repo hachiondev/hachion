@@ -670,7 +670,39 @@
   width: 100%;
   padding: 20px;
 }
+.avatar-group {
+  display: flex;
+  align-items: center;
+}
 
+.avatar-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  object-fit: cover;
+  margin-left: -10px;
+  background: #fff;
+}
+
+.avatar-img:first-child {
+  margin-left: 0;
+}
+
+.avatar-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #007bff; /* adjust to your theme */
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -10px;
+  border: 2px solid #fff;
+}
 .home-banner {
   display: flex;
   flex-direction: row;

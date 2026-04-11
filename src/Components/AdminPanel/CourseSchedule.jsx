@@ -56,6 +56,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 export default function CourseSchedule() {
   const [trainer, setTrainer] = useState([]);
+  const [coordinators, setCoordinators] = useState([]);
   const [courses, setCourses] = useState([]);
   const [category, setCategory] = useState([]);
   const [courseCategory, setCourseCategory] = useState([]);
@@ -73,11 +74,11 @@ export default function CourseSchedule() {
     schedule_course_name: "",
     trainer_name: "",
     schedule_date: null,
-    schedule_frequency: "",
+    
     schedule_time: null,
     schedule_duration: "",
     schedule_mode: "",
-    pattern: "",
+    
     meeting: "",
   });
   const [selectedRow, setSelectedRow] = useState({
@@ -86,11 +87,11 @@ export default function CourseSchedule() {
     schedule_course_name: "",
     trainer_name: "",
     schedule_date: "",
-    schedule_frequency: "",
+    scheduleFrequency: "",
     schedule_time: "",
     schedule_duration: "",
     schedule_mode: "",
-    pattern: "",
+    
     meeting: "",
   });
   const currentDate = new Date().toISOString().split("T")[0];
@@ -101,6 +102,8 @@ export default function CourseSchedule() {
     schedule_course_name: "",
     trainer_name: "",
     created_date: currentDate,
+    coordinator: "",
+    recordingsFolderId: ""
 
   });
   const [currentPage, setCurrentPage] = useState(1);
@@ -127,12 +130,12 @@ export default function CourseSchedule() {
       id: "",
       batchId: "",
       schedule_date: null,
-      schedule_frequency: "",
+      scheduleFrequency: "",
       schedule_week: "",
       schedule_time: null,
       schedule_duration: "",
       schedule_mode: "",
-      pattern: "",
+      
       meeting: "",
     },
   ]);
@@ -143,8 +146,8 @@ export default function CourseSchedule() {
   };
   const addRow = () => {
     setRows([...rows, {
-      id: Date.now(), batchId: "", schedule_date: "", schedule_frequency: "", schedule_week: '',
-      schedule_time: "", schedule_duration: "", schedule_mode: "", pattern: "", meeting: ""
+      id: Date.now(), batchId: "", schedule_date: "", scheduleFrequency: "", schedule_week: '',
+      schedule_time: "", schedule_duration: "", schedule_mode: "",  meeting: ""
     }]);
   };
 
@@ -176,6 +179,22 @@ export default function CourseSchedule() {
     };
     fetchCategory();
   }, []);
+
+  useEffect(() => {
+  const fetchCoordinators = async () => {
+    try {
+      const response = await axios.get(
+        "https://api.test.hachion.co/employees/by-departments"
+      );
+      setCoordinators(response.data);
+    } catch (error) {
+      console.error("Error fetching coordinators:", error);
+    }
+  };
+
+  fetchCoordinators();
+}, []);
+
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
@@ -231,14 +250,33 @@ export default function CourseSchedule() {
     setRows(updatedRows);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCourseData((prev) => ({
-      ...prev,
-      [name]: value,
-      ...(name === "schedule_category_name" && { schedule_course_name: "" }),
-    }));
-  };
+  
+  const handleChange = async (e) => {
+  const { name, value } = e.target;
+
+  setCourseData((prev) => ({
+    ...prev,
+    [name]: value,
+    ...(name === "schedule_category_name" && { schedule_course_name: "" }),
+  }));
+
+  
+  if (name === "coordinator" && value) {
+    try {
+      const response = await axios.get(
+        `https://api.test.hachion.co/employees/recording-folder`,
+        { params: { name: value } }
+      );
+
+      setCourseData((prev) => ({
+        ...prev,
+        recordingsFolderId: response.data?.[0] || ""
+      }));
+    } catch (error) {
+      console.error("Error fetching folder ID:", error);
+    }
+  }
+};
   const handleReset = () => {
     setCourseData({
       schedule_category_name: "",
@@ -246,7 +284,7 @@ export default function CourseSchedule() {
       schedule_date: "",
       schedule_week: "",
       schedule_time: "",
-      schedule_frequency: "",
+      scheduleFrequency: "",
       schedule_duration: "",
       schedule_mode: "",
       trainer_name: "",
@@ -266,8 +304,8 @@ export default function CourseSchedule() {
         hasError = true;
       }
 
-      if (!row.schedule_frequency) {
-        rowErrors.schedule_frequency = "Frequency is required";
+      if (!row.scheduleFrequency) {
+        rowErrors.scheduleFrequency = "Frequency is required";
         hasError = true;
       }
 
@@ -286,11 +324,7 @@ export default function CourseSchedule() {
         hasError = true;
       }
 
-      if (!row.pattern) {
-        rowErrors.pattern = "Pattern is required";
-        hasError = true;
-      }
-
+  
       if (!row.meeting) {
         rowErrors.meeting = "Meeting is required";
         hasError = true;
@@ -317,9 +351,13 @@ export default function CourseSchedule() {
         
         schedule_duration: row.schedule_duration ? `${row.schedule_duration} min` : "",
         schedule_mode: row.schedule_mode,
+        scheduleFrequency: row.scheduleFrequency,
         trainer_name: courseData.trainer_name || "",
         created_date: courseData.created_date,
         meeting_link: row.meeting,
+        coordinator: courseData.coordinator,
+        recordingsFolderId: courseData.recordingsFolderId
+
       };
 
       try {
@@ -366,7 +404,7 @@ export default function CourseSchedule() {
         !row.schedule_time ||
         !row.schedule_duration ||
         !row.schedule_mode ||
-        !row.pattern ||
+        
         !row.meeting
       ) {
         return false;
@@ -387,7 +425,7 @@ export default function CourseSchedule() {
         (item.schedule_category_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
         (item.schedule_mode || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
         (item.meeting || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.schedule_frequency || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.scheduleFrequency || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
         (item.schedule_date || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
         (item.batchId || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
         (item.trainer_name || "").toLowerCase().includes(searchTerm.toLowerCase());
@@ -427,10 +465,12 @@ export default function CourseSchedule() {
       (course.schedule_category_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       (course.schedule_mode || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       (course.meeting || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (course.schedule_frequency || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (course.scheduleFrequency || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       (course.schedule_date || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       (course.batchId || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (course.trainer_name || "").toLowerCase().includes(searchTerm.toLowerCase())
+      (course.trainer_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (course.recordingsFolderId || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (course.coordinator || "").toLowerCase().includes(searchTerm.toLowerCase()) 
     );
     setFilteredCourses(filtered);
   }, [searchTerm, courses]);
@@ -549,12 +589,12 @@ export default function CourseSchedule() {
     rows.forEach((row) => {
       const rowError = {
         schedule_date: row.schedule_date ? "" : "Date is required",
-        schedule_frequency: row.schedule_frequency ? "" : "Frequency is required",
+        scheduleFrequency: row.scheduleFrequency ? "" : "Frequency is required",
         schedule_time: row.schedule_time ? "" : "Time is required",
         schedule_duration: row.schedule_duration ? "" : "Duration is required",
         schedule_mode: row.schedule_mode ? "" : "Mode is required",
-        pattern: row.pattern ? "" : "Pattern is required",
-        meeting: row.meeting ? "" : "Meeting link is required",
+        
+        meeting: row.meeting_link ? "" : "Meeting link is required",
       };
       rowErrors.push(rowError);
     });
@@ -737,7 +777,53 @@ export default function CourseSchedule() {
                       ))}
                     </select>
                   </div>
-                </div>
+                   
+</div>
+ {/* Coordinator */}
+ <div>
+  <div className="col-md-3">
+    <label className="form-label">
+      Coordinator <span className="required-star">*</span>
+    </label>
+    
+    <select
+  name="coordinator"
+  className={`form-select ${formErrors.coordinator ? "is-invalid" : ""}`}
+  value={courseData.coordinator || ""}
+  onChange={handleChange}
+>
+  <option value="" disabled>Select Coordinator</option>
+  {coordinators.map((name, index) => (
+    <option key={index} value={name}>
+      {name}
+    </option>
+  ))}
+</select>
+    {formErrors.coordinator && (
+      <div className="invalid-feedback">{formErrors.coordinator}</div>
+    )}
+  </div>
+
+  {/* Meeting Recordings Folder ID */}
+  <div className="col-md-3">
+    <label className="form-label">
+      Recordings Folder ID 
+    </label>
+   <input
+  type="text"
+  name="recordingsFolderId"
+  className={`form-control ${formErrors.recordingsFolderId ? "is-invalid" : ""}`}
+  value={courseData.recordingsFolderId || ""}
+  readOnly
+  placeholder="Auto-filled based on coordinator"
+/>
+    {formErrors.recordingsFolderId && (
+      <div className="invalid-feedback">
+        {formErrors.recordingsFolderId}
+      </div>
+    )}
+  </div>
+  </div>
                 <TableContainer component={Paper}>
                   <Table
                     sx={{ minWidth: 650, marginTop: 5 }}
@@ -761,9 +847,7 @@ export default function CourseSchedule() {
                           <StyledTableCell align="center" sx={{ fontSize: "16px" }}>
                             Mode <span className="required-star">*</span>
                           </StyledTableCell>
-                          <StyledTableCell align="center" sx={{ fontSize: "16px" }}>
-                            Pattern <span className="required-star">*</span>
-                          </StyledTableCell>
+                         
                           <StyledTableCell align="center" sx={{ fontSize: "16px", width: "500px" }}>
                             Meeting <span className="required-star">*</span>
                           </StyledTableCell>
@@ -807,9 +891,9 @@ export default function CourseSchedule() {
                                 <select
                                   id="inputState"
                                   className="form-select"
-                                  name="schedule_frequency"
-                                  value={row.schedule_frequency}
-                                  onChange={(e) => handleRowChange(index, 'schedule_frequency', e.target.value)}
+                                  name="scheduleFrequency"
+                                  value={row.scheduleFrequency}
+                                  onChange={(e) => handleRowChange(index, 'scheduleFrequency', e.target.value)}
                                 >
                                   <option value="">Select</option>
                                   <option>Only Weekends</option>
@@ -817,9 +901,9 @@ export default function CourseSchedule() {
                                   <option>Any Days</option>
                                 </select>
                               </div>
-                              {formErrors[index]?.schedule_frequency && (
+                              {formErrors[index]?.scheduleFrequency && (
                                 <div style={{ color: "red", fontSize: "12px" }}>
-                                  {formErrors[index].schedule_frequency}
+                                  {formErrors[index].scheduleFrequency}
                                 </div>
                               )}
                             </StyledTableCell>
@@ -846,50 +930,45 @@ export default function CourseSchedule() {
                               )}
                             </StyledTableCell>
                             <StyledTableCell align="center" sx={{ padding: 0 }}>
-                              <div style={{ position: 'relative', display: 'inline-block' }}>
-                                <input
-                                  type="number"
-                                  name="schedule_duration"
-                                  className="table-curriculum no-spinners"
-                                  value={rows[index]?.schedule_duration || ''}
-                                  onChange={(e) => handleRowChange(index, 'schedule_duration', e.target.value)}
-                                  min="1"
-                                  step="1"
-                                  placeholder="0"
-                                  onKeyDown={(e) => {
-                                    
-                                    if (e.key === '-' || e.key === 'e') {
-                                      e.preventDefault();
-                                    }
-                                  }}
-                                  style={{
-                                    width: '80px',
-                                    padding: '4px 8px',
-                                    paddingRight: '30px',
-                                    border: '1px solid #ddd',
-                                    borderRadius: '4px',
-                                    textAlign: 'center',
-                                    backgroundColor: "#fff"
-                                  }}
-                                />
-                                <span style={{
-                                  position: 'absolute',
-                                  right: '8px',
-                                  top: '50%',
-                                  transform: 'translateY(-50%)',
-                                  fontSize: '12px',
-                                  color: '#000000',
-                                  pointerEvents: 'none'
-                                }}>
-                                  min
-                                </span>
-                              </div>
-                              {formErrors[index]?.schedule_duration && (
-                                <div style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
-                                  {formErrors[index].schedule_duration}
-                                </div>
-                              )}
-                            </StyledTableCell>
+  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    
+   <select
+  name="schedule_duration"
+  value={row.schedule_duration || ""}
+  onChange={(e) => handleRowChange(index, 'schedule_duration', e.target.value)}
+  style={{
+    width: '70px',          
+    padding: '4px 6px',     
+    fontSize: '13px',       
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    backgroundColor: "#fff"
+  }}
+>
+      <option value="">Select</option>
+      <option value="30">30</option>
+      <option value="45">45</option>
+      <option value="60">60</option>
+      <option value="90">90</option>
+      <option value="120">120</option>
+    </select>
+
+    <span style={{
+      marginLeft: '6px',
+      fontSize: '13px',
+      whiteSpace: 'nowrap'
+    }}>
+      min
+    </span>
+
+  </div>
+
+  {formErrors[index]?.schedule_duration && (
+    <div style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
+      {formErrors[index].schedule_duration}
+    </div>
+  )}
+</StyledTableCell>
                             <StyledTableCell align="center" sx={{ padding: 0 }}>
                               <div className="col-md-3">
                                 <select
@@ -910,19 +989,7 @@ export default function CourseSchedule() {
                                 </div>
                               )}
                             </StyledTableCell>
-                            <StyledTableCell align="center" sx={{ padding: 0 }}>
-                              <input
-                                name="pattern"
-                                className="table-curriculum"
-                                value={rows.pattern}
-                                onChange={(e) => handleRowChange(index, 'pattern', e.target.value)}
-                              />
-                              {formErrors[index]?.pattern && (
-                                <div style={{ color: "red", fontSize: "12px" }}>
-                                  {formErrors[index].pattern}
-                                </div>
-                              )}
-                            </StyledTableCell>
+                          
                             <StyledTableCell align="left" sx={{ padding: 0 }}>
                               <input
                                 name="meeting"
@@ -1113,6 +1180,8 @@ export default function CourseSchedule() {
                   <StyledTableCell align="center">Duration</StyledTableCell>
                   <StyledTableCell align="center">Mode</StyledTableCell>
                   <StyledTableCell align="center">Trainer</StyledTableCell>
+                  <StyledTableCell align="center">Coordinator</StyledTableCell>
+                  <StyledTableCell align="center">RecordingsFolderId</StyledTableCell>
                   <StyledTableCell align="center">Created Date</StyledTableCell>
                   <StyledTableCell align="center">Action</StyledTableCell>
                 </TableRow>
@@ -1158,6 +1227,12 @@ export default function CourseSchedule() {
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {course.trainer_name}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {course.coordinator}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {course.recordingsFolderId}
                       </StyledTableCell>
                       <StyledTableCell align="center">
                         {course.created_date
@@ -1315,8 +1390,8 @@ export default function CourseSchedule() {
                 <select
                   id="inputState"
                   className="form-select"
-                  name="schedule_frequency"
-                  value={editedRow.schedule_frequency || ""}
+                  name="scheduleFrequency"
+                  value={editedRow.scheduleFrequency || ""}
                   onChange={handleInputChange}
                 >
                   <option value="">Select</option>
@@ -1346,7 +1421,7 @@ export default function CourseSchedule() {
               <div className="col">
                 <label className="form-label">Duration</label>
                 <input
-                  type="number"
+                    type="text"
                   className="schedule-input"
                   name="schedule_duration"
                   value={editedRow.schedule_duration}
@@ -1378,23 +1453,33 @@ export default function CourseSchedule() {
                   <option>Live Demo</option>
                 </select>
               </div>
-              <div className="col">
-                <label className="form-label">Pattern</label>
+              
+            </div>
+            <div className="col">
+                <label className="form-label">Coordinator</label>
                 <input
                   className="schedule-input"
-                  name="pattern"
-                  value={editedRow.pattern}
+                  name="coordinator"
+                  value={editedRow.coordinator}
                   onChange={handleInputChange}
                 />
               </div>
-            </div>
+                <div className="col">
+                <label className="form-label">Recordings Folder Id</label>
+                <input
+                  className="schedule-input"
+                  name="recordingsFolderId"
+                  value={editedRow.recordingsFolderId}
+                  onChange={handleInputChange}
+                />
+              </div>
             <div className="course-row">
               <div className="col">
                 <label className="form-label">Meeting</label>
                 <input
                   className="schedule-input"
-                  name="meeting"
-                  value={editedRow.meeting}
+                  name="meeting_link"
+                  value={editedRow.meeting_link}
                   onChange={handleInputChange}
                 />
               </div>

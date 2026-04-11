@@ -61,7 +61,8 @@ export default function RequestInstallment() {
     const matchesSearch =
       searchTerm === '' ||
       [item.student_ID, item.userName, item.email, item.mobile, item.course_name, item.requestInstallments, item.requestStatus, item.date ? dayjs(item.date).format('MMM-DD-YYYY') : '']
-        .map(field => (field || '').toLowerCase())
+        // .map(field => (field || '').toLowerCase())
+        .map(field => String(field || '').toLowerCase())
         .some(field => field.includes(searchTerm.toLowerCase()));
     const inDateRange =
       (!startDate || date >= new Date(startDate)) &&

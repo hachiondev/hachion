@@ -69,6 +69,7 @@ import Layout from "./Components/Layout/Layout";
 import WorkshopDetails from "./Components/UserPanel/WorkshopDetails";
 import AuthLayout from "./Components/Layout/AuthLayout";
 import RefundPolicy from "./Components/UserPanel/LegalFooterSection/RefundPolicy";
+import EnquiryPage from "./Components/UserPanel/EnquiryPage";
 
 const RedirectToLowercase = () => {
   const location = useLocation();
@@ -168,6 +169,9 @@ function AppRoutes() {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/refundpolicy" element={<RefundPolicy />} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
+          {/* <Route path="/enquiryform" element={<EnquiryPage />} /> */}
+          {/* <Route path="/enquiryform/:refName" element={<EnquiryPage />} /> */}
+{/* <Route path="/enquiryform" element={<EnquiryPage />} /> */}
           <Route path="/sitemap" element={<Sitemap />} />
           <Route
             path="/summer-tech-bootcamp-for-teens"
@@ -187,6 +191,8 @@ function AppRoutes() {
             />
           </Route>
         </Route>
+
+  <Route path="/enquiryform/:refName" element={<EnquiryPage />} />
 
         {/* ADMIN ROUTES — NO LAYOUT */}
         <Route path="/adminlogin" element={<AdminLogin />} />

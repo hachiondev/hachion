@@ -6,6 +6,7 @@ const ImportLead = () => {
   const [file, setFile] = useState(null);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -25,6 +26,7 @@ const ImportLead = () => {
     formData.append("file", file);
 
     try {
+      setLoading(true);
       const response = await axios.post(
         "https://api.test.hachion.co/register-student/import",
         formData,
@@ -37,7 +39,7 @@ const ImportLead = () => {
 
       setResult(response.data);
       setError("");
-
+setLoading(false);
     } catch (err) {
       console.error(err);
 
@@ -48,6 +50,7 @@ const ImportLead = () => {
       }
 
       setResult(null);
+      setLoading(false);
     }
   };
 
@@ -76,9 +79,13 @@ const ImportLead = () => {
               Note: Upload the Leads carefully using Excel file format.
             </p>
 
-            <button type="submit" className='upload-btn'>
-              Upload
-            </button>
+            <button 
+  type="submit" 
+  className='upload-btn'
+  disabled={loading}
+>
+  {loading ? "Uploading..." : "Upload"}
+</button>
 
             {/* 🔥 ERROR MESSAGE */}
             {error && (
@@ -183,7 +190,22 @@ const ImportLead = () => {
           <p style={{ color: "#888" }}>No Excel duplicates</p>
         )}
       </div>
+{/* 🔥 Invalid Numbers Section */}
+<div style={{ marginTop: "25px" }}>
+  <h5 style={{ marginBottom: "10px" }}>Invalid Phone / WhatsApp Numbers</h5>
 
+  {result.invalidNumbers?.length > 0 ? (
+    <ul style={{ paddingLeft: "18px" }}>
+      {result.invalidNumbers.map((item, index) => (
+        <li key={index} style={{ color: "#ff9800", marginBottom: "6px" }}>
+          {item}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p style={{ color: "#4caf50" }}>No invalid numbers</p>
+  )}
+</div>
     </div>
 
   </div>

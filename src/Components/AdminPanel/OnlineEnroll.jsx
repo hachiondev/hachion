@@ -444,7 +444,7 @@ export default function OnlineEnroll() {
                     <StyledTableCell align="center">{row.mode}</StyledTableCell>
                     <StyledTableCell align="center">
                       <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-                        {row.type === 'completed' || row.type === 'approved' ? (
+                        {row.studentStatus === 'Completed' ? (
                           <span className="approved" style={{
                             color: 'green',
                             fontWeight: 'bold',
@@ -452,9 +452,9 @@ export default function OnlineEnroll() {
                             borderRadius: '4px',
                             backgroundColor: '#e6ffe6'
                           }}>
-                            {row.type === 'completed' ? 'Completed' : 'Completed'} {/* Display 'Completed' for both 'completed' and 'approved' */}
+                            {row.studentStatus === 'completed' ? 'Completed' : 'Completed'} {/* Display 'Completed' for both 'completed' and 'approved' */}
                           </span>
-                        ) : row.type === 'rejected' ? (
+                        ) : row.studentStatus === 'Pending' ? (
                           <span className="rejected" style={{
                             color: 'red',
                             fontWeight: 'bold',
@@ -475,24 +475,42 @@ export default function OnlineEnroll() {
                                 display: 'flex',
                                 alignItems: 'center'
                               }}
-                              onClick={() => {
-                                const confirmed = window.confirm("Are you sure you want to approve this enrollment?");
-                                if (confirmed) {
-                                  // Update local state only (no API call as requested)
-                                  const updatedData = enrollData.map((item) =>
-                                    item.id === row.id ? { ...item, type: "approved" } : item
-                                  );
-                                  setEnrollData(updatedData);
-                                  setFilteredData(updatedData);
+                             onClick={async () => {
+  const confirmed = window.confirm("Are you sure you want to approve this enrollment?");
+  if (confirmed) {
+    try {
+      // ✅ CALL BACKEND API
+      await axios.put("https://api.test.hachion.co/enroll/update-status", null, {
+        params: {
+          studentId: row.studentId,
+          batchId: row.batchId,
+          courseName: row.course_name,
+          studentStatus: "Completed"
+        }
+      });
 
-                                  // Remove from selectedIds if present
-                                  setSelectedIds(prev => prev.filter(id => id !== row.id));
+      // ✅ KEEP YOUR EXISTING CODE
+      const updatedData = enrollData.map((item) =>
+        item.id === row.id 
+  ? { ...item, type: "approved", studentStatus: "Completed" } 
+  : item
+      );
+      setEnrollData(updatedData);
+      setFilteredData(updatedData);
 
-                                  setSuccessMessage("✅ Enrollment approved successfully.");
-                                  setErrorMessage("");
-                                  setTimeout(() => setSuccessMessage(""), 3000);
-                                }
-                              }}
+      setSelectedIds(prev => prev.filter(id => id !== row.id));
+
+      setSuccessMessage("✅ Enrollment approved successfully.");
+      setErrorMessage("");
+      setTimeout(() => setSuccessMessage(""), 3000);
+
+    } catch (error) {
+      console.error(error);
+      setErrorMessage("❌ Failed to update status");
+      setSuccessMessage("");
+    }
+  }
+}}
                             >
                               <FaCheckCircle />
                             </span>
@@ -505,24 +523,43 @@ export default function OnlineEnroll() {
                                 display: 'flex',
                                 alignItems: 'center'
                               }}
-                              onClick={() => {
-                                const confirmed = window.confirm("Are you sure you want to reject this enrollment?");
-                                if (confirmed) {
-                                  // Update local state only (no API call as requested)
-                                  const updatedData = enrollData.map((item) =>
-                                    item.id === row.id ? { ...item, type: "rejected" } : item
-                                  );
-                                  setEnrollData(updatedData);
-                                  setFilteredData(updatedData);
+                            onClick={async () => {
+  const confirmed = window.confirm("Are you sure you want to reject this enrollment?");
+  if (confirmed) {
+    try {
+      // ✅ CALL BACKEND API (ADD THIS)
+      await axios.put("https://api.test.hachion.co/enroll/update-status", null, {
+        params: {
+          studentId: row.studentId,
+          batchId: row.batchId,
+          courseName: row.course_name,
+          studentStatus: "Pending"
+        }
+      });
 
-                                  // Remove from selectedIds if present
-                                  setSelectedIds(prev => prev.filter(id => id !== row.id));
+      // ✅ KEEP YOUR EXISTING CODE
+      const updatedData = enrollData.map((item) =>
+        item.id === row.id 
+          ? { ...item, type: "rejected", studentStatus: "Pending" } 
+          : item
+      );
 
-                                  setSuccessMessage("❌ Enrollment rejected.");
-                                  setErrorMessage("");
-                                  setTimeout(() => setSuccessMessage(""), 3000);
-                                }
-                              }}
+      setEnrollData(updatedData);
+      setFilteredData(updatedData);
+
+      setSelectedIds(prev => prev.filter(id => id !== row.id));
+
+      setSuccessMessage("❌ Enrollment rejected.");
+      setErrorMessage("");
+      setTimeout(() => setSuccessMessage(""), 3000);
+
+    } catch (error) {
+      console.error(error);
+      setErrorMessage("❌ Failed to update status");
+      setSuccessMessage("");
+    }
+  }
+}}
                             >
                               <RiCloseCircleLine />
                             </span>

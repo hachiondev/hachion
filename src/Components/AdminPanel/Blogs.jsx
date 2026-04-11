@@ -191,6 +191,21 @@ const Blogs = () => {
   }
 };
 
+// ✅ Check if all mandatory fields are filled
+const isFormValid = () => {
+  return (
+    formData.category_name &&
+    formData.title &&
+    formData.shortTitle &&
+    formData.author &&
+    formData.description &&
+    formData.meta_title &&
+    formData.meta_keyword &&
+    formData.meta_description &&
+    (formData.blog_image || formData.id) &&
+    !shortTitleError
+  );
+};
 const validateShortTitle = async () => {
 
   
@@ -234,12 +249,27 @@ setShortTitleError(backendMessage);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+ if (!isFormValid()) {
+    setErrorMessage("❌ Please fill all mandatory fields");
+    return;
+  }
       if (shortTitleError) {
     setErrorMessage(shortTitleError);
     return;
   }
-
+// if (
+//   !formData.category_name ||
+//   !formData.title ||
+//   !formData.shortTitle ||
+//   !formData.author ||
+//   !formData.description ||
+//   !formData.meta_title ||
+//   !formData.meta_keyword ||
+//   !formData.meta_description
+// ) {
+//   setErrorMessage("❌ All fields are mandatory");
+//   return;
+// }
    const blogPayload = JSON.stringify({
   category_name: formData.category_name,
   title: formData.title,
@@ -415,7 +445,7 @@ setShortTitleError(backendMessage);
               <div className="course-details">
                 <div className="course-row">
                   <div className="col-md-3">
-                    <label className="form-label">Category Name</label>
+                    <label className="form-label">Category Name <span style={{color:"red"}}>*</span></label>
                     <select
                       name="category_name"
                       className="form-select"
@@ -429,7 +459,7 @@ setShortTitleError(backendMessage);
                     </select>
                   </div>
                   <div className="col-md-3">
-                    <label className="form-label">Blog Title</label>
+                    <label className="form-label">Blog Title <span style={{color:"red"}}>*</span></label>
                     <input
                       type="text"
                       name="title"
@@ -440,7 +470,7 @@ setShortTitleError(backendMessage);
                     />
                   </div>
                   <div className="col-md-3">
-                    <label className="form-label">Short Blog URL</label>
+                    <label className="form-label">Short Blog URL <span style={{color:"red"}}>*</span></label>
                     <input
   type="text"
   name="shortTitle"
@@ -470,7 +500,7 @@ setShortTitleError(backendMessage);
                     />
                   </div>
                   <div className="col-md-4">
-                    <label className="form-label">Author</label>
+                    <label className="form-label">Author <span style={{color:"red"}}>*</span></label>
                     <input
                       type="text"
                       name="author"
@@ -481,7 +511,7 @@ setShortTitleError(backendMessage);
                     />
                   </div>
                   <div className="col-md-4">
-                    <label className="form-label">Blog Image (w-360 x h-160px)</label>
+                    <label className="form-label">Blog Image (w-360 x h-160px) <span style={{color:"red"}}>*</span></label>
                     <input
                       type="file"
                       name="blog_image"
@@ -492,7 +522,7 @@ setShortTitleError(backendMessage);
                   </div>
                 </div>
                 <div className="mb-3">
-                  <label className="form-label">Description</label>
+                  <label className="form-label">Description <span style={{color:"red"}}>*</span></label>
                   <ReactQuill
                     theme="snow"
                     value={formData.description}
@@ -502,7 +532,7 @@ setShortTitleError(backendMessage);
                 </div>
                 <div className="course-row">
                   <div className="col-md-4">
-                    <label className="form-label">Meta Title</label>
+                    <label className="form-label">Meta Title <span style={{color:"red"}}>*</span></label>
                     <input
                       type="text"
                       name="meta_title"
@@ -512,7 +542,7 @@ setShortTitleError(backendMessage);
                     />
                   </div>
                   <div className="col-md-4">
-                    <label className="form-label">Meta Keywords</label>
+                    <label className="form-label">Meta Keywords <span style={{color:"red"}}>*</span></label>
                     <input
                       type="text"
                       name="meta_keyword"
@@ -522,7 +552,7 @@ setShortTitleError(backendMessage);
                     />
                   </div>
                   <div className="col-md-4">
-                    <label className="form-label">Meta Description</label>
+                    <label className="form-label">Meta Description <span style={{color:"red"}}>*</span></label>
                     <input
                       type="text"
                       name="meta_description"
@@ -546,9 +576,17 @@ setShortTitleError(backendMessage);
     {errorMessage}
   </div>
 )}
-                  <button type="submit" className="submit-btn">
-                    {formMode === 'Add' ? 'Submit' : 'Update'}
-                  </button>
+                  <button
+  type="submit"
+  className="submit-btn"
+  disabled={!isFormValid()}
+  style={{
+    opacity: isFormValid() ? 1 : 0.5,
+    cursor: isFormValid() ? "pointer" : "not-allowed"
+  }}
+>
+  {formMode === 'Add' ? 'Submit' : 'Update'}
+</button>
                   <button type="button" className="reset-btn" onClick={handleReset}>
                     Reset
                   </button>

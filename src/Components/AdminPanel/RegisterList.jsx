@@ -111,7 +111,7 @@ export default function RegisterList() {
      seoTeam: "",
   technology: "",
   stateCity: "",
-  coordinator: ""
+  leadStatus: ""
   });
 // ✅ NEW: Update Modal + History States
 const [openUpdateModal, setOpenUpdateModal] = useState(false);
@@ -169,7 +169,7 @@ const [updateForm, setUpdateForm] = useState({
  seoTeam: "",
     technology: "",
     stateCity: "",
-    coordinator: ""
+    leadStatus: ""
     });
   }
 
@@ -193,7 +193,7 @@ const [updateForm, setUpdateForm] = useState({
       seoTeam: "",
     technology: "",
     stateCity: "",
-    coordinator: ""
+    leadStatus: ""
     });
 
     setSelectedCountry({
@@ -382,7 +382,7 @@ const isUpdateFormValid = () => {
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(`https://api.test.hachion.co/registerstudent/delete/${id}`);
-      console.log("Register Student deleted successfully:", response.data);
+      
       setRegisterStudent((prev) => prev.filter((s) => s.id !== id));
       setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
       
@@ -415,50 +415,6 @@ const isUpdateFormValid = () => {
     setFilteredStudent(filtered);
   }, [searchTerm, registerStudent]);
 
-  // const handleClickOpen = (row) => {
-  //   setFormMode("Edit");
-
-  //   const [codePart, ...numberParts] = (row.mobile || "").split(" ");
-  //   const numberPart = numberParts.join(" ");
-
-  //   const [wCode, ...wNumberParts] = (row.whatsapp || "").split(" ");
-  //   const wNumberPart = wNumberParts.join(" ");
-
-  //   const matchedCountry = countries.find(
-  //     (c) => c.name.toLowerCase() === row.country?.toLowerCase()
-  //   );
-
-  //   if (matchedCountry) {
-  //     setSelectedCountry({
-  //       value: matchedCountry.name,
-  //       code: matchedCountry.code,
-  //       flag: matchedCountry.flag,
-  //     });
-  //   }
-
-  //   setStudentData({
-  //     ...row,
-  //     userName: row.userName ?? "",
-  //     email: row.email ?? "",
-  //     mobile: numberPart ?? "",
-  //     whatsapp: wNumberPart ?? "",
-  //     country: row.country ?? "",
-  //     location: row.location ?? "",
-  //     time_zone: row.time_zone ?? "",
-  //     analyst_name: row.analyst_name ?? "",
-  //     source: row.source ?? "Select",
-  //     visa_status: row.visa_status ?? "Select Visa Status",
-  //     remarks: row.remarks ?? "",
-  //     comments: row.comments ?? "",
-
-  //      seoTeam: row.seoTeam ?? "",
-  // technology: row.course_name ?? "",
-  // stateCity: row.stateCity ?? "",
-  // coordinator: row.coordinator ?? ""
-  //   });
-
-  //   setShowAddCourse(true);
-  // };
 const handleClickOpen = async (row) => {
   setFormMode("Edit");
 
@@ -497,7 +453,7 @@ const handleClickOpen = async (row) => {
     seoTeam: row.seoTeam ?? "",
     technology: row.course_name ?? "",
     stateCity: row.stateCity ?? "",
-    coordinator: row.coordinator ?? ""
+    leadStatus: row.leadStatus ?? ""
   });
 
   // ✅ NEW CODE START (DO NOT REMOVE ABOVE CODE)
@@ -626,7 +582,7 @@ setHistory(formattedHistory);
       date: currentDate,
        course_name: studentData.technology
     };
-    console.log("Data being sent:", dataToSubmit);
+    
 
     try {
       const response = await axios.post("https://api.test.hachion.co/registerstudent/add", dataToSubmit);
@@ -672,7 +628,10 @@ setHistory(formattedHistory);
       safeTrim(studentData.country) !== "" &&
       // safeTrim(studentData.location) !== "" &&
       safeTrim(studentData.time_zone) !== "" &&
-      safeTrim(studentData.analyst_name) !== "" 
+      safeTrim(studentData.analyst_name) !== "" && 
+      safeTrim(studentData.seoTeam) !== "" &&
+      safeTrim(studentData.stateCity) !== "" &&
+      safeTrim(studentData.leadStatus) !== "" 
       // safeTrim(studentData.remarks).length >= 15 &&
       // safeTrim(studentData.comments) !== ""
     );
@@ -796,7 +755,7 @@ setHistory(formattedHistory);
                   onChange={handleChange} />
               </div>
               <div class="col">
-                <label for="inputPassword4" class="form-label">Location <span className="star">*</span></label>
+                <label for="inputPassword4" class="form-label">Location </label>
                 <input type="text" class="schedule-input" id="inputPassword4" name="location"
                   value={studentData.location}
                   onChange={handleChange} />
@@ -981,7 +940,7 @@ setHistory(formattedHistory);
                 </select>
               </div>
               <div class="col">
-                <label for="inputState" class="form-label">Source of Enquiry </label>
+                <label for="inputState" class="form-label">Source of Enquiry <span className="star">*</span></label>
                 <select id="inputState" class="form-select" name="source" value={studentData.source} onChange={handleChange}>
                   <option selected>Select</option>
                   <option>Linkedin</option>
@@ -996,7 +955,7 @@ setHistory(formattedHistory);
             </div>
             <div className="course-row">
   <div class="col">
-    <label class="form-label">SEO Team</label>
+    <label class="form-label">SEO Team <span className="star">*</span></label>
     <input type="text" class="schedule-input"
       name="seoTeam"
       value={studentData.seoTeam}
@@ -1004,7 +963,7 @@ setHistory(formattedHistory);
   </div>
 
   <div class="col">
-    <label class="form-label">Technology</label>
+    <label class="form-label">Technology </label>
     <input type="text" class="schedule-input"
       name="technology"
       value={studentData.technology}
@@ -1012,39 +971,37 @@ setHistory(formattedHistory);
   </div>
 
   <div class="col">
-    <label class="form-label">State / City</label>
+    <label class="form-label">State / City <span className="star">*</span></label>
     <input type="text" class="schedule-input"
       name="stateCity"
       value={studentData.stateCity}
       onChange={handleChange} />
   </div>
 
-  <div class="col">
-    <label class="form-label">Coordinator</label>
-    <input type="text" class="schedule-input"
-      name="coordinator"
-      value={studentData.coordinator}
-      onChange={handleChange} />
-  </div>
+ <div class="col">
+  <label class="form-label">Lead Status <span className="star">*</span></label>
+  
+  <select
+    className="schedule-input"
+    name="leadStatus"
+    value={studentData.leadStatus}
+    onChange={handleChange}
+  >
+    <option value="">Select Status</option>
+    <option value="New Lead">New Lead</option>
+    <option value="Contacted">Contacted</option>
+    <option value="Interested">Interested</option>
+    <option value="Demo Scheduled">Demo Scheduled</option>
+    <option value="Demo Attended">Demo Attended</option>
+    <option value="Not Interested">Not Interested</option>
+    <option value="No Response">No Response</option>
+    <option value="Enrolled">Enrolled</option>
+    <option value="No Clarity">No Clarity</option>
+    <option value="Placements">Placements</option>
+  </select>
 </div>
-            {/* <div className='row'>
-              <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">Remarks <span className="star">*</span></label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-                  name='remarks' value={studentData.remarks} onChange={handleChange}></textarea>
-              </div>
-              {studentData.remarks.trim().length > 0 && studentData.remarks.trim().length < 15 && (
-                <p style={{ color: "red", fontSize: "0.9rem" }}>
-                  Remarks must be at least 15 characters.
-                </p>
-              )}
-              <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">Comments <span className="star">*</span></label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-                  name='comments' value={studentData.comments} onChange={handleChange}></textarea>
-              </div>
-              
-            </div> */}
+</div>
+           
             {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
             {errorMessage && <p style={{ color: "red", fontWeight: "bold" }}>{errorMessage}</p>}
             <div className="course-row">
@@ -1161,9 +1118,10 @@ setHistory(formattedHistory);
         style={{ width: "100%", padding: "10px", borderRadius: "6px" }}
       >
          <option value="" disabled>Select Co-Ordinator</option>
-        <option>Arathi</option>
         <option>Priyanka</option>
         <option>Shoeb</option>
+        <option>Shireen</option>
+        <option>Arathi</option>
       </select>
 
       {/* BUTTONS */}
@@ -1454,7 +1412,7 @@ setHistory(formattedHistory);
                     <StyledTableCell align='center'>SEO Team</StyledTableCell>
                     <StyledTableCell align='center'>Technology</StyledTableCell>
                     <StyledTableCell align='center'>State/City</StyledTableCell>
-                    {/* <StyledTableCell align='center'>Coordinator</StyledTableCell> */}
+                    <StyledTableCell align='center'>Lead Status</StyledTableCell>
                     <StyledTableCell align="center">Action</StyledTableCell>
                   </TableRow>
                 </TableHead>
@@ -1489,7 +1447,7 @@ setHistory(formattedHistory);
                         <StyledTableCell align="center">{row.seoTeam}</StyledTableCell>
                         <StyledTableCell align="center">{row.course_name}</StyledTableCell>
                         <StyledTableCell align="center">{row.stateCity}</StyledTableCell>
-                        {/* <StyledTableCell align="center">{row.coordinator}</StyledTableCell> */}
+                        <StyledTableCell align="center">{row.leadStatus}</StyledTableCell>
                         <StyledTableCell align="center">
                           <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                             <FaEdit className="edit" onClick={() => handleClickOpen(row)} />

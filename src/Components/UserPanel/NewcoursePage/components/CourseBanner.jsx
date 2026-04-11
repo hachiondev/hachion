@@ -113,12 +113,8 @@ export default function CourseBanner({ onEnroll }) {
 
   const courseNameForApi = courseName
     ? decodeURIComponent(courseName)
-
-
       .replace(/---+/g, " - ")
       .replace(/\b([a-zA-Z]{2,3})-(\d{3})\b/g, "$1@@$2")
-
-
       .replace(/[-_]+/g, " ")
       .replace(/@@/g, "-")
       .replace(/\s+/g, " ")

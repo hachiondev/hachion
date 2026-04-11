@@ -138,7 +138,7 @@ const CourseDetail = ({
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get('https://api.test.hachion.co/courses/all');
+        const response = await axios.get('https://api.test.hachion.co/courses/allforadmin');
         setCategories(response.data);
         setFilteredCourses(response.data);
         setAllCourses(response.data);
@@ -333,7 +333,7 @@ const CourseDetail = ({
       mentoringMode: formData.mentoringMode,
       selfPacedLearning: formData.selfPacedLearning,
       // Add status to course data
-      status: formData.status,
+      courseStatus: formData.status,
     };
 
     const formNewData = new FormData();
@@ -375,18 +375,23 @@ const CourseDetail = ({
       }
     }
     catch (error) {
-      setSuccessMessage("");
+  setSuccessMessage("");
 
-      if (error.response && error.response.status === 409) {
-        setErrorMessage(
-          "❌ Course already exists for the selected category. Please use a different course name."
-        );
-        setDuplicateError(true);
-      } else {
-        setErrorMessage("❌ Something went wrong while submitting the course.");
-      }
+  if (error.response) {
+    const backendMessage =
+      typeof error.response.data === "string"
+        ? error.response.data
+        : error.response.data?.message;
 
+    setErrorMessage(`❌ ${backendMessage || "Something went wrong while updating the course."}`);
+
+    if (error.response.status === 409) {
+      setDuplicateError(true);
     }
+  } else {
+    setErrorMessage("❌ Network error. Please try again.");
+  }
+}
 
   };
 
@@ -448,7 +453,8 @@ const CourseDetail = ({
           mentoringMode: course.mentoringMode,
           selfPacedLearning: course.selfPacedLearning,
           // Add status from course data
-          status: course.status || 'active',
+          // status: course.status || 'active',
+          status: course.courseStatus || 'active',
         });
         setFormMode('Edit');
       } else {
@@ -650,7 +656,7 @@ const CourseDetail = ({
     const hasCareerOpportunities = formData.careerOpportunities?.trim() !== "";
     const hasAverageSalaryRange = formData.avarageSalaryRange?.trim() !== "";
     const hasPrerequisites = formData.prerequisities?.trim() !== "";
-    const hasYoutubeLink = formData.youtubeLink?.trim() !== "";
+    // const hasYoutubeLink = formData.youtubeLink?.trim() !== "";
     const hasLevel = formData.level?.trim() !== "";
     const hasStarRating = formData.starRating?.toString().trim() !== "";
     const hasRatingByNumberOfPeople = formData.ratingByNumberOfPeople?.toString().trim() !== "";
@@ -706,7 +712,7 @@ const CourseDetail = ({
       hasCareerOpportunities &&
       hasAverageSalaryRange &&
       hasPrerequisites &&
-      hasYoutubeLink &&
+      // hasYoutubeLink &&
       hasLevel &&
       hasStarRating &&
       hasRatingByNumberOfPeople &&
@@ -1143,7 +1149,7 @@ const CourseDetail = ({
 
                   <div className="col-md-4">
                     <label className="form-label">
-                      Youtube Link <span style={{ color: "red" }}>*</span>
+                      Youtube Link 
                     </label>
                     <input
                       type="text"
@@ -2025,11 +2031,11 @@ const CourseDetail = ({
                             borderRadius: '12px',
                             fontSize: '12px',
                             fontWeight: '600',
-                            backgroundColor: course.status === 'active' ? '#d4edda' : '#f8d7da',
-                            color: course.status === 'active' ? '#155724' : '#721c24',
-                            border: course.status === 'active' ? '1px solid #c3e6cb' : '1px solid #f5c6cb'
+                            backgroundColor: course.courseStatus === 'active' ? '#d4edda' : '#f8d7da',
+                            color: course.courseStatus === 'active' ? '#155724' : '#721c24',
+                            border: course.courseStatus === 'active' ? '1px solid #c3e6cb' : '1px solid #f5c6cb'
                           }}>
-                            {course.status ? (course.status.charAt(0).toUpperCase() + course.status.slice(1)) : 'Active'}
+                            {course.courseStatus ? (course.courseStatus.charAt(0).toUpperCase() + course.courseStatus.slice(1)) : 'Active'}
                           </span>
                         </StyledTableCell>
                         <StyledTableCell align="center">

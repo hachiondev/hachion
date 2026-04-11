@@ -61,6 +61,8 @@ const Employees = () => {
     location: "",
     department: "",
     role: "",
+    recordingsFolderId: "",
+  googleFormUrl: "",
     additionalInfo: "",
   });
   const [formMode, setFormMode] = useState("Add");
@@ -70,6 +72,7 @@ const Employees = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ADD: State for checkbox selection
   const [selectedIds, setSelectedIds] = useState([]);
@@ -202,11 +205,25 @@ const Employees = () => {
       location: "",
       department: "",
       role: "",
+      recordingsFolderId: "",
+  googleFormUrl: "",
       additionalInfo: "",
     });
     setImageDisplayName("");
     setExistingImagePath("");
   };
+  // const isBusinessOrSEO =
+  // formData.department === "Business" || formData.department === "SEO";
+
+const isFormValid =
+  formData.name &&
+  formData.phone &&
+  formData.email &&
+  formData.department &&
+  formData.role 
+  // &&
+  // (!isBusiness ||
+  //   (formData.recordingsFolderId && formData.googleFormUrl));
 
   // ADD: Handle bulk delete
   const handleBulkDelete = async () => {
@@ -252,68 +269,79 @@ const Employees = () => {
       }
     }
   };
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  if (isSubmitting) return; // 🚫 prevent double click
 
-    const fullPhone = `${selectedCountry.code} ${formData.phone.replace(
-      /\D/g,
-      ""
-    )}`;
+  setIsSubmitting(true); // 🔥 START LOADING
 
-    const employeePayload = {
-      name: formData.name,
-      phone: fullPhone,
-      email: formData.email,
-      location: formData.location,
-      department: formData.department,
-      role: formData.role,
-      additionalInfo: formData.additionalInfo,
-    };
+  const fullPhone = `${selectedCountry.code} ${formData.phone.replace(/\D/g, "")}`;
 
-    const fd = new FormData();
-    fd.append("employee", JSON.stringify(employeePayload));
-    if (formData.image) fd.append("companyImage", formData.image);
+  const fullGoogleFormUrl = formData.googleFormUrl
+    ? `https://test.hachion.co/enquiryform/${formData.googleFormUrl}`
+    : "";
 
-    try {
-      const endpoint = formData.id
-        ? `${API_BASE}/employees/update/${formData.id}`
-        : `${API_BASE}/employees/add`;
-      const method = formData.id ? axios.put : axios.post;
-
-      const response = await method(endpoint, fd, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      setSuccessMessage(
-        `Employee ${formMode === "Add" ? "added" : "updated"} successfully`
-      );
-      setErrorMessage("");
-
-      if (formData.id) {
-        const updatedRecord = response.data;
-        setEmployees((prev) =>
-          prev.map((emp) =>
-            (emp.employeeId ?? emp.id) ===
-              (formData.id || updatedRecord.employeeId)
-              ? { ...emp, ...updatedRecord }
-              : emp
-          )
-        );
-        // Remove from selectedIds if present
-        setSelectedIds(prev => prev.filter(id => id !== formData.id));
-      } else {
-        setEmployees((prev) => [...prev, response.data]);
-      }
-
-      handleReset();
-      setShowForm(false);
-    } catch (error) {
-      console.error(error);
-      setErrorMessage("Error submitting employee data");
-      setSuccessMessage("");
-    }
+  const employeePayload = {
+    name: formData.name,
+    phone: fullPhone,
+    email: formData.email,
+    location: formData.location,
+    department: formData.department,
+    role: formData.role,
+    recordingsFolderId: formData.recordingsFolderId,
+    googleFormUrl: fullGoogleFormUrl,
+    additionalInfo: formData.additionalInfo,
   };
+
+  const fd = new FormData();
+  fd.append("employee", JSON.stringify(employeePayload));
+  if (formData.image) fd.append("companyImage", formData.image);
+
+  try {
+    const endpoint = formData.id
+      ? `${API_BASE}/employees/update/${formData.id}`
+      : `${API_BASE}/employees/add`;
+
+    const method = formData.id ? axios.put : axios.post;
+
+    const response = await method(endpoint, fd, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    setSuccessMessage(
+      `Employee ${formMode === "Add" ? "added" : "updated"} successfully`
+    );
+    setErrorMessage("");
+
+    if (formData.id) {
+      const updatedRecord = response.data;
+
+      setEmployees((prev) =>
+        prev.map((emp) =>
+          (emp.employeeId ?? emp.id) ===
+          (formData.id || updatedRecord.employeeId)
+            ? { ...emp, ...updatedRecord }
+            : emp
+        )
+      );
+
+      setSelectedIds(prev => prev.filter(id => id !== formData.id));
+    } else {
+      setEmployees((prev) => [...prev, response.data]);
+    }
+
+    handleReset();
+    setShowForm(false);
+
+  } catch (error) {
+    console.error(error);
+    setErrorMessage("Error submitting employee data");
+    setSuccessMessage("");
+  } finally {
+    setIsSubmitting(false); // 🔥 STOP LOADING (VERY IMPORTANT)
+  }
+};
 
   const handleEdit = (id) => {
     const emp = employees.find((e) => (e.employeeId ?? e.id) === id);
@@ -327,6 +355,11 @@ const Employees = () => {
         location: emp.location || "",
         department: emp.department || "",
         role: emp.role || "",
+         recordingsFolderId: emp.recordingsFolderId || "",
+  // googleFormUrl: emp.googleFormUrl || "",
+  googleFormUrl: emp.googleFormUrl
+  ? emp.googleFormUrl.replace("https://test.hachion.co/enquiryform/", "")
+  : "",
         additionalInfo: emp.additionalInfo || "",
         image: "",
       });
@@ -423,7 +456,7 @@ const Employees = () => {
               <div className="course-details">
                 <div className="course-row">
                   <div className="col">
-                    <label className="form-label">Employee Name</label>
+                    <label className="form-label">Employee Name <span style={{ color: "red" }}>*</span></label>
                     <input
                       type="text"
                       name="name"
@@ -461,7 +494,7 @@ const Employees = () => {
                   </div>
 
                   <div className="col">
-                    <label className="form-label">Location</label>
+                    <label className="form-label">Location <span style={{ color: "red" }}>*</span></label>
                     <input
                       type="text"
                       name="location"
@@ -475,7 +508,7 @@ const Employees = () => {
 
                 <div className="course-row">
                   <div className="col">
-                    <label className="form-label">Phone Number</label>
+                    <label className="form-label">Phone Number <span style={{ color: "red" }}>*</span></label>
                     <div style={{ position: "relative" }}>
                       <button
                         type="button"
@@ -539,7 +572,7 @@ const Employees = () => {
                   </div>
 
                   <div className="col">
-                    <label className="form-label">Email</label>
+                    <label className="form-label">Email <span style={{ color: "red" }}>*</span></label>
                     <input
                       type="email"
                       name="email"
@@ -554,7 +587,7 @@ const Employees = () => {
 
                 <div className="course-row">
                   <div className="col">
-                    <label className="form-label">Department</label>
+                    <label className="form-label">Department <span style={{ color: "red" }}>*</span></label>
                     <select
                       id="inputState"
                       className="form-select"
@@ -571,7 +604,7 @@ const Employees = () => {
                     </select>
                   </div>
                   <div className="col">
-                    <label className="form-label">Role</label>
+                    <label className="form-label">Role <span style={{ color: "red" }}>*</span></label>
                     <input
                       type="text"
                       name="role"
@@ -581,8 +614,73 @@ const Employees = () => {
                       placeholder="Enter Role"
                     />
                   </div>
+                 
                 </div>
+ <div className="course-row">
+  <div className="col">
+    <label className="form-label">Recordings Folder ID </label>
+   <input
+  type="text"
+  name="recordingsFolderId"
+  className="form-control"
+  value={formData.recordingsFolderId}
+  onChange={handleInputChange}
+  placeholder="Enter Google Drive Folder ID"
+  // disabled={!isBusinessOrSEO}
+  // required={isBusinessOrSEO}
+/>
+  </div>
 
+ <div className="col">
+  <label className="form-label">Google Form URL </label>
+
+  <div
+    style={{
+      display: "flex",
+      border: "1px solid #ced4da",
+      borderRadius: "6px",
+      overflow: "hidden",
+      height: "38px"
+    }}
+  >
+    <div
+      style={{
+        background: "#f8f9fa",
+        padding: "8px 10px",
+        fontSize: "14px",
+        display: "flex",
+        alignItems: "center",
+        whiteSpace: "nowrap",
+        borderRight: "1px solid #ced4da"
+      }}
+    >
+      https://test.hachion.co/enquiryform/
+    </div>
+
+    <input
+      type="text"
+      name="googleFormUrl"
+      value={formData.googleFormUrl || ""}
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          googleFormUrl: e.target.value.toLowerCase().replace(/\s+/g, "")
+        }))
+      }
+      placeholder="Enter name (e.g. priyanka)"
+  //      disabled={!isBusinessOrSEO}
+  // required={isBusinessOrSEO}
+      style={{
+        border: "none",
+        outline: "none",
+        flex: 1,
+        padding: "8px 10px",
+        fontSize: "14px"
+      }}
+    />
+  </div>
+</div>
+</div>
                 <div className="mb-6">
                   <label className="form-label">Additional Info</label>
                   <textarea
@@ -596,9 +694,23 @@ const Employees = () => {
                 </div>
 
                 <div className="course-row">
-                  <button type="submit" className="submit-btn">
-                    {formMode === "Add" ? "Submit" : "Update"}
-                  </button>
+                  <button
+  type="submit"
+  className="submit-btn"
+  disabled={isSubmitting}
+  style={{
+    backgroundColor: isSubmitting ? "grey" : "#00AEEF",
+    cursor: isSubmitting ? "not-allowed" : "pointer"
+  }}
+>
+  {isSubmitting
+    ? formMode === "Add"
+      ? "Submitting..."
+      : "Updating..."
+    : formMode === "Add"
+    ? "Submit"
+    : "Update"}
+</button>
                   <button
                     type="button"
                     className="reset-btn"
@@ -713,6 +825,8 @@ const Employees = () => {
                   <StyledTableCell align="center">Location</StyledTableCell>
                   <StyledTableCell align="center">Department</StyledTableCell>
                   <StyledTableCell align="center">Role</StyledTableCell>
+                  <StyledTableCell align="center">Recordings Folder ID</StyledTableCell>
+<StyledTableCell align="center">Google Form URL</StyledTableCell>
                   <StyledTableCell align="center">
                     Additional Info
                   </StyledTableCell>
@@ -760,6 +874,19 @@ const Employees = () => {
                       <StyledTableCell align="center">{emp.location}</StyledTableCell>
                       <StyledTableCell align="center">{emp.department}</StyledTableCell>
                       <StyledTableCell align="center">{emp.role}</StyledTableCell>
+                      <StyledTableCell align="center">
+  {emp.recordingsFolderId || "-"}
+</StyledTableCell>
+
+<StyledTableCell align="center">
+  {emp.googleFormUrl ? (
+    <a href={emp.googleFormUrl} target="_blank" rel="noreferrer">
+      View Form
+    </a>
+  ) : "-"}
+</StyledTableCell>
+
+
                       <StyledTableCell align="left" style={{ maxWidth: 250 }}>
                         <div
                           style={{ maxHeight: "100px", overflowY: "auto" }}

@@ -1158,7 +1158,7 @@ const CourseDetail = ({
                       value={formData.youtubeLink}
                       onChange={handleInputChange}
                       placeholder="Enter Youtube URL"
-                      required
+                      
                     />
                   </div>
 

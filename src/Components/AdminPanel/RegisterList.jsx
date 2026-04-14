@@ -307,7 +307,7 @@ const isUpdateFormValid = () => {
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const response = await axios.get('https://api.test.hachion.co/registerstudent');
+        const response = await axios.get('https://api.test.hachion.co/registerstudent-with-remarks');
         setRegisterStudent(response.data);
         setFilteredStudent(response.data);
       } catch (error) {
@@ -549,7 +549,24 @@ setHistory(formattedHistory);
       setMobileError("");
     }
   };
+const formatDate = (dateStr) => {
+  if (!dateStr) return "";
 
+  // Try multiple input formats
+  const parsed = dayjs(dateStr, [
+    "YYYY-MM-DD",
+    "DD-MMM-YY",
+    "DD-MMM-YYYY",
+    "DD MMMM YYYY",   // ✅ handles "13 April 2026"
+    "DD MMM YYYY"
+  ], true);
+
+  if (parsed.isValid()) {
+    return parsed.format("DD-MMM-YYYY"); // ✅ FINAL FORMAT
+  }
+
+  return dateStr; // fallback
+};
   const handleWhatsappBlur = () => {
     const whatsapp = studentData.whatsapp?.trim();
 
@@ -1402,9 +1419,9 @@ setHistory(formattedHistory);
                     <StyledTableCell align="center">Mobile</StyledTableCell>
                     <StyledTableCell align="center">WhatsApp</StyledTableCell>
                     <StyledTableCell align="center">Country</StyledTableCell>
-                    <StyledTableCell align="center">Location</StyledTableCell>
+                    {/* <StyledTableCell align="center">Location</StyledTableCell> */}
                     <StyledTableCell align="center">Time Zone</StyledTableCell>
-                    <StyledTableCell align="center">Visa Status</StyledTableCell>
+                    {/* <StyledTableCell align="center">Visa Status</StyledTableCell> */}
                     <StyledTableCell align='center'>Entered By</StyledTableCell>
                     <StyledTableCell align='center'>Source</StyledTableCell>
                     {/* <StyledTableCell align='center'>Remark</StyledTableCell> */}
@@ -1413,6 +1430,11 @@ setHistory(formattedHistory);
                     <StyledTableCell align='center'>Technology</StyledTableCell>
                     <StyledTableCell align='center'>State/City</StyledTableCell>
                     <StyledTableCell align='center'>Lead Status</StyledTableCell>
+                    <StyledTableCell align='center'>Remark</StyledTableCell>
+                    <StyledTableCell align='center'>Coordinator</StyledTableCell>
+                    <StyledTableCell align='center'>Call Made On</StyledTableCell>
+                    <StyledTableCell align='center'>Next Follow Up</StyledTableCell>
+                    
                     <StyledTableCell align="center">Action</StyledTableCell>
                   </TableRow>
                 </TableHead>
@@ -1437,10 +1459,10 @@ setHistory(formattedHistory);
                         <StyledTableCell align="center">{row.mobile}</StyledTableCell>
                         <StyledTableCell align="center">{row.whatsapp}</StyledTableCell>
                         <StyledTableCell align="center">{row.country}</StyledTableCell>
-                        <StyledTableCell align="center">{row.location}</StyledTableCell>
-                        <StyledTableCell align="center">{row.time_zone}</StyledTableCell>
-                        <StyledTableCell align="center">{row.visa_status}</StyledTableCell>
-                        <StyledTableCell align="center">{row.analyst_name}</StyledTableCell>
+                        {/* <StyledTableCell align="center">{row.location}</StyledTableCell> */}
+                        <StyledTableCell align="center">{row.timeZone}</StyledTableCell>
+                        {/* <StyledTableCell align="center">{row.visa_status}</StyledTableCell> */}
+                        <StyledTableCell align="center">{row.analystName}</StyledTableCell>
                         <StyledTableCell align="center">{row.source}</StyledTableCell>
                         {/* <StyledTableCell align="left" style={{ whiteSpace: 'wrap' }}>{row.remarks}</StyledTableCell> */}
                         {/* <StyledTableCell align="left" style={{ whiteSpace: 'wrap' }}>{row.comments}</StyledTableCell> */}
@@ -1448,6 +1470,12 @@ setHistory(formattedHistory);
                         <StyledTableCell align="center">{row.course_name}</StyledTableCell>
                         <StyledTableCell align="center">{row.stateCity}</StyledTableCell>
                         <StyledTableCell align="center">{row.leadStatus}</StyledTableCell>
+                        <StyledTableCell align="center">{row.remark}</StyledTableCell>
+                        <StyledTableCell align="center">{row.remarkCoordinator}</StyledTableCell>
+                        <StyledTableCell align="center">{formatDate(row.callMadeOn)}</StyledTableCell>
+                        <StyledTableCell align="center">
+  {formatDate(row.lastCallMadeOn)}
+</StyledTableCell>
                         <StyledTableCell align="center">
                           <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                             <FaEdit className="edit" onClick={() => handleClickOpen(row)} />

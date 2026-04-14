@@ -853,7 +853,7 @@ const handleSubmit = async (e) => {
                             src={
                               emp.companyImage.startsWith("http")
                                 ? emp.companyImage
-                                : `https://api.test.hachion.co/uploads/test/employee_company_logo/${emp.companyImage.startsWith("/") ? emp.companyImage.substring(1) : emp.companyImage}`
+                                : `/uploads/prod/employee_company_logo/${emp.companyImage.startsWith("/") ? emp.companyImage.substring(1) : emp.companyImage}`
                             }
                             alt="Employee"
                             width="50"

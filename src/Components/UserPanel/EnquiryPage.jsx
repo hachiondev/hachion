@@ -51,7 +51,13 @@ const [searchCourse, setSearchCourse] = useState("");
 const [showDropdown, setShowDropdown] = useState(false);
 const [loadingCourses, setLoadingCourses] = useState(true);
 const { refName } = useParams();
-const { countryCode, isLoading: countryLoading } = useTopBarApi();
+// const { countryCode, isLoading: countryLoading } = useTopBarApi();
+const { 
+  countryCode, 
+  whatsappNumber, 
+  whatsappLink, 
+  isLoading: countryLoading 
+} = useTopBarApi();
 const filteredCourses = courses.filter((course) =>
   course.courseName.toLowerCase().includes(searchCourse.toLowerCase())
 );
@@ -304,12 +310,18 @@ if (!isValidForm) {
           https://www.hachion.co/coursedetails
         </a>
 
-        <p style={{ marginTop: "10px" }}>
-          ✅ Connect with us on WhatsApp:
-          <br />
-          +1 732-485-2499
-        </p>
-
+<p style={{ marginTop: "10px" }}>
+  ✅ Connect with us on WhatsApp:
+  <br />
+  <a 
+    href={whatsappLink} 
+    target="_blank" 
+    rel="noopener noreferrer"
+    style={{ color: "blue", textDecoration: "underline" }}
+  >
+    {whatsappNumber}
+  </a>
+</p>
         <p style={{ marginTop: "10px" }}>
           ✅ Follow us for updates, tips, and success stories
         </p>

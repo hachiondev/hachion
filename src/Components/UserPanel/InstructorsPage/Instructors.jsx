@@ -48,7 +48,14 @@ const getTrainerCourseCount = (allTrainers, trainerName) => {
 
 
 const normalize = (str) => str?.trim().toLowerCase() ?? "";
+const decodeHtml = (html) => {
+  if (!html) return "";
 
+  return html
+    .replace(/\\u003C/g, "<")
+    .replace(/\\u003E/g, ">")
+    .replace(/\\u0026/g, "&");
+};
 const Instructors = () => {
   const titleRef = useRef(null);
   const navigate = useNavigate();
@@ -94,21 +101,40 @@ const Instructors = () => {
   /* -----------------------------
      Filters
   ----------------------------- */
-  const filteredTrainers = useMemo(() => {
-    return trainers.map((t) => ({
-  ...t,
-  trainer_name: t.trainer_name || t.trainerName,
-  course_name: t.course_name || t.courseName,
-})).filter((trainer) => {
+  const summaryMap = useMemo(() => {
+  const map = {};
+
+  teacherOptions.forEach((t) => {
+    map[t.trainer_name?.trim().toLowerCase()] = t.summary;
+  });
+
+  return map;
+}, [teacherOptions]);
+const filteredTrainers = useMemo(() => {
+  return trainers
+    .map((t) => {
+      const trainerName = t.trainer_name || t.trainerName;
+      const courseName = t.course_name || t.courseName;
+
+      const key = trainerName?.trim().toLowerCase();
+
+      return {
+        ...t,
+        trainer_name: trainerName,
+        course_name: courseName,
+
+        // ✅ SUMMARY MERGE (MAIN FIX)
+        summary: summaryMap[key] || "",
+      };
+    })
+    .filter((trainer) => {
       const term = normalize(searchTerm);
 
-      
       const matchesSearch =
         term === "" ||
         normalize(trainer.trainer_name).includes(term) ||
         normalize(trainer.course_name).includes(term);
 
-    
       const matchesTeacher = selectedTeacher
         ? normalize(trainer.trainer_name) === normalize(selectedTeacher)
         : true;
@@ -119,9 +145,7 @@ const Instructors = () => {
 
       return matchesSearch && matchesCourse && matchesTeacher;
     });
-  }, [trainers, searchTerm, selectedTeacher, selectedCourse]);
-
-  
+}, [trainers, searchTerm, selectedTeacher, selectedCourse, summaryMap]);
   const teacherDropdownOptions = useMemo(() => {
     if (selectedCourse) {
       
@@ -227,8 +251,16 @@ const Instructors = () => {
   
 const groupedTrainers = Object.values(
   filteredTrainers.reduce((acc, trainer) => {
-    const name = trainer.trainer_name?.trim().toLowerCase();
+    // const name = trainer.trainer_name?.trim().toLowerCase();
+const name = trainer.trainer_name?.trim().toLowerCase();
 
+if (!acc[name]) {
+  acc[name] = {
+    ...trainer,
+    summary: trainer.summary, // ✅ FORCE KEEP
+    courses: [trainer.course_name],
+  };
+}
     if (!acc[name]) {
       acc[name] = {
         ...trainer,
@@ -346,7 +378,13 @@ const totalCards = groupedTrainers.length;
           <div className="profiles-grid">
             {currentCards.length > 0 ? (
               currentCards.map((trainer) => {
-                
+                console.log("RAW SUMMARY:", trainer.summary);
+try {
+  console.log("PARSED:", JSON.parse(`"${trainer.summary}"`));
+} catch (e) {
+  console.log("JSON PARSE ERROR:", e);
+}
+console.log("DECODED:", decodeHtml(trainer.summary));
 const courseCount = trainer.courses
   ? trainer.courses.length
   : getTrainerCourseCount(trainers, trainer.trainer_name);
@@ -396,12 +434,14 @@ const courseCount = trainer.courses
 
                         <div className="expert-about">
                           <p className="expert-me">About Me</p>
-                          <div
-                            className={`expert-detail ${
-                              isSummaryExpanded ? "expanded" : "collapsed"
-                            }`}
-                            dangerouslySetInnerHTML={{ __html: trainer.summary }}
-                          />
+                         <div
+  className={`expert-detail ${
+    isSummaryExpanded ? "expanded" : "collapsed"
+  }`}
+  dangerouslySetInnerHTML={{
+  __html: decodeHtml(trainer.summary || "No summary available"),
+}}
+/>
                           {trainer.summary && (
                             <button
                               className="read-more-btn"

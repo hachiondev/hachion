@@ -279,7 +279,7 @@ const handleSubmit = async (e) => {
   const fullPhone = `${selectedCountry.code} ${formData.phone.replace(/\D/g, "")}`;
 
   const fullGoogleFormUrl = formData.googleFormUrl
-    ? `https://test.hachion.co/enquiryform/${formData.googleFormUrl}`
+    ? `https://www.hachion.co/enquiryform/${formData.googleFormUrl}`
     : "";
 
   const employeePayload = {
@@ -358,7 +358,7 @@ const handleSubmit = async (e) => {
          recordingsFolderId: emp.recordingsFolderId || "",
   // googleFormUrl: emp.googleFormUrl || "",
   googleFormUrl: emp.googleFormUrl
-  ? emp.googleFormUrl.replace("https://test.hachion.co/enquiryform/", "")
+  ? emp.googleFormUrl.replace("https://www.hachion.co/enquiryform/", "")
   : "",
         additionalInfo: emp.additionalInfo || "",
         image: "",
@@ -654,7 +654,7 @@ const handleSubmit = async (e) => {
         borderRight: "1px solid #ced4da"
       }}
     >
-      https://test.hachion.co/enquiryform/
+      https://www.hachion.co/enquiryform/
     </div>
 
     <input
@@ -853,7 +853,7 @@ const handleSubmit = async (e) => {
                             src={
                               emp.companyImage.startsWith("http")
                                 ? emp.companyImage
-                                : `/uploads/prod/employee_company_logo/${emp.companyImage.startsWith("/") ? emp.companyImage.substring(1) : emp.companyImage}`
+                                : `/uploads/test/employee_company_logo/${emp.companyImage.startsWith("/") ? emp.companyImage.substring(1) : emp.companyImage}`
                             }
                             alt="Employee"
                             width="50"

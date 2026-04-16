@@ -80,7 +80,8 @@ export default function RegisterList() {
   const [endDate, setEndDate] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
+const [isSubmitting, setIsSubmitting] = useState(false);
+const [isUpdating, setIsUpdating] = useState(false);
   const [editedData, setEditedData] = useState({ student_Id: "", userName: "", email: "", mobile: "", whatsapp: "", location: "", country: "", time_zone: "", analyst_name: "", source: "", remarks: "", comments: "", date: currentDate, visa_status: "", mode: "" });
   const [mobileError, setMobileError] = useState("");
   const [whatsappError, setWhatsappError] = useState("");
@@ -503,6 +504,8 @@ setHistory(formattedHistory);
   setShowAddCourse(true);
 };
   const handleUpdate = async () => {
+    if (isUpdating) return; // ✅ prevent multiple clicks
+  setIsUpdating(true);
     try {
       const finalMobile = `${selectedCountry.code} ${studentData.mobile}`;
       const finalWhatsapp = `${selectedCountry.code} ${studentData.whatsapp}`;
@@ -523,10 +526,12 @@ setHistory(formattedHistory);
         prev.map((s) => s.id === studentData.id ? response.data : s)
       );
       setMessage("Student updated successfully!");
+      setIsUpdating(false);
       setShowAddCourse(false);
       setFormMode("Add");
       handleReset();
     } catch (error) {
+      setIsUpdating(false);
       console.error("Error updating student:", error.message);
       setMessage("Error updating student.");
     }
@@ -579,6 +584,10 @@ const formatDate = (dateStr) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    
     const mobileNumber = studentData.mobile?.trim();
     const countryCode = selectedCountry.code?.trim() || "";
 
@@ -604,12 +613,14 @@ const formatDate = (dateStr) => {
     try {
       const response = await axios.post("https://api.test.hachion.co/registerstudent/add", dataToSubmit);
       if (response.status === 200) {
+        setIsSubmitting(false);
         setSuccessMessage("✅ Student added successfully.");
         setErrorMessage("");
         setStudentData(dataToSubmit);
         handleReset();
       }
     } catch (error) {
+      setIsSubmitting(false);
       if (error.response && error.response.data && error.response.data.message) {
         const message = error.response.data.message;
 
@@ -1024,9 +1035,13 @@ const formatDate = (dateStr) => {
             <div className="course-row">
              {formMode === "Edit" ? (
     <div style={{ width: "100%" }}>
-      <button className='submit-btn' onClick={handleUpdate} disabled={!isFormValid()}>
-        Update
-      </button>
+     <button 
+  className='submit-btn' 
+  onClick={handleUpdate} 
+  disabled={!isFormValid() || isUpdating}
+>
+  {isUpdating ? "Updating..." : "Update"}
+</button>
 
       {/* ✅ FORCE NEW LINE */}
       <div style={{ width: "100%", marginTop: "20px" }}>
@@ -1280,9 +1295,13 @@ const formatDate = (dateStr) => {
       </div>
     </div>
   ) : (
-                <button className='submit-btn' onClick={handleSubmit} disabled={!isFormValid()}>
-                  Submit
-                </button>
+                <button 
+  className='submit-btn' 
+  onClick={handleSubmit} 
+  disabled={!isFormValid() || isSubmitting}
+>
+  {isSubmitting ? "Submitting..." : "Submit"}
+</button>
               )}
             </div>
           </div>

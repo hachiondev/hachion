@@ -22,14 +22,14 @@ export const useTrendingData = () => {
 
       const matchedTrainer = trainers.find(
         tr =>
-          (tr.course_name || "").trim().toLowerCase() ===
+          (tr.courseName || "").trim().toLowerCase() ===
           courseName.toLowerCase()
       );
 
       return {
         ...t,
         ...courseDetails,
-        trainerName: matchedTrainer?.trainer_name || "",
+        trainerName: matchedTrainer?.trainerName || "",
       };
     });
   }, [trendingRaw, summary, trainers]);

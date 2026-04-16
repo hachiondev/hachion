@@ -3,6 +3,7 @@ import RegisterList from './RegisterList';
 import StudentDetails from './StudentDetails';
 import ImportLead from './ImportLead';
 import RegisterStudent from './RegisterStudent';
+import LeadDashboard from './LeadDashboard';
 
 
 export default function Registration() {
@@ -20,6 +21,7 @@ export default function Registration() {
     <h3>Registration</h3>
       <div className="certificate-tabs">
         {/* Tab Navigation */}
+
         <div 
           className={`tab-item ${activeTab === 'registerlist' ? 'active-tab' : ''}`}
           onClick={() => handleTabChange('registerlist')}
@@ -38,6 +40,12 @@ export default function Registration() {
         >
           Import Lead
         </div>
+        <div 
+  className={`tab-item ${activeTab === 'leaddashboard' ? 'active-tab' : ''}`}
+  onClick={() => handleTabChange('leaddashboard')}
+>
+  Lead Dashboard
+</div>
         {/* <div 
           className={`tab-item ${activeTab === 'registerStudent' ? 'active-tab' : ''}`}
           onClick={() => handleTabChange('registerStudent')}
@@ -50,7 +58,7 @@ export default function Registration() {
       {/* {activeTab==='studentdetails' &&  <StudentDetails/>} */}
       {activeTab==='importlead' &&  <ImportLead/>}
       {/* {activeTab==='registerStudent' &&  <RegisterStudent/>} */}
-     
+     {activeTab === 'leaddashboard' && <LeadDashboard />}
      
     </>
   );

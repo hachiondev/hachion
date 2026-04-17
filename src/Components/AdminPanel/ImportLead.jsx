@@ -129,17 +129,27 @@ setLoading(false);
         <p style={{ margin: 0, color: "#666" }}>Total no of Students in File</p>
         <h3 style={{ margin: 0 }}>{result.totalRecords}</h3>
       </div>
+<div style={{
+  flex: 1,
+  background: "#e6f7ff",
+  padding: "12px",
+  borderRadius: "8px",
+  textAlign: "center"
+}}>
+  <p style={{ margin: 0, color: "#666" }}>Saved students in DB</p>
+  <h3 style={{ margin: 0 }}>{result.savedRecords}</h3>
+</div>
 
-      <div style={{
-        flex: 1,
-        background: "#e6f7ff",
-        padding: "12px",
-        borderRadius: "8px",
-        textAlign: "center"
-      }}>
-        <p style={{ margin: 0, color: "#666" }}>Updated students in DB</p>
-        <h3 style={{ margin: 0 }}>{result.savedRecords}</h3>
-      </div>
+<div style={{
+  flex: 1,
+  background: "#e8f5e9",
+  padding: "12px",
+  borderRadius: "8px",
+  textAlign: "center"
+}}>
+  <p style={{ margin: 0, color: "#666" }}>Updated students record count </p>
+  <h3 style={{ margin: 0 }}>{result.updatedRecords || 0}</h3>
+</div>
 
       <div style={{
         flex: 1,
@@ -148,7 +158,7 @@ setLoading(false);
         borderRadius: "8px",
         textAlign: "center"
       }}>
-        <p style={{ margin: 0, color: "#666" }}>Duplicate students</p>
+        <p style={{ margin: 0, color: "#666" }}>Duplicate students in DB</p>
         <h3 style={{ margin: 0 }}>{result.duplicateRecords}</h3>
       </div>
 
@@ -190,6 +200,39 @@ setLoading(false);
           <p style={{ color: "#888" }}>No Excel duplicates</p>
         )}
       </div>
+
+      {/* 🔥 Updated Emails */}
+<div style={{ flex: 1 }}>
+  <h5 style={{ marginBottom: "10px" }}>Updated Emails in DB</h5>
+
+  {result.updatedEmails?.length > 0 ? (
+    <ul style={{ paddingLeft: "18px" }}>
+      {result.updatedEmails.map((email, index) => (
+        <li key={index} style={{ color: "#2e7d32", marginBottom: "4px" }}>
+          {email}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p style={{ color: "#888" }}>No updated records</p>
+  )}
+</div>
+{/* 🔥 Skipped Duplicates */}
+<div style={{ flex: 1 }}>
+  <h5 style={{ marginBottom: "10px" }}>Skipped Duplicates</h5>
+
+  {result.skippedDuplicates?.length > 0 ? (
+    <ul style={{ paddingLeft: "18px" }}>
+      {result.skippedDuplicates.map((email, index) => (
+        <li key={index} style={{ color: "#9e9e9e", marginBottom: "4px" }}>
+          {email}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p style={{ color: "#888" }}>No skipped duplicates</p>
+  )}
+</div>
 {/* 🔥 Invalid Numbers Section */}
 <div style={{ marginTop: "25px" }}>
   <h5 style={{ marginBottom: "10px" }}>Invalid Phone / WhatsApp Numbers</h5>

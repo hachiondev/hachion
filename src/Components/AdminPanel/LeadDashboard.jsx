@@ -112,10 +112,10 @@ const filteredStudent = registerStudent.filter(item => {
   const matchesTag = demoFilter ? item.leadTag === demoFilter : true;
   const matchesStatus = statusFilter ? item.leadStatus === statusFilter : true;
 
-  // 🔥 1. ALL button → show everything
-  if (showAllData) {
-    return matchesSearch && matchesTag && matchesStatus;
-  }
+  // 🔥 ALL button → show all ONLY when no date is selected
+if (showAllData && !startDate && !endDate) {
+  return matchesSearch && matchesTag && matchesStatus;
+}
 
   // ❗ If dropdown selected and NO date → return ALL DB filtered by dropdown
   // if ((demoFilter || statusFilter) && !startDate && !endDate) {
@@ -134,12 +134,15 @@ if ((demoFilter || statusFilter) && !startDate && !endDate) {
 if (!demoFilter && !statusFilter && !startDate && !endDate) {
 
   if (!item.lastCallMadeOn) return false;
-
-  const callDate = dayjs(item.lastCallMadeOn, [
-    "DD-MMM-YY",
-    "YYYY-MM-DD",
-    "DD-MMM-YYYY"
-  ]);
+const callDate = dayjs(item.lastCallMadeOn, [
+  "DD-MMM-YY",
+  "YYYY-MM-DD",
+  "DD-MMM-YYYY",
+  "DD-MMMM-YYYY",   
+  "DD MMMM YYYY",   
+  "DD MMM YYYY",    
+  "DD/MM/YYYY"      
+]);
 
   if (!callDate.isValid()) return false;
 
@@ -153,11 +156,15 @@ if (!demoFilter && !statusFilter && !startDate && !endDate) {
   // ❗ If no date and no dropdown → default 7 days
   if (!item.lastCallMadeOn) return false;
 
-  const callDate = dayjs(item.lastCallMadeOn, [
-    "DD-MMM-YY",
-    "YYYY-MM-DD",
-    "DD-MMM-YYYY"
-  ]);
+const callDate = dayjs(item.lastCallMadeOn, [
+  "DD-MMM-YY",
+  "YYYY-MM-DD",
+  "DD-MMM-YYYY",
+  "DD-MMMM-YYYY",   
+  "DD MMMM YYYY",   
+  "DD MMM YYYY",    
+  "DD/MM/YYYY"      
+]);
 
   if (!callDate.isValid()) return false;
 
@@ -371,9 +378,23 @@ return (
 
             <div className='date-schedule'>
               Start Date
-              <DatePicker value={startDate} onChange={setStartDate} slotProps={{ textField: { size: "small", sx: { width: "170px" } } }} />
+              <DatePicker 
+  value={startDate} 
+  onChange={(date) => {
+    setStartDate(date);
+    setShowAllData(false); // 🔥 disable ALL when date selected
+  }} 
+  slotProps={{ textField: { size: "small", sx: { width: "170px" } } }} 
+/>
               End Date
-              <DatePicker value={endDate} onChange={setEndDate} slotProps={{ textField: { size: "small", sx: { width: "170px" } } }} />
+              <DatePicker 
+  value={endDate} 
+  onChange={(date) => {
+    setEndDate(date);
+    setShowAllData(false); // 🔥 disable ALL when date selected
+  }} 
+  slotProps={{ textField: { size: "small", sx: { width: "170px" } } }} 
+/>
 
 <button  className="filter"  onClick={() => {   setStatusFilter("");    setDemoFilter("");  setStartDate(null); setEndDate(null);  setShowAllData(true);}}>
   All

@@ -287,7 +287,9 @@ const QueryFormWidget = () => {
         email: formData.email,
         phone: fullMobileNumber,
         comments: formData.query,
-        location: selectedCountry?.name || ""
+        location: selectedCountry?.name || "",
+        timeZone: selectedCountry.timezone ,
+  country: selectedCountry.name 
       };
 
       console.log('Query submitted:', submitData);

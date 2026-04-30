@@ -76,61 +76,30 @@ const StickyBar = () => {
           {/* ----------------------- */}
           {/* SOCIAL MEDIA LINKS      */}
           {/* ----------------------- */}
-          <div className="footer-link">
-            <a
-              href="https://www.facebook.com/hachion.co"
-              aria-label="Facebook"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src={facebook} alt="facebook-icon" loading="lazy" />
-            </a>
-
-            <a
-              href="https://x.com/hachion_co"
-              aria-label="Twitter"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src={twitter} alt="twitter-icon" loading="lazy" />
-            </a>
-
-            <a
-              href="https://www.linkedin.com/company/hachion"
-              aria-label="Linkedin"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src={linkedin} alt="linkedin-icon" loading="lazy" />
-            </a>
-
-            <a
-              href="https://www.instagram.com/hachion_trainings"
-              aria-label="Instagram"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src={instagram} alt="instagram-icon" loading="lazy" />
-            </a>
-
-            <a
-              href="https://www.quora.com/profile/Hachion"
-              aria-label="Quora"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src={quora} alt="quora-icon" loading="lazy" />
-            </a>
-
-            <a
-              href="https://www.youtube.com/@hachion"
-              aria-label="YouTube"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src={youtube} alt="youtube" loading="lazy" />
-            </a>
-          </div>
+          {/* SOCIAL MEDIA LINKS */}
+              <div className='mt-2'>
+                <h6 className='footer-heading text-center'>Social Links</h6>
+                <div className="footer-link">
+                  <a href="https://www.facebook.com/hachion.official/" target="_blank" rel="noopener noreferrer">
+                    <img src={facebook} alt="facebook-icon" loading="lazy" />
+                  </a>
+                  <a href="https://x.com/hachionofficial" target="_blank" rel="noopener noreferrer">
+                    <img src={twitter} alt="twitter-icon" loading="lazy" />
+                  </a>
+                  <a href="https://www.linkedin.com/company/hachion" target="_blank" rel="noopener noreferrer">
+                    <img src={linkedin} alt="linkedin-icon" loading="lazy" />
+                  </a>
+                  <a href="https://www.instagram.com/hachion.official/" target="_blank" rel="noopener noreferrer">
+                    <img src={instagram} alt="instagram-icon" loading="lazy" />
+                  </a>
+                  {/* <a href="https://www.quora.com/profile/Hachion" target="_blank" rel="noopener noreferrer">
+                    <img src={quora} alt="quora-icon" loading="lazy" />
+                  </a> */}
+                  <a href="https://www.youtube.com/@hachion.official" target="_blank" rel="noopener noreferrer">
+                    <img src={youtube} alt="youtube" loading="lazy" />
+                  </a>
+                </div>
+              </div>
 
           {/* ----------------------- */}
           {/* COPYRIGHT (Mobile)      */}

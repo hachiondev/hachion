@@ -66,10 +66,42 @@ const Register = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+const handleClick = async () => {
+  if (!validateForm()) return;
+  setIsLoading(true);
 
-  const handleClick = async () => {
-    if (!validateForm()) return;
-    setIsLoading(true);
+  // 🔥 STEP 1: Call get-status API before create account
+  try {
+    const statusRes = await fetch(
+      `https://api.test.hachion.co/get-status?email=${email}`
+    );
+
+    const data = await statusRes.text();
+
+    if (data && !data.toLowerCase().includes("not found")) {
+
+      // 🔴 DISABLED CASE (UPDATED MESSAGE)
+      if (data.toLowerCase().includes("disabled")) {
+
+        const confirmMsg = window.confirm(
+          "Your account already exists but is currently disabled. Please login to activate your account. Do you want to go to login page?"
+        );
+
+        if (confirmMsg) {
+          navigate("/login");
+        }
+
+        setIsLoading(false);
+        return;
+      }
+
+    
+    }
+
+  } catch (err) {
+    
+  }
+
 
     const sanitizedMobile = mobile.trim().replace(/^(\+)?/, "");
     const fullMobileNumber = `${selectedCountry.code} ${sanitizedMobile}`;

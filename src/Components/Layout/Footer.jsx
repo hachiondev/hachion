@@ -135,22 +135,22 @@ const Footer = () => {
               <div className='mt-2'>
                 <h6 className='footer-heading text-center'>Social Links</h6>
                 <div className="footer-link">
-                  <a href="https://www.facebook.com/hachion.co" target="_blank" rel="noopener noreferrer">
+                  <a href="https://www.facebook.com/hachion.official/" target="_blank" rel="noopener noreferrer">
                     <img src={facebook} alt="facebook-icon" loading="lazy" />
                   </a>
-                  <a href="https://x.com/hachion_co" target="_blank" rel="noopener noreferrer">
+                  <a href="https://x.com/hachionofficial" target="_blank" rel="noopener noreferrer">
                     <img src={twitter} alt="twitter-icon" loading="lazy" />
                   </a>
                   <a href="https://www.linkedin.com/company/hachion" target="_blank" rel="noopener noreferrer">
                     <img src={linkedin} alt="linkedin-icon" loading="lazy" />
                   </a>
-                  <a href="https://www.instagram.com/hachion_trainings" target="_blank" rel="noopener noreferrer">
+                  <a href="https://www.instagram.com/hachion.official/" target="_blank" rel="noopener noreferrer">
                     <img src={instagram} alt="instagram-icon" loading="lazy" />
                   </a>
-                  <a href="https://www.quora.com/profile/Hachion" target="_blank" rel="noopener noreferrer">
+                  {/* <a href="https://www.quora.com/profile/Hachion" target="_blank" rel="noopener noreferrer">
                     <img src={quora} alt="quora-icon" loading="lazy" />
-                  </a>
-                  <a href="https://www.youtube.com/@hachion" target="_blank" rel="noopener noreferrer">
+                  </a> */}
+                  <a href="https://www.youtube.com/@hachion.official" target="_blank" rel="noopener noreferrer">
                     <img src={youtube} alt="youtube" loading="lazy" />
                   </a>
                 </div>

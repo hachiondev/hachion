@@ -47,16 +47,87 @@ const Login = () => {
     if (!validation.isValid) return;
 
     dismissError();
-    setIsLoading(true); // Start loading
+    setIsLoading(true); 
 
     const loginData = { email, password };
 
     try {
+
+
+  // ✅ STEP 1: Call status API before login
+  let proceedLogin = true;
+
+  // ✅ STEP 1: Call status API before login (ONLY FIRST TIME PER EMAIL)
+
+// let proceedLogin = true;
+
+// 🔥 Check if already confirmed for this email
+const confirmedEmail = sessionStorage.getItem("statusConfirmedEmail");
+
+if (confirmedEmail !== email) {
+
+  try {
+    const statusResponse = await axios.get(
+      `https://api.test.hachion.co/get-status?email=${email}`
+    );
+
+    // If API returns string
+    if (
+      typeof statusResponse.data === "string" &&
+      statusResponse.data.toLowerCase().includes("disabled")
+    ) {
+      proceedLogin = window.confirm(
+        "Your account is disabled. Are you sure you want to activate this student?"
+      );
+
+      if (proceedLogin) {
+        sessionStorage.setItem("statusConfirmedEmail", email);
+      }
+    }
+
+    // If API returns JSON
+    if (
+      statusResponse.data?.status &&
+      statusResponse.data.status.toUpperCase() === "DISABLED"
+    ) {
+      proceedLogin = window.confirm(
+        "Your account is disabled. Are you sure you want to activate this student?"
+      );
+
+      if (proceedLogin) {
+        sessionStorage.setItem("statusConfirmedEmail", email);
+      }
+    }
+
+  } catch (err) {
+    if (
+      err.response &&
+      err.response.data &&
+      typeof err.response.data === "string" &&
+      err.response.data.toLowerCase().includes("disabled")
+    ) {
+      proceedLogin = window.confirm(
+        "Your account is disabled. Are you sure you want to activate this student?"
+      );
+
+      if (proceedLogin) {
+        sessionStorage.setItem("statusConfirmedEmail", email);
+      }
+    }
+  }
+
+}
+  // ❌ If user clicks NO → stop here
+  if (!proceedLogin) {
+    setIsLoading(false);
+    return;
+  }
       const response = await axios.post('https://api.test.hachion.co/api/v1/user/login', loginData);
 
       console.log('Response Data:', response.data);
 
       if (response.data.status === true) {
+        sessionStorage.removeItem("statusConfirmedEmail");
         console.log('SUCCESS - Redirecting...');
 
         const loginuserData = {

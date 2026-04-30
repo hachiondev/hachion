@@ -233,7 +233,8 @@ export default function OfflinePayment() {
       !isNaN(parseFloat(paymentData.course_fee)) &&
       !isNaN(parseFloat(paymentData.tax)) &&
       !isNaN(parseFloat(paymentData.discount)) &&
-      !isNaN(parseInt(paymentData.installments)) &&
+      // !isNaN(parseInt(paymentData.installments)) &&
+      parseInt(paymentData.installments) > 0 &&
       !isNaN(parseInt(paymentData.days)) &&
       !isNaN(parseFloat(paymentData.total)) &&
       !isNaN(parseFloat(paymentData.balance));
@@ -560,7 +561,15 @@ reminderEnabled: item.stopReminder === "stop" ? false : true
     }));
 
     if (name === 'installments' || name === 'days') {
+      // let count = parseInt(updatedData.installments);
       let count = parseInt(updatedData.installments);
+
+// 🔁 Auto-fix: if 0 / empty / invalid → set to 1 (no error)
+if (!count || count <= 0) {
+  count = 1;
+  updatedData.installments = "1";
+  setPaymentData(updatedData);
+}
       const dayGap = parseInt(updatedData.days) || 0;
 
       if (name === 'installments') {

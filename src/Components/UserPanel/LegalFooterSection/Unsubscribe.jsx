@@ -13,7 +13,7 @@ const initialValues = {
   name: "",
   email: "",
   number: "",
-  duration: "",
+  chooseDuration: "",
   reason: "",
   comment: "",
   date: "",
@@ -40,52 +40,6 @@ const { values, handleBlur, handleChange } = useFormik({
 });
 
 const defaultCountry = getDefaultCountry("US");
-
-// useEffect(() => {
-//   const detectAndSetCountry = async () => {
-//     try {
-//       const res = await fetch("https://ipwhowho.is/");
-//       if (!res.ok) throw new Error("Location fetch failed");
-//       const data = await res.json();
-
-//       const matched = countries.find(c => c.flag === data?.country_code);
-//       if (matched) setSelectedCountry(matched);
-
-//     } catch (err) {
-      
-//     }
-//   };
-
-
-//   detectAndSetCountry();
-
-//   const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
-//   const userEmail = userData.email || "";
-
-//   if (!userEmail) {
-//     window.confirm("Please login before unsubscribe from hachion");
-//     navigate("/login");
-//     return;
-//   }
-
-//   values.email = userEmail;
-
-//   const fetchUserProfile = async () => {
-//     try {
-//       const res = await fetch(`https://api.test.hachion.co/api/v1/user/myprofile?email=${userEmail}`);
-//       const data = await res.json();
-//       if (res.ok) {
-//         values.name = data.name || "";
-//         values.country = data.country || "";
-//         setMobileNumber(data.mobile || "");
-//       }
-//     } catch (err) {
-      
-//     }
-//   };
-
-//   fetchUserProfile();
-// }, []);
 
 useEffect(() => {
   const detectAndSetCountry = async () => {
@@ -170,6 +124,7 @@ const handleFormSubmit = async (e) => {
     email: values.email,
     mobile: mobileNumber,
     reason: selectedReasons.join(", "),
+    chooseDuration: values.chooseDuration, 
     comments: values.comment,
     country: matchedCountry.name
   };
@@ -193,7 +148,7 @@ const handleFormSubmit = async (e) => {
       setTimeout(() => {
         localStorage.removeItem("authToken");
         localStorage.removeItem("loginuserData");
-        navigate("/");
+        navigate("/login");
       }, 3000);
     } else {
       const errorData = await res.json();
@@ -215,7 +170,7 @@ const isFormValid = (
   values.email.trim() !== "" &&
   mobileNumber.trim() !== "" &&
   selectedReasons.length > 0 &&
-  values.duration.trim() !== "" &&
+  values.chooseDuration.trim() !== "" &&
   values.comment.trim() !== ""
 );
 useEffect(() => {
@@ -381,8 +336,8 @@ useEffect(() => {
               <div className="form-field">
                 <select
                   className="login-label"
-                  name="duration"
-                  value={values.duration}
+                  name="chooseDuration"
+                  value={values.chooseDuration}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   required

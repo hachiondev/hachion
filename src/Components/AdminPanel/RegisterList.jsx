@@ -85,8 +85,10 @@ const [isUpdating, setIsUpdating] = useState(false);
   const [editedData, setEditedData] = useState({ student_Id: "", userName: "", email: "", mobile: "", whatsapp: "", location: "", country: "", time_zone: "", analyst_name: "", source: "", remarks: "", comments: "", date: currentDate, visa_status: "", mode: "" });
   const [mobileError, setMobileError] = useState("");
   const [whatsappError, setWhatsappError] = useState("");
-
+const [sendingId, setSendingId] = useState(null);
   const [anchorElCountry, setAnchorElCountry] = useState(null);
+  const [allEmployees, setAllEmployees] = useState([]);
+const [seoEmployees, setSeoEmployees] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState({
     name: '',
     code: '',
@@ -112,19 +114,22 @@ const [isUpdating, setIsUpdating] = useState(false);
      seoTeam: "",
   technology: "",
   stateCity: "",
-  leadStatus: ""
+  leadStatus: "",
+  leadTag: ""   
   });
 // ✅ NEW: Update Modal + History States
 const [openUpdateModal, setOpenUpdateModal] = useState(false);
 const [latestUpdate, setLatestUpdate] = useState(null);
 const [history, setHistory] = useState([]);
-
+const [isBulkSending, setIsBulkSending] = useState(false);
 const [updateForm, setUpdateForm] = useState({
   remark: "",
   status: "",
   date: "",
   coordinator: ""
 });
+const [showStatusConfirm, setShowStatusConfirm] = useState(false);
+const [pendingStatusChange, setPendingStatusChange] = useState(null);
 
   const [countries, setCountries] = useState([]);
 
@@ -170,10 +175,93 @@ const [updateForm, setUpdateForm] = useState({
  seoTeam: "",
     technology: "",
     stateCity: "",
-    leadStatus: ""
+    leadStatus: "",
+    leadTag: ""
     });
   }
+  const handleSendEmail = async (studentId) => {
+  try {
+    setSendingId(studentId);   // 👈 start loading
+    setSuccessMessage("");
+    setErrorMessage("");
 
+    await axios.post(`https://api.test.hachion.co/send-email/${studentId}`);
+
+    setSuccessMessage("✅ Email sent successfully!");
+    setErrorMessage("");
+
+    setTimeout(() => setSuccessMessage(""), 4000);
+
+  } catch (error) {
+    console.error(error);
+
+    setErrorMessage("❌ Failed to send email");
+    setSuccessMessage("");
+
+    setTimeout(() => setErrorMessage(""), 4000);
+
+  } finally {
+    setSendingId(null);   // 👈 stop loading
+  }
+};
+const handleBulkSendEmail = async () => {
+  if (selectedIds.length === 0) {
+    setErrorMessage("Please select at least one student");
+    setTimeout(() => setErrorMessage(""), 3000);
+    return;
+  }
+
+  if (isBulkSending) return; // ✅ prevent double click
+
+  try {
+    setIsBulkSending(true);   // 👈 START LOADING
+    setSuccessMessage("");
+    setErrorMessage("");
+
+    let successCount = 0;
+    let failCount = 0;
+    let skippedCount = 0;
+
+    for (let id of selectedIds) {
+      const student = registerStudent.find(s => s.id === id);
+
+      if (!student?.remark || student.remark.trim() === "") {
+        skippedCount++;
+        continue;
+      }
+
+      try {
+        await axios.post(`https://api.test.hachion.co/send-email/${student.studentId}`);
+        successCount++;
+      } catch {
+        failCount++;
+      }
+    }
+
+    let message = `✅ ${successCount} emails sent successfully`;
+
+if (skippedCount > 0) {
+  message += ` | ⚠️ ${skippedCount} skipped (no remarks)`;
+}
+
+setSuccessMessage(message);
+
+if (failCount > 0) {
+  setErrorMessage(`❌ ${failCount} failed`);
+}
+
+    setTimeout(() => {
+      setSuccessMessage("");
+      setErrorMessage("");
+    }, 4000);
+
+  } catch (error) {
+    console.error(error);
+    setErrorMessage("❌ Bulk email failed");
+  } finally {
+    setIsBulkSending(false);   // 👈 STOP LOADING
+  }
+};
   const resetFormState = () => {
     setStudentData({
       student_Id: "",
@@ -194,7 +282,8 @@ const [updateForm, setUpdateForm] = useState({
       seoTeam: "",
     technology: "",
     stateCity: "",
-    leadStatus: ""
+    leadStatus: "",
+    leadTag : ""
     });
 
     setSelectedCountry({
@@ -309,8 +398,16 @@ const isUpdateFormValid = () => {
     const fetchStudent = async () => {
       try {
         const response = await axios.get('https://api.test.hachion.co/registerstudent-with-remarks');
-        setRegisterStudent(response.data);
-        setFilteredStudent(response.data);
+        const mappedData = response.data.map(item => ({
+  ...item,
+
+  // ✅ handle both cases
+  time_zone: item.time_zone || item.timeZone || "",
+  analyst_name: item.analyst_name || item.analystName || ""
+}));
+        setRegisterStudent(mappedData);
+setFilteredStudent(mappedData);
+
       } catch (error) {
         console.error("Error fetching student list:", error.message);
       }
@@ -319,25 +416,69 @@ const isUpdateFormValid = () => {
     setFilteredStudent(registerStudent)
   }, []);
 
+  useEffect(() => {
+  const fetchEmployees = async () => {
+    try {
+      const allRes = await axios.get("https://api.test.hachion.co/employees/enteredBy");
+      const seoRes = await axios.get("https://api.test.hachion.co/employees/seo-team");
+
+      setAllEmployees(allRes.data);
+      setSeoEmployees(seoRes.data);
+    } catch (error) {
+      console.error("Error fetching employees:", error);
+    }
+  };
+
+  fetchEmployees();
+}, []);
   const handleDateFilter = () => {
     const filtered = registerStudent.filter((item) => {
       const regDate = new Date(item.date);
       const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
       const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
 
-      const matchSearch =
-        (item.studentId || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.userName || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.email || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.mobile || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.country || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.location || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.analyst_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.source || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.mode || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.date || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.visa_status || "").toLowerCase().includes(searchTerm.toLowerCase());
+      // const matchSearch =
+      //   (item.studentId || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      //   (item.userName || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      //   (item.email || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      //   (item.mobile || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      //   (item.country || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      //   (item.location || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      //   (item.analyst_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      //   (item.source || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      //   (item.mode || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      //   (item.date || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      //   (item.visa_status || "").toLowerCase().includes(searchTerm.toLowerCase());
+const matchSearch =
+  (item.studentId || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+  (item.userName || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+  (item.email || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+  (item.mobile || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+  (item.whatsapp || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+  (item.country || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+  (item.location || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+  (item.time_zone || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
 
+  (item.analyst_name || item.analyst_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+  (item.source || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+  (item.mode || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+
+  (item.seoTeam || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+  (item.course_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+  (item.stateCity || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+
+  (item.leadStatus || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+  (item.status || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+  (item.leadTag || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+
+  (item.remark || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+  (item.remarkCoordinator || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+
+  (item.callMadeOn || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+  (item.lastCallMadeOn || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+
+  (item.date || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+  (item.visa_status || "").toLowerCase().includes(searchTerm.toLowerCase());
       const inRange =
         (!start || regDate >= start) &&
         (!end || regDate <= end)
@@ -398,51 +539,82 @@ const isUpdateFormValid = () => {
       setSuccessMessage("");
     }
   };
+useEffect(() => {
+  const filtered = registerStudent.filter(item => {
+    const search = searchTerm.toLowerCase();
 
-  useEffect(() => {
-    const filtered = registerStudent.filter(registerStudent =>
-      registerStudent.studentId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      registerStudent.userName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      registerStudent.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      registerStudent.mobile?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      registerStudent.country?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      registerStudent.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      registerStudent.analyst_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      registerStudent.source?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      registerStudent.mode?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      registerStudent.date?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      registerStudent.visa_status?.toLowerCase().includes(searchTerm.toLowerCase())
+    return (
+      (item.studentId || "").toLowerCase().includes(search) ||
+      (item.userName || "").toLowerCase().includes(search) ||
+      (item.email || "").toLowerCase().includes(search) ||
+      (item.mobile || "").toLowerCase().includes(search) ||
+      (item.whatsapp || "").toLowerCase().includes(search) ||
+
+      (item.country || "").toLowerCase().includes(search) ||
+      (item.location || "").toLowerCase().includes(search) ||
+      (item.time_zone || "").toLowerCase().includes(search) ||
+
+      (item.analyst_name || item.analyst_name || "").toLowerCase().includes(search) ||
+      (item.source || "").toLowerCase().includes(search) ||
+      (item.mode || "").toLowerCase().includes(search) ||
+
+      (item.seoTeam || "").toLowerCase().includes(search) ||
+      (item.course_name || "").toLowerCase().includes(search) ||
+      (item.stateCity || "").toLowerCase().includes(search) ||
+
+      (item.leadStatus || "").toLowerCase().includes(search) ||
+      (item.status || "").toLowerCase().includes(search) ||
+      (item.leadTag || "").toLowerCase().includes(search) ||
+
+      (item.remark || "").toLowerCase().includes(search) ||
+      (item.remarkCoordinator || "").toLowerCase().includes(search) ||
+
+      (item.callMadeOn || "").toLowerCase().includes(search) ||
+      (item.lastCallMadeOn || "").toLowerCase().includes(search) ||
+
+      (item.date || "").toLowerCase().includes(search) ||
+      (item.visa_status || "").toLowerCase().includes(search)
     );
-    setFilteredStudent(filtered);
-  }, [searchTerm, registerStudent]);
+  });
+
+  setFilteredStudent(filtered);
+  setCurrentPage(1);
+}, [searchTerm, registerStudent]);
 
 const handleClickOpen = async (row) => {
   setFormMode("Edit");
+const [codePart, ...numberParts] = (row.mobile || "").split(" ");
+const numberPart = numberParts.join(" ");
 
-  const [codePart, ...numberParts] = (row.mobile || "").split(" ");
-  const numberPart = numberParts.join(" ");
+const [wCode, ...wNumberParts] = (row.whatsapp || "").split(" ");
+const wNumberPart = wNumberParts.join(" ");
 
-  const [wCode, ...wNumberParts] = (row.whatsapp || "").split(" ");
-  const wNumberPart = wNumberParts.join(" ");
+// ✅ MATCH USING MOBILE COUNTRY CODE (FIX)
+const matchedCountry = countries.find(
+  (c) => c.code === codePart
+);
 
-  const matchedCountry = countries.find(
-    (c) => c.name.toLowerCase() === row.country?.toLowerCase()
-  );
-
-  if (matchedCountry) {
-    setSelectedCountry({
-      value: matchedCountry.name,
-      code: matchedCountry.code,
-      flag: matchedCountry.flag,
-    });
-  }
+if (matchedCountry) {
+  setSelectedCountry({
+    value: matchedCountry.name,
+    code: matchedCountry.code,
+    flag: matchedCountry.flag,
+  });
+} else {
+  // ✅ FALLBACK (IMPORTANT)
+  setSelectedCountry({
+    value: row.country || "",
+    code: codePart || "",
+    flag: ""
+  });
+}
 
   setStudentData({
     ...row,
     userName: row.userName ?? "",
     email: row.email ?? "",
-    mobile: numberPart ?? "",
-    whatsapp: wNumberPart ?? "",
+     mobile: numberPart || "",
+  whatsapp: wNumberPart || "",
     country: row.country ?? "",
     location: row.location ?? "",
     time_zone: row.time_zone ?? "",
@@ -454,10 +626,10 @@ const handleClickOpen = async (row) => {
     seoTeam: row.seoTeam ?? "",
     technology: row.course_name ?? "",
     stateCity: row.stateCity ?? "",
-    leadStatus: row.leadStatus ?? ""
+    leadStatus: row.leadStatus ?? "",
+    leadTag: row.leadTag ?? "",
+    status: (row.status || "").toUpperCase()
   });
-
-  // ✅ NEW CODE START (DO NOT REMOVE ABOVE CODE)
 
   try {
     const res = await axios.get(
@@ -514,7 +686,8 @@ setHistory(formattedHistory);
         ...studentData,
         mobile: finalMobile,
         whatsapp: finalWhatsapp,
-        course_name: studentData.technology
+        course_name: studentData.technology,
+        status: studentData.status || "ACTIVE"
       };
 
       const response = await axios.put(
@@ -536,14 +709,32 @@ setHistory(formattedHistory);
       setMessage("Error updating student.");
     }
   };
+const handleChange = (e) => {
+  const { name, value } = e.target;
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setStudentData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+  if (name === "status") {
+    const currentStatus = (studentData.status || "").toUpperCase();
+
+    // ✅ DISABLED → ACTIVE
+    if (currentStatus === "DISABLED" && value === "ACTIVE") {
+      setPendingStatusChange(value);
+      setShowStatusConfirm(true);
+      return;
+    }
+
+    // ✅ ACTIVE → DISABLED
+    if (currentStatus === "ACTIVE" && value === "DISABLED") {
+      setPendingStatusChange(value);
+      setShowStatusConfirm(true);
+      return;
+    }
+  }
+
+  setStudentData((prevData) => ({
+    ...prevData,
+    [name]: value,
+  }));
+};
 
   const handleMobileBlur = () => {
     const mobile = studentData.mobile?.trim();
@@ -562,12 +753,15 @@ const formatDate = (dateStr) => {
     "YYYY-MM-DD",
     "DD-MMM-YY",
     "DD-MMM-YYYY",
-    "DD MMMM YYYY",   // ✅ handles "13 April 2026"
-    "DD MMM YYYY"
+    "DD MMMM YYYY", 
+    "DD-MMMM-YYYY",  // ✅ handles "13 April 2026"
+    "DD MMM YYYY",
+    "MMM-DD-YYYY"
   ], true);
 
+
   if (parsed.isValid()) {
-    return parsed.format("DD-MMM-YYYY"); // ✅ FINAL FORMAT
+    return parsed.format("MMM-DD-YYYY"); // ✅ FINAL FORMAT
   }
 
   return dateStr; // fallback
@@ -606,7 +800,10 @@ const formatDate = (dateStr) => {
       mobile: finalMobile,
       whatsapp: finalWhatsapp,
       date: currentDate,
-       course_name: studentData.technology
+       course_name: studentData.technology,
+        status: studentData.status || "New",
+        time_zone: studentData.time_zone,
+  analyst_name: studentData.analyst_name
     };
     
 
@@ -659,7 +856,8 @@ const formatDate = (dateStr) => {
       safeTrim(studentData.analyst_name) !== "" && 
       safeTrim(studentData.seoTeam) !== "" &&
       safeTrim(studentData.stateCity) !== "" &&
-      safeTrim(studentData.leadStatus) !== "" 
+      safeTrim(studentData.leadStatus) !== "" &&
+      safeTrim(studentData.status) !== "" 
       // safeTrim(studentData.remarks).length >= 15 &&
       // safeTrim(studentData.comments) !== ""
     );
@@ -744,6 +942,10 @@ const formatDate = (dateStr) => {
       }
     }
   };
+  const validSelectedCount = selectedIds.filter(id => {
+  const student = registerStudent.find(s => s.id === id);
+  return student?.remark && student.remark.trim() !== "";
+}).length;
 
   return (
     <>
@@ -942,8 +1144,25 @@ const formatDate = (dateStr) => {
                   )}
 
                 </div>
+                
               </div>
+{/* ✅ NEW STATUS COLUMN */}
+<div className="col">
+  <label className="form-label">Status <span className="star">*</span></label>
 
+  <select
+    className="schedule-input"
+    name="status"
+    value={studentData.status || ""}
+    onChange={handleChange}
+  >
+    <option value="">Select Status</option>
+    <option value="ACTIVE">ACTIVE</option>
+    <option value="SEMI-ACTIVE">SEMI-ACTIVE</option>
+    <option value="INACTIVE">INACTIVE</option>
+    <option value="DISABLED">DISABLED</option>
+  </select>
+</div>
             </div>
             <div className="course-row">
               <div class="col">
@@ -953,8 +1172,17 @@ const formatDate = (dateStr) => {
               </div>
               <div class="col">
                 <label for="inputState" class="form-label">Entered by <span className="star">*</span></label>
-                <input type="text" class="schedule-input"
-                  name="analyst_name" value={studentData.analyst_name} onChange={handleChange} />
+               <select
+  className="schedule-input"
+  name="analyst_name"
+  value={studentData.analyst_name}
+  onChange={handleChange}
+>
+  <option value="">Select Entered By</option>
+  {allEmployees.map((emp, index) => (
+    <option key={index} value={emp}>{emp}</option>
+  ))}
+</select>
               </div>
               <div class="col">
                 <label for="inputState" class="form-label">Visa Status</label>
@@ -969,14 +1197,29 @@ const formatDate = (dateStr) => {
               </div>
               <div class="col">
                 <label for="inputState" class="form-label">Source of Enquiry <span className="star">*</span></label>
-                <select id="inputState" class="form-select" name="source" value={studentData.source} onChange={handleChange}>
-                  <option selected>Select</option>
-                  <option>Linkedin</option>
-                  <option>Instagram</option>
-                  <option>Facebook</option>
-                  <option>Twitter</option>
-                  <option>Other</option>
-                </select>
+               <select
+  id="inputState"
+  className="form-select"
+  name="source"
+  value={studentData.source || ""}
+  onChange={handleChange}
+>
+  <option value="">Select</option>
+
+  {/* ✅ SHOW DB VALUE IF NOT IN DROPDOWN */}
+  {studentData.source &&
+    !["Linkedin", "Instagram", "Facebook", "Twitter", "Other"].includes(studentData.source) && (
+      <option value={studentData.source}>
+        {studentData.source}
+      </option>
+    )}
+
+  <option value="Linkedin">Linkedin</option>
+  <option value="Instagram">Instagram</option>
+  <option value="Facebook">Facebook</option>
+  <option value="Twitter">Twitter</option>
+  <option value="Other">Other</option>
+</select>
               </div>
               
 
@@ -984,10 +1227,17 @@ const formatDate = (dateStr) => {
             <div className="course-row">
   <div class="col">
     <label class="form-label">SEO Team <span className="star">*</span></label>
-    <input type="text" class="schedule-input"
-      name="seoTeam"
-      value={studentData.seoTeam}
-      onChange={handleChange} />
+   <select
+  className="schedule-input"
+  name="seoTeam"
+  value={studentData.seoTeam}
+  onChange={handleChange}
+>
+  <option value="">Select SEO Team</option>
+  {seoEmployees.map((emp, index) => (
+    <option key={index} value={emp}>{emp}</option>
+  ))}
+</select>
   </div>
 
   <div class="col">
@@ -1028,6 +1278,29 @@ const formatDate = (dateStr) => {
     <option value="Placements">Placements</option>
   </select>
 </div>
+<div class="col">
+  <label class="form-label">Lead Tag</label>
+<select
+  className="schedule-input"
+  name="leadTag"
+  value={studentData.leadTag || ""}
+  onChange={handleChange}
+>
+  <option value="">Select Tag</option>
+
+  {/* ✅ SHOW DB VALUE EVEN IF NOT IN DROPDOWN */}
+  {studentData.leadTag &&
+    !["Hot", "Warm", "Cold"].includes(studentData.leadTag) && (
+      <option value={studentData.leadTag}>
+        {studentData.leadTag}
+      </option>
+    )}
+
+  <option value="Hot">🔥 Hot</option>
+  <option value="Warm">🌤️ Warm</option>
+  <option value="Cold">❄️ Cold</option>
+</select>
+</div>
 </div>
            
             {successMessage && <p style={{ color: "green", fontWeight: "bold" }}>{successMessage}</p>}
@@ -1042,7 +1315,67 @@ const formatDate = (dateStr) => {
 >
   {isUpdating ? "Updating..." : "Update"}
 </button>
+{showStatusConfirm && (
+  <div style={{
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(0,0,0,0.4)",
+    zIndex: 9999
+  }}>
+    <div style={{
+      width: "400px",
+      background: "#fff",
+      margin: "150px auto",
+      padding: "20px",
+      borderRadius: "8px",
+      textAlign: "center"
+    }}>
+      <h3>Confirmation</h3>
+      {/* <p>Are you sure you want to activate this student?</p> */}
+<p>
+  {pendingStatusChange === "ACTIVE"
+    ? "Are you sure you want to activate this student?"
+    : "Are you sure you want to disable this student?"}
+</p>
+      <div style={{ marginTop: "20px" }}>
+        <button
+          onClick={() => {
+            setStudentData(prev => ({
+              ...prev,
+              status: pendingStatusChange
+            }));
+            setShowStatusConfirm(false);
+          }}
+          style={{
+            background: "#28a745",
+            color: "#fff",
+            padding: "8px 16px",
+            marginRight: "10px",
+            borderRadius: "5px"
+          }}
+        >
+          Yes
+        </button>
 
+        <button
+          onClick={() => {
+            setShowStatusConfirm(false);
+          }}
+          style={{
+            background: "#ccc",
+            padding: "8px 16px",
+            borderRadius: "5px"
+          }}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
       {/* ✅ FORCE NEW LINE */}
       <div style={{ width: "100%", marginTop: "20px" }}>
 {openUpdateModal && (
@@ -1396,17 +1729,33 @@ const formatDate = (dateStr) => {
                         <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
                       </div>
                       
-                      {/* ADDED: Bulk Delete Button */}
-                      {selectedIds.length > 0 && (
-                        <button 
-                          type="button" 
-                          className="btn-category" 
-                          onClick={handleBulkDelete}
-                          style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
-                        >
-                          <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
-                        </button>
-                      )}
+                     {selectedIds.length > 0 && (
+  <>
+    <button 
+      type="button" 
+      className="btn-category" 
+      onClick={handleBulkDelete}
+      style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
+    >
+      <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+    </button>
+<button 
+  type="button" 
+  className="btn-category" 
+  onClick={handleBulkSendEmail}
+  disabled={isBulkSending}
+  style={{
+    backgroundColor: isBulkSending ? "#ccc" : "#28a745",
+    cursor: isBulkSending ? "not-allowed" : "pointer",
+    opacity: isBulkSending ? 0.6 : 1
+  }}
+>
+ {isBulkSending 
+  ? "Sending..." 
+  : `📧 Send Emails (${validSelectedCount})`}
+</button>
+  </>
+)}
                       
                       <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick} >
                         <FiPlus /> Add Student
@@ -1449,6 +1798,8 @@ const formatDate = (dateStr) => {
                     <StyledTableCell align='center'>Technology</StyledTableCell>
                     <StyledTableCell align='center'>State/City</StyledTableCell>
                     <StyledTableCell align='center'>Lead Status</StyledTableCell>
+                    <StyledTableCell align='center'>Lead Tag</StyledTableCell>
+                    <StyledTableCell align='center'>status</StyledTableCell>
                     <StyledTableCell align='center'>Remark</StyledTableCell>
                     <StyledTableCell align='center'>Coordinator</StyledTableCell>
                     <StyledTableCell align='center'>Call Made On</StyledTableCell>
@@ -1470,7 +1821,7 @@ const formatDate = (dateStr) => {
                         </StyledTableCell>
                         <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}
                         </StyledTableCell> {/* S.No. */}
-                        <StyledTableCell align="center">{row.date ? dayjs(row.date).format('MMM-DD-YYYY').toUpperCase() : ""}</StyledTableCell>
+                        <StyledTableCell align="center">{row.date ? dayjs(row.date).format('MMM-DD-YYYY') : ""}</StyledTableCell>
                         <StyledTableCell align="center">{row.mode}</StyledTableCell>
                         <StyledTableCell align="center">{row.studentId}</StyledTableCell>
                         <StyledTableCell align="left">{row.userName}</StyledTableCell>
@@ -1479,9 +1830,9 @@ const formatDate = (dateStr) => {
                         <StyledTableCell align="center">{row.whatsapp}</StyledTableCell>
                         <StyledTableCell align="center">{row.country}</StyledTableCell>
                         {/* <StyledTableCell align="center">{row.location}</StyledTableCell> */}
-                        <StyledTableCell align="center">{row.timeZone}</StyledTableCell>
+                        <StyledTableCell align="center">{row.time_zone}</StyledTableCell>
                         {/* <StyledTableCell align="center">{row.visa_status}</StyledTableCell> */}
-                        <StyledTableCell align="center">{row.analystName}</StyledTableCell>
+                        <StyledTableCell align="center">{row.analyst_name}</StyledTableCell>
                         <StyledTableCell align="center">{row.source}</StyledTableCell>
                         {/* <StyledTableCell align="left" style={{ whiteSpace: 'wrap' }}>{row.remarks}</StyledTableCell> */}
                         {/* <StyledTableCell align="left" style={{ whiteSpace: 'wrap' }}>{row.comments}</StyledTableCell> */}
@@ -1489,6 +1840,8 @@ const formatDate = (dateStr) => {
                         <StyledTableCell align="center">{row.course_name}</StyledTableCell>
                         <StyledTableCell align="center">{row.stateCity}</StyledTableCell>
                         <StyledTableCell align="center">{row.leadStatus}</StyledTableCell>
+                        <StyledTableCell align="center">{row.leadTag}</StyledTableCell>
+                        <StyledTableCell align="center">{row.status}</StyledTableCell>
                         <StyledTableCell align="center">{row.remark}</StyledTableCell>
                         <StyledTableCell align="center">{row.remarkCoordinator}</StyledTableCell>
                         <StyledTableCell align="center">{formatDate(row.callMadeOn)}</StyledTableCell>
@@ -1499,6 +1852,31 @@ const formatDate = (dateStr) => {
                           <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                             <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
                             <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.id)} />
+                               <button
+  disabled={
+    !row.remark || 
+    row.remark.trim() === "" || 
+    sendingId === row.studentId
+  }
+  style={{
+    background: (!row.remark || row.remark.trim() === "" || sendingId === row.studentId)
+      ? "#ccc"
+      : "#28a745",
+    color: "#fff",
+    border: "none",
+    padding: "5px 10px",
+    borderRadius: "5px",
+    cursor: (!row.remark || row.remark.trim() === "" || sendingId === row.studentId)
+      ? "not-allowed"
+      : "pointer",
+    opacity: (!row.remark || row.remark.trim() === "" || sendingId === row.studentId)
+      ? 0.6
+      : 1
+  }}
+  onClick={() => handleSendEmail(row.studentId)}
+>
+  {sendingId === row.studentId ? "Sending..." : "Send Email"}
+</button>
                           </div>
                         </StyledTableCell>
                       </StyledTableRow>

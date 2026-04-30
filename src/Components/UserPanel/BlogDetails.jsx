@@ -151,15 +151,15 @@ const shortTitle = decodeURIComponent(title)?.replace(/-/g, " ");
 
   const shareLinks = {
     facebook: () =>
-      window.open(`https://www.facebook.com/hachion.co`, "_blank"),
+      window.open(`https://www.facebook.com/hachion.official/`, "_blank"),
     twitter: () =>
-      window.open(`https://x.com/hachion_co`, "_blank"),
+      window.open(`https://x.com/hachionofficial`, "_blank"),
     linkedin: () =>
       window.open(`https://www.linkedin.com/company/hachion`, "_blank"),
     whatsapp: () =>
       window.open(`https://whatsapp.com/channel/0029VbBClUlKbYMFEaRnjp28`, "_blank"),
     youtube: () =>
-      window.open("https://www.youtube.com/@hachion", "_blank"),
+      window.open("https://www.youtube.com/@hachion.official", "_blank"),
     email: () => {
       const rawBlogUrl = window.location.href;
       const emailSubject = "Check out this blog!";

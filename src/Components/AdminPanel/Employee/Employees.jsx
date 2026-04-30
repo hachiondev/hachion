@@ -113,13 +113,22 @@ const Employees = () => {
 
   useEffect(() => {
     const term = searchTerm.toLowerCase();
-    const filtered = employees.filter(
-      (emp) =>
-        emp.name?.toLowerCase().includes(term) ||
-        emp.email?.toLowerCase().includes(term) ||
-        emp.department?.toLowerCase().includes(term) ||
-        emp.role?.toLowerCase().includes(term)
-    );
+   const filtered = employees.filter((emp) => {
+  const searchValue = term.toLowerCase();
+
+  return (
+    emp.name?.toLowerCase().includes(searchValue) ||
+    emp.email?.toLowerCase().includes(searchValue) ||
+    emp.department?.toLowerCase().includes(searchValue) ||
+    emp.role?.toLowerCase().includes(searchValue) ||
+
+    // ✅ Mobile Number Search
+    emp.phone?.toLowerCase().includes(searchValue) ||
+
+    // ✅ Country / Location Search
+    emp.location?.toLowerCase().includes(searchValue)
+  );
+});
     setFilteredEmployees(filtered);
     // Reset selection on search
     setSelectedIds([]);
@@ -335,10 +344,14 @@ const handleSubmit = async (e) => {
     setShowForm(false);
 
   } catch (error) {
-    console.error(error);
-    setErrorMessage("Error submitting employee data");
-    setSuccessMessage("");
-  } finally {
+  console.error(error);
+
+  const backendMessage =
+    error?.response?.data || "Error submitting employee data";
+
+  setErrorMessage(backendMessage);
+  setSuccessMessage("");
+} finally {
     setIsSubmitting(false); // 🔥 STOP LOADING (VERY IMPORTANT)
   }
 };

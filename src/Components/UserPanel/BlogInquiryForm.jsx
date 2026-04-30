@@ -382,14 +382,16 @@ useEffect(() => {
   ...formData,
   phone: fullPhone,
   blogTitle,
-  // timestamp: new Date().toISOString().split('T')[0],
   timestamp: new Date().toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: '2-digit'
-}),
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit'
+  }),
   source: "blog",
-  pageUrl: window.location.href
+  pageUrl: window.location.href,
+
+  timeZone: selectedCountry.timezone ,
+  country: selectedCountry.name 
 });
       if (response.status === 200 || response.status === 201) {
         setSuccess(true);

@@ -235,41 +235,19 @@ useEffect(() => {
     setCurrentPage(1);
   };
 
-  // const handleDeleteConfirmation = (id) => {
-  //   if (window.confirm("Are you sure you want to delete this Student?")) {
-  //     handleDelete(id);
-  //   }
-  // };
-
-  // const handleDelete = async (id) => {
-  //   try {
-  //     const response = await axios.delete(`https://api.test.hachion.co/registerstudent/delete/${id}`);
-      
-  //     setRegisterStudent((prev) => prev.filter((s) => s.id !== id));
-     
-  //     setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
-      
-  //     setSuccessMessage("✅ Student deleted successfully.");
-  //     setErrorMessage("");
-  //   } catch (error) {
-  //     console.error("Error deleting Student:", error);
-  //     setErrorMessage("❌ Failed to delete student. Please try again.");
-  //     setSuccessMessage("");
-  //   }
-  // };
-
 const formatDate = (dateStr) => {
   if (!dateStr) return "";
   const parsed = dayjs(dateStr, [
     "YYYY-MM-DD",
     "DD-MMM-YY",
     "DD-MMM-YYYY",
+    "DD-MMMM-YYYY",
     "DD MMMM YYYY",   // ✅ handles "13 April 2026"
     "DD MMM YYYY"
   ], true);
 
   if (parsed.isValid()) {
-    return parsed.format("DD-MMM-YYYY"); // ✅ FINAL FORMAT
+    return parsed.format("MMM-DD-YYYY"); // ✅ FINAL FORMAT
   }
 
   return dateStr; // fallback
@@ -386,7 +364,7 @@ return (
 
           <div className='category'>
             <div className='category-header'>
-              <p style={{ marginBottom: 0 }}>Register List</p>
+              <p style={{ marginBottom: 0 }}>Lead Dashboard List</p>
             </div>
 
             {successMessage && (
@@ -466,15 +444,6 @@ style={{ marginLeft:"10px", height:"36px", borderRadius:"15px", border:"1px soli
                                         <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
                                       </div>
 
-                {/* {selectedIds.length > 0 && (
-                  <button
-                    className="btn-category"
-                    onClick={handleBulkDelete}
-                    style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
-                  >
-                    <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
-                  </button>
-                )} */}
               </div>
             </div>
 

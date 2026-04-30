@@ -213,14 +213,32 @@ const AdminCoupon = ({ onChange }) => {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
+useEffect(() => {
+  if (successMessage) {
+    const timer = setTimeout(() => {
+      setSuccessMessage("");
+    }, 240000); // 4 minutes
 
+    return () => clearTimeout(timer);
+  }
+}, [successMessage]);
   const handleReset = () => {
-    setFormData({
-      id: "", course_name: "", code: "", author: "",
-      description: "", status: "",
-      date: new Date().toISOString().split('T')[0],
-    });
-  };
+  setFormData({
+    id: "",
+    course_name: "",
+    code: "",
+    status: "",
+    selectedCourses: [],
+    selectedCountries: [],
+    usageLimit: "",
+    discountType: "",
+    discountValue: "",
+    createdDate: ""
+  });
+
+  setSelectedCourses([]);
+  setSelectedCountries([]);
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -239,15 +257,24 @@ const AdminCoupon = ({ onChange }) => {
         usageLimit: formData.usageLimit || ""
       };
 
-      if (formMode === "Add") {
-        await axios.post("https://api.test.hachion.co/coupon-code/create", payload);
-        setSuccessMessage("✅ Coupon created successfully.");
-        setErrorMessage("");
-      } else if (formMode === "Edit") {
-        await axios.put("https://api.test.hachion.co/coupon-code/update", payload);
-        setSuccessMessage("✅ Coupon updated successfully.");
-        setErrorMessage("");
-      }
+    if (formMode === "Add") {
+  await axios.post("https://api.test.hachion.co/coupon-code/create", payload);
+  setSuccessMessage("✅ Coupon created successfully.");
+  setErrorMessage("");
+
+  handleReset();        // ✅ RESET FORM
+  setStartDate(null);   // ✅ RESET DATE
+  setEndDate(null);
+
+} else if (formMode === "Edit") {
+  await axios.put("https://api.test.hachion.co/coupon-code/update", payload);
+  setSuccessMessage("✅ Coupon updated successfully.");
+  setErrorMessage("");
+
+  // handleReset();        // ✅ RESET FORM
+  // setStartDate(null);
+  // setEndDate(null);
+}
 
     } catch (error) {
       console.error("❌ Error submitting coupon:", error);

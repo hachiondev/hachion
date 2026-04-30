@@ -69,6 +69,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function RegisterList() {
   const [searchTerm, setSearchTerm] = useState("")
+  const [modeFilter, setModeFilter] = useState("");
+  const [demoFilter, setDemoFilter] = useState("");     // leadTag
+const [statusFilter, setStatusFilter] = useState(""); // leadStatus
+const [leadTags, setLeadTags] = useState([]);
+const [leadStatuses, setLeadStatuses] = useState([]);
   const [formMode, setFormMode] = useState("Add");
   const [showAddCourse, setShowAddCourse] = useState(false);
   const [registerStudent, setRegisterStudent] = useState([]);
@@ -89,6 +94,7 @@ const [sendingId, setSendingId] = useState(null);
   const [anchorElCountry, setAnchorElCountry] = useState(null);
   const [allEmployees, setAllEmployees] = useState([]);
 const [seoEmployees, setSeoEmployees] = useState([]);
+const [periodFilter, setPeriodFilter] = useState("");
   const [selectedCountry, setSelectedCountry] = useState({
     name: '',
     code: '',
@@ -204,6 +210,23 @@ const [pendingStatusChange, setPendingStatusChange] = useState(null);
     setSendingId(null);   // 👈 stop loading
   }
 };
+useEffect(() => {
+  const fetchDropdownData = async () => {
+    try {
+      const [tagRes, statusRes] = await Promise.all([
+        axios.get('https://api.test.hachion.co/register-leadtag'),
+        axios.get('https://api.test.hachion.co/register-leadstatus')
+      ]);
+
+      setLeadTags(tagRes.data || []);
+      setLeadStatuses(statusRes.data || []);
+    } catch (error) {
+      console.error("Error fetching dropdown data:", error);
+    }
+  };
+
+  fetchDropdownData();
+}, []); // ✅ IMPORTANT
 const handleBulkSendEmail = async () => {
   if (selectedIds.length === 0) {
     setErrorMessage("Please select at least one student");
@@ -508,10 +531,22 @@ const matchSearch =
   (item.date || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
   (item.visa_status || "").toLowerCase().includes(searchTerm.toLowerCase());
       const inRange =
-        (!start || regDate >= start) &&
-        (!end || regDate <= end)
+  (!start || regDate >= start) &&
+  (!end || regDate <= end);
 
-      return matchSearch && inRange;
+// ✅ NEW MODE FILTER
+const matchesMode =
+  !modeFilter ||                       // All Modes
+  (modeFilter === "both") ||           // Both = no filter
+  (item.mode || "").toLowerCase() === modeFilter.toLowerCase();
+
+const matchesTag =
+  !demoFilter || item.leadTag === demoFilter;
+
+const matchesStatus =
+  !statusFilter || item.leadStatus === statusFilter;
+
+return matchSearch && inRange && matchesMode && matchesTag && matchesStatus;
     });
     setFilteredStudent(filtered);
     setCurrentPage(1);
@@ -521,6 +556,11 @@ const matchSearch =
     setStartDate(null);
     setEndDate(null);
     setSearchTerm('');
+     setPeriodFilter(""); 
+     setModeFilter("");
+     setDemoFilter("");
+setStatusFilter("");
+
     setFilteredStudent(registerStudent);
     setCurrentPage(1);
   };
@@ -1685,7 +1725,7 @@ const formatDate = (dateStr) => {
                   <div className='date-schedule'>
                     Start Date
                     <DatePicker
-                      selected={startDate}
+                      value={startDate}
                       onChange={(date) => setStartDate(date)}
                       isClearable
                       sx={{
@@ -1693,7 +1733,7 @@ const formatDate = (dateStr) => {
                       }} />
                     End Date
                     <DatePicker
-                      selected={endDate}
+                      value={endDate}
                       onChange={(date) => setEndDate(date)}
                       isClearable
                       sx={{
@@ -1704,10 +1744,29 @@ const formatDate = (dateStr) => {
                     {/* ADDED: Time Period Dropdown */}
                     <select
                       className="form-select period-select"
-                      onChange={(e) => {
-                        // Handle period selection if needed
-                        console.log(e.target.value);
-                      }}
+                       value={periodFilter}
+                    onChange={(e) => {
+  const value = e.target.value;
+   setPeriodFilter(value);
+
+  if (value === "thisWeek") {
+    const start = dayjs().startOf("week").add(1, "day"); // Monday
+    const end = dayjs().endOf("week").add(1, "day");     // Sunday
+
+    setStartDate(start);
+    setEndDate(end);
+  }
+
+  if (value === "thisMonth") {
+    setStartDate(dayjs().startOf("month"));
+    setEndDate(dayjs().endOf("month"));
+  }
+
+  if (value === "thisYear") {
+    setStartDate(dayjs().startOf("year"));
+    setEndDate(dayjs().endOf("year"));
+  }
+}}
                       style={{ width: '150px', marginLeft: '10px' }}
                     >
                       <option value="">Select Period</option>
@@ -1719,8 +1778,9 @@ const formatDate = (dateStr) => {
                     {/* ADDED: Mode Filter Dropdown */}
                     <select
                       className="form-select mode-select"
+                      value={modeFilter} 
                       onChange={(e) => {
-                        // Handle mode selection if needed
+                          setModeFilter(e.target.value);
                         console.log(e.target.value);
                       }}
                       style={{ width: '150px' }}
@@ -1730,7 +1790,44 @@ const formatDate = (dateStr) => {
                       <option value="offline">Offline</option>
                       <option value="both">Both</option>
                     </select>
-                    
+       
+
+{/* ✅ STATUS DROPDOWN */}
+<select
+  value={statusFilter}
+  onChange={(e) => setStatusFilter(e.target.value)}
+  style={{
+    marginLeft: "10px",
+    height: "36px",
+    borderRadius: "15px",
+    border: "1px solid #ccc",
+    padding: "0 12px",
+    outline: "none"
+  }}
+>
+  <option value="">Status</option>
+  {leadStatuses.map((status, index) => (
+    <option key={index} value={status}>{status}</option>
+  ))}
+</select>
+             {/* ✅ DEMO DROPDOWN */}
+<select
+  value={demoFilter}
+  onChange={(e) => setDemoFilter(e.target.value)}
+  style={{
+    marginLeft: "10px",
+    height: "36px",
+    borderRadius: "15px",
+    border: "1px solid #ccc",
+    padding: "0 12px",
+    outline: "none"
+  }}
+>
+  <option value="">Demo</option>
+  {leadTags.map((tag, index) => (
+    <option key={index} value={tag}>{tag}</option>
+  ))}
+</select>
                     <button className='filter' onClick={handleDateFilter} >Filter</button>
                     <button className="filter" onClick={handleDateReset}>Reset</button>
                   </div>

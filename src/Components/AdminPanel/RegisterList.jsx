@@ -297,7 +297,35 @@ if (failCount > 0) {
     setSuccessMessage("");
     setErrorMessage("");
   };
+// const parseDate = (dateStr) => {
+//   if (!dateStr) return new Date(0);
+//   return new Date(dateStr.replace(/-/g, " "));
+// };
+const parseDate = (dateStr) => {
+  if (!dateStr) return new Date(0);
 
+  const parsed = dayjs(dateStr, [
+    "DD-MMM-YY",
+    "YYYY-MM-DD",
+    "DD-MMM-YYYY",
+    "DD-MMMM-YYYY",
+    "DD MMMM YYYY",
+    "DD MMM YYYY"
+  ]);
+
+  return parsed.isValid() ? parsed.toDate() : new Date(0);
+};
+
+const sortByFollowUp = (order) => {
+  const sorted = [...filteredStudent].sort((a, b) => {
+    const dateA = parseDate(a.lastCallMadeOn);
+    const dateB = parseDate(b.lastCallMadeOn);
+
+    return order === "asc" ? dateA - dateB : dateB - dateA;
+  });
+
+  setFilteredStudent(sorted);
+};
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditedData((prev) => ({
@@ -1803,7 +1831,40 @@ const formatDate = (dateStr) => {
                     <StyledTableCell align='center'>Remark</StyledTableCell>
                     <StyledTableCell align='center'>Coordinator</StyledTableCell>
                     <StyledTableCell align='center'>Call Made On</StyledTableCell>
-                    <StyledTableCell align='center'>Next Follow Up</StyledTableCell>
+                    <StyledTableCell align='center'>
+  <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+    Next Follow Up
+    <span style={{
+      display: "flex",
+      flexDirection: "column",
+      marginLeft: "6px",
+      cursor: "pointer"
+    }}>
+      <span
+        style={{
+          width: 0,
+          height: 0,
+          borderLeft: "5px solid transparent",
+          borderRight: "5px solid transparent",
+          borderBottom: "7px solid white",
+          marginBottom: "2px"
+        }}
+        onClick={() => sortByFollowUp("asc")}
+      ></span>
+
+      <span
+        style={{
+          width: 0,
+          height: 0,
+          borderLeft: "5px solid transparent",
+          borderRight: "5px solid transparent",
+          borderTop: "7px solid white"
+        }}
+        onClick={() => sortByFollowUp("desc")}
+      ></span>
+    </span>
+  </div>
+</StyledTableCell>
                     
                     <StyledTableCell align="center">Action</StyledTableCell>
                   </TableRow>

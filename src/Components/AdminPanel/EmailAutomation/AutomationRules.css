@@ -1,0 +1,191 @@
+.automation-rules-container {
+  width: 100%;
+}
+
+.automation-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #174ea6;
+}
+
+/* FILTER SECTION */
+
+.automation-filters {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  /* flex-wrap: wrap; */
+  margin-bottom: 20px;
+}
+
+.automation-filters > * {
+  flex: unset;
+}
+
+.automation-input {
+  padding: 10px 12px;
+  width: 160px;
+  height: 42px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+/* BUTTONS */
+
+
+
+.custom-filter-btn {
+  background: #174ea6;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  height: 42px;
+  min-width: 90px;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.custom-reset-btn {
+  background: #6b7280;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  height: 42px;
+  min-width: 90px;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+/* ADD RULE BUTTON */
+
+.add-rule-wrapper {
+  margin-bottom: 20px;
+}
+
+.add-rule-btn {
+  background: #11c26d;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.add-rule-btn:hover {
+  background: #0fa55d;
+}
+
+/* TABLE */
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.automation-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.automation-table thead {
+  background: #174ea6;
+  color: white;
+}
+
+.automation-table th,
+.automation-table td {
+  padding: 15px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.automation-table tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+
+/* BADGES */
+
+.warm-badge,
+.active-badge,
+.enabled-badge {
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.warm-badge {
+  background: #f4a100;
+}
+
+.active-badge {
+  background: #11c26d;
+}
+
+.enabled-badge {
+  background: #11c26d;
+}
+
+/* ACTION BUTTONS */
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.edit-btn,
+.run-btn,
+.disable-btn {
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.edit-btn {
+  background: #4285f4;
+}
+
+.edit-btn:hover {
+  background: #2f6fe0;
+}
+
+.run-btn {
+  background: #f4a100;
+}
+
+.run-btn:hover {
+  background: #d88d00;
+}
+
+.disable-btn {
+  background: #ef4444;
+}
+
+.disable-btn:hover {
+  background: #dc2626;
+}

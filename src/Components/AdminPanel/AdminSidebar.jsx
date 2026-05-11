@@ -40,12 +40,18 @@ const menuItems = [
       { title: 'Student Interests', icon: <CgPathFront /> },
     ],
   },
+  {
+  title: 'Email Automation',
+  icon: <FaRegPenToSquare />,
+  
+},
   { title: 'Interview', icon: <IoNewspaperOutline /> },
   { title: 'Reports', icon: <IoNewspaperOutline /> },
   { title: 'Schedule Request', icon: <BiSolidBookContent /> },
   { title: 'Blog', icon: <MdOutlineVideoCameraFront /> },
   { title: 'General FAQ', icon: <FaQuestion /> },
   { title: 'Upload Images', icon: <RiImageAddFill /> },
+
   { title: 'Other', icon: <HiOutlineDotsCircleHorizontal /> },
   { title: 'Discount Courses', icon: <TbDiscount /> },
   { title: 'Employees', icon: <IoIosPeople /> },

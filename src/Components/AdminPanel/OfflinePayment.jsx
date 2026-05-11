@@ -26,6 +26,9 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { countries as staticCountries } from '../../countryUtils';
+
+
 dayjs.extend(customParseFormat);
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -82,10 +85,11 @@ export default function OfflinePayment() {
   const [invoiceNumber, setInvoiceNumber] = useState("");
   const [lastModifiedInstallmentId, setLastModifiedInstallmentId] = useState(null);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
-  
-  
+  const [courseAmounts, setCourseAmounts] = useState(null);
+  const [summaryData, setSummaryData] = useState([]);
   const [reminderEnabled, setReminderEnabled] = useState(true); 
-  
+  const [cadRate, setCadRate] = useState(1);
+  const [inrRate, setInrRate] = useState(1);
   const [paymentData, setPaymentData] = useState({
     id: "",
     student_ID: "",
@@ -110,10 +114,15 @@ export default function OfflinePayment() {
     invoiceNumber: "",
     date: currentDate,
     selectedInstallmentId: null,
-    reminderEnabled: true
+    reminderEnabled: true,
+    currency: "",
   });
   
-  
+  const allowedCurrencies = [
+  { label: "India (INR)", value: "INR" },
+  { label: "United States (USD)", value: "USD" },
+  { label: "Canada (CAD)", value: "CAD" }
+];
   const [selectedIds, setSelectedIds] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   
@@ -230,6 +239,7 @@ export default function OfflinePayment() {
       paymentData.email?.trim() &&
       paymentData.mobile?.trim() &&
       paymentData.course_name?.trim() &&
+      paymentData.currency?.trim() &&
       !isNaN(parseFloat(paymentData.course_fee)) &&
       !isNaN(parseFloat(paymentData.tax)) &&
       !isNaN(parseFloat(paymentData.discount)) &&
@@ -315,6 +325,7 @@ setReminderEnabled(reminderStatus);
       email: row.email || "",
       mobile: row.mobile || "",
       course_name: row.course_name || "",
+      currency: row.currency || "",
       course_fee: row.course_fee || "",
       tax: row.tax || 0,
       discount: row.discount || 0,
@@ -448,27 +459,139 @@ const handleReminderToggle = async (event) => {
     fetchByMobile();
   }, [paymentData.mobile]);
   
-  useEffect(() => {
-    const fetchCourseFee = async () => {
-      if (paymentData.course_name) {
-        try {
-          const res = await fetch(`https://api.test.hachion.co/payments/courseFee?courseName=${encodeURIComponent(paymentData.course_name)}`);
-          const data = await res.json();
-          if (data && data.courseFee !== undefined) {
-            setPaymentData((prev) => ({
-              ...prev,
-              course_fee: data.courseFee
-            }));
-          }
-        } catch (error) {
-          console.error("Error fetching course fee:", error);
+//   useEffect(() => {
+//     const fetchCourseFee = async () => {
+//       if (paymentData.course_name) {
+//         try {
+//           const res = await fetch(`https://api.test.hachion.co/payments/courseFee?courseName=${encodeURIComponent(paymentData.course_name)}`);
+//           const data = await res.json();
+//           // if (data && data.courseFee !== undefined) {
+//           //   setPaymentData((prev) => ({
+//           //     ...prev,
+//           //     course_fee: data.courseFee
+//           //   }));
+//           // }
+//          if (data) {
+//   let finalAmount = "";
+
+//   // ❌ No currency selected → don't show fee
+//   if (!paymentData.currency) {
+//     finalAmount = "";
+//   }
+//   // ✅ INR
+//   else if (paymentData.currency === "INR") {
+//     finalAmount = data.inrAmount;
+//   }
+//   // ✅ USD
+//   else if (paymentData.currency === "USD") {
+//     finalAmount = data.usdAmount;
+//   }
+//   // ✅ Other currencies
+//   else {
+//     finalAmount = Math.round(data.usdAmount * exchangeRate);
+//   }
+
+//   setPaymentData((prev) => ({
+//     ...prev,
+//     course_fee: finalAmount
+//   }));
+// }
+//         } catch (error) {
+//           console.error("Error fetching course fee:", error);
+//         }
+//       }
+//     };
+
+//     fetchCourseFee();
+//   // }, [paymentData.course_name]);
+//   }, [paymentData.course_name, paymentData.currency, exchangeRate]);
+useEffect(() => {
+  const fetchCourseFee = async () => {
+    if (paymentData.course_name) {
+      try {
+        const res = await fetch(
+          `https://api.test.hachion.co/payments/courseFee?courseName=${encodeURIComponent(paymentData.course_name)}`
+        );
+        const data = await res.json();
+
+        if (data) {
+          setCourseAmounts(data); // store API result
         }
+      } catch (error) {
+        console.error("Error fetching course fee:", error);
       }
-    };
+    }
+  };
 
-    fetchCourseFee();
-  }, [paymentData.course_name]);
+  fetchCourseFee();
+}, [paymentData.course_name]);
 
+useEffect(() => {
+  if (!courseAmounts) return;
+
+  // 🔴 If no currency → clear fee
+  if (!paymentData.currency) {
+    setPaymentData(prev => ({ ...prev, course_fee: "" }));
+    return;
+  }
+let finalAmount = "";
+
+if (paymentData.currency === "INR") {
+  finalAmount = courseAmounts.inrAmount;
+} 
+else if (paymentData.currency === "USD") {
+  finalAmount = courseAmounts.usdAmount;
+} 
+else if (paymentData.currency === "CAD") {
+  console.log("Currency:", paymentData.currency);
+// console.log("Exchange Rate:", exchangeRate);
+console.log("USD Amount:", courseAmounts.usdAmount);
+  // Only CAD needs conversion from USD
+  // finalAmount = Math.round(courseAmounts.usdAmount * exchangeRate);
+   finalAmount = Math.round(courseAmounts.usdAmount * cadRate);
+  
+}
+
+  setPaymentData((prev) => ({
+    ...prev,
+    course_fee: finalAmount
+  }));
+
+}, [paymentData.currency, cadRate, courseAmounts]);
+useEffect(() => {
+
+  const fetchExchangeRates = async () => {
+
+    try {
+
+      const res = await axios.get(
+        "https://api.exchangerate-api.com/v4/latest/USD"
+      );
+
+      const cad = res.data?.rates?.CAD;
+      const inr = res.data?.rates?.INR;
+
+      if (cad) {
+        setCadRate(cad);
+      }
+
+      if (inr) {
+        setInrRate(inr);
+      }
+
+      console.log("CAD Rate:", cad);
+      console.log("INR Rate:", inr);
+
+    } catch (error) {
+
+      console.error("Error fetching exchange rates:", error);
+
+    }
+  };
+
+  fetchExchangeRates();
+
+}, []);
   useEffect(() => {
     axios.get("https://api.test.hachion.co/payments")
       .then((response) => {
@@ -479,6 +602,7 @@ const handleReminderToggle = async (event) => {
           email: item.email,
           mobile: item.mobile,
           course_name: item.courseName,
+          currency: item.currency,
           course_fee: item.courseFee,
           installments: item.noOfInstallments,
           tax: item.tax,
@@ -671,6 +795,7 @@ if (!count || count <= 0) {
       email: paymentData.email,
       mobile: paymentData.mobile,
       courseName: paymentData.course_name,
+      currency: paymentData.currency,
       courseFee: parseFloat(paymentData.course_fee),
       tax: parseFloat(paymentData.tax),
       discount: parseFloat(paymentData.discount),
@@ -715,16 +840,45 @@ if (!count || count <= 0) {
     }
   };
 
-  const handleDateFilter = () => {
-    const filtered = offlinePayment.filter((item) => {
-      const itemDate = dayjs(item.date);
-      return (
-        (!startDate || itemDate.isAfter(dayjs(startDate).subtract(1, 'day'))) &&
-        (!endDate || itemDate.isBefore(dayjs(endDate).add(1, 'day')))
-      );
-    });
-    setFilteredPayment(filtered);
-  };
+  // const handleDateFilter = () => {
+  //   const filtered = offlinePayment.filter((item) => {
+  //     const itemDate = dayjs(item.date);
+  //     return (
+  //       (!startDate || itemDate.isAfter(dayjs(startDate).subtract(1, 'day'))) &&
+  //       (!endDate || itemDate.isBefore(dayjs(endDate).add(1, 'day')))
+  //     );
+  //   });
+  //   setFilteredPayment(filtered);
+  // };
+const handleDateFilter = async () => {
+
+  const filtered = offlinePayment.filter((item) => {
+    const itemDate = dayjs(item.date);
+
+    return (
+      (!startDate || itemDate.isAfter(dayjs(startDate).subtract(1, 'day'))) &&
+      (!endDate || itemDate.isBefore(dayjs(endDate).add(1, 'day')))
+    );
+  });
+
+  setFilteredPayment(filtered);
+
+  // SUMMARY API CALL
+  try {
+
+    const start = dayjs(startDate).format("YYYY-MM-DD");
+    const end = dayjs(endDate).format("YYYY-MM-DD");
+
+    const response = await axios.get(
+      `https://api.test.hachion.co/payments/payment-summary?startDate=${start}&endDate=${end}`
+    );
+
+    setSummaryData(response.data);
+
+  } catch (error) {
+    console.error("Error fetching payment summary:", error);
+  }
+};
 
   const handleDateReset = () => {
     setStartDate(null);
@@ -755,6 +909,7 @@ if (!count || count <= 0) {
       mobile: paymentData.mobile,
       balancePay: parseFloat(paymentData.balance),
       courseName: paymentData.course_name,
+      
       courseFee: parseFloat(paymentData.course_fee),
       discount: parseFloat(paymentData.discount),
       tax: parseFloat(paymentData.tax),
@@ -810,6 +965,7 @@ if (!count || count <= 0) {
       email: paymentData.email,
       mobile: paymentData.mobile,
       courseName: paymentData.course_name,
+      currency: paymentData.currency,
       courseFee: parseFloat(paymentData.course_fee),
       tax: parseFloat(paymentData.tax),
       discount: parseFloat(paymentData.discount),
@@ -1077,16 +1233,33 @@ if (!count || count <= 0) {
                     ))}
                   </select>
                 </div>
+                {/* Currency Dropdown */}
+<div className="col">
+  <label className="form-label">Currency</label>
+ <select
+  className="form-select"
+  name="currency"
+  value={paymentData.currency}
+  onChange={handleChange}
+>
+  <option value="">Select Currency</option>
+  {allowedCurrencies.map((c, index) => (
+    <option key={index} value={c.value}>
+      {c.label}
+    </option>
+  ))}
+</select>
+</div>
                 <div className="col">
                   <label className="form-label">Course Fee</label>
                   <input
-                    type="text"
-                    className="schedule-input"
-                    name="course_fee"
-                    value={paymentData.course_fee}
-                    onChange={(e) =>
-                      setPaymentData({ ...paymentData, course_fee: e.target.value })
-                    } />
+  type="text"
+  className="schedule-input"
+  name="course_fee"
+  value={paymentData.course_fee}
+  readOnly
+  placeholder="Select currency first"
+/>
                 </div>
 
                 <div class="col">
@@ -1397,6 +1570,214 @@ if (!count || count <= 0) {
                   <button className='filter' onClick={handleDateFilter}>Filter</button>
                   <button className="filter" onClick={handleDateReset}>Reset</button>
                 </div>
+
+
+{/* Payment Summary Table */}
+{/* Payment Summary Table */}
+{startDate && endDate && summaryData.length > 0 && (
+  <div
+    style={{
+      width: "100%",
+      marginBottom: "15px",
+      display: "flex",
+      justifyContent: "center",
+    }}
+  >
+    <table
+      style={{
+        borderCollapse: "collapse",
+        textAlign: "center",
+        width: "85%",
+        background: "#fff",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        borderRadius: "8px",
+        overflow: "hidden",
+        fontSize: "14px"
+      }}
+    >
+      <thead>
+        <tr style={{ background: "#00AEEF", color: "#fff" }}>
+          <th style={{ padding: "10px", border: "1px solid #ddd" }}>🌍 Currency</th>
+          <th style={{ padding: "10px", border: "1px solid #ddd" }}>💰 Total Revenue</th>
+          <th style={{ padding: "10px", border: "1px solid #ddd" }}>🟡 Pending</th>
+          <th style={{ padding: "10px", border: "1px solid #ddd" }}>🔴 Overdue</th>
+          <th style={{ padding: "10px", border: "1px solid #ddd" }}>🟢 Paid</th>
+          <th style={{ padding: "10px", border: "1px solid #ddd" }}>📈 Total Payments</th>
+        </tr>
+      </thead>
+
+      
+        {/* {summaryData.map((item, index) => { */}
+<tbody>
+
+{(() => {
+
+const totalRevenueUSD = summaryData.reduce((sum, item) => {
+
+  if (item.currency === "USD") {
+    return sum + item.totalRevenue;
+  }
+
+   if (item.currency === "CAD") {
+
+    const converted = Number(item.totalRevenue) / Number(cadRate);
+
+    console.log("CAD Converted:", converted);
+
+    return sum + converted;
+  }
+
+  if (item.currency === "INR") {
+    return sum + (item.totalRevenue / inrRate);
+  }
+
+  return sum;
+
+}, 0);
+
+const totalPendingUSD = summaryData.reduce((sum, item) => {
+
+  if (item.currency === "USD") {
+    return sum + item.pendingAmount;
+  }
+
+  if (item.currency === "CAD") {
+    return sum + (item.pendingAmount / cadRate);
+  }
+
+  if (item.currency === "INR") {
+    return sum + (item.pendingAmount / inrRate);
+  }
+
+  return sum;
+
+}, 0);
+
+const totalPaymentsUSD = summaryData.reduce((sum, item) => {
+
+  if (item.currency === "USD") {
+    return sum + item.totalPayments;
+  }
+
+  if (item.currency === "CAD") {
+    return sum + (item.totalPayments / cadRate);
+  }
+
+  if (item.currency === "INR") {
+    return sum + (item.totalPayments / inrRate);
+  }
+
+  return sum;
+
+}, 0);
+
+const totalPaidCount = summaryData.reduce(
+  (sum, item) => sum + item.paidCount,
+  0
+);
+
+const totalOverdueCount = summaryData.reduce(
+  (sum, item) => sum + item.overdueCount,
+  0
+);
+
+return (
+<>
+
+{summaryData
+  .filter(item => item.currency && item.currency.trim() !== "")
+  .map((item, index) => {
+          const symbol =
+            item.currency === "USD"
+              ? "$"
+              : item.currency === "INR"
+              ? "₹"
+              : item.currency === "CAD"
+              ? "C$"
+              : "";
+
+          return (
+            <tr key={index}>
+              <td style={{ padding: "10px", border: "1px solid #ddd", fontWeight: "bold" }}>
+                {item.currency === "USD" && "🇺🇸 USD"}
+                {item.currency === "INR" && "🇮🇳 INR"}
+                {item.currency === "CAD" && "🇨🇦 CAD"}
+                {/* {!item.currency && "N/A"} */}
+              </td>
+
+              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
+                {item.totalRevenue}
+              </td>
+
+              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
+                {item.pendingAmount}
+              </td>
+
+              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
+                {item.overdueCount}
+              </td>
+
+              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
+                {item.paidCount}
+              </td>
+
+              <td style={{ padding: "10px", border: "1px solid #ddd" }}>
+                {item.totalPayments}
+              </td>
+            </tr>
+          );
+                })}
+
+<tr
+  style={{
+    background: "#f5f5f5",
+    fontWeight: "bold"
+  }}
+>
+  <td style={{ padding: "10px", border: "1px solid #ddd" }}>
+    💵 TOTAL (USD)
+  </td>
+
+  <td style={{ padding: "10px", border: "1px solid #ddd", color: "green" }}>
+    ${totalRevenueUSD.toFixed(2)}
+  </td>
+
+  <td style={{ padding: "10px", border: "1px solid #ddd", color: "orange" }}>
+    ${totalPendingUSD.toFixed(2)}
+  </td>
+
+  {/* <td style={{ padding: "10px", border: "1px solid #ddd" }}>
+    {totalOverdueCount}
+  </td> */}
+<td style={{ padding: "10px", border: "1px solid #ddd" }}>
+  {summaryData
+    .filter(item => item.currency && item.currency.trim() !== "")
+    .reduce((sum, item) => sum + item.overdueCount, 0)}
+</td>
+  {/* <td style={{ padding: "10px", border: "1px solid #ddd" }}>
+    {totalPaidCount}
+  </td> */}
+<td style={{ padding: "10px", border: "1px solid #ddd" }}>
+  {summaryData
+    .filter(item => item.currency && item.currency.trim() !== "")
+    .reduce((sum, item) => sum + item.paidCount, 0)}
+</td>
+  <td style={{ padding: "10px", border: "1px solid #ddd", color: "blue" }}>
+    ${totalPaymentsUSD.toFixed(2)}
+  </td>
+</tr>
+
+</>
+);
+
+})()}
+
+</tbody>
+    </table>
+  </div>
+)}
+
+
                 <div className='entries'>
                   <div className='entries-left'>
                     <p style={{ marginBottom: '0' }}>Show</p>
@@ -1488,7 +1869,7 @@ if (!count || count <= 0) {
                         <StyledTableCell align="center">{curr.email}</StyledTableCell>
                         <StyledTableCell align="center">{curr.mobile}</StyledTableCell>
                         <StyledTableCell align="center">{curr.course_name}</StyledTableCell>
-                        <StyledTableCell align="center">{curr.course_fee}</StyledTableCell>
+                        <StyledTableCell align="center"> {curr.course_fee} {curr.currency ? ` (${curr.currency})` : ""}</StyledTableCell>
                         <StyledTableCell align="center">{curr.installments}</StyledTableCell>
                         <StyledTableCell align="center">{curr.balance}</StyledTableCell>
                         <StyledTableCell align="center">{curr.status}</StyledTableCell>

@@ -60,24 +60,72 @@ export const Home = () => {
         {/* Organization Schema */}
         <script type="application/ld+json">
           {`
-          {
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "Hachion",
-            "url": "https://www.hachion.co",
-            "logo": "https://www.hachion.co/Hachion-logo.png",
-            "sameAs": [
-              "https://www.facebook.com/hachion.co",
-              "https://x.com/hachion_co",
-              "https://www.linkedin.com/company/hachion",
-              "https://www.instagram.com/hachion_trainings",
-              "https://www.quora.com/profile/Hachion-4",
-              "https://www.youtube.com/@hachion"
-            ]
-          }
+         {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hachion",
+  "url": "https://www.hachion.co/",
+  "logo": "https://www.hachion.co/static/media/logo.01fbce12140022ec183e.webp",
+  "description": "Hachion offers industry-ready online IT courses with certification and complete job assistance.",
+  "telephone": "+1-732-485-2499",
+  "email": "trainings@hachion.co",
+
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "601 Voyage Trce",
+    "addressLocality": "Leander",
+    "addressRegion": "TX",
+    "postalCode": "78641",
+    "addressCountry": "US"
+  },
+
+  "sameAs": [
+    "https://www.facebook.com/hachion.official/",
+    "https://www.instagram.com/hachion.official/",
+    "https://www.linkedin.com/company/hachion/",
+    "https://www.youtube.com/@hachion.official",
+    "https://x.com/hachionofficial"
+  ],
+
+  "contactPoint": [{
+    "@type": "ContactPoint",
+    "telephone": "+1-732-485-2499",
+    "contactType": "customer support",
+    "areaServed": "US",
+    "availableLanguage": [
+      "English",
+      "Hindi",
+      "Telugu"
+    ]
+  }]
+}
           `}
         </script>
 
+{/* Local Business Schema */}
+<script type="application/ld+json">
+{`
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://www.hachion.co/coursedetails/salesforce-admin",
+  "name": "Salesforce Admin Course Training and Placement Online",
+  "image": "https://www.hachion.co/Certificate_Of_Hachion.jpg",
+  "url": "https://www.hachion.co/coursedetails/salesforce-admin",
+  "telephone": "+1 732-485-2499",
+  "priceRange": "$400 to $500",
+  "description": "Salesforce admin course training and placement online at Hachion offers Salesforce admin training and job placement support with Salesforce Admin Certification.",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "601 Voyage Trace",
+    "addressLocality": "Leander",
+    "addressRegion": "Texas",
+    "postalCode": "78641",
+    "addressCountry": "USA"
+  }
+}
+`}
+</script>
         {/* Navigation Schema */}
         <script type="application/ld+json">
           {`

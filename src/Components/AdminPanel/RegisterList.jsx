@@ -696,7 +696,7 @@ if (matchedCountry) {
     stateCity: row.stateCity ?? "",
     leadStatus: row.leadStatus ?? "",
     leadTag: row.leadTag ?? "",
-    status: (row.status || "").toUpperCase()
+    status: row.status ? row.status.toUpperCase() : "ACTIVE"
   });
 
   try {
@@ -918,7 +918,7 @@ const formatDate = (dateStr) => {
       safeTrim(studentData.email) !== "" &&
       safeTrim(studentData.mobile).length === 10 &&
       safeTrim(studentData.whatsapp).length === 10 &&
-      safeTrim(studentData.country) !== "" &&
+      safeTrim(studentData.country) !== "" || selectedCountry.code !== ""&&
       // safeTrim(studentData.location) !== "" &&
       safeTrim(studentData.time_zone) !== "" &&
       safeTrim(studentData.analyst_name) !== "" && 
@@ -2010,30 +2010,105 @@ const formatDate = (dateStr) => {
                           <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                             <FaEdit className="edit" onClick={() => handleClickOpen(row)} />
                             <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(row.id)} />
-                               <button
+                             <button
   disabled={
-    !row.remark || 
-    row.remark.trim() === "" || 
-    sendingId === row.studentId
+    !row.remark ||
+    row.remark.trim() === "" ||
+    sendingId === row.studentId ||
+
+    // ✅ EMAIL COOLDOWN
+    (
+      row.lastEmailSentAt &&
+      dayjs().isBefore(dayjs(row.lastEmailSentAt).add(3, "day"))
+    ) ||
+
+    // ✅ RESTRICTED REMARK CHECK
+    (
+      row.remark &&
+      (
+        row.remark.toLowerCase().includes("not interested") ||
+        row.remark.toLowerCase().includes("no need") ||
+        row.remark.toLowerCase().includes("remove my number") ||
+        row.remark.toLowerCase().includes("don't call") ||
+        row.remark.toLowerCase().includes("do not contact")
+      )
+    )
   }
   style={{
-    background: (!row.remark || row.remark.trim() === "" || sendingId === row.studentId)
-      ? "#ccc"
-      : "#28a745",
+    background:
+  (
+    row.remark &&
+    (
+      row.remark.toLowerCase().includes("not interested") ||
+      row.remark.toLowerCase().includes("no need") ||
+      row.remark.toLowerCase().includes("remove my number") ||
+      row.remark.toLowerCase().includes("don't call") ||
+      row.remark.toLowerCase().includes("do not contact")
+    )
+  )
+   ? "#ccc" // ✅ same gray as Email Sent
+
+    : (!row.remark ||
+      row.remark.trim() === "" ||
+      sendingId === row.studentId ||
+      (
+        row.lastEmailSentAt &&
+        dayjs().isBefore(dayjs(row.lastEmailSentAt).add(3, "day"))
+      ))
+    ? "#ccc"
+
+    : "#28a745",
+
     color: "#fff",
     border: "none",
     padding: "5px 10px",
     borderRadius: "5px",
-    cursor: (!row.remark || row.remark.trim() === "" || sendingId === row.studentId)
-      ? "not-allowed"
-      : "pointer",
-    opacity: (!row.remark || row.remark.trim() === "" || sendingId === row.studentId)
-      ? 0.6
-      : 1
+
+    cursor:
+      (!row.remark ||
+      row.remark.trim() === "" ||
+      sendingId === row.studentId ||
+      (
+        row.lastEmailSentAt &&
+        dayjs().isBefore(dayjs(row.lastEmailSentAt).add(3, "day"))
+      ))
+        ? "not-allowed"
+        : "pointer",
+
+    opacity:
+      (!row.remark ||
+      row.remark.trim() === "" ||
+      sendingId === row.studentId ||
+      (
+        row.lastEmailSentAt &&
+        dayjs().isBefore(dayjs(row.lastEmailSentAt).add(3, "day"))
+      ))
+        ? 0.6
+        : 1
   }}
   onClick={() => handleSendEmail(row.studentId)}
 >
-  {sendingId === row.studentId ? "Sending..." : "Send Email"}
+  {sendingId === row.studentId
+    ? "Sending..."
+    : (
+        row.lastEmailSentAt &&
+        dayjs().isBefore(dayjs(row.lastEmailSentAt).add(3, "day"))
+      )
+? "Email Sent"
+
+: (
+    row.remark &&
+    (
+      row.remark.toLowerCase().includes("not interested") ||
+      row.remark.toLowerCase().includes("no need") ||
+      row.remark.toLowerCase().includes("remove my number") ||
+      row.remark.toLowerCase().includes("don't call") ||
+      row.remark.toLowerCase().includes("do not contact")
+    )
+  )
+? "Opted Out"
+
+: "Send Email"}
 </button>
                           </div>
                         </StyledTableCell>

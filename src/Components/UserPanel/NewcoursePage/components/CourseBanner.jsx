@@ -202,7 +202,7 @@ export default function CourseBanner({ onEnroll }) {
 
   const seoKeywords = course.metaKeyword || "";
 
-  const canonicalUrl = `https://hachion.co/course/${encodeURIComponent(courseName)}`;
+  const canonicalUrl = `https://www.hachion.co/coursedetails/${encodeURIComponent(courseName)}`;
 
   const breadcrumbSchema = {
   "@context": "https://schema.org",
@@ -501,6 +501,32 @@ export default function CourseBanner({ onEnroll }) {
 `}
 </script>
 
+<script type="application/ld+json">
+{`
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is Salesforce Admin Certification?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Salesforce Admin Certification is an entry-level credential that validates your skills in managing and customizing Salesforce to meet business needs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why Should I Get Salesforce Admin Certified?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Getting certified can enhance your career prospects in cloud-based customer relationship management and increase earning potential."
+      }
+    }
+  ]
+}
+`}
+</script>
       </Helmet>
       <section className={styles.bnwrap}>
         {showOfferStrip && (

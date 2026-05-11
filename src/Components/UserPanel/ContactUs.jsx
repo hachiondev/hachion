@@ -38,6 +38,7 @@ const ContactUs = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [error, setError] = useState("");
+  const [mobileError, setMobileError] = useState("");
   const [contactNumber, setContactNumber] = useState("+1 (732) 485-2499");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -83,15 +84,31 @@ const ContactUs = () => {
     setAnchorEl(null);
     mobileInputRef.current?.focus();
   };
+const handleMobileChange = (e) => {
 
-  const handleMobileChange = (e) => {
-    const digits = onlyDigits(e.target.value);
-    setMobileNumber(digits);
-  };
+  const digits = onlyDigits(e.target.value);
 
-  const handleMobileBlur = () => {
-    setMobileNumber((m) => onlyDigits(m));
-  };
+  setMobileNumber(digits);
+
+  // immediate validation after 10 digits
+  if (digits.length > 10) {
+    setMobileError("Mobile number must be 10 digits");
+  } else {
+    setMobileError("");
+  }
+};
+
+const handleMobileBlur = () => {
+
+  setMobileNumber((m) => onlyDigits(m));
+
+  // blur validation for less than 10
+  if (mobileNumber.length > 0 && mobileNumber.length !== 10) {
+    setMobileError("Mobile number must be 10 digits");
+  } else {
+    setMobileError("");
+  }
+};
 
 
   useEffect(() => {
@@ -349,21 +366,35 @@ const ContactUs = () => {
                   ))}
                 </Menu>
 
-                <input
-                  type="tel"
-                  className="form-control"
-                  ref={mobileInputRef}
-                  value={mobileNumber}
-                  onChange={handleMobileChange}
-                  onBlur={handleMobileBlur}
-                  aria-label="Text input with segmented dropdown button"
-                  placeholder="Enter your mobile number"
-                  style={{ paddingLeft: "120px" }}
-                  maxLength={15}
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                />
+               <input
+  type="tel"
+  className="form-control"
+  ref={mobileInputRef}
+  value={mobileNumber}
+  onChange={handleMobileChange}
+  onBlur={handleMobileBlur}
+  aria-label="Text input with segmented dropdown button"
+  placeholder="Enter your mobile number"
+  style={{ paddingLeft: "120px" }}
+  maxLength={15}
+  inputMode="numeric"
+  pattern="[0-9]*"
+/>
+
               </div>
+              
+{mobileError && (
+  <p
+    style={{
+      color: "red",
+      fontSize: "12px",
+      marginTop: "5px",
+      marginBottom: "0"
+    }}
+  >
+    {mobileError}
+  </p>
+)}
             </div>
 
             <label htmlFor="contactComment" className="form-label">

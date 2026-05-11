@@ -25,6 +25,8 @@ import AdminDiscount from './AdminDiscount';
 import GeneralFaq from './GeneralFaq';
 import Interview from './Interview';
 import EmployeesPage from './Employee/EmployeesPage';
+import EmailAutomation from './EmailAutomation/EmailAutomation';
+
 const componentMap = {
   'Dashboard': <AdminDashboard />,
   'Course Category': <CourseCategory />,
@@ -50,6 +52,7 @@ const componentMap = {
   'Employees': <EmployeesPage />,
   'Support': <Support />,
   'Interview': <Interview />,
+  'Email Automation': <EmailAutomation />,
 };
 const AdminDashboardView = () => {
   const [selectedCategory, setSelectedCategory] = useState(() => {

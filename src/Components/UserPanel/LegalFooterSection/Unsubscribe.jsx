@@ -7,6 +7,9 @@ import { LoginSchema } from "../../Schemas";
 import success from "../../../Assets/success.gif";
 import axios from "axios";
 import { GoHeartFill } from "react-icons/go";
+import { Menu, MenuItem } from "@mui/material";
+import Flag from "react-world-flags";
+import { AiFillCaretDown } from "react-icons/ai";
 import { countries, getDefaultCountry } from '../../../countryUtils';
 
 const initialValues = {
@@ -26,8 +29,10 @@ const [showModal, setShowModal] = useState(false);
 const [mobileNumber, setMobileNumber] = useState("");
 const [selectedCountry, setSelectedCountry] = useState({ code: "+1", flag: "US", name: "United States" });
 const [anchorEl, setAnchorEl] = useState(null);
-const [isChecked, setIsChecked] = useState(false);
+const [isChecked, setIsChecked] = useState(true);
 const [error, setError] = useState("");
+const [mobileError, setMobileError] = useState("");
+const [isSubmitting, setIsSubmitting] = useState(false);
 const [selectedReasons, setSelectedReasons] = useState([]);
 const mobileInputRef = useRef(null);
   
@@ -40,32 +45,41 @@ const { values, handleBlur, handleChange } = useFormik({
 });
 
 const defaultCountry = getDefaultCountry("US");
-
 useEffect(() => {
+
   const detectAndSetCountry = async () => {
+
+    // ✅ Don't overwrite if already selected from profile
+    if (selectedCountry?.code && mobileNumber) {
+      return;
+    }
+
     try {
       const res = await fetch("https://api.country.is");
+
       if (!res.ok) throw new Error("Location fetch failed");
+
       const data = await res.json();
 
       data.country_code = (data.country || "").toUpperCase();
-      const matched = countries.find((c) => c.flag === data?.country_code);
-      if (matched) setSelectedCountry(matched);
+
+      const matched = countries.find(
+        (c) => c.flag === data?.country_code
+      );
+
+      if (matched) {
+        setSelectedCountry(matched);
+      }
 
     } catch (err) {}
   };
-
   detectAndSetCountry();
 
   const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
-  const userEmail = userData.email || "";
+const userEmail = userData.email || "";
 
-  if (!userEmail) {
-    window.confirm("Please login before unsubscribe from hachion");
-    navigate("/login");
-    return;
-  }
-
+// ✅ If logged in → autofill
+if (userEmail) {
   values.email = userEmail;
 
   const fetchUserProfile = async () => {
@@ -73,14 +87,47 @@ useEffect(() => {
       const res = await fetch(`https://api.test.hachion.co/api/v1/user/myprofile?email=${userEmail}`);
       const data = await res.json();
       if (res.ok) {
-        values.name = data.name || "";
-        values.country = data.country || "";
-        setMobileNumber(data.mobile || "");
+  values.name = data.name || "";
+  values.country = data.country || "";
+
+  if (data.mobile) {
+
+    const mobileValue = String(data.mobile).trim();
+
+    // Example: +91 9876543210
+    const parts = mobileValue.split(" ");
+
+    if (parts.length > 1) {
+
+      const code = parts[0];
+      const number = parts.slice(1).join("");
+
+      // set country dropdown
+      const matchedCountry = countries.find(
+        (c) => c.code === code
+      );
+
+      if (matchedCountry) {
+        setSelectedCountry(matchedCountry);
       }
+
+      // set only mobile number in textbox
+      setMobileNumber(number.replace(/\D/g, ""));
+
+    } else {
+
+      // fallback
+      setMobileNumber(
+        mobileValue.replace(/\D/g, "")
+      );
+    }
+  }
+}
     } catch (err) {}
   };
 
   fetchUserProfile();
+}
 }, []);
 
 const handleCountrySelect = (country) => {
@@ -105,20 +152,7 @@ const handleCheckboxChange = (e) => {
 
 const handleFormSubmit = async (e) => {
   e.preventDefault();
-
-  if (!isChecked) {
-    setError("Please select at least one option to unsubscribe.");
-    return;
-  } else {
-    setError("");
-  }
-
-  const form = e.target.closest("form");
-  if (!form.checkValidity()) {
-    form.classList.add("was-validated");
-    return;
-  }
-
+    setIsSubmitting(true);
   const requestBody = {
     userName: values.name,
     email: values.email,
@@ -137,13 +171,14 @@ const handleFormSubmit = async (e) => {
     });
 
     if (res.ok) {
+     setIsSubmitting(false);
       setShowModal(true);
       values.name = "";
       values.email = "";
       values.comment = "";
       setMobileNumber("");
       setIsChecked(false);
-      form.classList.remove("was-validated");
+      // form.classList.remove("was-validated");
 
       setTimeout(() => {
         localStorage.removeItem("authToken");
@@ -151,12 +186,25 @@ const handleFormSubmit = async (e) => {
         navigate("/login");
       }, 3000);
     } else {
-      const errorData = await res.json();
-      
-      setError("Something went wrong. Please try again.");
-    }
+
+  const errorData = await res.json();
+
+  setIsSubmitting(false);
+
+  // ✅ Backend meaningful error message
+if (errorData?.message) {
+
+  // ✅ Remove 400 BAD_REQUEST / 404 NOT_FOUND
+  const cleanMessage = errorData.message.replace(/^\d+\s+\w+\s*/, "");
+
+  setError(cleanMessage);
+
+} else {
+  setError("Something went wrong. Please try again.");
+}
+}
   } catch (err) {
-    
+    setIsSubmitting(false);
     setError("Unable to connect to the server.");
   }
 };
@@ -166,12 +214,9 @@ const handlePrivacy = () => {
 };
 
 const isFormValid = (
-  values.name.trim() !== "" &&
-  values.email.trim() !== "" &&
-  mobileNumber.trim() !== "" &&
-  selectedReasons.length > 0 &&
-  values.chooseDuration.trim() !== "" &&
-  values.comment.trim() !== ""
+  
+  values.email.trim() !== "" 
+  
 );
 useEffect(() => {
     window.scrollTo(0, 0);
@@ -184,7 +229,7 @@ useEffect(() => {
       <div className="unsubscribe-info">
             <h2 className="unsubscribe-heading">We're sorry to see you go</h2>
             <p className="unsubscribe-message">
-              Please let us know the reason for your decision.
+              Please let us know the  for your decision.
               <br />
               If you no longer wish to receive communications from us, kindly fill out the form below.
             </p>
@@ -220,7 +265,7 @@ useEffect(() => {
               </div>
               <div>
                 <label className="login-label">
-                  Full Name<span className="required">*</span>
+                  Full Name
                 </label>
                 <div className="register-field">
               <div className="form-field">
@@ -233,8 +278,8 @@ useEffect(() => {
                   value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  required
-                  readOnly
+                  // required
+                  // readOnly
                 />
                 <div class="invalid-feedback">PLease Enter Your Full Name.</div>
               </div>
@@ -256,107 +301,183 @@ useEffect(() => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   required
-                  readOnly
+                  // readOnly
                 />
                 <div class="invalid-feedback">PLease Enter Your Email ID.</div>
               </div>
               </div>
               </div>
               <div>
-              <label className="login-label">Mobile Number<span className="required">*</span></label>
+              <label className="login-label">Mobile Number</label>
+               
                 <div className="register-field">
-                <div className="form-field" style={{ position: "relative" }}>
-                  <input
-                    type="tel"
-                    ref={mobileInputRef}
-                    className="form-control"
-                    id="contactEmail"
-                    value={mobileNumber}
-                    onChange={(e) => setMobileNumber(e.target.value)}
-                    aria-label="Text input with segmented dropdown button"
-                    placeholder="Enter your mobile number"
-                    style={{
-                      paddingLeft: '12px', 
-                      textAlign: 'left'
-                    }}
-                    readOnly
-                  />
-                </div>
-                </div>
+  <div className="form-field" style={{ position: "relative" }}>
+
+    <button
+      onClick={(e) => {
+        e.preventDefault();
+        setAnchorEl(e.currentTarget);
+      }}
+      className="mobile-button"
+      type="button"
+      style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
+    >
+      <Flag code={selectedCountry.flag} className="country-flag me-1" />
+      <span style={{ marginRight: "5px", fontSize: "small" }}>
+        {selectedCountry.flag} ({selectedCountry.code})
+      </span>
+      <AiFillCaretDown />
+    </button>
+
+    <Menu
+      anchorEl={anchorEl}
+      open={Boolean(anchorEl)}
+      onClose={() => setAnchorEl(null)}
+    >
+      {countries.map((country) => (
+        <MenuItem
+          key={country.code + country.flag}
+          onClick={() => handleCountrySelect(country)}
+        >
+          <Flag code={country.flag} className="country-flag me-2" />
+          {country.name} ({country.code})
+        </MenuItem>
+      ))}
+    </Menu>
+
+  <input
+  type="tel"
+  ref={mobileInputRef}
+  className="form-control"
+  value={mobileNumber}
+  onChange={(e) => {
+
+  const value = e.target.value.replace(/\D/g, "");
+
+  setMobileNumber(value);
+
+  // typing validation
+  if (value.length > 10) {
+    setMobileError("Mobile number must be 10 digits");
+  } else if (value.length === 10) {
+    setMobileError("");
+  } else {
+    setMobileError("");
+  }
+}}
+
+  onBlur={() => {
+    if (mobileNumber.length > 0 && mobileNumber.length !== 10) {
+      setMobileError("Mobile number must be 10 digits");
+    } else {
+      setMobileError("");
+    }
+  }}
+
+  placeholder="Enter your mobile number"
+  style={{ paddingLeft: "120px" }}
+  maxLength={15}
+  inputMode="numeric"
+  pattern="[0-9]*"
+/>
+
+  </div>
+  {mobileError && (
+  <p
+    style={{
+      color: "red",
+      fontSize: "12px",
+      marginTop: "5px",
+      marginBottom: "0"
+    }}
+  >
+    {mobileError}
+  </p>
+)}
+</div>
                 </div>
                 <div>
               <label htmlFor="inputEmail" className="login-label">
-                Reason<span className="required">*</span> :
+                Reason :
               </label>
-              {error && <p className="error-message">{error}</p>}
+              
               <div className="input-group-checkbox">
-                <div class="form-check pe-4">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="chknotification"
-                    onChange={handleCheckboxChange}
-                  />
-                  <label className="login-label" for="chknotification">
-                    Notifications
-                  </label>
-                </div>
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="chkmails"
-                    onChange={handleCheckboxChange}
-                  />
-                  <label className="login-label" for="chkmails">
-                    Mails and Messages
-                  </label>
-                </div>
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="chkpromotional"
-                    onChange={handleCheckboxChange}
-                  />
-                  <label className="login-label" for="chkpromotional">
-                    Promotional mails &amp; Messages
-                  </label>
-                </div>
+  <div className="form-check pe-4">
+    <input
+      className="form-check-input"
+      type="radio"
+      name="reason"
+      id="r1"
+      value="Too many emails"
+      onChange={(e) => setSelectedReasons([e.target.value])}
+    />
+    <label className="login-label" htmlFor="r1">
+      Too many emails
+    </label>
+  </div>
+
+  <div className="form-check">
+    <input
+      className="form-check-input"
+      type="radio"
+      name="reason"
+      id="r2"
+      value="Not relevant to me"
+      onChange={(e) => setSelectedReasons([e.target.value])}
+    />
+    <label className="login-label" htmlFor="r2">
+      Not relevant to me
+    </label>
+  </div>
+
+  <div className="form-check">
+    <input
+      className="form-check-input"
+      type="radio"
+      name="reason"
+      id="r3"
+      value="Already enrolled / completed course"
+      onChange={(e) => setSelectedReasons([e.target.value])}
+    />
+    <label className="login-label" htmlFor="r3">
+      Already enrolled / completed course
+    </label>
+  </div>
+
+  <div className="form-check">
+    <input
+      className="form-check-input"
+      type="radio"
+      name="reason"
+      id="r4"
+      value="Found another platform"
+      onChange={(e) => setSelectedReasons([e.target.value])}
+    />
+    <label className="login-label" htmlFor="r4">
+      Found another platform
+    </label>
+  </div>
+
+  <div className="form-check">
+    <input
+      className="form-check-input"
+      type="radio"
+      name="reason"
+      id="r5"
+      value="Other"
+      onChange={(e) => setSelectedReasons([e.target.value])}
+    />
+    <label className="login-label" htmlFor="r5">
+      Other
+    </label>
+  </div>
+</div>
+             
               </div>
-              </div>
-              <div >
-                <label className="login-label"   >
-                  Choose Duration<span className="required">*</span>
-                </label>
-                <div className="register-field">
-              <div className="form-field">
-                <select
-                  className="login-label"
-                  name="chooseDuration"
-                  value={values.chooseDuration}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  required
-                  style={{border: 'none'}}
-                >
-                  <option value="">Select Duration</option>
-                  <option value="1 Month">1 Month</option>
-                  <option value="3 Months">3 Months</option>
-                  <option value="6 Months">6 Months</option>
-                  <option value="1 Year">1 Year</option>
-                  <option value="Permanently">Permanently</option>
-                </select>
-                <div className="invalid-feedback">Please select a duration.</div>
-                </div>
-                </div>
-                </div>
+             
                <div>
                 <label className="login-label" for="exampleFormControlTextarea1"  >
-                  Comments<span className="required">*</span>
+                  Comments
                 </label>
                 <div className="register-field">
               <div className="form-field">
@@ -377,15 +498,17 @@ useEffect(() => {
                   type="button"
                   className="u-submit-button"
                   onClick={handleFormSubmit}
-                  disabled={!isFormValid}
+                   disabled={!isFormValid || isSubmitting}
                   style={{
                     opacity: isFormValid ? 1 : 0.5,
                     cursor: isFormValid ? 'pointer' : 'not-allowed'
                   }}
                 >
-                  Submit
+                  {isSubmitting ? "Submitting..." : "Submit"}
                 </button>
                 {/* Error message display */}
+                {/* Error message display */}
+{error && <p className="error-message">{error}</p>}
               </div>
             </form>
             {showModal && (

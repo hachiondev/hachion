@@ -78,80 +78,122 @@
 // export const getDefaultCountry = (flag = 'US') =>
 //   countries.find((c) => c.flag === flag);
 
+// export const countries = [
+//   { name: 'United States (CST)', code: '+1', flag: 'US', timezone: 'CST' },
+//   { name: 'United States (EST)', code: '+1', flag: 'US', timezone: 'EST' },
+//   { name: 'United States (MST)', code: '+1', flag: 'US', timezone: 'MST' },
+//   { name: 'United States (PST)', code: '+1', flag: 'US', timezone: 'PST' },
+
+//   { name: 'India', code: '+91', flag: 'IN', timezone: 'IST' },
+//   { name: 'Afghanistan', code: '+93', flag: 'AF', timezone: 'AFT' },
+//   { name: 'Albania', code: '+355', flag: 'AL', timezone: 'CET' },
+//   { name: 'Algeria', code: '+213', flag: 'DZ', timezone: 'CET' },
+//   { name: 'American Samoa', code: '+1-684', flag: 'AS', timezone: 'SST' },
+
+//   { name: 'Australia (ACST)', code: '+61', flag: 'AU', timezone: 'ACST' },
+//   { name: 'Australia (AEST)', code: '+61', flag: 'AU', timezone: 'AEST' },
+//   { name: 'Australia (AWST)', code: '+61', flag: 'AU', timezone: 'AWST' },
+//   { name: 'Australia (LHST)', code: '+61', flag: 'AU', timezone: 'LHST' },
+
+//   { name: 'Bangladesh', code: '+880', flag: 'BD', timezone: 'BST' },
+
+//   { name: 'Brazil (ACT)', code: '+55', flag: 'BR', timezone: 'ACT' },
+//   { name: 'Brazil (AMT)', code: '+55', flag: 'BR', timezone: 'AMT' },
+//   { name: 'Brazil (BRT)', code: '+55', flag: 'BR', timezone: 'BRT' },
+
+//   { name: 'Canada (AST)', code: '+1', flag: 'CA', timezone: 'AST' },
+//   { name: 'Canada (CST)', code: '+1', flag: 'CA', timezone: 'CST' },
+//   { name: 'Canada (EST)', code: '+1', flag: 'CA', timezone: 'EST' },
+//   { name: 'Canada (MST)', code: '+1', flag: 'CA', timezone: 'MST' },
+//   { name: 'Canada (NST)', code: '+1', flag: 'CA', timezone: 'NST' },
+//   { name: 'Canada (PST)', code: '+1', flag: 'CA', timezone: 'PST' },
+
+//   { name: 'Chad', code: '+235', flag: 'TD', timezone: 'WAT' },
+//   { name: 'Chile', code: '+56', flag: 'CL', timezone: 'CLT' },
+//   { name: 'China', code: '+86', flag: 'CN', timezone: 'CST' },
+//   { name: 'Colombia', code: '+57', flag: 'CO', timezone: 'COT' },
+
+//   { name: 'France', code: '+33', flag: 'FR', timezone: 'CET' },
+//   { name: 'Germany', code: '+49', flag: 'DE', timezone: 'CET' },
+//   { name: 'Italy', code: '+39', flag: 'IT', timezone: 'CET' },
+//   { name: 'Spain', code: '+34', flag: 'ES', timezone: 'CET' },
+//   { name: 'Netherlands', code: '+31', flag: 'NL', timezone: 'CET' },
+//   { name: 'Sweden', code: '+46', flag: 'SE', timezone: 'CET' },
+//   { name: 'Switzerland', code: '+41', flag: 'CH', timezone: 'CET' },
+
+//   { name: 'Japan', code: '+81', flag: 'JP', timezone: 'JST' },
+//   { name: 'South Korea', code: '+82', flag: 'KR', timezone: 'KST' },
+//   { name: 'Singapore', code: '+65', flag: 'SG', timezone: 'SGT' },
+//   { name: 'Malaysia', code: '+60', flag: 'MY', timezone: 'MYT' },
+//   { name: 'Thailand', code: '+66', flag: 'TH', timezone: 'ICT' },
+//   { name: 'Vietnam', code: '+84', flag: 'VN', timezone: 'ICT' },
+//   { name: 'Philippines', code: '+63', flag: 'PH', timezone: 'PHT' },
+
+//   { name: 'Pakistan', code: '+92', flag: 'PK', timezone: 'PKT' },
+//   { name: 'Sri Lanka', code: '+94', flag: 'LK', timezone: 'IST' },
+
+//   { name: 'United Arab Emirates', code: '+971', flag: 'AE', timezone: 'GST' },
+//   { name: 'Saudi Arabia', code: '+966', flag: 'SA', timezone: 'AST' },
+//   { name: 'Qatar', code: '+974', flag: 'QA', timezone: 'AST' },
+
+//   { name: 'South Africa', code: '+27', flag: 'ZA', timezone: 'SAST' },
+//   { name: 'Nigeria', code: '+234', flag: 'NG', timezone: 'WAT' },
+//   { name: 'Kenya', code: '+254', flag: 'KE', timezone: 'EAT' },
+
+//   { name: 'Mexico (CST)', code: '+52', flag: 'MX', timezone: 'CST' },
+//   { name: 'Mexico (MST)', code: '+52', flag: 'MX', timezone: 'MST' },
+//   { name: 'Mexico (PST)', code: '+52', flag: 'MX', timezone: 'PST' },
+
+//   { name: 'United Kingdom', code: '+44', flag: 'GB', timezone: 'GMT' },
+
+//   { name: 'Russia (MSK)', code: '+7', flag: 'RU', timezone: 'MSK' },
+//   { name: 'Russia (OMST)', code: '+7', flag: 'RU', timezone: 'OMST' },
+//   { name: 'Russia (VLAT)', code: '+7', flag: 'RU', timezone: 'VLAT' },
+//   { name: 'Russia (YAKT)', code: '+7', flag: 'RU', timezone: 'YAKT' },
+
+//   { name: 'Others', timezone: 'UTC' }
+// ];
 export const countries = [
-  { name: 'United States (CST)', code: '+1', flag: 'US', timezone: 'CST' },
-  { name: 'United States (EST)', code: '+1', flag: 'US', timezone: 'EST' },
-  { name: 'United States (MST)', code: '+1', flag: 'US', timezone: 'MST' },
-  { name: 'United States (PST)', code: '+1', flag: 'US', timezone: 'PST' },
-
-  { name: 'India', code: '+91', flag: 'IN', timezone: 'IST' },
-  { name: 'Afghanistan', code: '+93', flag: 'AF', timezone: 'AFT' },
-  { name: 'Albania', code: '+355', flag: 'AL', timezone: 'CET' },
-  { name: 'Algeria', code: '+213', flag: 'DZ', timezone: 'CET' },
-  { name: 'American Samoa', code: '+1-684', flag: 'AS', timezone: 'SST' },
-
-  { name: 'Australia (ACST)', code: '+61', flag: 'AU', timezone: 'ACST' },
-  { name: 'Australia (AEST)', code: '+61', flag: 'AU', timezone: 'AEST' },
-  { name: 'Australia (AWST)', code: '+61', flag: 'AU', timezone: 'AWST' },
-  { name: 'Australia (LHST)', code: '+61', flag: 'AU', timezone: 'LHST' },
-
-  { name: 'Bangladesh', code: '+880', flag: 'BD', timezone: 'BST' },
-
-  { name: 'Brazil (ACT)', code: '+55', flag: 'BR', timezone: 'ACT' },
-  { name: 'Brazil (AMT)', code: '+55', flag: 'BR', timezone: 'AMT' },
-  { name: 'Brazil (BRT)', code: '+55', flag: 'BR', timezone: 'BRT' },
-
-  { name: 'Canada (AST)', code: '+1', flag: 'CA', timezone: 'AST' },
-  { name: 'Canada (CST)', code: '+1', flag: 'CA', timezone: 'CST' },
-  { name: 'Canada (EST)', code: '+1', flag: 'CA', timezone: 'EST' },
-  { name: 'Canada (MST)', code: '+1', flag: 'CA', timezone: 'MST' },
-  { name: 'Canada (NST)', code: '+1', flag: 'CA', timezone: 'NST' },
-  { name: 'Canada (PST)', code: '+1', flag: 'CA', timezone: 'PST' },
-
-  { name: 'Chad', code: '+235', flag: 'TD', timezone: 'WAT' },
-  { name: 'Chile', code: '+56', flag: 'CL', timezone: 'CLT' },
-  { name: 'China', code: '+86', flag: 'CN', timezone: 'CST' },
-  { name: 'Colombia', code: '+57', flag: 'CO', timezone: 'COT' },
-
-  { name: 'France', code: '+33', flag: 'FR', timezone: 'CET' },
-  { name: 'Germany', code: '+49', flag: 'DE', timezone: 'CET' },
-  { name: 'Italy', code: '+39', flag: 'IT', timezone: 'CET' },
-  { name: 'Spain', code: '+34', flag: 'ES', timezone: 'CET' },
-  { name: 'Netherlands', code: '+31', flag: 'NL', timezone: 'CET' },
-  { name: 'Sweden', code: '+46', flag: 'SE', timezone: 'CET' },
-  { name: 'Switzerland', code: '+41', flag: 'CH', timezone: 'CET' },
-
-  { name: 'Japan', code: '+81', flag: 'JP', timezone: 'JST' },
-  { name: 'South Korea', code: '+82', flag: 'KR', timezone: 'KST' },
-  { name: 'Singapore', code: '+65', flag: 'SG', timezone: 'SGT' },
-  { name: 'Malaysia', code: '+60', flag: 'MY', timezone: 'MYT' },
-  { name: 'Thailand', code: '+66', flag: 'TH', timezone: 'ICT' },
-  { name: 'Vietnam', code: '+84', flag: 'VN', timezone: 'ICT' },
-  { name: 'Philippines', code: '+63', flag: 'PH', timezone: 'PHT' },
-
-  { name: 'Pakistan', code: '+92', flag: 'PK', timezone: 'PKT' },
-  { name: 'Sri Lanka', code: '+94', flag: 'LK', timezone: 'IST' },
-
-  { name: 'United Arab Emirates', code: '+971', flag: 'AE', timezone: 'GST' },
-  { name: 'Saudi Arabia', code: '+966', flag: 'SA', timezone: 'AST' },
-  { name: 'Qatar', code: '+974', flag: 'QA', timezone: 'AST' },
-
-  { name: 'South Africa', code: '+27', flag: 'ZA', timezone: 'SAST' },
-  { name: 'Nigeria', code: '+234', flag: 'NG', timezone: 'WAT' },
-  { name: 'Kenya', code: '+254', flag: 'KE', timezone: 'EAT' },
-
-  { name: 'Mexico (CST)', code: '+52', flag: 'MX', timezone: 'CST' },
-  { name: 'Mexico (MST)', code: '+52', flag: 'MX', timezone: 'MST' },
-  { name: 'Mexico (PST)', code: '+52', flag: 'MX', timezone: 'PST' },
-
-  { name: 'United Kingdom', code: '+44', flag: 'GB', timezone: 'GMT' },
-
-  { name: 'Russia (MSK)', code: '+7', flag: 'RU', timezone: 'MSK' },
-  { name: 'Russia (OMST)', code: '+7', flag: 'RU', timezone: 'OMST' },
-  { name: 'Russia (VLAT)', code: '+7', flag: 'RU', timezone: 'VLAT' },
-  { name: 'Russia (YAKT)', code: '+7', flag: 'RU', timezone: 'YAKT' },
-
-  { name: 'Others', timezone: 'UTC' }
+  { name: 'Afghanistan', code: '+93', flag: 'AF', timezone: 'AFT', currency: 'AFN' },
+  { name: 'Albania', code: '+355', flag: 'AL', timezone: 'CET', currency: 'ALL' },
+  { name: 'Algeria', code: '+213', flag: 'DZ', timezone: 'CET', currency: 'DZD' },
+  { name: 'American Samoa', code: '+1-684', flag: 'AS', timezone: 'SST', currency: 'USD' },
+  { name: 'Australia', code: '+61', flag: 'AU', timezone: 'AEST', currency: 'AUD' },
+  { name: 'Bangladesh', code: '+880', flag: 'BD', timezone: 'BST', currency: 'BDT' },
+  { name: 'Brazil', code: '+55', flag: 'BR', timezone: 'BRT', currency: 'BRL' },
+  { name: 'Canada', code: '+1', flag: 'CA', timezone: 'EST', currency: 'CAD' },
+  { name: 'Chad', code: '+235', flag: 'TD', timezone: 'WAT', currency: 'XAF' },
+  { name: 'Chile', code: '+56', flag: 'CL', timezone: 'CLT', currency: 'CLP' },
+  { name: 'China', code: '+86', flag: 'CN', timezone: 'CST', currency: 'CNY' },
+  { name: 'Colombia', code: '+57', flag: 'CO', timezone: 'COT', currency: 'COP' },
+  { name: 'France', code: '+33', flag: 'FR', timezone: 'CET', currency: 'EUR' },
+  { name: 'Germany', code: '+49', flag: 'DE', timezone: 'CET', currency: 'EUR' },
+  { name: 'India', code: '+91', flag: 'IN', timezone: 'IST', currency: 'INR' },
+  { name: 'Italy', code: '+39', flag: 'IT', timezone: 'CET', currency: 'EUR' },
+  { name: 'Japan', code: '+81', flag: 'JP', timezone: 'JST', currency: 'JPY' },
+  { name: 'Kenya', code: '+254', flag: 'KE', timezone: 'EAT', currency: 'KES' },
+  { name: 'Malaysia', code: '+60', flag: 'MY', timezone: 'MYT', currency: 'MYR' },
+  { name: 'Mexico', code: '+52', flag: 'MX', timezone: 'CST', currency: 'MXN' },
+  { name: 'Netherlands', code: '+31', flag: 'NL', timezone: 'CET', currency: 'EUR' },
+  { name: 'Nigeria', code: '+234', flag: 'NG', timezone: 'WAT', currency: 'NGN' },
+  { name: 'Pakistan', code: '+92', flag: 'PK', timezone: 'PKT', currency: 'PKR' },
+  { name: 'Philippines', code: '+63', flag: 'PH', timezone: 'PHT', currency: 'PHP' },
+  { name: 'Qatar', code: '+974', flag: 'QA', timezone: 'AST', currency: 'QAR' },
+  { name: 'Russia', code: '+7', flag: 'RU', timezone: 'MSK', currency: 'RUB' },
+  { name: 'Saudi Arabia', code: '+966', flag: 'SA', timezone: 'AST', currency: 'SAR' },
+  { name: 'Singapore', code: '+65', flag: 'SG', timezone: 'SGT', currency: 'SGD' },
+  { name: 'South Africa', code: '+27', flag: 'ZA', timezone: 'SAST', currency: 'ZAR' },
+  { name: 'South Korea', code: '+82', flag: 'KR', timezone: 'KST', currency: 'KRW' },
+  { name: 'Spain', code: '+34', flag: 'ES', timezone: 'CET', currency: 'EUR' },
+  { name: 'Sri Lanka', code: '+94', flag: 'LK', timezone: 'IST', currency: 'LKR' },
+  { name: 'Sweden', code: '+46', flag: 'SE', timezone: 'CET', currency: 'SEK' },
+  { name: 'Switzerland', code: '+41', flag: 'CH', timezone: 'CET', currency: 'CHF' },
+  { name: 'Thailand', code: '+66', flag: 'TH', timezone: 'ICT', currency: 'THB' },
+  { name: 'United Arab Emirates', code: '+971', flag: 'AE', timezone: 'GST', currency: 'AED' },
+  { name: 'United Kingdom', code: '+44', flag: 'GB', timezone: 'GMT', currency: 'GBP' },
+  { name: 'United States', code: '+1', flag: 'US', timezone: 'EST', currency: 'USD' },
+  { name: 'Vietnam', code: '+84', flag: 'VN', timezone: 'ICT', currency: 'VND' },
+  { name: 'Others', timezone: 'UTC', currency: 'USD' }
 ];
 export const getDefaultCountry = (flag = 'US') =>
   countries.find((c) => c.flag === flag);

@@ -56,7 +56,7 @@ const QueryFormWidget = () => {
   useEffect(() => {
     const showTimer = setTimeout(() => {
       setIsVisible(true);
-    }, 10000);
+    }, 30000);
 
     return () => clearTimeout(showTimer);
   }, []);

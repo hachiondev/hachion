@@ -232,7 +232,7 @@ export default function CourseBanner({ onEnroll }) {
   ]
 };
   const ogImage = course.courseImage
-    ? `http://localhost:8081/${course.courseImage}`
+    ? `https://api.test.hachion.co/${course.courseImage}`
     : heroImage;
 
   const author =
@@ -438,7 +438,7 @@ export default function CourseBanner({ onEnroll }) {
 
     if (brochureItem) {
       const filename = brochureItem.brochure_pdf.split("/").pop();
-      const url = `http://localhost:8081/uploads/test/curriculum/pdfs/brochurepdf/${filename}`;
+      const url = `https://api.test.hachion.co/uploads/test/curriculum/pdfs/brochurepdf/${filename}`;
       window.open(url, "_blank");
       return;
     }
@@ -450,7 +450,7 @@ export default function CourseBanner({ onEnroll }) {
 
     if (curriculumItem) {
       const filename = curriculumItem.curriculum_pdf.split("/").pop();
-      const url = `http://localhost:8081/uploads/test/curriculum/pdfs/${filename}`;
+      const url = `https://api.test.hachion.co/uploads/test/curriculum/pdfs/${filename}`;
       window.open(url, "_blank");
       return;
     }

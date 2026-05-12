@@ -108,13 +108,12 @@ export const Home = () => {
 {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
-  "@id": "https://www.hachion.co/courses/salesforce-admin",
-  "name": "Salesforce Admin Course Training and Placement Online",
-  "image": "https://www.hachion.co/Certificate_Of_Hachion.jpg",
-  "url": "https://www.hachion.co/courses/salesforce-admin",
+  "@id": "https://www.hachion.co/",
+  "name": "Online IT Training: Get Certified, Find Your Dream Job",
+  "image": "https://www.hachion.co/industry-recognized-it-certifications.webp",
+  "url": "https://www.hachion.co",
   "telephone": "+1 732-485-2499",
-  "priceRange": "$400 to $500",
-  "description": "Salesforce admin course training and placement online at Hachion offers Salesforce admin training and job placement support with Salesforce Admin Certification.",
+  "description": "Hachion offers professional certification online training courses authored by industry experts Learn the high in demand skills from our experts.",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "601 Voyage Trace",
@@ -123,6 +122,67 @@ export const Home = () => {
     "postalCode": "78641",
     "addressCountry": "USA"
   }
+}
+
+`}
+</script>
+{/* Review Schema */}
+<script type="application/ld+json">
+{`
+{
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  "@id": "https://www.hachion.co/#organization",
+  "name": "Hachion",
+  "url": "https://www.hachion.co/",
+  "logo": "https://www.hachion.co/static/media/logo.01fbce12140022ec183e.webp",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "bestRating": "5",
+    "reviewCount": "3"
+  },
+  "review": [
+    {
+      "@type": "Review",
+      "author": {
+        "@type": "Person",
+        "name": "Shimpa Sontakke"
+      },
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5"
+      },
+      "reviewBody": "The sessions were very helpful for beginners. The training helped me understand technical concepts clearly with practical guidance."
+    },
+    {
+      "@type": "Review",
+      "author": {
+        "@type": "Person",
+        "name": "Jacker Jack"
+      },
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5"
+      },
+      "reviewBody": "Best live online training institute for IT courses with excellent job assistance and career support."
+    },
+    {
+      "@type": "Review",
+      "author": {
+        "@type": "Person",
+        "name": "Raju"
+      },
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5"
+      },
+      "reviewBody": "Hachion provides excellent learning support and knowledgeable mentors for Salesforce Admin training."
+    }
+  ]
 }
 `}
 </script>

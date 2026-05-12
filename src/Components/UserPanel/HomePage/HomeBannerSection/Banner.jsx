@@ -56,7 +56,7 @@
 //       {/* Right side image */}
 //       <motion.img
 //         className="home-banner-img"
-//         src="/home-banner1.webp"
+//         src="/industry-recognized-it-certifications.webp"
 //         alt="Home banner"
 //         fetchpriority="high"
 //         initial={{ x: 150, opacity: 0 }}
@@ -182,7 +182,7 @@ const Banner = () => {
         {MotionImg ? (
           <MotionImg
             className="home-banner-img"
-            src="/home-banner1.webp"
+            src="/industry-recognized-it-certifications.webp"
             alt="Home banner"
             fetchpriority="high"
             initial={{ x: 150, opacity: 0 }}
@@ -192,7 +192,7 @@ const Banner = () => {
         ) : (
           <img
             className="home-banner-img"
-            src="/home-banner1.webp"
+            src="/industry-recognized-it-certifications.webp"
             alt="Home banner"
             fetchpriority="high"
           />

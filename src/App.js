@@ -8,10 +8,8 @@ import {
   BrowserRouter,
   Routes,
   Route,
-  Navigate,
   useLocation,
   useNavigate,
-  useParams,
 } from "react-router-dom";
 import { useEffect } from "react";
 
@@ -20,7 +18,7 @@ import RegisterNext from "./Components/UserPanel/HomePage/AuthSection//RegisterN
 import RegisterHere from "./Components/UserPanel/HomePage/AuthSection//RegisterHere";
 import ForgotPassword from "./Components/UserPanel/HomePage/AuthSection/ForgotPassword";
 import Course from "./Components/UserPanel/CoursePage/Course";
-// import CourseDetails from './Components/UserPanel/courses';
+// import CourseDetails from './Components/UserPanel/CourseDetails';
 import CorporateTraining from "./Components/UserPanel/CorporateTraining";
 import Terms from "./Components/UserPanel/LegalFooterSection/Terms";
 import Privacy from "./Components/UserPanel/LegalFooterSection/Privacy";
@@ -62,7 +60,7 @@ import QueryGuard from "./Components/UserPanel/QueryGuard";
 import NotFound from "./Components/UserPanel/NotFound";
 import NewCourseDetails from "./Components/UserPanel/NewcoursePage/NewCourseDetails";
 
-// import CourseDetails from './Components/UserPanel/OldcoursePage/courses';
+// import CourseDetails from './Components/UserPanel/OldcoursePage/CourseDetails';
 import NewEnrollNow from "./Components/UserPanel/NewEnrollmentPage/NewEnrollNow";
 // import NewEnrollNow from './Components/UserPanel/NewEnrollNow';
 import NewEnrollSelfPaced from "./Components/UserPanel/NewEnrollSelfPaced";
@@ -98,16 +96,6 @@ const TrackPageView = () => {
   }, [location]);
   return null;
 };
-const CourseDetailsRedirect = () => {
-  const { courseName } = useParams();
-
-  return (
-    <Navigate
-      to={`/courses/${courseName}`}
-      replace
-    />
-  );
-};
 
 function AppRoutes() {
   return (
@@ -142,28 +130,19 @@ function AppRoutes() {
           />
           <Route path="/become-instructor" element={<BecomeInstructor />} />
           <Route path="/view-all-reviews" element={<ViewReviews />} />
-          {/* <Route path="/courses" element={<Course />} /> */}
-          <Route
-  path="/coursedetails/:courseName"
-  element={<CourseDetailsRedirect />}
-/>
-
-<Route
-  path="/courses/:courseName"
-  element={<NewCourseDetails />}
-/>
+          <Route path="/coursedetails" element={<Course />} />
           <Route path="/enroll-now/:courseName" element={<NewEnrollNow />} />
           <Route
             path="/enroll-self/:courseName"
             element={<NewEnrollSelfPaced />}
           />
-{/* 
+
           <Route
-            path="/courses/:courseName"
+            path="/coursedetails/:courseName"
             element={<NewCourseDetails />}
-          /> */}
+          />
           {/* <Route
-            path="/courses/:courseName"
+            path="/coursedetails/:courseName"
             element={<CourseDetails />}
           /> */}
           <Route path="/corporate" element={<CorporateTraining />} />

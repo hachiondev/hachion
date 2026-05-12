@@ -66,9 +66,20 @@ body {
   height: 48px;
   padding: 0 12px;
   border-radius: 8px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #ccc;
   background: #f9fbff;
   font-size: 14px;
+  outline: none;
+}
+
+.show-dropdown {
+  position: absolute;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 1000;
 }
 
 /* Urgency */
@@ -116,21 +127,60 @@ body {
   background: #fff;
   border: 1px solid #e6ebf5;
 }
-.phone-field-container {
+.phone-field-container-form {
   display: flex;
   gap: 10px;
   align-items: center;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #fff;
 }
 
 .country-select-button {
+  height: 48px;
+  padding: 0 8px;
+  border: none;
+  background: #fff;
+  color: #00aaef;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background: white;
+  justify-content: space-between;
   cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  min-width: 120px;
+  max-width: 100px;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.country-select-button:hover {
+  background-color: #f8f9fa;
+}
+
+.country-flag-icon {
+  width: 16px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.country-code-display {
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0 2px;
+}
+
+/* Arrow icon inside button */
+.country-select-button svg {
+  width: 12px;
+  height: 12px;
+  color: #666;
+  flex-shrink: 0;
 }
 
 .phone-number-input-field {
@@ -148,7 +198,7 @@ body {
 .field-label {
   font-size: 13px;
   font-weight: 500;
-  margin-bottom: 5px;
+  margin: 5px 0;
   display: block;
 }
 
@@ -157,6 +207,8 @@ body {
   background: #ccc !important;
   cursor: not-allowed;
   box-shadow: none;
+  border: 2px solid #ccc;
+  color: #666;
 }
 .phone-error-text {
   color: red;
@@ -292,7 +344,6 @@ body {
   margin-bottom: 15px;
 }
 
-
 .success-scroll-content::-webkit-scrollbar {
   width: 5px;
 }
@@ -301,7 +352,6 @@ body {
   background: #ccc;
   border-radius: 10px;
 }
-
 
 .social-icons {
   display: flex;
@@ -314,14 +364,12 @@ body {
   width: 26px;
 }
 
-
 .success-card-new p,
 .success-card-new div {
   font-size: 14px !important;
   line-height: 1.5;
   color: #666;
 }
-
 
 .success-card-new a {
   font-size: 14px;

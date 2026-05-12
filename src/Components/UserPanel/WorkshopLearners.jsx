@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './Corporate.css';
 import './Blogs.css';
 import { Carousel, Modal } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
 import LearnerCard from './HomePage/LearnerSection/components/LearnerCard';
 

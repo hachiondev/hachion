@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./EnquiryPage.css";
+import styles from "./EnquiryPage.module.css";
 
 import Flag from "react-world-flags";
 import { Menu, MenuItem } from "@mui/material";
@@ -10,13 +10,11 @@ import { useRef } from "react";
 import { getCoursesSummary } from "./HomePage/TrendingSection/services/coursesService";
 import { useParams } from "react-router-dom";
 
-import whatsapp from '../../Assets/logos_whatsapp-icon.webp';
 import facebook from '../../Assets/facebook.webp';
 import twitter from '../../Assets/twitter.webp';
 import youtube from '../../Assets/youtube.webp';
 import linkedin from '../../Assets/linkedin.webp';
 import instagram from '../../Assets/instagram.webp';
-import quora from '../../Assets/Component 141.webp';
 
 const EnquiryPage = () => {
   const [formData, setFormData] = useState({
@@ -268,9 +266,9 @@ if (!isValidForm) {
   return (
     <>
    {showSuccessScreen && (
-  <div className="success-overlay">
+  <div className={styles['success-overlay']}>
 
-    <div className="success-card-new">
+    <div className={styles['success-card-new']}>
 
       {/* CLOSE BUTTON */}
       {/* <button
@@ -281,28 +279,27 @@ if (!isValidForm) {
       </button> */}
 
       {/* ICON */}
-      <div className="success-icon-circle">
+      <div className={styles['success-icon-circle']}>
          {/* <span className="success-tick">✔</span> */}
-         <span className="success-tick">
+         <span className={styles['success-tick']}>
   {isErrorCase ? "✖" : "✔"}
 </span>
         
       </div>
 
       {/* TITLE */}
-      {/* <h2 className="success-title">Success</h2> */}
-<h2 className="success-title">
+<h2 className={styles['success-title']}>
   {isErrorCase ? "Already Registered" : "Success"}
 </h2>
       {/* MESSAGE */}
-  <div className="success-scroll-content">
+  <div className={styles['success-scroll-content']}>
 
   {!isErrorCase ? (
     <>
       <p>Your form has been successfully submitted.</p>
       <p>Our team will review your details and get back to you within 24 hours.</p>
 
-      <div className="extra-section">
+      <div className={styles['extra-section']}>
         <p>📌 In the meantime, here's what you can do:</p>
 
         <p>✅ Explore our courses:</p>
@@ -325,6 +322,23 @@ if (!isValidForm) {
         <p style={{ marginTop: "10px" }}>
           ✅ Follow us for updates, tips, and success stories
         </p>
+        <div className={styles['social-icons']}>
+                  <a href="https://www.facebook.com/hachion.official/" target="_blank" rel="noopener noreferrer">
+                    <img src={facebook} alt="facebook-icon" loading="lazy" className={styles['social-icon']} />
+                  </a>
+                  <a href="https://x.com/hachionofficial" target="_blank" rel="noopener noreferrer">
+                    <img src={twitter} alt="twitter-icon" loading="lazy" className={styles['social-icon']} />
+                  </a>
+                  <a href="https://www.linkedin.com/company/hachion" target="_blank" rel="noopener noreferrer">
+                    <img src={linkedin} alt="linkedin-icon" loading="lazy" className={styles['social-icon']} />
+                  </a>
+                  <a href="https://www.instagram.com/hachion.official/" target="_blank" rel="noopener noreferrer">
+                    <img src={instagram} alt="instagram-icon" loading="lazy" className={styles['social-icon']} />
+                  </a>
+                  <a href="https://www.youtube.com/@hachion.official" target="_blank" rel="noopener noreferrer">
+                    <img src={youtube} alt="youtube" loading="lazy" className={styles['social-icon']} />
+                  </a>
+                </div>
       </div>
     </>
   ) : (
@@ -344,7 +358,7 @@ if (!isValidForm) {
 </div>
       {/* BUTTON */}
       <button
-        className="continue-btn-new"
+        className={styles['continue-btn-new']}
         onClick={() => setShowSuccessScreen(false)}
       >
         Close
@@ -354,58 +368,58 @@ if (!isValidForm) {
 
   </div>
 )}
-    <div className="enquiry-container">
+    <div className={styles['enquiry-container']}>
 
-      <div className="top-banner">
+      <div className={styles['top-banner']}>
         <img src="/hachionlogo.webp" alt="Hachion Banner" />
       </div>
 
-      <div className="headline-box">
+      <div className={styles['headline-box']}>
         <h1>Get FREE Demo + Career Roadmap + 10% Discount</h1>
         <p>⏱️ Takes only 30 seconds</p>
-        <span className="privacy">
+        <span className={styles['privacy']}>
           We respect your privacy. We’ll never share your data.
         </span>
       </div>
 
-      <div className="form-card">
+      <div className={styles['form-card']}>
         <form onSubmit={handleSubmit}>
         
-<label className="field-label">
-  Email Address <span className="required">*</span>
+<label className={styles['field-label']}>
+  Email <span className={styles['required']}>*</span>
 </label>
 <input
   type="email"
   name="email"
   value={formData.email}
-  placeholder="Your email address *"
+  placeholder="Enter your email"
   required
   onChange={handleChange}
 />
 
-<label className="field-label">
-  Full Name <span className="required">*</span>
+<label className={styles['field-label']}>
+  Full Name <span className={styles['required']}>*</span>
 </label>
 <input
   type="text"
   name="name"
   value={formData.name}
-  placeholder="Full Name *"
+  placeholder="Enter your full name"
   required
   onChange={handleChange}
 />
-<label className="field-label">
-  Phone / Whatsapp Number <span className="required">*</span>
+<label className={styles['field-label']}>
+  Phone / Whatsapp Number <span className={styles['required']}>*</span>
 </label>
-<div className="phone-field-container">
+<div className={styles['phone-field-container-form']}>
 
   <button
     type="button"
     onClick={(e) => setAnchorEl(e.currentTarget)}
-    className="country-select-button"
+    className={styles['country-select-button']}
   >
-    <Flag code={selectedCountry.flag} className="country-flag-icon" />
-    <span className="country-code-display">
+    <Flag code={selectedCountry.flag} className={styles['country-flag-icon']} />
+    <span className={styles['country-code-display']}>
       {selectedCountry.flag} ({selectedCountry.code})
     </span>
     <AiFillCaretDown />
@@ -421,14 +435,14 @@ if (!isValidForm) {
         key={country.code}
         onClick={() => handleCountrySelect(country)}
       >
-        <Flag code={country.flag} className="country-flag-icon menu-flag" />
+        <Flag code={country.flag} className={styles['country-flag-icon']} />
         {country.name} ({country.code})
       </MenuItem>
     ))}
   </Menu>
 <input
   type="tel"
-  className="phone-number-input-field"
+  className={styles['phone-number-input-field']} 
   ref={mobileInputRef}
   value={formData.phone}
   onChange={(e) => {
@@ -456,12 +470,12 @@ if (!isValidForm) {
 />
 </div>
 {phoneError && (
-  <div className="phone-error-text">
+  <div className={styles['phone-error-text']}>
     {phoneError}
   </div>
 )}
-<label className="field-label">
-  Training Program <span className="required">*</span>
+<label className={styles['field-label']}>
+  Training Program <span className={styles['required']}>*</span>
 </label>
 <div style={{ position: "relative" }}>
   <input
@@ -477,25 +491,11 @@ if (!isValidForm) {
   }}
   onFocus={() => setShowDropdown(true)}   
   onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-    style={{
-      width: "100%",
-      padding: "10px",
-      borderRadius: "6px",
-      border: "1px solid #ccc"
-    }}
   />
 
   {/* Dropdown list */}
   {showDropdown && (
-    <div style={{
-      position: "absolute",
-      width: "100%",
-      background: "#fff",
-      border: "1px solid #ccc",
-      maxHeight: "150px",
-      overflowY: "auto",
-      zIndex: 1000
-    }}>
+    <div className={styles['show-dropdown']} >
       {filteredCourses.map((course) => (
         <div
           key={course.id}
@@ -519,11 +519,11 @@ if (!isValidForm) {
     </div>
   )}
 </div>
-     <div className="row-two-fields">
+     <div className={styles['row-two-fields']}>
 
   {/* STATE */}
-  <div className="field-box">
-    <label className="field-label">
+  <div className={styles['field-box']}>
+    <label className={styles['field-label']}>
       State 
     </label>
     <input
@@ -536,9 +536,9 @@ if (!isValidForm) {
   </div>
 
   {/* TIMEZONE */}
-  <div className="field-box">
-    <label className="field-label">
-      Timezone <span className="required">*</span>
+  <div className={styles['field-box']}>
+    <label className={styles['field-label']}>
+      Timezone <span className={styles['required']}>*</span>
     </label>
     <input
   type="text"
@@ -580,11 +580,11 @@ if (!isValidForm) {
           
           <input type="hidden" name="utm" value={formData.utm} />
 
-          <p className="urgency">⚠️ Limited seats available</p>
+          <p className={styles['urgency']}>⚠️ Limited seats available</p>
 
 <button
   type="submit"
-  className={`submit-btn ${!isFormValid ? "disabled-btn" : ""}`}
+  className={styles['submit-btn'] + (isFormValid ? '' : ' ' + styles['disabled-btn'])}
   disabled={!isFormValid || isSubmitting}
 >
   {isSubmitting ? "Submitting... Please wait ⏳ then move to the success message screen" : "🚀 Book Free Demo"}
@@ -602,7 +602,7 @@ if (!isValidForm) {
         </form>
       </div>
 
-      <div className="trust-box">
+      <div className={styles['trust-box']}>
         ⭐ 5000+ Students Trained | 4.8 Rating | US-Based Trainers
         <br />
         📞 Our team will contact you within 24 hrs

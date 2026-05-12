@@ -3,7 +3,6 @@ import { FaPhone, FaChevronUp, FaChevronDown, FaTimes, FaCheckCircle, FaLock, Fa
 import { Form, Button, Spinner } from 'react-bootstrap';
 import Flag from 'react-world-flags';
 import { AiFillCaretDown } from 'react-icons/ai';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './QueryFormWidget.module.css';
 import { useTopBarApi } from '../../../../Api/hooks/HomePageApi/useTopBarApi';
 import { countries, getDefaultCountry } from '../../../../countryUtils';

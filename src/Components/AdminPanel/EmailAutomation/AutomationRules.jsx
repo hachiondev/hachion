@@ -267,8 +267,14 @@ const handleEditRule = (rule) => {
 
     const today = new Date();
 
-    const [hours, minutes] =
-      rule.sendTime.split(":");
+    // const [hours, minutes] =
+    //   rule.sendTime.split(":");
+
+    const safeSendTime =
+  rule.sendTime || "00:00";
+
+const [hours, minutes] =
+  safeSendTime.split(":");
 
     today.setHours(hours);
     today.setMinutes(minutes);
@@ -340,26 +346,32 @@ const handleUpdateRule = async () => {
       if (rule.frequencyDays === 0) {
 
         message =
-          `This one-time automation will run at ${rule.sendTime} ${rule.timezone}.`;
+          `This one-time automation will run at ${rule.sendTime || "-"} ${rule.timezone || "-"}.`;
 
       }
       else if (rule.frequencyDays === 1) {
         message =
-          `This automation will run every day at ${rule.sendTime} ${rule.timezone}.`;
+          `This automation will run every day at ${rule.sendTime || "-"} ${rule.timezone || "-"}.`;
 
       }
       else {
 
         message =
-          `This automation will run every ${rule.frequencyDays} days at ${rule.sendTime} ${rule.timezone}.`;
+          `This automation will run every ${rule.frequencyDays || 0} days at ${rule.sendTime || "-"} ${rule.timezone || "-"}.`;
 
       }
 
       // ✅ TIME CHECK
       const currentTime = new Date();
 
-      const [hours, minutes] =
-        rule.sendTime.split(":");
+      // const [hours, minutes] =
+      //   rule.sendTime.split(":");
+
+      const safeSendTime =
+  rule.sendTime || "00:00";
+
+const [hours, minutes] =
+  safeSendTime.split(":");
 
       const ruleTime = new Date();
 
@@ -582,26 +594,31 @@ const handleUpdateRule = async () => {
                   </td>
 
                   {/* RULE NAME */}
-                  <td>{rule.ruleName}</td>
+                  {/* <td>{rule.ruleName}</td> */}
+                  <td>{rule.ruleName || "-"}</td>
 
                   {/* LEAD STATUS */}
                   <td>
                     <span className="warm-badge">
-                      {rule.leadStatus}
+                      {rule.leadStatus || "-"}
                     </span>
                   </td>
 
                   {/* TIMEZONE */}
-                  <td>{rule.timezone}</td>
+                  <td>{rule.timezone || "-"}</td>
 
                   {/* SEND TIME */}
-                  <td>{rule.sendTime}</td>
+                  <td>{rule.sendTime || "-"}</td>
 
                   {/* FREQUENCY */}
-                  <td>{rule.frequencyDays} Day(s)</td>
+                  <td>
+  {rule.frequencyDays != null
+    ? `${rule.frequencyDays} Day(s)`
+    : "-"}
+</td>
 
                   {/* MAX EMAILS */}
-                  <td>{rule.maxEmails}</td>
+                  <td>{rule.maxEmails || "-"}</td>
 
                   {/* STATUS */}
                   <td>
@@ -614,7 +631,7 @@ const handleUpdateRule = async () => {
 
                   {/* LAST RUN */}
                   <td>
-                    {rule.lastRunAt ? rule.lastRunAt : "Never"}
+                    {rule.lastRunAt || "Never"}
                   </td>
 
                   {/* ACTIONS */}
@@ -628,8 +645,14 @@ const handleUpdateRule = async () => {
 
   const currentTime = new Date();
 
-  const [hours, minutes] =
-    rule.sendTime.split(":");
+  // const [hours, minutes] =
+  //   rule.sendTime.split(":");
+
+  const safeSendTime =
+  rule.sendTime || "00:00";
+
+const [hours, minutes] =
+  safeSendTime.split(":");
 
   const ruleTime = new Date();
 

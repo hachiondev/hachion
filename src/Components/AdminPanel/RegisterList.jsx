@@ -578,7 +578,8 @@ setStatusFilter("");
       setMessage("Student details updated successfully!");
       setTimeout(() => setMessage(""), 5000);
       setOpen(false);
-    } catch (error) {
+    } 
+    catch (error) {
       setMessage("Error updating student details.");
     }
   };
@@ -771,11 +772,33 @@ setHistory(formattedHistory);
       setShowAddCourse(false);
       setFormMode("Add");
       handleReset();
-    } catch (error) {
-      setIsUpdating(false);
-      console.error("Error updating student:", error.message);
-      setMessage("Error updating student.");
-    }
+    } 
+    catch (error) {
+
+  setIsUpdating(false);
+
+  console.error("Error updating student:", error);
+
+  // ✅ BACKEND CUSTOM MESSAGE
+  if (
+    error.response &&
+    error.response.data &&
+    error.response.data.message
+  ) {
+
+    setErrorMessage(error.response.data.message);
+
+  } else {
+
+    setErrorMessage(
+      "❌ Failed to update student."
+    );
+  }
+
+  setTimeout(() => {
+    setErrorMessage("");
+  }, 15000);
+}
   };
 const handleChange = (e) => {
   const { name, value } = e.target;

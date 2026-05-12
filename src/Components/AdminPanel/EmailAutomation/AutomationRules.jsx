@@ -7,8 +7,9 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import AdminPagination from '../AdminPagination';
+import dayjs from 'dayjs';
 
-const API_BASE = "http://localhost:8081";
+const API_BASE = "https://api.test.hachion.co";
 
 const AutomationRules = () => {
 
@@ -22,6 +23,7 @@ const AutomationRules = () => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
 
+  const [runningRuleId, setRunningRuleId] = useState(null);
   // FORM STATES
   const [leadStatus, setLeadStatus] = useState("");
   const [timezone, setTimezone] = useState("");
@@ -31,11 +33,31 @@ const AutomationRules = () => {
   const [frequencyDays, setFrequencyDays] = useState("");
 
   // =====================================================
+// EDIT POPUP STATES
+// =====================================================
+
+const [showEditPopup, setShowEditPopup] = useState(false);
+
+const [editingRuleId, setEditingRuleId] = useState(null);
+
+const [editLeadStatus, setEditLeadStatus] = useState("");
+
+const [editTimezone, setEditTimezone] = useState("");
+
+const [editStartDate, setEditStartDate] = useState("");
+
+const [editEndDate, setEditEndDate] = useState("");
+
+const [editSendTime, setEditSendTime] = useState(null);
+
+const [editFrequencyDays, setEditFrequencyDays] = useState("");
+
+  // =====================================================
   // FETCH LEAD STATUS
   // =====================================================
 
   useEffect(() => {
-    fetch("http://localhost:8081/register-leadtag")
+    fetch("https://api.test.hachion.co/register-leadtag")
       .then(res => res.json())
       .then(data => setLeadStatuses(data || []))
       .catch(error =>
@@ -179,31 +201,207 @@ const AutomationRules = () => {
   // RUN AUTOMATION
   // =====================================================
 
-  const handleRunAutomation = async (id) => {
-    try {
-      await axios.post(`${API_BASE}/automation-rules/run/${id}`);
-      alert("Automation executed successfully");
-      fetchRules();
-    } catch (error) {
-      console.error(error);
-      alert("Failed to execute automation");
+const handleRunAutomation = async (rule) => {
+
+  try {
+
+    const confirmed = window.confirm(
+      `Run this automation immediately?\n\n` +
+      `Lead Status : ${rule.leadStatus}\n` +
+      `Timezone : ${rule.timezone}\n` +
+      `Max Emails : ${rule.maxEmails}\n\n` +
+      `Matching users will receive emails immediately.`
+    );
+
+   if (!confirmed) return;
+
+// ✅ DISABLE BUTTON
+setRunningRuleId(rule.id);
+
+await axios.post(
+  `${API_BASE}/automation-rules/run/${rule.id}`
+);
+
+alert("Automation executed successfully");
+
+fetchRules();
+
+// ✅ ENABLE AGAIN
+setRunningRuleId(null);
+
+ } catch (error) {
+
+  console.error(error);
+
+  // ✅ ENABLE AGAIN ON ERROR
+  setRunningRuleId(null);
+
+  alert("Failed to execute automation");
+}
+};
+
+// =====================================================
+// OPEN EDIT POPUP
+// =====================================================
+
+const handleEditRule = (rule) => {
+
+  setEditingRuleId(rule.id);
+
+  setEditLeadStatus(rule.leadStatus || "");
+
+  setEditTimezone(rule.timezone || "");
+
+  setEditStartDate(rule.startDate || "");
+
+  setEditEndDate(rule.endDate || "");
+
+  setEditFrequencyDays(
+    rule.frequencyDays != null
+      ? String(rule.frequencyDays)
+      : ""
+  );
+
+  // TIME
+  if (rule.sendTime) {
+
+    const today = new Date();
+
+    const [hours, minutes] =
+      rule.sendTime.split(":");
+
+    today.setHours(hours);
+    today.setMinutes(minutes);
+
+    setEditSendTime(dayjs(today));
+
+  } else {
+
+    setEditSendTime(null);
+  }
+
+  setShowEditPopup(true);
+};
+
+// =====================================================
+// UPDATE RULE
+// =====================================================
+
+const handleUpdateRule = async () => {
+
+  try {
+
+    const payload = {
+
+      startDate: editStartDate,
+
+      endDate: editEndDate,
+
+      frequencyDays:
+        editFrequencyDays === ""
+          ? null
+          : parseInt(editFrequencyDays),
+
+      sendTime:
+        editSendTime
+          ? editSendTime.format("HH:mm:ss")
+          : null
+    };
+
+    await axios.put(
+      `${API_BASE}/automation-rules/${editingRuleId}`,
+      payload
+    );
+
+    alert("Rule updated successfully");
+
+    setShowEditPopup(false);
+
+    fetchRules();
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(
+      error?.response?.data ||
+      "Failed to update rule"
+    );
+  }
+};
+  const handleToggleRule = async (rule) => {
+
+  try {
+    if (!rule.enabled) {
+
+      let message = "";
+
+      // ONE TIME
+      if (rule.frequencyDays === 0) {
+
+        message =
+          `This one-time automation will run at ${rule.sendTime} ${rule.timezone}.`;
+
+      }
+      else if (rule.frequencyDays === 1) {
+        message =
+          `This automation will run every day at ${rule.sendTime} ${rule.timezone}.`;
+
+      }
+      else {
+
+        message =
+          `This automation will run every ${rule.frequencyDays} days at ${rule.sendTime} ${rule.timezone}.`;
+
+      }
+
+      // ✅ TIME CHECK
+      const currentTime = new Date();
+
+      const [hours, minutes] =
+        rule.sendTime.split(":");
+
+      const ruleTime = new Date();
+
+      ruleTime.setHours(hours);
+      ruleTime.setMinutes(minutes);
+      ruleTime.setSeconds(0);
+
+      // TIME PASSED
+     if (currentTime > ruleTime) {
+
+  if (rule.frequencyDays === 0) {
+
+    alert(
+      `This one-time automation expired today at ${rule.sendTime} ${rule.timezone}. Please update send time before enabling.`
+    );
+
+    return;
+  }
+
+  message +=
+    "\n\n⚠ Today's scheduled time already passed. Rule will run on next eligible schedule.";
+
+}
+      // CONFIRMATION
+      const confirmed = window.confirm(message);
+
+      if (!confirmed) return;
     }
-  };
 
-  // =====================================================
-  // TOGGLE RULE
-  // =====================================================
+    await axios.put(
+      `${API_BASE}/automation-rules/toggle/${rule.id}`
+    );
 
-  const handleToggleRule = async (id) => {
-    try {
-      await axios.put(`${API_BASE}/automation-rules/toggle/${id}`);
-      fetchRules();
-    } catch (error) {
-      console.error(error);
-      alert("Failed to update rule status");
-    }
-  };
+    fetchRules();
 
+  } catch (error) {
+
+    console.error(error);
+
+    alert("Failed to update rule status");
+  }
+};
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="automation-rules-container">
@@ -424,27 +622,122 @@ const AutomationRules = () => {
                   <td>
                     <div className="action-buttons">
 
-                      <button className="edit-btn">
-                        Edit
-                      </button>
+{(() => {
 
-                      {/* RUN */}
+  
 
-                      <button
-                        className="run-btn"
-                        onClick={() => handleRunAutomation(rule.id)}
-                      >
-                        Run
-                      </button>
+  const currentTime = new Date();
 
-                      {/* ENABLE / DISABLE */}
+  const [hours, minutes] =
+    rule.sendTime.split(":");
 
-                      {/* <button
-                        className="disable-btn"
-                        onClick={() => handleToggleRule(rule.id)}
-                      >
-                        {rule.enabled ? "Disable" : "Enable"}
-                      </button> */}
+  const ruleTime = new Date();
+
+  ruleTime.setHours(hours);
+  ruleTime.setMinutes(minutes);
+  ruleTime.setSeconds(0);
+
+  const today = new Date();
+
+today.setHours(0,0,0,0);
+
+const ruleEndDate =
+  rule.endDate
+    ? new Date(rule.endDate)
+    : null;
+
+let isExpired = false;
+// ==========================================
+// END DATE EXPIRED
+// ==========================================
+
+if (ruleEndDate) {
+
+  // normalize end date
+  ruleEndDate.setHours(0, 0, 0, 0);
+
+  // END DATE ALREADY PASSED
+  if (today > ruleEndDate) {
+
+    isExpired = true;
+  }
+
+  // SAME DAY + TIME PASSED
+  else if (
+    today.getTime() === ruleEndDate.getTime() &&
+    currentTime > ruleTime
+  ) {
+
+    isExpired = true;
+  }
+}
+
+// ==========================================
+// ONE TIME RULE EXPIRED
+// ==========================================
+
+if (
+  rule.frequencyDays === 0 &&
+  currentTime > ruleTime
+) {
+
+  isExpired = true;
+}
+ return (
+
+  <>
+
+    <button
+      className={
+        isExpired
+          ? "expired-btn"
+          : "edit-btn"
+      }
+
+      disabled={isExpired}
+
+      onClick={() => handleEditRule(rule)}
+    >
+      {isExpired ? "Lock" : "Edit"}
+    </button>
+
+    <button
+      className="run-btn"
+      disabled={runningRuleId === rule.id}
+      onClick={() => handleRunAutomation(rule)}
+    >
+      {runningRuleId === rule.id
+        ? "Running..."
+        : "Run"}
+    </button>
+
+    <button
+      className={
+        isExpired
+          ? "expired-btn"
+          : rule.enabled
+          ? "disable-btn"
+          : "enable-btn"
+      }
+
+      disabled={isExpired}
+
+      onClick={() => handleToggleRule(rule)}
+    >
+
+      {isExpired
+        ? "Expired"
+        : rule.enabled
+        ? "Disable"
+        : "Enable"}
+
+    </button>
+
+  </>
+
+);
+
+})()}
 
                     </div>
 
@@ -470,6 +763,119 @@ const AutomationRules = () => {
 
         </div>
       </div>
+      {/* =====================================================
+    EDIT POPUP
+===================================================== */}
+
+{showEditPopup && (
+
+  <div className="popup-overlay">
+
+    <div className="popup-container">
+
+      <h3>Edit Automation Rule</h3>
+
+      {/* LEAD STATUS */}
+
+      {/* <select
+        className="automation-input"
+        value={editLeadStatus}
+        disabled
+      >
+        <option value="">
+          Select Lead Status
+        </option>
+      </select> */}
+
+<input
+  type="text"
+  className="automation-input disabled-input"
+  value={editLeadStatus}
+  disabled
+/>
+      {/* TIMEZONE */}
+
+    <input
+  type="text"
+  className="automation-input disabled-input"
+  value={editTimezone}
+  disabled
+/>
+
+      {/* START DATE */}
+
+      <input
+        type="date"
+        className="automation-input"
+        value={editStartDate}
+        onChange={(e) =>
+          setEditStartDate(e.target.value)
+        }
+      />
+
+      {/* END DATE */}
+
+      <input
+        type="date"
+        className="automation-input"
+        value={editEndDate}
+        onChange={(e) =>
+          setEditEndDate(e.target.value)
+        }
+      />
+
+      {/* TIME PICKER */}
+
+      <TimePicker
+        label="Select Time"
+        ampm={true}
+        value={editSendTime}
+        onChange={(newValue) =>
+          setEditSendTime(newValue)
+        }
+      />
+
+      {/* FREQUENCY */}
+
+      <select
+        className="automation-input"
+        value={editFrequencyDays}
+        onChange={(e) =>
+          setEditFrequencyDays(e.target.value)
+        }
+      >
+        <option value="0">One Time</option>
+        <option value="1">Every Day</option>
+        <option value="2">Every 2 Days</option>
+        <option value="3">Every 3 Days</option>
+      </select>
+
+      {/* BUTTONS */}
+
+      <div className="popup-buttons">
+
+        <button
+          className="enable-btn"
+          onClick={handleUpdateRule}
+        >
+          Update
+        </button>
+
+        <button
+          className="disable-btn"
+          onClick={() =>
+            setShowEditPopup(false)
+          }
+        >
+          Cancel
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+)}
     </LocalizationProvider>
   );
 };

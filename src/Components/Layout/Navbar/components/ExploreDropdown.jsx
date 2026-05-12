@@ -39,7 +39,7 @@ export default function ExploreDropdown({ isOpen, setIsOpen, selectedCategory, s
                   <DropdownCourseList category={selectedCategory} />
                 </Suspense>
                 <li>
-                  <button className="dropdown-all-btn" onClick={() => window.location.assign("/coursedetails")}>Explore All Courses</button>
+                  <button className="dropdown-all-btn" onClick={() => window.location.assign("/courses")}>Explore All Courses</button>
                 </li>
               </div>
             </div>

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../CoursePage/Course.css';
-import CourseDetailsTop from '../CourseDetailsTop';
+import CourseDetailsTop from '../coursesTop';
 import KeyHighlights from '../KeyHighlights';
 import UpcomingHeader from '../UpcomingHeader';
 import UpcomingBatch from '../UpcomingBatch';
@@ -14,7 +14,7 @@ import CourseCertificate from '../CourseCertificate';
 import Learners from "../HomePage/LearnerSection/Learners";
 import TrainerProfile from '../TrainerProfile';
 import CurriculumMain from '../CurriculumMain';
-import CourseDetailsFaq from '../CourseDetailsFaq';
+import CourseDetailsFaq from '../coursesFaq';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
@@ -116,7 +116,7 @@ const CourseDetails = () => {
         <meta property="og:title" content={courseData?.metaTitle || "Best Online IT Certification Courses"} />
         <meta property="og:description" content={courseData?.metaDescription || "Transform your career with Hachion's Online IT Courses."} />
         <meta property="og:image" content={courseData?.metaImage || "https://hachion.co/images/course-banner.jpg"} />
-        <meta property="og:url" content={`https://hachion.co/coursedetails/${courseName}`} />
+        <meta property="og:url" content={`https://hachion.co/courses/${courseName}`} />
         <meta name="robots" content="index, follow" />
       </Helmet>
 
@@ -129,10 +129,10 @@ const CourseDetails = () => {
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
               <li className="breadcrumb-item">
-                <Link to="/coursedetails">Courses</Link> <MdKeyboardArrowRight />
+                <Link to="/courses">Courses</Link> <MdKeyboardArrowRight />
               </li>
               <li className="breadcrumb-item">
-                <Link to="/coursedetails">
+                <Link to="/courses">
                   {courseData?.courseCategory}
                 </Link> <MdKeyboardArrowRight />
               </li>

@@ -306,8 +306,8 @@ if (!isValidForm) {
         <p>📌 In the meantime, here's what you can do:</p>
 
         <p>✅ Explore our courses:</p>
-        <a href="https://www.hachion.co/coursedetails" target="_blank">
-          https://www.hachion.co/coursedetails
+        <a href="https://www.hachion.co/courses" target="_blank">
+          https://www.hachion.co/courses
         </a>
 
 <p style={{ marginTop: "10px" }}>

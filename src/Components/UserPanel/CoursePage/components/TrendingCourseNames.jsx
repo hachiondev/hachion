@@ -23,7 +23,7 @@ const navigate= useNavigate();
     
       const handleNavigation = (courseName) => {
         const formattedName = courseName.toLowerCase().replace(/\s+/g, '-');
-        navigate(`/coursedetails/${formattedName}`);
+        navigate(`/courses/${formattedName}`);
       };
   return (
     <>

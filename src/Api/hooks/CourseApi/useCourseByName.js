@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-const API_BASE = "https://api.test.hachion.co";
+const API_BASE = "http://localhost:8081";
 
 export function useCourseByName(courseName) {
   return useQuery({

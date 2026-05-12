@@ -20,7 +20,7 @@ const TrainingCard = ({ mode, heading, month, date, time, duration, discountPerc
   const navigateToCourse = () => {
     if (heading) {
       const formattedName = heading.toLowerCase().replace(/\s+/g, '-');
-      navigate(`/coursedetails/${formattedName}`, {
+      navigate(`/courses/${formattedName}`, {
         state: { scrollTo: 'upcoming-batch' }  // pass scroll target
       });
     }
@@ -30,7 +30,7 @@ const handleShare = async (e) => {
 
   // ✅ define formattedName from heading
   const formattedName = heading.toLowerCase().replace(/\s+/g, '-');
-  const courseUrl = `${window.location.origin}/coursedetails/${formattedName}`;
+  const courseUrl = `${window.location.origin}/courses/${formattedName}`;
   const shareMessage = `Check this course details to gain more knowledge on this: ${heading}`;
 
   try {

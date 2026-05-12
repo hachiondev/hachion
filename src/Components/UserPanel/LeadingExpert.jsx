@@ -314,7 +314,7 @@ useEffect(() => {
   const handleCardClick = (course) => {
     if (!course?.courseName) return;
     const slug = course.courseName.toLowerCase().replace(/\s+/g, "-");
-    navigate(`/coursedetails/${slug}`);
+    navigate(`/courses/${slug}`);
   };
 
   return (

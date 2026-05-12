@@ -12,14 +12,14 @@ export const saveRedirectUrl = (additionalState = {}) => {
 
 export const getRedirectUrl = () => {
   const saved = localStorage.getItem('redirectAfterLogin');
-  if (!saved) return '/coursedetails';
+  if (!saved) return '/courses';
   
   try {
     const state = JSON.parse(saved);
     // Check if redirect is not too old (e.g., within 10 minutes)
     if (Date.now() - state.timestamp > 10 * 60 * 1000) {
       localStorage.removeItem('redirectAfterLogin');
-      return '/coursedetails';
+      return '/courses';
     }
     return state.url;
   } catch {

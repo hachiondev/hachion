@@ -363,7 +363,7 @@ useEffect(() => {
         </div>
       </div>
 
-      <button className="explore-btn" onClick={() => (window.location.href = "/coursedetails")}>
+      <button className="explore-btn" onClick={() => (window.location.href = "/courses")}>
         Explore All Courses
       </button>
     </>

@@ -7,7 +7,7 @@ const LeadingExpertCard = ({ CourseName, image }) => {
 
   const handleViewDetails = () => {
     const formattedCourseName = CourseName.toLowerCase().replace(/\s+/g, '-');
-    navigate(`/coursedetails/${formattedCourseName}`);
+    navigate(`/courses/${formattedCourseName}`);
   };
 
   return (

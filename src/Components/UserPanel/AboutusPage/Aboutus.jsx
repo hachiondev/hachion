@@ -207,7 +207,7 @@ const Aboutus = () => {
 
           <button
             className="home-start-button"
-            onClick={() => navigate("/coursedetails")}
+            onClick={() => navigate("/courses")}
           >
             Start Learning Today
           </button>

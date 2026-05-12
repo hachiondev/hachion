@@ -178,7 +178,7 @@ export default function UserEnrolledCourses() {
         )}
       </div>
 
-      <button className="explore-btn" onClick={() => navigate("/coursedetails")}>
+      <button className="explore-btn" onClick={() => navigate("/courses")}>
         Explore All Courses
       </button>
     </>

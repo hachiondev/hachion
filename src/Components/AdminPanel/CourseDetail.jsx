@@ -82,7 +82,7 @@ const CourseDetail = ({
   const [trainers, setTrainers] = useState([]);
   const [inrChecked, setInrChecked] = useState(false);
   const [formData, setFormData] = useState({
-    course_id: "", title: '', courseName: '', shortCourse: '', courseImage: "", youtubeLink: '', numberOfClasses: '', dailySessions: '', courseCategory: "", defaultTrainer: "",
+    course_id: "", title: '', courseName: '', seoH1Title: '',shortCourse: '', courseImage: "", youtubeLink: '', numberOfClasses: '', dailySessions: '', courseCategory: "", defaultTrainer: "",
     starRating: '', level: '', ratingByNumberOfPeople: '', totalEnrollment: '', keyHighlights1: '', keyHighlights2: '', keyHighlights3: '',
     keyHighlights4: '', keyHighlights5: '', keyHighlights6: '', amount: '', discount: '', total: '', samount: '', sdiscount: '', stotal: '', sqamount: '', sqdiscount: '', sqtotal: '', camount: '', cdiscount: '', ctotal: '', mamount: '', mdiscount: '', mtotal: '', iamount: '', idiscount: '', itotal: '', isamount: '', isdiscount: '', istotal: '', isqamount: '', isqdiscount: '', isqtotal: '', icamount: '', icdiscount: '', ictotal: '', imamount: '', imdiscount: '', imtotal: '', mentoring1: '', mentoring2: '', self1: '',
     self2: '', headerTitle: '', courseKeyword: '', courseKeywordDescription: '', aboutCourse: '', courseHighlight: '', courseDescription: '', date: currentDate, whatYouWillLearn: '', numberOfProjects: '', whoIsThisCourseFor: '', careerOpportunities: '', avarageSalaryRange: '', prerequisities: '', liveTraining: '', crashCourse: '', mentoringMode: '', selfPacedLearning: '',
@@ -103,7 +103,7 @@ const CourseDetail = ({
       ) {
         try {
           const response = await axios.get(
-            "https://api.test.hachion.co/trainernames",
+            "http://localhost:8081/trainernames",
             {
               params: {
                 categoryName: formData.courseCategory,
@@ -126,7 +126,7 @@ const CourseDetail = ({
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get("https://api.test.hachion.co/course-categories/all");
+        const response = await axios.get("http://localhost:8081/course-categories/all");
         setCourse(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -138,7 +138,7 @@ const CourseDetail = ({
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get('https://api.test.hachion.co/courses/allforadmin');
+        const response = await axios.get('http://localhost:8081/courses/allforadmin');
         setCategories(response.data);
         setFilteredCourses(response.data);
         setAllCourses(response.data);
@@ -153,6 +153,7 @@ const CourseDetail = ({
     if (!startDate && !endDate) {
       const filtered = allCourses.filter((item) =>
         item.courseName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.seoH1Title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.courseCategory?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.shortCourse?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.date?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -171,6 +172,7 @@ const CourseDetail = ({
 
       const matchSearch =
         item.courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.seoH1Title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.courseCategory?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.shortCourse.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.date.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -286,6 +288,7 @@ const CourseDetail = ({
     const courseData = {
       courseCategory: formData.courseCategory,
       courseName: formData.courseName,
+      seoH1Title: formData.seoH1Title,
       shortCourse: formData.shortCourse,
       ...(formMode === 'Edit' && { defaultTrainer: formData.defaultTrainer }),
       date: currentDate,
@@ -346,7 +349,7 @@ const CourseDetail = ({
     try {
       if (formMode === "Edit") {
         const response = await axios.put(
-          `https://api.test.hachion.co/courses/update/${formData.id}`,
+          `http://localhost:8081/courses/update/${formData.id}`,
           formNewData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
@@ -362,7 +365,7 @@ const CourseDetail = ({
           setShowAddCourse(false);
         }
       } else {
-        const response = await axios.post("https://api.test.hachion.co/courses/addCourseDetails", formNewData, {
+        const response = await axios.post("http://localhost:8081/courses/addCourseDetails", formNewData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
 
@@ -398,7 +401,7 @@ const CourseDetail = ({
   const handleEditClick = async (courseId) => {
     setShowAddCourse(true);
     try {
-      const response = await fetch(`https://api.test.hachion.co/courses/${courseId}`);
+      const response = await fetch(`http://localhost:8081/courses/${courseId}`);
       if (response.ok) {
         const course = await response.json();
 
@@ -406,6 +409,7 @@ const CourseDetail = ({
           id: course.id,
           courseCategory: course.courseCategory,
           courseName: course.courseName,
+          seoH1Title: course.seoH1Title,
           courseImage: course.courseImage,
           shortCourse: course.shortCourse,
           defaultTrainer: course.defaultTrainer || "",
@@ -498,6 +502,7 @@ const CourseDetail = ({
       course_id: "",
       title: '',
       courseName: '',
+      seoH1Title: '',
       shortCourse: '',
       courseImage: null,
       youtubeLink: '',
@@ -533,7 +538,7 @@ const CourseDetail = ({
 
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`https://api.test.hachion.co/courses/delete/${id}`);
+      const response = await axios.delete(`http://localhost:8081/courses/delete/${id}`);
 
       if (response.status === 200) {
         setSuccessMessage("✅ Course deleted successfully.");
@@ -568,7 +573,7 @@ const CourseDetail = ({
     if (!shortCourseValue) return;
 
     try {
-      await axios.get(`https://api.test.hachion.co/courses/shortCourse`, {
+      await axios.get(`http://localhost:8081/courses/shortCourse`, {
         params: { shortCourse: shortCourseValue },
       });
 
@@ -643,6 +648,7 @@ const CourseDetail = ({
   const areMandatoryFieldsFilled = () => {
     const hasCategory = formData.courseCategory?.trim() !== "";
     const hasCourseName = formData.courseName?.trim() !== "";
+    const hasSeoH1Title = formData.seoH1Title?.trim() !== "";
     const hasShortCourse = formData.shortCourse?.trim() !== "";
     const hasDefaultTrainer = formMode === 'Edit'
       ? formData.defaultTrainer?.trim() !== ""
@@ -702,6 +708,7 @@ const CourseDetail = ({
     return (
       hasCategory &&
       hasCourseName &&
+      hasSeoH1Title &&
       hasShortCourse &&
       hasDefaultTrainer &&
       hasClasses &&
@@ -785,7 +792,7 @@ const CourseDetail = ({
         // Delete all selected courses
         await Promise.all(
           selectedIds.map(id =>
-            axios.delete(`https://api.test.hachion.co/courses/delete/${id}`)
+            axios.delete(`http://localhost:8081/courses/delete/${id}`)
           )
         );
 
@@ -946,6 +953,35 @@ const CourseDetail = ({
                 </div>
 
                 <div className="course-row">
+                   <div className="col-md-4">
+                    <label className="form-label">
+                      Seo H1 Title <span style={{ color: "red" }}>*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="seoH1Title"
+
+                      placeholder="Enter Seo H1 Title"
+                      value={formData.seoH1Title}
+                      onChange={(e) => {
+                        handleInputChange(e);
+                        setErrorMessage("");
+                        setDuplicateError(false);
+                      }}
+
+                      required
+
+                      // disabled={formMode === "Edit"}
+                      style={{
+                        width: "100%",
+                        padding: "0.375rem 0.75rem",
+                        border: "1px solid #ced4da",
+                        borderRadius: "0.375rem",
+                        // backgroundColor: formMode === "Edit" ? "#e9ecef" : "#ffffff",
+                       
+                      }}
+                    />
+                  </div>
                   <div className="col-md-4">
                     <label className="form-label">
                       No. of Projects <span style={{ color: "red" }}>*</span>
@@ -1994,6 +2030,7 @@ const CourseDetail = ({
                       <StyledTableCell align="center">Category Name</StyledTableCell>
                       <StyledTableCell align="center">Short Course</StyledTableCell>
                       <StyledTableCell align="center">Course Name</StyledTableCell>
+                      <StyledTableCell align="center">SEO H1 Title</StyledTableCell>
                       <StyledTableCell align="center">Date</StyledTableCell>
                       {/* New Status Column */}
                       <StyledTableCell align="center">Status</StyledTableCell>
@@ -2012,12 +2049,13 @@ const CourseDetail = ({
                         <StyledTableCell align="center">{idx + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
                         <StyledTableCell align="center">
                           {course.courseImage
-                            ? <img src={`https://api.test.hachion.co/${course.courseImage}`} alt="Course" width="50" />
+                            ? <img src={`http://localhost:8081/${course.courseImage}`} alt="Course" width="50" />
                             : 'No Image'}
                         </StyledTableCell>
                         <StyledTableCell align="left">{course.courseCategory}</StyledTableCell>
                         <StyledTableCell align="left">{course.shortCourse}</StyledTableCell>
                         <StyledTableCell align="left">{course.courseName}</StyledTableCell>
+                        <StyledTableCell align="left">{course.seoH1Title}</StyledTableCell>
                         {/* <StyledTableCell align="center">{course.date}</StyledTableCell> */}
                         <StyledTableCell align="center">
                           {course.date

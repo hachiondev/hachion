@@ -26,7 +26,7 @@ const slugify = (text = "") =>
     .replace(/\s+/g, "-")
     .replace(/^-+|-+$/g, "");
 
-const POPUP_DELAY = 5000; // ⏱️ 30 seconds
+const POPUP_DELAY = 30000;
 
 const NewCourseDetails = () => {
   const { courseName } = useParams();
@@ -60,7 +60,7 @@ const NewCourseDetails = () => {
     if (!isLoading && courseData) {
       const correctSlug = slugify(courseData.courseName);
       if (courseName !== correctSlug) {
-        navigate(`/coursedetails/${correctSlug}`, { replace: true });
+        navigate(`/courses/${correctSlug}`, { replace: true });
       }
     }
   }, [courseName, courseData, isLoading, navigate]);
@@ -94,10 +94,17 @@ const NewCourseDetails = () => {
   // }, [courseName, isLoggedIn]);
 
   /** Lock body scroll */
-  useEffect(() => {
-    document.body.style.overflow = showPopup ? "hidden" : "unset";
-    return () => (document.body.style.overflow = "unset");
-  }, [showPopup]);
+ useEffect(() => {
+  if (showPopup) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "auto";
+  }
+
+  return () => {
+    document.body.style.overflow = "auto";
+  };
+}, [showPopup]);
 
   const scrollToDemoClass = () => {
     demoClassRef.current?.scrollIntoView({
@@ -143,7 +150,7 @@ const NewCourseDetails = () => {
           />
           <meta
             property="og:url"
-            content={`https://hachion.co/coursedetails/${courseName}`}
+            content={`https://hachion.co/courses/${courseName}`}
           />
 
           <meta name="robots" content="index, follow" />
@@ -154,10 +161,10 @@ const NewCourseDetails = () => {
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <Link to="/coursedetails">Courses</Link> <MdKeyboardArrowRight />
+              <Link to="/courses">Courses</Link> <MdKeyboardArrowRight />
             </li>
             <li className="breadcrumb-item">
-              <Link to="/coursedetails" state={{ selectedCategory: courseData?.courseCategory }}>
+              <Link to="/courses" state={{ selectedCategory: courseData?.courseCategory }}>
                 {courseData?.courseCategory}
               </Link> <MdKeyboardArrowRight />
             </li>

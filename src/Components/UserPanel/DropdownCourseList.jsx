@@ -66,7 +66,7 @@ const DropdownCourseList = ({ category,onCourseSelect  }) => {
   const handleCourseClick = (title) => {
     setActiveCourse(title);
     const slug = title.toLowerCase().replace(/\s+/g, "-");
-    navigate(`/coursedetails/${slug}`);
+    navigate(`/courses/${slug}`);
     if (onCourseSelect) onCourseSelect(); 
   };
 

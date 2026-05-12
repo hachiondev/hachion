@@ -71,12 +71,12 @@ const SidebarCard = ({
   const formattedName = heading ? heading.toLowerCase().replace(/\s+/g, '-') : '';
 
   const handleNavigation = () => {
-    navigate(`/coursedetails/${formattedName}`);
+    navigate(`/courses/${formattedName}`);
   };
 
   const handleShare = async (e) => {
     e.stopPropagation();
-    const courseUrl = `${window.location.origin}/coursedetails/${formattedName}`;
+    const courseUrl = `${window.location.origin}/courses/${formattedName}`;
     const shareMessage = `Check this course details to gain more knowledge on this: ${heading}`;
 
     try {

@@ -752,15 +752,15 @@ navigate(`/payment/${slug}`, {
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <Link to="/coursedetails">Courses</Link> <MdKeyboardArrowRight />
+              <Link to="/courses">Courses</Link> <MdKeyboardArrowRight />
             </li>
             <li className="breadcrumb-item">
-              <Link to="/coursedetails" state={{ selectedCategory: courseData?.courseCategory }}>
+              <Link to="/courses" state={{ selectedCategory: courseData?.courseCategory }}>
                 {courseData?.courseCategory}
               </Link> <MdKeyboardArrowRight />
             </li>
             <li className="breadcrumb-item">
-              <Link to={`/coursedetails/${courseSlug}`}>
+              <Link to={`/courses/${courseSlug}`}>
                 {courseData?.courseName}
               </Link> <MdKeyboardArrowRight />
             </li>

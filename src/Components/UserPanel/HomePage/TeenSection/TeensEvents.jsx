@@ -157,7 +157,7 @@ const summerCourses = useMemo(() => {
   const handleCardClick = (course) => {
     if (!course?.courseName) return;
     const courseSlug = course.courseName.toLowerCase().replace(/\s+/g, "-");
-    navigate(`/coursedetails/${courseSlug}`);
+    navigate(`/courses/${courseSlug}`);
   };
 
   const loading = loadingSummer || loadingCourses;

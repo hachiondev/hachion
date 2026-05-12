@@ -33,7 +33,7 @@ const PopupBanner = () => {
   }, []);
 
   const handleClose = () => setShowPopup(false);
-  const handleExploreMore = () => navigate("/coursedetails");
+  const handleExploreMore = () => navigate("/courses");
 
   // Close popup when clicking outside
   useEffect(() => {
@@ -60,7 +60,7 @@ const PopupBanner = () => {
         <button className="close-popup" onClick={handleClose}>
           <RiCloseCircleLine size={24} />
         </button>
-        <a href="/coursedetails">
+        <a href="/courses">
          <img
   src={`https://api.test.hachion.co/uploads/test/banner_images/${popupBanner.banner_image}`}
   alt="Popup Banner"

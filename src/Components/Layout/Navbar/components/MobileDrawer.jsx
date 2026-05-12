@@ -39,14 +39,14 @@ export default function MobileDrawer({ isOpen, onClose, isLoggedIn, userData, na
               <div className="drawer-item" onClick={() => navigate("/userdashboard/review")}><MdOutlineRateReview /> Review</div>
               <div className="drawer-item" onClick={() => navigate("/userdashboard/pathfinder")}><CgPathOutline /> Pathfinder</div>
 
-              <div className="drawer-item" onClick={() => navigate("/coursedetails")}>Explore Courses</div>
+              <div className="drawer-item" onClick={() => navigate("/courses")}>Explore Courses</div>
               <div className="drawer-item" onClick={() => navigate("/corporate")}>Corporate Training</div>
 
               <button className="btn btn-info rounded-pill w-100 text-white mt-3" onClick={handleLogout}><MdLogout /> Logout</button>
             </>
           ) : (
             <>
-              <div className="drawer-item" onClick={() => navigate("/coursedetails")}>Explore Courses</div>
+              <div className="drawer-item" onClick={() => navigate("/courses")}>Explore Courses</div>
               <div className="drawer-item" onClick={() => navigate("/corporate")}>Corporate Training</div>
               <Link to="/login" className="btn btn-outline-info rounded-pill w-100 mt-3 fw-bold">Log In</Link>
               <Link to="/register" className="btn btn-info rounded-pill w-100 mt-2 text-white fw-bold">Sign Up</Link>

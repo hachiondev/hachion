@@ -207,7 +207,7 @@ const NavbarTop = () => {
   const handleCourseClick = (item) => {
     if (item.type === "course") {
       const slug = item.courseName.toLowerCase().replace(/\s+/g, "-");
-      navigate(`/coursedetails/${slug}`);
+      navigate(`/courses/${slug}`);
     } else {
       const slug = item.title.toLowerCase().replace(/\s+/g, "-");
       navigate(`/blogs/${item.category_name}/${slug}-${item.id}`);
@@ -314,7 +314,7 @@ const NavbarTop = () => {
                             <button
                               className="dropdown-all-btn"
                               onClick={() => {
-                                navigate("/coursedetails");
+                                navigate("/courses");
                                 setIsDropdownOpen(false); // ← add this
                               }}
 
@@ -578,7 +578,7 @@ const NavbarTop = () => {
                 <CgPathOutline /> Pathfinder
               </div>
 
-              <div className="drawer-item" onClick={() => { navigate("/coursedetails"); setDrawerOpen(false); }}>
+              <div className="drawer-item" onClick={() => { navigate("/courses"); setDrawerOpen(false); }}>
                 Explore Courses
               </div>
               <div className="drawer-item" onClick={() => { navigate("/corporate"); setDrawerOpen(false); }}>
@@ -594,7 +594,7 @@ const NavbarTop = () => {
             </>
           ) : (
             <>
-              <div className="drawer-item" onClick={() => { navigate("/coursedetails"); setDrawerOpen(false); }}>
+              <div className="drawer-item" onClick={() => { navigate("/courses"); setDrawerOpen(false); }}>
                 Explore Courses
               </div>
               <div className="drawer-item" onClick={() => { navigate("/corporate"); setDrawerOpen(false); }}>

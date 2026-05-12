@@ -157,15 +157,15 @@ if (confirmedEmail !== email) {
           console.error('Error saving to localStorage:', err);
         }
 
-        // const redirectPath = localStorage.getItem('redirectAfterLogin') || '/coursedetails';
+        // const redirectPath = localStorage.getItem('redirectAfterLogin') || '/courses';
         // localStorage.removeItem('redirectAfterLogin');
         // window.location.href = redirectPath;
               // 🔥 Get redirect URL from utility
       const redirectPath = getRedirectUrl();
       clearRedirectUrl(); // Clear after getting
       
-      // If no redirect saved, default to '/coursedetails'
-      window.location.href = redirectPath || '/coursedetails';
+      // If no redirect saved, default to '/courses'
+      window.location.href = redirectPath || '/courses';
 
       } else {
         console.log('FAILED - Showing error message');

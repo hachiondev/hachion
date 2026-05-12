@@ -55,7 +55,7 @@ const Sitemap = () => {
         .toLowerCase()
         .replace(/\s+/g, "-")
         .replace(/[^a-z0-9\-]/g, ""); 
-      navigate(`/coursedetails/${formattedName}`);
+      navigate(`/courses/${formattedName}`);
     }
   };
   return (
@@ -81,7 +81,7 @@ const Sitemap = () => {
               {Category.map((item, index) => (
                 <div key={index} class="col-12 col-md-6">
                   <p class="txtCategory mt-2">
-                    <a href="/coursedetails">{item.name}</a>
+                    <a href="/courses">{item.name}</a>
                   </p>
                 </div>
               ))}

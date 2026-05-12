@@ -33,7 +33,7 @@ const normalizeCourseNameFromSlug = (slug) => {
 const Footer = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const isCourseDetailPage = location.pathname.startsWith("/coursedetails/");
+  const isCourseDetailPage = location.pathname.startsWith("/courses/");
 
   const { data: trendingCourses = [], isLoading } = useTrendingData();
   const { whatsappNumber, whatsappLink } = useTopBarApi();
@@ -75,7 +75,7 @@ const Footer = () => {
 
   const handleNavigation = (courseName) => {
     const formatted = courseName.toLowerCase().replace(/\s+/g, "-");
-    navigate(`/coursedetails/${formatted}`);
+    navigate(`/courses/${formatted}`);
   };
 
   return (

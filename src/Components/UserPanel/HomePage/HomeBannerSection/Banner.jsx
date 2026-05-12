@@ -47,7 +47,7 @@
 //             Start Your Certification
 //           </button>
 
-//           <Link to="/coursedetails" className="home-browse-button">
+//           <Link to="/courses" className="home-browse-button">
 //           Browse All Courses
 //         </Link>
 //         </div>
@@ -136,7 +136,7 @@ const Banner = () => {
                 Start Your Certification
               </button>
 
-              <Link to="/coursedetails" className="home-browse-button">
+              <Link to="/courses" className="home-browse-button">
                 Browse All Courses
               </Link>
             </div>
@@ -171,7 +171,7 @@ const Banner = () => {
                 Start Your Certification
               </button>
 
-              <Link to="/coursedetails" className="home-browse-button">
+              <Link to="/courses" className="home-browse-button">
                 Browse All Courses
               </Link>
             </div>

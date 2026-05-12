@@ -778,7 +778,7 @@ const formatDate = (dateString) => {
             </Link>
           </div>
           <div>
-            <Link to="/coursedetails" className="EnrollPay-btn">
+            <Link to="/courses" className="EnrollPay-btn">
               Browse Courses
             </Link>
           </div>

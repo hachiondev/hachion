@@ -333,7 +333,7 @@ const DiscountCards = () => {
   const handleCardClick = (course) => {
     if (!course?.courseName) return;
     const courseSlug = course.courseName.toLowerCase().replace(/\s+/g, "-");
-    navigate(`/coursedetails/${courseSlug}`);
+    navigate(`/courses/${courseSlug}`);
   };
 
   return (

@@ -393,7 +393,7 @@ const ExploreDeals = () => {
     const slug = course.courseName
       .toLowerCase()
       .replace(/\s+/g, '-');
-    navigate(`/coursedetails/${slug}`);
+    navigate(`/courses/${slug}`);
   };
 
   return (

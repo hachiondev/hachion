@@ -238,7 +238,7 @@ useEffect(() => {
   const handleCardClick = (course) => {
     if (!course?.courseName) return;
     const courseSlug = course.courseName.toLowerCase().replace(/\s+/g, '-');
-    navigate(`/coursedetails/${courseSlug}`);
+    navigate(`/courses/${courseSlug}`);
   };
   
   const updateTotalCards = (total) => {
@@ -506,7 +506,7 @@ useEffect(() => {
               amount={`${currency} ${fmt(99)}`}
               totalAmount={`${fmt(199)}`}
               level="Beginner"
-              staticButtonLink="/coursedetails/python"
+              staticButtonLink="/courses/python"
               className="course-card"
             />
 

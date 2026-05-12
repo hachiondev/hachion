@@ -273,3 +273,6 @@
 .popup-buttons button {
   min-width: 100px;
 }
+.MuiPickersPopper-root {
+  z-index: 999999 !important;
+}

@@ -36,7 +36,7 @@ const Sitemap = () => {
   }
 
   const handleCategoryClick = (categoryName) => {
-    navigate("/coursedetails", {
+    navigate("/courses", {
       state: { selectedCategory: categoryName }
     });
   };
@@ -44,7 +44,7 @@ const Sitemap = () => {
   const handleCourseDetails = (coursename) => {
     if (coursename) {
       const formatted = coursename.toLowerCase().replace(/\s+/g, "-");
-      navigate(`/coursedetails/${formatted}`);
+      navigate(`/courses/${formatted}`);
     }
   };
   return (

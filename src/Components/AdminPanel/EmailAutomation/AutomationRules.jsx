@@ -849,14 +849,34 @@ if (
 
       {/* TIME PICKER */}
 
-      <TimePicker
-        label="Select Time"
-        ampm={true}
-        value={editSendTime}
-        onChange={(newValue) =>
-          setEditSendTime(newValue)
-        }
-      />
+     <TimePicker
+  label="Select Time"
+  ampm={true}
+  value={editSendTime}
+  onChange={(newValue) =>
+    setEditSendTime(newValue)
+  }
+  renderInput={(params) => (
+    <TextField {...params} />
+  )}
+  slotProps={{
+    popper: {
+      sx: {
+        zIndex: 999999
+      }
+    }
+  }}
+  sx={{
+    "& .MuiInputBase-root": {
+      width: "100%",
+      height: "42px",
+      background: "#fff"
+    },
+    "& .MuiIconButton-root": {
+      color: "#00aeef"
+    }
+  }}
+/>
 
       {/* FREQUENCY */}
 

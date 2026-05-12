@@ -25,8 +25,8 @@ export default function StudentsSay({ onCta }) {
 
   const navigate = useNavigate();
   const handleCta = onCta || (() => {
-    console.log("Navigating to /coursedetails");
-    navigate("/coursedetails");
+    console.log("Navigating to /courses");
+    navigate("/courses");
   });
 
   /* ===============================

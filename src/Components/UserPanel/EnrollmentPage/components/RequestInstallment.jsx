@@ -119,7 +119,7 @@ const RequestInstallment = ({
 
         setTimeout(() => {
           navigate(
-            `/coursedetails/${courseName.toLowerCase().replace(/\s+/g, "-")}`
+            `/courses/${courseName.toLowerCase().replace(/\s+/g, "-")}`
           );
         }, 5000);
       } else {

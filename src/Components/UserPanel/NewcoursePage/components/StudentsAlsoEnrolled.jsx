@@ -34,7 +34,7 @@ export default function StudentsAlsoEnrolled() {
           {/* Optional button */}
           {/* 
           <button
-            onClick={() => navigate("/coursedetails")}
+            onClick={() => navigate("/courses")}
             className={styles.homeStartButton}
           >
             Explore courses

@@ -705,10 +705,10 @@ amount = Math.round(amount);
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <Link to="/coursedetails">Courses</Link> <MdKeyboardArrowRight />
+              <Link to="/courses">Courses</Link> <MdKeyboardArrowRight />
             </li>
             <li className="breadcrumb-item">
-              <Link to={`/coursedetails/${courseSlug}`}>{courseData?.courseName} </Link> <MdKeyboardArrowRight />
+              <Link to={`/courses/${courseSlug}`}>{courseData?.courseName} </Link> <MdKeyboardArrowRight />
             </li>
             <li className="breadcrumb-item">
               <Link to={`/enroll/${courseSlug}`}>Enroll {courseData?.courseName} </Link> <MdKeyboardArrowRight />

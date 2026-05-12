@@ -933,26 +933,30 @@ const formatDate = (dateStr) => {
     setShowAddCourse(true);
   };
 
-  const isFormValid = () => {
-    const safeTrim = (val) => (val ?? "").trim();
+ const isFormValid = () => {
+  const safeTrim = (val) => (val ?? "").trim();
 
-    return (
-      safeTrim(studentData.userName) !== "" &&
-      safeTrim(studentData.email) !== "" &&
-      safeTrim(studentData.mobile).length === 10 &&
-      safeTrim(studentData.whatsapp).length === 10 &&
-      safeTrim(studentData.country) !== "" || selectedCountry.code !== ""&&
-      // safeTrim(studentData.location) !== "" &&
-      safeTrim(studentData.time_zone) !== "" &&
-      safeTrim(studentData.analyst_name) !== "" && 
-      safeTrim(studentData.seoTeam) !== "" &&
-      safeTrim(studentData.stateCity) !== "" &&
-      safeTrim(studentData.leadStatus) !== "" &&
-      safeTrim(studentData.status) !== "" 
-      // safeTrim(studentData.remarks).length >= 15 &&
-      // safeTrim(studentData.comments) !== ""
-    );
-  };
+  return (
+    safeTrim(studentData.userName) !== "" &&
+    safeTrim(studentData.email) !== "" &&
+    safeTrim(studentData.mobile).length === 10 &&
+    safeTrim(studentData.whatsapp).length === 10 &&
+
+    (
+      safeTrim(studentData.country) !== "" ||
+      safeTrim(selectedCountry.code) !== ""
+    ) &&
+
+    // safeTrim(studentData.location) !== "" &&
+
+    safeTrim(studentData.time_zone) !== "" &&
+    safeTrim(studentData.analyst_name) !== "" &&
+    safeTrim(studentData.seoTeam) !== "" &&
+    safeTrim(studentData.stateCity) !== "" &&
+    safeTrim(studentData.leadStatus) !== "" &&
+    safeTrim(studentData.status) !== ""
+  );
+};
 
   // ADDED: Handle Select All checkbox
   const handleSelectAll = (event) => {

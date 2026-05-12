@@ -108,10 +108,10 @@ export const Home = () => {
 {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
-  "@id": "https://www.hachion.co/coursedetails/salesforce-admin",
+  "@id": "https://www.hachion.co/courses/salesforce-admin",
   "name": "Salesforce Admin Course Training and Placement Online",
   "image": "https://www.hachion.co/Certificate_Of_Hachion.jpg",
-  "url": "https://www.hachion.co/coursedetails/salesforce-admin",
+  "url": "https://www.hachion.co/courses/salesforce-admin",
   "telephone": "+1 732-485-2499",
   "priceRange": "$400 to $500",
   "description": "Salesforce admin course training and placement online at Hachion offers Salesforce admin training and job placement support with Salesforce Admin Certification.",
@@ -138,35 +138,35 @@ export const Home = () => {
                 "position": 1,
                 "name": "Security Operations Center",
                 "description": "SOC Analyst Training",
-                "url": "https://www.hachion.co/coursedetails/security-operations-center-(soc)-analyst"
+                "url": "https://www.hachion.co/courses/security-operations-center-(soc)-analyst"
               },
               {
                 "@type": "SiteNavigationElement",
                 "position": 2,
                 "name": "Agentic AI Training",
                 "description": "Agentic AI Certification Course",
-                "url": "https://www.hachion.co/coursedetails/agentic-ai"
+                "url": "https://www.hachion.co/courses/agentic-ai"
               },
               {
                 "@type": "SiteNavigationElement",
                 "position": 3,
                 "name": "Cyber Security Training",
                 "description": "Cyber Security Certification",
-                "url": "https://www.hachion.co/coursedetails/cyber-security"
+                "url": "https://www.hachion.co/courses/cyber-security"
               },
               {
                 "@type": "SiteNavigationElement",
                 "position": 4,
                 "name": "Data Science with Python",
                 "description": "Data Science Training",
-                "url": "https://www.hachion.co/coursedetails/data-science-with-python"
+                "url": "https://www.hachion.co/courses/data-science-with-python"
               },
               {
                 "@type": "SiteNavigationElement",
                 "position": 5,
                 "name": "Salesforce Admin Training",
                 "description": "Salesforce Administrator Training",
-                "url": "https://www.hachion.co/coursedetails/salesforce-admin"
+                "url": "https://www.hachion.co/courses/salesforce-admin"
               }
             ]
           }

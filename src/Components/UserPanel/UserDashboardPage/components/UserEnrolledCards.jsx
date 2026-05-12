@@ -32,7 +32,7 @@ const UserEnrolledCards = ({
   const formattedName = heading ? heading.toLowerCase().replace(/\s+/g, "-") : "";
 
   const handleNavigation = () => {
-    navigate(`/coursedetails/${formattedName}`, {
+    navigate(`/courses/${formattedName}`, {
       state: { courseData, activeTab },
     });
   };

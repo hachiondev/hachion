@@ -10,7 +10,6 @@ import NewEnrollNow from "../../NewEnrollmentPage/NewEnrollNow";
 import { useCourseByName } from "../../../../Api/hooks/CourseApi/useCourseByName";
 import { Helmet } from "react-helmet-async";
 
-
 import { useCurrency } from "../../../../Api/hooks/CourseApi/useCurrency";
 import { useCourseDiscountRule } from "../../../../Api/hooks/CourseApi/useCourseDiscountRule";
 import dayjs from "dayjs";
@@ -187,7 +186,11 @@ export default function CourseBanner({ onEnroll }) {
   }
 
   const level = course.level || "Beginner level";
-  const title = course.courseName || "Course";
+  // const title = course.courseName || "Course";
+  const title =
+  course.seoH1Title?.trim() ||
+  course.courseName ||
+  "Course";
 
   const subtitle =
     stripHtml(course.aboutCourse) ||
@@ -202,7 +205,7 @@ export default function CourseBanner({ onEnroll }) {
 
   const seoKeywords = course.metaKeyword || "";
 
-  const canonicalUrl = `https://www.hachion.co/coursedetails/${encodeURIComponent(courseName)}`;
+  const canonicalUrl = `https://www.hachion.co/courses/${encodeURIComponent(courseName)}`;
 
   const breadcrumbSchema = {
   "@context": "https://schema.org",
@@ -229,7 +232,7 @@ export default function CourseBanner({ onEnroll }) {
   ]
 };
   const ogImage = course.courseImage
-    ? `https://api.test.hachion.co/${course.courseImage}`
+    ? `http://localhost:8081/${course.courseImage}`
     : heroImage;
 
   const author =
@@ -435,7 +438,7 @@ export default function CourseBanner({ onEnroll }) {
 
     if (brochureItem) {
       const filename = brochureItem.brochure_pdf.split("/").pop();
-      const url = `https://api.test.hachion.co/uploads/test/curriculum/pdfs/brochurepdf/${filename}`;
+      const url = `http://localhost:8081/uploads/test/curriculum/pdfs/brochurepdf/${filename}`;
       window.open(url, "_blank");
       return;
     }
@@ -447,7 +450,7 @@ export default function CourseBanner({ onEnroll }) {
 
     if (curriculumItem) {
       const filename = curriculumItem.curriculum_pdf.split("/").pop();
-      const url = `https://api.test.hachion.co/uploads/test/curriculum/pdfs/${filename}`;
+      const url = `http://localhost:8081/uploads/test/curriculum/pdfs/${filename}`;
       window.open(url, "_blank");
       return;
     }

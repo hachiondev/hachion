@@ -22,16 +22,17 @@ const DropdownCourseList = ({ category,onCourseSelect  }) => {
         const mapped = rows.map((row) => ({
           id: row[0],
           courseName: row[1],
-          courseImage: row[2],
-          numberOfClasses: row[3],
-          level: row[4],
-          amount: row[5],
-          discount: row[6],
-          total: row[7],
-          iamount: row[8],
-          idiscount: row[9],
-          itotal: row[10],
-          courseCategory: row[11],
+          seoH1Title: row[2],
+          courseImage: row[3],
+          numberOfClasses: row[4],
+          level: row[5],
+          amount: row[6],
+          discount: row[7],
+          total: row[8],
+          iamount: row[9],
+          idiscount: row[10],
+          itotal: row[11],
+          courseCategory: row[12],
         }));
 
         if (isMounted) setCourses(mapped);

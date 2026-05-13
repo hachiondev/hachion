@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { IoIosMail } from "react-icons/io";
 import { FaPhone } from "react-icons/fa6";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../Components/UserPanel/Style.css';
 import { useTopBarApi } from '../../Api/hooks/HomePageApi/useTopBarApi';
 

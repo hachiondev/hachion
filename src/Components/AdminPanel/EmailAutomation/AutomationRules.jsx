@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './AutomationRules.css';
+import './AutomationRules.module.css';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';

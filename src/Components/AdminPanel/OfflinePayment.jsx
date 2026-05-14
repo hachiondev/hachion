@@ -90,6 +90,8 @@ export default function OfflinePayment() {
   const [reminderEnabled, setReminderEnabled] = useState(true); 
   const [cadRate, setCadRate] = useState(1);
   const [inrRate, setInrRate] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isInvoiceSent, setIsInvoiceSent] = useState(false);
   const [paymentData, setPaymentData] = useState({
     id: "",
     student_ID: "",
@@ -194,7 +196,7 @@ export default function OfflinePayment() {
       try {
         
         const deletePromises = selectedIds.map(id => 
-          axios.delete(`http://localhost:8081/payments/${id}`)
+          axios.delete(`https://api.test.hachion.co/payments/${id}`)
         );
         
         await Promise.all(deletePromises);
@@ -287,7 +289,7 @@ export default function OfflinePayment() {
       return;
     }
     try {
-      const response = await axios.delete(`http://localhost:8081/payments/${id}`);
+      const response = await axios.delete(`https://api.test.hachion.co/payments/${id}`);
 
       if (response.status === 200) {
         setSuccessMessage("✅ Payment deleted successfully.");
@@ -368,7 +370,7 @@ const handleReminderToggle = async (event) => {
   try {
     
     const response = await axios.put(
-      "http://localhost:8081/payments/stop-reminder",
+      "https://api.test.hachion.co/payments/stop-reminder",
       {
         stopReminder: stopReminderValue,
         courseName: paymentData.course_name,
@@ -382,10 +384,14 @@ const handleReminderToggle = async (event) => {
       }
     );
 
-    if (response.data?.success) {
-      setSuccessMessage(`✅ Reminder ${stopReminderValue} successfully.`);
-      setErrorMessage("");
-    } else {
+   if (response.data?.success) {
+  setSuccessMessage(`✅ Reminder ${stopReminderValue} successfully.`);
+  await fetchPayments();
+
+  setShowAddCourse(false);
+
+  setErrorMessage("");
+} else {
       setErrorMessage("⚠️ Failed to update reminder status.");
       setSuccessMessage("");
     }
@@ -400,7 +406,7 @@ const handleReminderToggle = async (event) => {
     const fetchByStudentId = async () => {
       if (paymentData.student_ID) {
         try {
-          const res = await fetch(`http://localhost:8081/payments/studentInfo?studentId=${paymentData.student_ID}`);
+          const res = await fetch(`https://api.test.hachion.co/payments/studentInfo?studentId=${paymentData.student_ID}`);
           const data = await res.json();
           setPaymentData((prev) => ({
             ...prev,
@@ -421,7 +427,7 @@ const handleReminderToggle = async (event) => {
     const fetchByEmail = async () => {
       if (paymentData.email) {
         try {
-          const res = await fetch(`http://localhost:8081/payments/studentInfo?email=${paymentData.email}`);
+          const res = await fetch(`https://api.test.hachion.co/payments/studentInfo?email=${paymentData.email}`);
           const data = await res.json();
           setPaymentData((prev) => ({
             ...prev,
@@ -442,7 +448,7 @@ const handleReminderToggle = async (event) => {
     const fetchByMobile = async () => {
       if (paymentData.mobile) {
         try {
-          const res = await fetch(`http://localhost:8081/payments/studentInfo?mobile=${paymentData.mobile}`);
+          const res = await fetch(`https://api.test.hachion.co/payments/studentInfo?mobile=${paymentData.mobile}`);
           const data = await res.json();
           setPaymentData((prev) => ({
             ...prev,
@@ -459,58 +465,12 @@ const handleReminderToggle = async (event) => {
     fetchByMobile();
   }, [paymentData.mobile]);
   
-//   useEffect(() => {
-//     const fetchCourseFee = async () => {
-//       if (paymentData.course_name) {
-//         try {
-//           const res = await fetch(`http://localhost:8081/payments/courseFee?courseName=${encodeURIComponent(paymentData.course_name)}`);
-//           const data = await res.json();
-//           // if (data && data.courseFee !== undefined) {
-//           //   setPaymentData((prev) => ({
-//           //     ...prev,
-//           //     course_fee: data.courseFee
-//           //   }));
-//           // }
-//          if (data) {
-//   let finalAmount = "";
-
-//   // ❌ No currency selected → don't show fee
-//   if (!paymentData.currency) {
-//     finalAmount = "";
-//   }
-//   // ✅ INR
-//   else if (paymentData.currency === "INR") {
-//     finalAmount = data.inrAmount;
-//   }
-//   // ✅ USD
-//   else if (paymentData.currency === "USD") {
-//     finalAmount = data.usdAmount;
-//   }
-//   // ✅ Other currencies
-//   else {
-//     finalAmount = Math.round(data.usdAmount * exchangeRate);
-//   }
-
-//   setPaymentData((prev) => ({
-//     ...prev,
-//     course_fee: finalAmount
-//   }));
-// }
-//         } catch (error) {
-//           console.error("Error fetching course fee:", error);
-//         }
-//       }
-//     };
-
-//     fetchCourseFee();
-//   // }, [paymentData.course_name]);
-//   }, [paymentData.course_name, paymentData.currency, exchangeRate]);
 useEffect(() => {
   const fetchCourseFee = async () => {
     if (paymentData.course_name) {
       try {
         const res = await fetch(
-          `http://localhost:8081/payments/courseFee?courseName=${encodeURIComponent(paymentData.course_name)}`
+          `https://api.test.hachion.co/payments/courseFee?courseName=${encodeURIComponent(paymentData.course_name)}`
         );
         const data = await res.json();
 
@@ -592,39 +552,47 @@ useEffect(() => {
   fetchExchangeRates();
 
 }, []);
-  useEffect(() => {
-    axios.get("http://localhost:8081/payments")
-      .then((response) => {
-        const normalizedData = response.data.map((item) => ({
-          id: item.paymentId,
-          student_ID: item.studentId,
-          student_name: item.studentName,
-          email: item.email,
-          mobile: item.mobile,
-          course_name: item.courseName,
-          currency: item.currency,
-          course_fee: item.courseFee,
-          installments: item.noOfInstallments,
-          tax: item.tax,
-          discount: item.discount,
-          days: item.noOfDays,
-          total: item.totalAmount,
-          balance: item.balancePay,
-          date: item.installments?.[0]?.payDate || "",
-          rawInstallments: item.installments,
-          invoiceNumber: item.invoiceNumber,
-          status: item.status,
-          
-reminderEnabled: item.stopReminder === "stop" ? false : true
+const fetchPayments = async () => {
+  try {
 
-        }));
-        setOfflinePayment(normalizedData);
-        setFilteredPayment(normalizedData);
-      })
-      .catch((error) => {
-        console.error("❌ Failed to fetch payments:", error);
-      });
-  }, []);
+    const response = await axios.get("https://api.test.hachion.co/payments");
+
+    const normalizedData = response.data.map((item) => ({
+      id: item.paymentId,
+      student_ID: item.studentId,
+      student_name: item.studentName,
+      email: item.email,
+      mobile: item.mobile,
+      course_name: item.courseName,
+      currency: item.currency,
+      course_fee: item.courseFee,
+      installments: item.noOfInstallments,
+      tax: item.tax,
+      discount: item.discount,
+      days: item.noOfDays,
+      total: item.totalAmount,
+      balance: item.balancePay,
+      date: item.installments?.[0]?.payDate || "",
+      rawInstallments: item.installments,
+      invoiceNumber: item.invoiceNumber,
+      status: item.status,
+
+      reminderEnabled: item.stopReminder === "stop" ? false : true
+    }));
+
+    setOfflinePayment(normalizedData);
+    setFilteredPayment(normalizedData);
+
+  } catch (error) {
+
+    console.error("❌ Failed to fetch payments:", error);
+
+  }
+};
+
+useEffect(() => {
+  fetchPayments();
+}, []);
 
   useEffect(() => {
     const filteredData = offlinePayment.filter((item) => {
@@ -734,7 +702,25 @@ if (!count || count <= 0) {
       Rows(updatedRows);
     }
   };
+useEffect(() => {
+  if (successMessage) {
+    const timer = setTimeout(() => {
+      setSuccessMessage("");
+    }, 5000);
 
+    return () => clearTimeout(timer);
+  }
+}, [successMessage]);
+
+useEffect(() => {
+  if (errorMessage) {
+    const timer = setTimeout(() => {
+      setErrorMessage("");
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }
+}, [errorMessage]);
   const handleRowChange = (index, e) => {
     const { name, value, files } = e.target;
     const updatedRows = [...rows];
@@ -817,7 +803,7 @@ if (!count || count <= 0) {
     });
 
     try {
-      const response = await axios.post("http://localhost:8081/payments", formData, {
+      const response = await axios.post("https://api.test.hachion.co/payments", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -828,7 +814,8 @@ if (!count || count <= 0) {
         setSelectedPaymentId(response.data.paymentId);
         setInvoiceNumber(response.data.invoiceNumber);
         setIsSaved(true);
-
+await fetchPayments();
+setShowAddCourse(false);
         if (response.data.invoiceNumber) {
           setInvoiceNumber(response.data.invoiceNumber);
         } else {
@@ -836,20 +823,13 @@ if (!count || count <= 0) {
         }
       }
     } catch (error) {
-      setErrorMessage("❌ Error adding payment. Please try again.");
-    }
+    console.error("❌ Error:", error);
+    // Use the error message from the backend if it exists
+    const serverMessage = error.response?.data?.message || "Something went wrong. Please try again.";
+    setErrorMessage(`❌ ${serverMessage}`);
+}
   };
 
-  // const handleDateFilter = () => {
-  //   const filtered = offlinePayment.filter((item) => {
-  //     const itemDate = dayjs(item.date);
-  //     return (
-  //       (!startDate || itemDate.isAfter(dayjs(startDate).subtract(1, 'day'))) &&
-  //       (!endDate || itemDate.isBefore(dayjs(endDate).add(1, 'day')))
-  //     );
-  //   });
-  //   setFilteredPayment(filtered);
-  // };
 const handleDateFilter = async () => {
 
   const filtered = offlinePayment.filter((item) => {
@@ -870,7 +850,7 @@ const handleDateFilter = async () => {
     const end = dayjs(endDate).format("YYYY-MM-DD");
 
     const response = await axios.get(
-      `http://localhost:8081/payments/payment-summary?startDate=${start}&endDate=${end}`
+      `https://api.test.hachion.co/payments/payment-summary?startDate=${start}&endDate=${end}`
     );
 
     setSummaryData(response.data);
@@ -925,7 +905,7 @@ const handleDateFilter = async () => {
     };
 
     try {
-      await axios.post("http://localhost:8081/payments/generateInvoice", invoicePayload);
+      await axios.post("https://api.test.hachion.co/payments/generateInvoice", invoicePayload);
       setSuccessMessage("📩 Invoice generated and sent to email.");
     } catch (err) {
       console.error("❌ Invoice generation failed:", err);
@@ -999,7 +979,7 @@ const handleDateFilter = async () => {
     }));
     
     try {
-      const response = await axios.put(`http://localhost:8081/payments/${selectedPaymentId}`, formData, {
+      const response = await axios.put(`https://api.test.hachion.co/payments/${selectedPaymentId}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -1011,6 +991,9 @@ const handleDateFilter = async () => {
         setSelectedPaymentId(response.data.paymentId);
         setInvoiceNumber(response.data.invoiceNumber);
         setIsSaved(true);
+        await fetchPayments();
+
+setShowAddCourse(false);
       }
     } catch (error) {
       setSuccessMessage("");
@@ -1037,7 +1020,7 @@ const handleDateFilter = async () => {
         reminderEnabled: reminderEnabled
       };
 
-      const response = await axios.post("http://localhost:8081/payments/reminder", reminderPayload, {
+      const response = await axios.post("https://api.test.hachion.co/payments/reminder", reminderPayload, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -1045,6 +1028,7 @@ const handleDateFilter = async () => {
 
       if (response.status === 200) {
         setSuccessMessage("✅ Reminder sent successfully.");
+        await fetchPayments();
       } else {
         setErrorMessage("⚠️ Reminder not sent.");
       }
@@ -1055,6 +1039,9 @@ const handleDateFilter = async () => {
 
   const handleSaveAndSendInvoice = async (e) => {
     e.preventDefault();
+    if (isLoading) return; // Prevent double execution
+
+  setIsLoading(true);
     setSuccessMessage("");
     setErrorMessage("");
 
@@ -1079,6 +1066,7 @@ const handleDateFilter = async () => {
       email: paymentData.email,
       mobile: paymentData.mobile,
       courseName: paymentData.course_name,
+      currency: paymentData.currency,
       courseFee: parseFloat(paymentData.course_fee),
       tax: parseFloat(paymentData.tax),
       discount: parseFloat(paymentData.discount),
@@ -1100,7 +1088,7 @@ const handleDateFilter = async () => {
     });
 
     try {
-      const saveResponse = await axios.post("http://localhost:8081/payments", formData, {
+      const saveResponse = await axios.post("https://api.test.hachion.co/payments", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -1140,22 +1128,82 @@ const handleDateFilter = async () => {
           })),
         };
 
-        await axios.post("http://localhost:8081/payments/generateInvoice", invoicePayload);
+        await axios.post("https://api.test.hachion.co/payments/generateInvoice", invoicePayload);
         setSuccessMessage("📩 Invoice generated and sent to email.");
+        setIsInvoiceSent(true);
+        await fetchPayments();
+        setIsLoading(false);
+        setShowAddCourse(false);
       }
-    } catch (error) {
-      console.error("❌ Error:", error);
-      setErrorMessage("❌ Something went wrong. Please try again.");
-    }
+   } catch (error) {
+    console.error("❌ Error:", error);
+    // Use the error message from the backend if it exists
+    const serverMessage = error.response?.data?.message || "Something went wrong. Please try again.";
+    setErrorMessage(`❌ ${serverMessage}`);
+}
   };
-  
   const handleAddTrendingCourseClick = () => {
-    setShowAddCourse(true);
-    
-    setReminderEnabled(true);
-    setFormMode("Add");
-  }
 
+  setSuccessMessage("");
+  setErrorMessage("");
+
+  setIsSaved(false);
+  setIsInvoiceSent(false);
+  setIsLoading(false);
+
+  setSelectedPaymentId(null);
+  setInvoiceNumber("");
+  setLastModifiedInstallmentId(null);
+
+  setReminderEnabled(true);
+
+  setPaymentData({
+    id: "",
+    student_ID: "",
+    student_name: "",
+    email: "",
+    mobile: "",
+    course_name: "",
+    course_fee: "",
+    tax: "",
+    discount: "",
+    installments: "",
+    days: "",
+    pay_date: "",
+    due_date: "",
+    method: "",
+    actual_pay: "",
+    received_pay: "",
+    reference: "",
+    total: "",
+    balance: "",
+    status: "",
+    invoiceNumber: "",
+    date: currentDate,
+    selectedInstallmentId: null,
+    reminderEnabled: true,
+    currency: "",
+  });
+
+  const today = dayjs();
+
+  Rows(
+    Array.from({ length: 4 }, (_, idx) => ({
+      pay_date: idx === 0 ? today.format('DD-MM-YYYY') : '',
+      due_date: '',
+      method: '',
+      actual_pay: '',
+      received_pay: '',
+      proof_image: '',
+      reference: '',
+      installments: `${idx + 1}`,
+      installmentId: undefined,
+    }))
+  );
+
+  setFormMode("Add");
+  setShowAddCourse(true);
+};
   return (
     <>
       {showAddCourse ? (
@@ -1165,6 +1213,7 @@ const handleDateFilter = async () => {
               <li className="breadcrumb-item">
                 <a href="#!" onClick={() => {
                   setShowAddCourse(false);
+                  setIsLoading(false);
                   setFormMode("Add");
                 }}>
                   View Offline Payment List
@@ -1328,10 +1377,10 @@ const handleDateFilter = async () => {
                   Send Reminder
                 </button>
 
-                <button
+                {/* <button
                   className='filter'
                   onClick={handleSaveAndSendInvoice}
-                  disabled={isSendInvoiceDisabled}
+                  disabled={isSendInvoiceDisabled }
                   style={{
                     backgroundColor: isSendInvoiceDisabled ? "#ccc" : "#007bff",
                     color: isSendInvoiceDisabled ? "#666" : "#fff",
@@ -1344,7 +1393,31 @@ const handleDateFilter = async () => {
                   }}
                 >
                   Send Invoice
-                </button>
+                </button> */}
+               <button
+  className='filter'
+  onClick={handleSaveAndSendInvoice}
+  // Disable if it's loading, already sent, or other conditions met
+  disabled={isSendInvoiceDisabled || isLoading || isInvoiceSent}
+  style={{
+    backgroundColor: (isSendInvoiceDisabled || isLoading || isInvoiceSent) ? "#ccc" : "#007bff",
+    color: (isSendInvoiceDisabled || isLoading || isInvoiceSent) ? "#666" : "#fff",
+    opacity: 1,
+    cursor: (isSendInvoiceDisabled || isLoading || isInvoiceSent) ? "not-allowed" : "pointer",
+    pointerEvents: (isSendInvoiceDisabled || isLoading || isInvoiceSent) ? "none" : "auto",
+    border: "none",
+    padding: "8px 16px",
+    borderRadius: "5px",
+  }}
+>
+  {isLoading ? (
+    "Sending..."
+  ) : isInvoiceSent ? (
+    <>✅ Sent Invoice</>
+  ) : (
+    "Send Invoice"
+  )}
+</button>
               </div>
 
               <TableContainer component={Paper}>
@@ -1365,31 +1438,50 @@ const handleDateFilter = async () => {
                     {rows.map((curr, index) => (
                       <StyledTableRow key={index}>
                         <StyledTableCell align='center'>
-                          <input
-                            type="date"
-                            className="table-curriculum"
-                            name="pay_date"
-                            value={dayjs(curr.pay_date, 'DD-MM-YYYY').format('YYYY-MM-DD')}
-                            onChange={(e) => {
-                              const formattedDate = dayjs(e.target.value).format('DD-MM-YYYY');
-                              const fakeEvent = {
-                                target: {
-                                  name: 'pay_date',
-                                  value: formattedDate,
-                                },
-                              };
-                              handleRowChange(index, fakeEvent);
-                            }}
-                          />
-                        </StyledTableCell>
-                        <StyledTableCell align='center'>
-                          <input
-                            className='table-curriculum'
-                            name='due_date'
-                            value={curr.due_date}
-                            onChange={(e) => handleRowChange(index, e)}
-                          />
-                        </StyledTableCell>
+  <input
+    type="text"
+    className="table-curriculum"
+    name="pay_date"
+    placeholder="MMM-DD-YYYY"
+    value={curr.pay_date ? dayjs(curr.pay_date, 'DD-MM-YYYY').format('MMM-DD-YYYY') : ""}
+    onChange={(e) => {
+      const fakeEvent = {
+        target: {
+          name: 'pay_date',
+          value: e.target.value, 
+        },
+      };
+      handleRowChange(index, fakeEvent);
+    }}
+  />
+</StyledTableCell>
+                     <StyledTableCell align='center'>
+  <input
+    type="text" // Permanent text type, no more calendar popup
+    className='table-curriculum'
+    name='due_date'
+    placeholder="MMM-DD-YYYY"
+    
+    // Displays the date in the format: May-14-2026
+    value={
+      curr.due_date 
+        ? dayjs(curr.due_date, 'DD-MM-YYYY').format('MMM-DD-YYYY') 
+        : ""
+    }
+
+    onChange={(e) => {
+      const val = e.target.value;
+      
+      const fakeEvent = {
+        target: {
+          name: 'due_date',
+          value: val, 
+        },
+      };
+      handleRowChange(index, fakeEvent);
+    }}
+  />
+</StyledTableCell>
                         <StyledTableCell align='center'>
                           <select
                             className='table-curriculum'
@@ -1431,7 +1523,7 @@ const handleDateFilter = async () => {
                               <img
                                 src={
                                   typeof curr.proof_image === 'string'
-                                    ? `http://localhost:8081/payments/download/${encodeURIComponent(curr.proof_image)}`
+                                    ? `https://api.test.hachion.co/payments/download/${encodeURIComponent(curr.proof_image)}`
                                     : URL.createObjectURL(curr.proof_image)
                                 }
                                 alt="proof"
@@ -1446,7 +1538,7 @@ const handleDateFilter = async () => {
                                 onClick={() =>
                                   window.open(
                                     typeof curr.proof_image === 'string'
-                                      ? `http://localhost:8081/payments/download/${encodeURIComponent(curr.proof_image)}`
+                                      ? `https://api.test.hachion.co/payments/download/${encodeURIComponent(curr.proof_image)}`
                                       : URL.createObjectURL(curr.proof_image),
                                     '_blank'
                                   )
@@ -1509,7 +1601,14 @@ const handleDateFilter = async () => {
               <div className='course-row'>
                 {formMode === "Add" ? (
                   <>
-                    <button className='submit-btn' onClick={handleSave} disabled={isSaveDisabled}>Save</button>
+                    {/* <button className='submit-btn' onClick={handleSave} disabled={isSaveDisabled}>Save</button> */}
+                  <button 
+  className='submit-btn' 
+  onClick={handleSave} 
+  disabled={isLoading || isSaved} 
+>
+  {isLoading ? "Saving..." : "Save"}
+</button>
                     <button
                       className='submit-btn'
                       onClick={handleSendToEmail}
@@ -1545,9 +1644,9 @@ const handleDateFilter = async () => {
                   <p style={{ marginBottom: 0 }}>View Offline Payment List</p>
                 </div>
                 
-                {/* Success and Error Messages */}
+                {/* Success and Error Messages
                 {successMessage && <div style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{successMessage}</div>}
-                {errorMessage && <div style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</div>}
+                {errorMessage && <div style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "10px" }}>{errorMessage}</div>} */}
                 
                 <div className='date-schedule'>
                   Start Date

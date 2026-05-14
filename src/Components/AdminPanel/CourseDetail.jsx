@@ -1740,31 +1740,53 @@ const CourseDetail = ({
               </div>
 
               {/* About Course Section */}
-              <div className="mb-3" style={{ paddingBottom: "20px" }}>
-                <label className="form-label">About Course(Add only 160 Characters) <span style={{ color: "red" }}>*</span></label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="aboutCourse"
-                  value={formData.aboutCourse}
-                  onChange={(e) => {
-                    const text = e.target.value;
-                    const count = text.length;
-                    if (count > 160) {
-                      setAboutError("Character limit exceeded. Please keep it within 160 characters.");
-                    } else {
-                      setAboutError("");
-                    }
-                    handleInputChange(null, "aboutCourse", text);
-                    setAboutCharacterCount(count);
-                  }}
-                />
-                <div style={{ marginLeft: '10px', marginTop: '8px', fontSize: '14px', color: aboutCharacterCount > 160 ? 'red' : 'black' }}>
-                  Character Count: {aboutCharacterCount}/160
-                </div>
-                {aboutError && <p className="error-message" style={{ color: "red" }}>{aboutError}</p>}
-              </div>
+<div className="mb-3" style={{ paddingBottom: "20px" }}>
+  <label className="form-label">
+    About Course (Maximum 100 Words) <span style={{ color: "red" }}>*</span>
+  </label>
 
+  <textarea
+    className="form-control"
+    name="aboutCourse"
+    rows={5}
+    value={formData.aboutCourse}
+    onChange={(e) => {
+      const text = e.target.value;
+
+      // Count words
+      const wordCount = text
+        .trim()
+        .split(/\s+/)
+        .filter((word) => word.length > 0).length;
+
+      if (wordCount > 100) {
+        setAboutError("Word limit exceeded. Please keep it within 100 words.");
+      } else {
+        setAboutError("");
+      }
+
+      handleInputChange(null, "aboutCourse", text);
+      setAboutCharacterCount(wordCount);
+    }}
+  />
+
+  <div
+    style={{
+      marginLeft: "10px",
+      marginTop: "8px",
+      fontSize: "14px",
+      color: aboutCharacterCount > 100 ? "red" : "black",
+    }}
+  >
+    Word Count: {aboutCharacterCount}/100
+  </div>
+
+  {aboutError && (
+    <p className="error-message" style={{ color: "red" }}>
+      {aboutError}
+    </p>
+  )}
+</div>
               {/* Course Highlight Section */}
               <div className="mb-3" style={{ paddingBottom: "20px" }}>
                 <label className="form-label">Course Highlight(Add only 4 Lines)</label>

@@ -194,7 +194,7 @@ export default function OfflinePayment() {
       try {
         
         const deletePromises = selectedIds.map(id => 
-          axios.delete(`https://api.test.hachion.co/payments/${id}`)
+          axios.delete(`http://localhost:8081/payments/${id}`)
         );
         
         await Promise.all(deletePromises);
@@ -287,7 +287,7 @@ export default function OfflinePayment() {
       return;
     }
     try {
-      const response = await axios.delete(`https://api.test.hachion.co/payments/${id}`);
+      const response = await axios.delete(`http://localhost:8081/payments/${id}`);
 
       if (response.status === 200) {
         setSuccessMessage("✅ Payment deleted successfully.");
@@ -368,7 +368,7 @@ const handleReminderToggle = async (event) => {
   try {
     
     const response = await axios.put(
-      "https://api.test.hachion.co/payments/stop-reminder",
+      "http://localhost:8081/payments/stop-reminder",
       {
         stopReminder: stopReminderValue,
         courseName: paymentData.course_name,
@@ -400,7 +400,7 @@ const handleReminderToggle = async (event) => {
     const fetchByStudentId = async () => {
       if (paymentData.student_ID) {
         try {
-          const res = await fetch(`https://api.test.hachion.co/payments/studentInfo?studentId=${paymentData.student_ID}`);
+          const res = await fetch(`http://localhost:8081/payments/studentInfo?studentId=${paymentData.student_ID}`);
           const data = await res.json();
           setPaymentData((prev) => ({
             ...prev,
@@ -421,7 +421,7 @@ const handleReminderToggle = async (event) => {
     const fetchByEmail = async () => {
       if (paymentData.email) {
         try {
-          const res = await fetch(`https://api.test.hachion.co/payments/studentInfo?email=${paymentData.email}`);
+          const res = await fetch(`http://localhost:8081/payments/studentInfo?email=${paymentData.email}`);
           const data = await res.json();
           setPaymentData((prev) => ({
             ...prev,
@@ -442,7 +442,7 @@ const handleReminderToggle = async (event) => {
     const fetchByMobile = async () => {
       if (paymentData.mobile) {
         try {
-          const res = await fetch(`https://api.test.hachion.co/payments/studentInfo?mobile=${paymentData.mobile}`);
+          const res = await fetch(`http://localhost:8081/payments/studentInfo?mobile=${paymentData.mobile}`);
           const data = await res.json();
           setPaymentData((prev) => ({
             ...prev,
@@ -463,7 +463,7 @@ const handleReminderToggle = async (event) => {
 //     const fetchCourseFee = async () => {
 //       if (paymentData.course_name) {
 //         try {
-//           const res = await fetch(`https://api.test.hachion.co/payments/courseFee?courseName=${encodeURIComponent(paymentData.course_name)}`);
+//           const res = await fetch(`http://localhost:8081/payments/courseFee?courseName=${encodeURIComponent(paymentData.course_name)}`);
 //           const data = await res.json();
 //           // if (data && data.courseFee !== undefined) {
 //           //   setPaymentData((prev) => ({
@@ -510,7 +510,7 @@ useEffect(() => {
     if (paymentData.course_name) {
       try {
         const res = await fetch(
-          `https://api.test.hachion.co/payments/courseFee?courseName=${encodeURIComponent(paymentData.course_name)}`
+          `http://localhost:8081/payments/courseFee?courseName=${encodeURIComponent(paymentData.course_name)}`
         );
         const data = await res.json();
 
@@ -593,7 +593,7 @@ useEffect(() => {
 
 }, []);
   useEffect(() => {
-    axios.get("https://api.test.hachion.co/payments")
+    axios.get("http://localhost:8081/payments")
       .then((response) => {
         const normalizedData = response.data.map((item) => ({
           id: item.paymentId,
@@ -817,7 +817,7 @@ if (!count || count <= 0) {
     });
 
     try {
-      const response = await axios.post("https://api.test.hachion.co/payments", formData, {
+      const response = await axios.post("http://localhost:8081/payments", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -870,7 +870,7 @@ const handleDateFilter = async () => {
     const end = dayjs(endDate).format("YYYY-MM-DD");
 
     const response = await axios.get(
-      `https://api.test.hachion.co/payments/payment-summary?startDate=${start}&endDate=${end}`
+      `http://localhost:8081/payments/payment-summary?startDate=${start}&endDate=${end}`
     );
 
     setSummaryData(response.data);
@@ -925,7 +925,7 @@ const handleDateFilter = async () => {
     };
 
     try {
-      await axios.post("https://api.test.hachion.co/payments/generateInvoice", invoicePayload);
+      await axios.post("http://localhost:8081/payments/generateInvoice", invoicePayload);
       setSuccessMessage("📩 Invoice generated and sent to email.");
     } catch (err) {
       console.error("❌ Invoice generation failed:", err);
@@ -999,7 +999,7 @@ const handleDateFilter = async () => {
     }));
     
     try {
-      const response = await axios.put(`https://api.test.hachion.co/payments/${selectedPaymentId}`, formData, {
+      const response = await axios.put(`http://localhost:8081/payments/${selectedPaymentId}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -1037,7 +1037,7 @@ const handleDateFilter = async () => {
         reminderEnabled: reminderEnabled
       };
 
-      const response = await axios.post("https://api.test.hachion.co/payments/reminder", reminderPayload, {
+      const response = await axios.post("http://localhost:8081/payments/reminder", reminderPayload, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -1100,7 +1100,7 @@ const handleDateFilter = async () => {
     });
 
     try {
-      const saveResponse = await axios.post("https://api.test.hachion.co/payments", formData, {
+      const saveResponse = await axios.post("http://localhost:8081/payments", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -1140,7 +1140,7 @@ const handleDateFilter = async () => {
           })),
         };
 
-        await axios.post("https://api.test.hachion.co/payments/generateInvoice", invoicePayload);
+        await axios.post("http://localhost:8081/payments/generateInvoice", invoicePayload);
         setSuccessMessage("📩 Invoice generated and sent to email.");
       }
     } catch (error) {
@@ -1431,7 +1431,7 @@ const handleDateFilter = async () => {
                               <img
                                 src={
                                   typeof curr.proof_image === 'string'
-                                    ? `https://api.test.hachion.co/payments/download/${encodeURIComponent(curr.proof_image)}`
+                                    ? `http://localhost:8081/payments/download/${encodeURIComponent(curr.proof_image)}`
                                     : URL.createObjectURL(curr.proof_image)
                                 }
                                 alt="proof"
@@ -1446,7 +1446,7 @@ const handleDateFilter = async () => {
                                 onClick={() =>
                                   window.open(
                                     typeof curr.proof_image === 'string'
-                                      ? `https://api.test.hachion.co/payments/download/${encodeURIComponent(curr.proof_image)}`
+                                      ? `http://localhost:8081/payments/download/${encodeURIComponent(curr.proof_image)}`
                                       : URL.createObjectURL(curr.proof_image),
                                     '_blank'
                                   )

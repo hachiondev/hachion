@@ -12,7 +12,7 @@ const LimitedDeals = () => {
       <div className="limited-deal-content">
         <h2 className="association-head">Limited Time Deals on Top Courses!</h2>
         <p className="limited-deals-text">
-          Special prices on selected courses for a limited period. Countdown to savings starts now!
+          Special prices on selected coursefs for a limited period. Countdown to savings starts now!
         </p>
         <div className="button-row">
           <button className="limited-deal-button" onClick={() => {navigate("/discountdeals");}}>Explore All Deals</button>

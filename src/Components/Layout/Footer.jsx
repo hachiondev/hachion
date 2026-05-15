@@ -72,11 +72,23 @@ const Footer = () => {
       "noopener,noreferrer"
     );
   };
+const handleNavigation = (course) => {
 
-  const handleNavigation = (courseName) => {
-    const formatted = courseName.toLowerCase().replace(/\s+/g, "-");
-    navigate(`/courses/${formatted}`);
-  };
+  const courseSlug = course?.course_name
+    ?.toLowerCase()
+    ?.replace(/\s+/g, "-");
+
+  const categorySlug = course?.courseCategory
+    ?.toLowerCase()
+    ?.replace(/\s+/g, "-");
+
+  if (!courseSlug || !categorySlug) {
+    console.error("Missing course/category", course);
+    return;
+  }
+
+  navigate(`/courses/${categorySlug}/${courseSlug}`);
+};
 
   return (
     <>
@@ -190,7 +202,7 @@ const Footer = () => {
                     <p
                       key={course.trendingcourse_id}
                       className="footer-content"
-                      onClick={() => handleNavigation(course.course_name)}
+                      onClick={() => handleNavigation(course)}
                     >
                       {course.course_name}
                     </p>

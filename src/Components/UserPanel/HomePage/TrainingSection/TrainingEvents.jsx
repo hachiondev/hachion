@@ -330,6 +330,7 @@ const TrainingEvents = () => {
                 key={course.course_id || index}
                 id={course.course_id}
                 heading={course.schedule_course_name}
+                courseCategory={course.schedule_category_name}
                 discountPercentage={(() => {
                   const rulePct = getRuleDiscountPct(
                     course.schedule_course_name,

@@ -49,15 +49,25 @@ const Sitemap = () => {
   }, []);
 
   
-  const handleCourseDetails = (coursename) => {
-    if (coursename) {
-      const formattedName = coursename
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/[^a-z0-9\-]/g, ""); 
-      navigate(`/courses/${formattedName}`);
-    }
-  };
+const handleCourseDetails = (course) => {
+
+  if (!course?.courseName || !course?.courseCategory) {
+    console.error("Missing category/course", course);
+    return;
+  }
+
+  const formattedName = course.courseName
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9\-]/g, "");
+
+  const formattedCategory = course.courseCategory
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9\-]/g, "");
+
+  navigate(`/courses/${formattedCategory}/${formattedName}`);
+};
   return (
     <>
       <div className="about-us container">
@@ -104,7 +114,7 @@ const Sitemap = () => {
                       className="txtCoursebtn"
                       onClick={(e) => {
                         e.stopPropagation(); 
-                        handleCourseDetails(item.courseName);
+                        handleCourseDetails(item);
                       }}
                     >
                       {item.courseName}

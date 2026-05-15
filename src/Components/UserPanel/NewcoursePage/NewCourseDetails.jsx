@@ -29,7 +29,7 @@ const slugify = (text = "") =>
 const POPUP_DELAY = 30000;
 
 const NewCourseDetails = () => {
-  const { courseName } = useParams();
+  const { categoryName, courseName } = useParams();
   const navigate = useNavigate();
   const [helmetKey, setHelmetKey] = useState(0);
   const isLoggedIn = !!localStorage.getItem("loginuserData");
@@ -38,8 +38,12 @@ const NewCourseDetails = () => {
     useAllCourses("courseDetailsPage");
 
   const courseData = allCourses.find(
-    (c) => slugify(c.courseName) === slugify(courseName)
-  );
+  (c) =>
+    slugify(c.courseName) === slugify(courseName) &&
+    slugify(c.courseCategory) === slugify(categoryName)
+);
+
+const categorySlug = slugify(courseData?.courseCategory);
 
   /* ---------------- HELMET FORCE UPDATE ---------------- */
   useEffect(() => {
@@ -55,15 +59,22 @@ const NewCourseDetails = () => {
   // Section refs for tracking scroll
   const sectionRefs = useRef([]);
   const demoClassRef = useRef(null);
+useEffect(() => {
+  if (!isLoading && courseData) {
+    const correctCourseSlug = slugify(courseData.courseName);
+    const correctCategorySlug = slugify(courseData.courseCategory);
 
-  useEffect(() => {
-    if (!isLoading && courseData) {
-      const correctSlug = slugify(courseData.courseName);
-      if (courseName !== correctSlug) {
-        navigate(`/courses/${correctSlug}`, { replace: true });
-      }
+    if (
+      courseName !== correctCourseSlug ||
+      categoryName !== correctCategorySlug
+    ) {
+      navigate(
+        `/courses/${correctCategorySlug}/${correctCourseSlug}`,
+        { replace: true }
+      );
     }
-  }, [courseName, courseData, isLoading, navigate]);
+  }
+}, [categoryName, courseName, courseData, isLoading, navigate]);
 
   {/* Always top on load */ }
   useEffect(() => {
@@ -150,7 +161,7 @@ const NewCourseDetails = () => {
           />
           <meta
             property="og:url"
-            content={`https://hachion.co/courses/${courseName}`}
+            content={`https://hachion.co/courses/${categoryName}/${courseName}`}
           />
 
           <meta name="robots" content="index, follow" />

@@ -205,10 +205,19 @@ const NavbarTop = () => {
   };
 
   const handleCourseClick = (item) => {
-    if (item.type === "course") {
-      const slug = item.courseName.toLowerCase().replace(/\s+/g, "-");
-      navigate(`/courses/${slug}`);
-    } else {
+  if (item.type === "course") {
+
+    const courseSlug = item.courseName
+      .toLowerCase()
+      .replace(/\s+/g, "-");
+
+    const categorySlug = item.courseCategory
+      .toLowerCase()
+      .replace(/\s+/g, "-");
+
+    navigate(`/courses/${categorySlug}/${courseSlug}`);
+
+  } else {
       const slug = item.title.toLowerCase().replace(/\s+/g, "-");
       navigate(`/blogs/${item.category_name}/${slug}-${item.id}`);
     }

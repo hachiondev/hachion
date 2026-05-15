@@ -17,6 +17,7 @@ const UserEnrolledCards = ({
   courseData = {},
   activeTab,
   forceCompleted = false,
+  courseCategory
 }) => {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
@@ -29,13 +30,31 @@ const UserEnrolledCards = ({
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  const formattedName = heading ? heading.toLowerCase().replace(/\s+/g, "-") : "";
+  const formattedName = heading
+  ? heading.toLowerCase().replace(/\s+/g, "-")
+  : "";
 
-  const handleNavigation = () => {
-    navigate(`/courses/${formattedName}`, {
-      state: { courseData, activeTab },
+const formattedCategory = courseCategory
+  ? courseCategory.toLowerCase().replace(/\s+/g, "-")
+  : "";
+
+const handleNavigation = () => {
+
+  if (!formattedName || !formattedCategory) {
+    console.error("Missing category/course", {
+      heading,
+      courseCategory
     });
-  };
+    return;
+  }
+
+  navigate(
+    `/courses/${formattedCategory}/${formattedName}`,
+    {
+      state: { courseData, activeTab },
+    }
+  );
+};
 
   const handleShare = async (e) => {
     e.stopPropagation();

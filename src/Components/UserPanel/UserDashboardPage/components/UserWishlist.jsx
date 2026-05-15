@@ -299,6 +299,7 @@ useEffect(() => {
                 <SidebarCard
             key={course.id || index}
             heading={course.courseName}
+            courseCategory={course.courseCategory}
             image={`https://api.test.hachion.co/${course.courseImage}`}
             discountPercentage={
               (() => {

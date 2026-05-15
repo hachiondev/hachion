@@ -154,12 +154,23 @@ const summerCourses = useMemo(() => {
   // --------------------------
   // Handlers
   // --------------------------
-  const handleCardClick = (course) => {
-    if (!course?.courseName) return;
-    const courseSlug = course.courseName.toLowerCase().replace(/\s+/g, "-");
-    navigate(`/courses/${courseSlug}`);
-  };
+ const handleCardClick = (course) => {
 
+  if (!course?.courseName || !course?.courseCategory) {
+    console.error("Missing category/course", course);
+    return;
+  }
+
+  const courseSlug = course.courseName
+    .toLowerCase()
+    .replace(/\s+/g, "-");
+
+  const categorySlug = course.courseCategory
+    .toLowerCase()
+    .replace(/\s+/g, "-");
+
+  navigate(`/courses/${categorySlug}/${courseSlug}`);
+};
   const loading = loadingSummer || loadingCourses;
 
   // Reset page when filtered length changes to keep UI stable
@@ -228,6 +239,7 @@ if (!isIN && !isUS) {
                 key={course.id || i}
                 course_id={course.id}
                 heading={course.courseName}
+                courseCategory={course.courseCategory}
                 month={course.numberOfClasses}
                 image={`https://api.test.hachion.co/${course.courseImage}`}
                 trainer_name={trainerName}

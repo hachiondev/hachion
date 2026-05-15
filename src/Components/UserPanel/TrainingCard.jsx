@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { TbShare3 } from "react-icons/tb";
 import fallbackImg from "../../Assets/18.webp";
 
-const TrainingCard = ({ mode, heading, month, date, time, duration, discountPercentage, image, trainer_name, level, scheduleCount }) => {
+const TrainingCard = ({ mode, heading, month, date, time, duration, discountPercentage, image, trainer_name, level, scheduleCount, courseCategory }) => {
   const navigate = useNavigate();
   const [bookmarked, setBookmarked] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -18,19 +18,41 @@ const TrainingCard = ({ mode, heading, month, date, time, duration, discountPerc
   }, []);
 
   const navigateToCourse = () => {
-    if (heading) {
-      const formattedName = heading.toLowerCase().replace(/\s+/g, '-');
-      navigate(`/courses/${formattedName}`, {
-        state: { scrollTo: 'upcoming-batch' }  // pass scroll target
-      });
+
+  if (!heading || !courseCategory) {
+    console.error("Missing category/course", {
+      heading,
+      courseCategory
+    });
+    return;
+  }
+
+  const formattedName = heading
+    .toLowerCase()
+    .replace(/\s+/g, '-');
+
+  const formattedCategory = courseCategory
+    .toLowerCase()
+    .replace(/\s+/g, '-');
+
+  navigate(
+    `/courses/${formattedCategory}/${formattedName}`,
+    {
+      state: { scrollTo: 'upcoming-batch' }
     }
-  };
+  );
+};
 const handleShare = async (e) => {
   e.stopPropagation();
 
   // ✅ define formattedName from heading
   const formattedName = heading.toLowerCase().replace(/\s+/g, '-');
-  const courseUrl = `${window.location.origin}/courses/${formattedName}`;
+  const formattedCategory = courseCategory
+  ?.toLowerCase()
+  ?.replace(/\s+/g, '-');
+
+const courseUrl =
+  `${window.location.origin}/courses/${formattedCategory}/${formattedName}`;
   const shareMessage = `Check this course details to gain more knowledge on this: ${heading}`;
 
   try {

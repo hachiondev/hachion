@@ -153,6 +153,7 @@ export default function UserEnrolledCourses() {
                 <UserEnrolledCards
                   key={course.uniqueId}
                   heading={course.course_name || course.courseName}
+                  courseCategory={course.course_category || course.courseCategory}
                   image={`https://api.test.hachion.co/${course.courseImage}`}
                   level={course.level}
                   trainer_name={course.trainer}

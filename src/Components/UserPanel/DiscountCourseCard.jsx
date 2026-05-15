@@ -5,7 +5,7 @@ import { MdBookmarkBorder, MdBookmark } from "react-icons/md";
 import fallbackImg from "../../Assets/18.webp";
 import './Home.css';
 import axios from 'axios'; 
-const DiscountCourseCard = ({ heading, month, discountPercentage, image, trainer_name, level, amount, totalAmount, timeLeftLabel, userEmail, course_id }) => {
+const DiscountCourseCard = ({ heading, month, discountPercentage, image, trainer_name, level, amount, totalAmount, timeLeftLabel, userEmail, course_id, courseCategory }) => {
   const navigate = useNavigate(); 
   const [isMobile, setIsMobile] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
@@ -46,16 +46,32 @@ const DiscountCourseCard = ({ heading, month, discountPercentage, image, trainer
   }, [userEmail, course_id]);
 
   const formattedName = heading
-    ? heading.toLowerCase().replace(/\s+/g, '-')
-    : '';
+  ? heading.toLowerCase().replace(/\s+/g, '-')
+  : '';
 
-  const handleNavigation = () => {
-    navigate(`/courses/${formattedName}`);
-  };
+const formattedCategory = courseCategory
+  ? courseCategory.toLowerCase().replace(/\s+/g, '-')
+  : '';
+
+const handleNavigation = () => {
+
+  if (!formattedCategory || !formattedName) {
+    console.error("Missing category/course", {
+      courseCategory,
+      heading
+    });
+    return;
+  }
+
+  navigate(`/courses/${formattedCategory}/${formattedName}`);
+};
+
 
   const handleShare = async (e) => {
     e.stopPropagation();
-    const courseUrl = `${window.location.origin}/courses/${formattedName}`;
+    // const courseUrl = `${window.location.origin}/courses/${formattedName}`;
+    const courseUrl =
+  `${window.location.origin}/courses/${formattedCategory}/${formattedName}`;
     const shareMessage = `Check this course details to gain more knowledge on this: ${heading}`;
 
     try {

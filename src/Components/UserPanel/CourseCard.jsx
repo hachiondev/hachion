@@ -6,7 +6,23 @@ import fallbackImg from "../../Assets/18.webp";
 import './Home.css';
 import axios from 'axios';
 
-const CourseCard = ({ heading, month, discountPercentage, staticButtonLink, onClick, image, trainer_name, level, amount, totalAmount, timeLeftLabel = "", course_id, userEmail }) => {
+// const CourseCard = ({ heading, month, discountPercentage, staticButtonLink, onClick, image, trainer_name, level, amount, totalAmount, timeLeftLabel = "", course_id, userEmail }) => {
+  const CourseCard = ({
+  heading,
+  month,
+  discountPercentage,
+  staticButtonLink,
+  onClick,
+  image,
+  trainer_name,
+  level,
+  amount,
+  totalAmount,
+  timeLeftLabel = "",
+  course_id,
+  userEmail,
+  courseCategory
+}) => {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
@@ -46,15 +62,31 @@ const CourseCard = ({ heading, month, discountPercentage, staticButtonLink, onCl
   }, [userEmail, course_id]);
 
   const formattedName = heading
-    ? heading.toLowerCase().replace(/\s+/g, '-')
-    : '';
-  const handleNavigation = () => {
-    navigate(`/courses/${formattedName}`);
-  };
+  ? heading.toLowerCase().replace(/\s+/g, '-')
+  : '';
+
+const formattedCategory = courseCategory
+  ? courseCategory.toLowerCase().replace(/\s+/g, '-')
+  : '';
+
+const handleNavigation = () => {
+
+  if (!formattedCategory || !formattedName) {
+    console.error("Missing category/course", {
+      courseCategory,
+      heading
+    });
+    return;
+  }
+
+  navigate(`/courses/${formattedCategory}/${formattedName}`);
+};
 
   const handleShare = async (e) => {
     e.stopPropagation();
-    const courseUrl = `${window.location.origin}/courses/${formattedName}`;
+    // const courseUrl = `${window.location.origin}/courses/${formattedName}`;
+    const courseUrl =
+  `${window.location.origin}/courses/${formattedCategory}/${formattedName}`;
     const shareMessage = `Check this course details to gain more knowledge on this: ${heading}`;
 
     try {

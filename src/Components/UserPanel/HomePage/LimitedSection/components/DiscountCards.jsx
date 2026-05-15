@@ -26,7 +26,6 @@ const fmt = (n) => Math.round(Number(n) || 0).toLocaleString();
 
 const DiscountCards = () => {
   const navigate = useNavigate();
-
   
   const { data: geo = {}, isLoading: loadingGeo } = useGeoData();
   const { data: discountRules = [] } = useDiscountRules();
@@ -136,12 +135,24 @@ const orderedCourses = useMemo(() => {
   const countdowns = useCountdowns(currentCourses, getEndsAt);
 
   
-  const handleCardClick = useCallback((course) => {
-    if (!course?.courseName) return;
-    const courseSlug = course.courseName.toLowerCase().replace(/\s+/g, "-");
-    navigate(`/courses/${courseSlug}`);
-  }, [navigate]);
+const handleCardClick = useCallback((course) => {
 
+  if (!course?.courseName || !course?.courseCategory) {
+    console.error("Missing category/course", course);
+    return;
+  }
+
+  const courseSlug = course.courseName
+    .toLowerCase()
+    .replace(/\s+/g, "-");
+
+  const categorySlug = course.courseCategory
+    .toLowerCase()
+    .replace(/\s+/g, "-");
+
+  navigate(`/courses/${categorySlug}/${courseSlug}`);
+
+}, [navigate]);
   return (
     <div className="position-relative text-center">
       {orderedCourses.length > 1 && (
@@ -197,6 +208,7 @@ const orderedCourses = useMemo(() => {
               <DiscountCourseCard
                 key={course.id || idx}
                 heading={course.courseName}
+                courseCategory={course.courseCategory}
                 month={course.numberOfClasses}
                 image={`https://api.test.hachion.co/${course.courseImage}`}
                 course_id={course.id}

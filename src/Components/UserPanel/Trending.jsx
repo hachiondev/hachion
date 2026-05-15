@@ -235,12 +235,23 @@ useEffect(() => {
       ? trendingCourses
       : trendingCourses.filter(course => course.category_name === activeCategory);
 
-  const handleCardClick = (course) => {
-    if (!course?.courseName) return;
-    const courseSlug = course.courseName.toLowerCase().replace(/\s+/g, '-');
-    navigate(`/courses/${courseSlug}`);
-  };
-  
+ const handleCardClick = (course) => {
+
+  if (!course?.courseName || !course?.courseCategory) {
+    console.error("Missing category/course", course);
+    return;
+  }
+
+  const courseSlug = course.courseName
+    .toLowerCase()
+    .replace(/\s+/g, '-');
+
+  const categorySlug = course.courseCategory
+    .toLowerCase()
+    .replace(/\s+/g, '-');
+
+  navigate(`/courses/${categorySlug}/${courseSlug}`);
+};
   const updateTotalCards = (total) => {
     setTotalCards(total);
   };
@@ -506,7 +517,8 @@ useEffect(() => {
               amount={`${currency} ${fmt(99)}`}
               totalAmount={`${fmt(199)}`}
               level="Beginner"
-              staticButtonLink="/courses/python"
+              // staticButtonLink="/courses/python"
+              staticButtonLink="/courses/programming/python"
               className="course-card"
             />
 
@@ -542,6 +554,7 @@ useEffect(() => {
                     key={course.id || i}
                     course_id={course.id}
                     heading={course.courseName}
+                    courseCategory={course.courseCategory}
                     month={course.numberOfClasses}
                     image={`https://api.test.hachion.co/${course.courseImage}`}
                     trainer_name={trainerName}

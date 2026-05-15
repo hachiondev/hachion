@@ -21,7 +21,8 @@ const SidebarCard = ({
   isWishlisted = false,
   onToggleWishlist,
   userEmail,        
-  course_id,        
+  course_id, 
+  courseCategory,       
 }) => {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
@@ -68,15 +69,32 @@ const SidebarCard = ({
     return () => { stop = true; };
   }, [onToggleWishlist, userEmail, course_id]);
 
-  const formattedName = heading ? heading.toLowerCase().replace(/\s+/g, '-') : '';
+  const formattedName = heading
+  ? heading.toLowerCase().replace(/\s+/g, '-')
+  : '';
 
-  const handleNavigation = () => {
-    navigate(`/courses/${formattedName}`);
-  };
+const formattedCategory = courseCategory
+  ? courseCategory.toLowerCase().replace(/\s+/g, '-')
+  : '';
+
+const handleNavigation = () => {
+
+  if (!formattedCategory || !formattedName) {
+    console.error("Missing category/course", {
+      heading,
+      courseCategory
+    });
+    return;
+  }
+
+  navigate(`/courses/${formattedCategory}/${formattedName}`);
+};
 
   const handleShare = async (e) => {
     e.stopPropagation();
-    const courseUrl = `${window.location.origin}/courses/${formattedName}`;
+    // const courseUrl = `${window.location.origin}/courses/${formattedName}`;
+    const courseUrl =
+  `${window.location.origin}/courses/${formattedCategory}/${formattedName}`;
     const shareMessage = `Check this course details to gain more knowledge on this: ${heading}`;
 
     try {

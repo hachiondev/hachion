@@ -311,12 +311,23 @@ useEffect(() => {
     };
   }, [courseCards, country, discountRules]);
 
-  const handleCardClick = (course) => {
-    if (!course?.courseName) return;
-    const slug = course.courseName.toLowerCase().replace(/\s+/g, "-");
-    navigate(`/courses/${slug}`);
-  };
+const handleCardClick = (course) => {
 
+  if (!course?.courseName || !course?.courseCategory) {
+    console.error("Missing category/course", course);
+    return;
+  }
+
+  const courseSlug = course.courseName
+    .toLowerCase()
+    .replace(/\s+/g, "-");
+
+  const categorySlug = course.courseCategory
+    .toLowerCase()
+    .replace(/\s+/g, "-");
+
+  navigate(`/courses/${categorySlug}/${courseSlug}`);
+};
   return (
     <div className="training-events container">
       <div className="home-spacing">
@@ -352,6 +363,7 @@ useEffect(() => {
                 <CourseCard
                   key={index}
                   heading={course.courseName}
+                  courseCategory={course.courseCategory}
                   image={course.image}
                   level={course.level}
                   month={course.numberOfClasses}

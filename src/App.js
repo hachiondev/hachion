@@ -98,17 +98,32 @@ const TrackPageView = () => {
   }, [location]);
   return null;
 };
+const slugify = (text = "") =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
 const CourseDetailsRedirect = () => {
   const { courseName } = useParams();
 
+  // Example mapping
+  const categoryMap = {
+    "java-full-stack": "full-stack-development",
+    "aws-devops": "cloud-computing",
+  };
+
+  const categoryName =
+    categoryMap[slugify(courseName)] || "courses";
+
   return (
     <Navigate
-      to={`/courses/${courseName}`}
+      to={`/courses/${categoryName}/${courseName}`}
       replace
     />
   );
 };
-
 function AppRoutes() {
   return (
     <>
@@ -148,8 +163,12 @@ function AppRoutes() {
   element={<CourseDetailsRedirect />}
 />
 
-<Route
+{/* <Route
   path="/courses/:courseName"
+  element={<NewCourseDetails />}
+/> */}
+<Route
+  path="/courses/:categoryName/:courseName"
   element={<NewCourseDetails />}
 />
           <Route path="/enroll-now/:courseName" element={<NewEnrollNow />} />

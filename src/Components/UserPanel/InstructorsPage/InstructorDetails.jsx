@@ -172,12 +172,23 @@ const InstructorDetails = () => {
     });
   }, []);
 
-  const handleCardClick = (course) => {
-    if (!course?.courseName) return;
-    const courseSlug = course.courseName.toLowerCase().replace(/\s+/g, "-");
-    navigate(`/courses/${courseSlug}`);
-  };
+ const handleCardClick = (course) => {
 
+  if (!course?.courseName || !course?.courseCategory) {
+    console.error("Missing category/course", course);
+    return;
+  }
+
+  const courseSlug = course.courseName
+    .toLowerCase()
+    .replace(/\s+/g, "-");
+
+  const categorySlug = course.courseCategory
+    .toLowerCase()
+    .replace(/\s+/g, "-");
+
+  navigate(`/courses/${categorySlug}/${courseSlug}`);
+};
   if (trainersLoading && coursesLoading) return <Loader />;
   if (!trainer) return <div>No trainer found.</div>;
 
@@ -277,6 +288,7 @@ const InstructorDetails = () => {
             <CourseCard
               key={idx}
               heading={course.courseName}
+              courseCategory={course.courseCategory}
               month={course.numberOfClasses || course.duration || 0}
               image={`https://api.test.hachion.co/${course.courseImage || course.image}`}
               trainer_name={trainer.trainer_name}

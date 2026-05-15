@@ -64,12 +64,23 @@ const DropdownCourseList = ({ category,onCourseSelect  }) => {
     }
   }, [category, courses]);
 
-  const handleCourseClick = (title) => {
-    setActiveCourse(title);
-    const slug = title.toLowerCase().replace(/\s+/g, "-");
-    navigate(`/courses/${slug}`);
-    if (onCourseSelect) onCourseSelect(); 
-  };
+  const handleCourseClick = (course) => {
+
+  setActiveCourse(course.courseName);
+
+  const courseSlug = course.courseName
+    .toLowerCase()
+    .replace(/\s+/g, "-");
+
+  const categorySlug = course.courseCategory
+    .toLowerCase()
+    .replace(/\s+/g, "-");
+
+  navigate(`/courses/${categorySlug}/${courseSlug}`);
+
+  if (onCourseSelect) onCourseSelect();
+};
+
 
   if (loading) {
     return (
@@ -103,7 +114,7 @@ const DropdownCourseList = ({ category,onCourseSelect  }) => {
               <button
                 onMouseEnter={() => setHoveredCourse(course.courseName)}
                 onMouseLeave={() => setHoveredCourse(null)}
-                onClick={() => handleCourseClick(course.courseName)}
+                onClick={() => handleCourseClick(course)}
                 className={`category-menu-item ${isActive ? "active" : ""}`}
                 style={{ padding: "4px 8px", fontWeight: "400" }}
               >

@@ -77,6 +77,7 @@ const CourseCategory = ({
   }]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   // New state for checkbox selection
   const [selectedIds, setSelectedIds] = useState([]);
@@ -201,6 +202,9 @@ const CourseCategory = ({
   };
 
   const handleEdit = async () => {
+     if (isUpdating) return;
+
+  setIsUpdating(true);
     try {
       const payload = {
         id: editedRow.id,
@@ -234,10 +238,12 @@ const CourseCategory = ({
 
       setTimeout(() => setSuccessMessage(""), 6000);
       setOpen(false);
+      setIsUpdating(false);
 
     } catch (error) {
       setSuccessMessage("");
       setErrorMessage("Error updating category");
+      setIsUpdating(false);
     }
   };
 
@@ -569,21 +575,20 @@ const CourseCategory = ({
       <DialogContent>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <label>Category Name</label>
-          <input
-            type="text"
-            className="form-control"
-            id="categoryName"
-            placeholder="Enter Category name"
-            name="name"
-            value={editedRow.name || ""}
-            onChange={handleInputChange}
-            readOnly
-            style={{
-              backgroundColor: "#f0f0f0",
-              color: "#000",
-              cursor: "not-allowed"
-            }}
-          />
+         <input
+  type="text"
+  className="form-control"
+  id="categoryName"
+  placeholder="Enter Category name"
+  name="name"
+  value={editedRow.name || ""}
+  onChange={handleInputChange}
+  style={{
+    backgroundColor: "#fff",
+    color: "#000",
+    cursor: "text"
+  }}
+/>
 
           <div className="mb-3">
             Date <br />
@@ -604,7 +609,18 @@ const CourseCategory = ({
 
       </DialogContent>
       <DialogActions className="update" style={{ display: 'flex', justifyContent: 'center' }}>
-        <Button onClick={handleEdit} className="update-btn">Update</Button>
+        {/* <Button onClick={handleEdit} className="update-btn">Update</Button> */}
+        <Button
+  onClick={handleEdit}
+  className="update-btn"
+  disabled={isUpdating}
+  style={{
+    opacity: isUpdating ? 0.6 : 1,
+    cursor: isUpdating ? "not-allowed" : "pointer"
+  }}
+>
+  {isUpdating ? "Updating..." : "Update"}
+</Button>
       </DialogActions>
     </Dialog>
 

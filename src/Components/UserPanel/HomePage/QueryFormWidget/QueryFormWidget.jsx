@@ -413,12 +413,12 @@ const QueryFormWidget = () => {
               }
             }}
           >
-            <h5 className={`m-0 d-flex align-items-center ${styles.widgetTitle}`}>
+            <h3 className={`m-0 d-flex align-items-center ${styles.widgetTitle}`}>
               Have a Question? We're Here to Help
               <span className={styles.buttonIcon}>
                 <FaQuestionCircle size={16} className={styles.blinkIcon} />
               </span>
-            </h5>
+            </h3>
             <span className={styles.chevronIcon}>
               {isOpen ? <FaChevronUp size={12} /> : <FaChevronDown size={12} />}
             </span>

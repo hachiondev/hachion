@@ -17,7 +17,6 @@ dayjs.extend(customParseFormat);
 const Sidebar = ({ onFilterChange, selectedCategoryFromParent }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const preSelectedCategory = location.state?.selectedCategory || null;
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedLevels, setSelectedLevels] = useState(["All Levels"]);
   const [selectedPrice, setSelectedPrice] = useState([]);
@@ -42,6 +41,16 @@ const Sidebar = ({ onFilterChange, selectedCategoryFromParent }) => {
 const normalize = (v = "") =>
   v.toString().trim().toLowerCase();
 
+const slugifyCategory = (text = "") =>
+  text
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobileView(window.innerWidth <= 768);
@@ -51,35 +60,27 @@ const normalize = (v = "") =>
   }, []);
 
 useEffect(() => {
-  const categoryFromState = location.state?.selectedCategory;
+  const categoryFromParent = selectedCategoryFromParent;
 
   if (!categories.length) return;
 
-  let categoryToSelect = null;
-
-  // 1️⃣ From sitemap / login redirect
-  if (categoryFromState) {
-    categoryToSelect = categories.find(
-      c => normalize(c.name) === normalize(categoryFromState)
+  if (categoryFromParent) {
+    const categoryToSelect = categories.find(
+      (c) =>
+        normalize(c.name) === normalize(categoryFromParent) ||
+        slugifyCategory(c.name) === slugifyCategory(categoryFromParent)
     );
+
+    if (!categoryToSelect) return;
+
+    setSelectedCategories([categoryToSelect.name]);
+    onFilterChange({
+      categories: [categoryToSelect.name],
+      levels: [],
+      price: [],
+    });
   }
-
-  // 2️⃣ Default category (fallback)
-  if (!categoryToSelect) {
-    categoryToSelect = categories[0]; // or any fixed category
-  }
-
-  if (!categoryToSelect) return;
-
-  setSelectedCategories([categoryToSelect.name]);
-
-  onFilterChange({
-    categories: [categoryToSelect.name],
-    levels: [],
-    price: [],
-  });
-
-}, [categories, location.state]);
+}, [categories, selectedCategoryFromParent]);
 
 
   const toggleSection = (section) => {
@@ -94,6 +95,12 @@ useEffect(() => {
         ? selectedCategories.filter((c) => c !== value)
         : [...selectedCategories, value];
       setSelectedCategories(updated);
+
+      const categoryPath =
+        updated.length === 1
+          ? `/courses/${slugifyCategory(updated[0])}`
+          : "/courses";
+      navigate(categoryPath, { replace: true, state: null });
     } else if (type === "level") {
       if (value === "All Levels") {
         updated = ["All Levels"];

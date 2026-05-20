@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation, useSearchParams, Link } from 'react-router-dom';
+import { useLocation, useSearchParams, useParams, Link } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import SidebarRight from './components/SidebarRight';
 import Pagination from '../Common/Pagination';
@@ -12,6 +12,7 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 const Course = () => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
+  const { categoryName } = useParams();
   const [selectedCategoryFromParent, setSelectedCategoryFromParent] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [filters, setFilters] = useState({
@@ -29,15 +30,19 @@ const Course = () => {
   // ✅ SINGLE SOURCE OF TRUTH: Initialize category from URL
   useEffect(() => {
     const categoryFromUrl = searchParams.get("category");
+    const decodedCategoryFromUrl = categoryFromUrl ? decodeURIComponent(categoryFromUrl) : null;
 
-    if (categoryFromUrl) {
-      const decoded = decodeURIComponent(categoryFromUrl);
-      setSelectedCategoryFromParent(decoded);
-      setSelectedCategory(decoded); // Update selectedCategory as well
+    if (categoryName) {
+      const decodedRouteCategory = decodeURIComponent(categoryName);
+      setSelectedCategoryFromParent(decodedRouteCategory);
+      setSelectedCategory(decodedRouteCategory);
+    } else if (decodedCategoryFromUrl) {
+      setSelectedCategoryFromParent(decodedCategoryFromUrl);
+      setSelectedCategory(decodedCategoryFromUrl);
     } else {
       setSelectedCategoryFromParent(null);
     }
-  }, [searchParams]);
+  }, [searchParams, categoryName]);
 
   const handleFilterChange = (updatedFilters) => {
     const normalized = {

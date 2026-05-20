@@ -27,8 +27,6 @@ import AdminPagination from './AdminPagination';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { countries as staticCountries } from '../../countryUtils';
-
-
 dayjs.extend(customParseFormat);
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -78,6 +76,7 @@ export default function OfflinePayment() {
   const [endDate, setEndDate] = useState(null);
   const [rows, Rows] = useState([]);
   const [formMode, setFormMode] = useState("Add");
+  const isEditMode = formMode === "Edit";
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedPaymentId, setSelectedPaymentId] = useState(null);
@@ -263,7 +262,7 @@ export default function OfflinePayment() {
     if (rows.length === 0) {
       const today = dayjs();
       const defaultRows = Array.from({ length: 4 }, (_, idx) => ({
-        pay_date: idx === 0 ? today.format('DD-MM-YYYY') : '',
+        pay_date: idx === 0 ? today.format('MMM-DD-YYYY') : '',
         due_date: '',
         method: '',
         actual_pay: '',
@@ -340,8 +339,8 @@ setReminderEnabled(reminderStatus);
     });
 
     const rowData = (row.rawInstallments || []).map((inst) => ({
-      pay_date: inst.payDate ? dayjs(inst.payDate).format("DD-MM-YYYY") : "",
-      due_date: inst.dueDate ? dayjs(inst.dueDate).format("DD-MM-YYYY") : "",
+      pay_date: inst.payDate ? dayjs(inst.payDate).format("MMM-DD-YYYY") : "",
+      due_date: inst.dueDate ? dayjs(inst.dueDate).format("MMM-DD-YYYY") : "",
       method: inst.paymentMethod || "",
       actual_pay: inst.actualPay || "",
       received_pay: inst.receivedPay || "",
@@ -486,38 +485,111 @@ useEffect(() => {
   fetchCourseFee();
 }, [paymentData.course_name]);
 
+// useEffect(() => {
+//   if (!courseAmounts) return;
+
+//   // 🔴 If no currency → clear fee
+//   if (!paymentData.currency) {
+//     setPaymentData(prev => ({ ...prev, course_fee: "" }));
+//     return;
+//   }
+// let finalAmount = "";
+
+// if (paymentData.currency === "INR") {
+//   finalAmount = courseAmounts.inrAmount;
+// } 
+// else if (paymentData.currency === "USD") {
+//   finalAmount = courseAmounts.usdAmount;
+// } 
+// else if (paymentData.currency === "CAD") {
+//   console.log("Currency:", paymentData.currency);
+// // console.log("Exchange Rate:", exchangeRate);
+// console.log("USD Amount:", courseAmounts.usdAmount);
+//   // Only CAD needs conversion from USD
+//   // finalAmount = Math.round(courseAmounts.usdAmount * exchangeRate);
+//    finalAmount = Math.round(courseAmounts.usdAmount * cadRate);
+  
+// }
+
+//   setPaymentData((prev) => ({
+//     ...prev,
+//     course_fee: finalAmount
+//   }));
+
+// }, [paymentData.currency, cadRate, courseAmounts]);
+
 useEffect(() => {
+
   if (!courseAmounts) return;
 
   // 🔴 If no currency → clear fee
   if (!paymentData.currency) {
-    setPaymentData(prev => ({ ...prev, course_fee: "" }));
+
+    setPaymentData(prev => ({
+      ...prev,
+      course_fee: ""
+    }));
+
     return;
   }
-let finalAmount = "";
 
-if (paymentData.currency === "INR") {
-  finalAmount = courseAmounts.inrAmount;
-} 
-else if (paymentData.currency === "USD") {
-  finalAmount = courseAmounts.usdAmount;
-} 
-else if (paymentData.currency === "CAD") {
-  console.log("Currency:", paymentData.currency);
-// console.log("Exchange Rate:", exchangeRate);
-console.log("USD Amount:", courseAmounts.usdAmount);
-  // Only CAD needs conversion from USD
-  // finalAmount = Math.round(courseAmounts.usdAmount * exchangeRate);
-   finalAmount = Math.round(courseAmounts.usdAmount * cadRate);
-  
-}
+  let finalAmount = "";
 
-  setPaymentData((prev) => ({
-    ...prev,
-    course_fee: finalAmount
+  if (paymentData.currency === "INR") {
+
+    finalAmount = courseAmounts.inrAmount;
+
+  } else if (paymentData.currency === "USD") {
+
+    finalAmount = courseAmounts.usdAmount;
+
+  } else if (paymentData.currency === "CAD") {
+
+    finalAmount = Math.round(courseAmounts.usdAmount * cadRate);
+
+  }
+
+  // 🔥 Recalculate totals
+  const tax = parseFloat(paymentData.tax) || 0;
+  const discount = parseFloat(paymentData.discount) || 0;
+
+  const totalAmount =
+    parseFloat(finalAmount || 0) + tax - discount;
+
+  const installmentCount =
+    parseInt(paymentData.installments) || 1;
+
+  const perInstallment =
+    Math.round(totalAmount / installmentCount);
+
+  // 🔥 Update rows actual pay
+  const updatedRows = rows.map((row, index) => ({
+    ...row,
+    actual_pay:
+      index < installmentCount
+        ? perInstallment
+        : ""
   }));
 
-}, [paymentData.currency, cadRate, courseAmounts]);
+  Rows(updatedRows);
+
+  // 🔥 Update payment data
+  setPaymentData((prev) => ({
+    ...prev,
+    course_fee: finalAmount,
+    total: totalAmount,
+    balance: totalAmount
+  }));
+
+}, [
+  paymentData.currency,
+  cadRate,
+  courseAmounts,
+  paymentData.tax,
+  paymentData.discount,
+  paymentData.installments
+]);
+
 useEffect(() => {
 
   const fetchExchangeRates = async () => {
@@ -656,7 +728,6 @@ useEffect(() => {
       // let count = parseInt(updatedData.installments);
       let count = parseInt(updatedData.installments);
 
-// 🔁 Auto-fix: if 0 / empty / invalid → set to 1 (no error)
 if (!count || count <= 0) {
   count = 1;
   updatedData.installments = "1";
@@ -680,7 +751,7 @@ if (!count || count <= 0) {
       const updatedRows = [...rows];
       for (let i = 0; i < 4; i++) {
         const baseRow = {
-          due_date: i < count ? today.add(dayGap * i, 'day').format('DD-MM-YYYY') : '',
+          due_date: i < count ? today.add(dayGap * i, 'day').format('MMM-DD-YYYY') : '',
           installments: `${i + 1}`,
         };
 
@@ -721,15 +792,102 @@ useEffect(() => {
     return () => clearTimeout(timer);
   }
 }, [errorMessage]);
+
   const handleRowChange = (index, e) => {
     const { name, value, files } = e.target;
     const updatedRows = [...rows];
 
+    // if (name === 'proof_image') {
+    //   updatedRows[index][name] = files[0];
+    // } else {
+    //   updatedRows[index][name] = value;
+    // }
     if (name === 'proof_image') {
-      updatedRows[index][name] = files[0];
+
+  updatedRows[index][name] = files[0];
+
+} else if (name === "pay_date" || name === "due_date") {
+
+  // Regex format validation
+  const dateRegex = /^[A-Za-z]{0,3}(-?\d{0,2})?(-?\d{0,4})?$/;
+
+  // Stop invalid typing immediately
+  if (!dateRegex.test(value)) {
+    return;
+  }
+
+  // Limit max length
+  if (value.length > 12) {
+    return;
+  }
+
+  updatedRows[index][name] = value;
+
+  if (value.length === 12) {
+
+    const isValidDate = dayjs(
+      value,
+      "MMM-DD-YYYY",
+      true
+    ).isValid();
+
+    if (!isValidDate) {
+      setErrorMessage(
+        `❌ Invalid ${name === "pay_date" ? "Pay Date" : "Due Date"}`
+      );
     } else {
-      updatedRows[index][name] = value;
+      setErrorMessage("");
     }
+  } else {
+    setErrorMessage("");
+  } 
+} else {
+
+  // ✅ Only allow numbers and decimals
+  if (name === "received_pay") {
+
+    const numberRegex = /^\d*\.?\d*$/;
+
+    // Block characters immediately
+    if (!numberRegex.test(value)) {
+      return;
+    }
+
+    // Prevent multiple dots
+    const dotCount = (value.match(/\./g) || []).length;
+
+    if (dotCount > 1) {
+      return;
+    }
+  }
+
+  // ✅ Allow typing only one installment row at a time
+  if (
+    ["pay_date", "method", "received_pay", "reference", "proof_image"].includes(name)
+  ) {
+
+    if (index > 0) {
+
+      const previousRow = updatedRows[index - 1];
+
+      const isPreviousFilled =
+        previousRow.pay_date?.toString().trim() !== "" &&
+        previousRow.method?.toString().trim() !== "" &&
+        previousRow.received_pay?.toString().trim() !== "";
+
+      if (!isPreviousFilled) {
+
+        setErrorMessage(
+          `❌ Please complete Installment ${index} before filling Installment ${index + 1}`
+        );
+
+        return;
+      }
+    }
+  }
+
+  updatedRows[index][name] = value;
+}
 
     Rows(updatedRows);
 
@@ -765,7 +923,7 @@ useEffect(() => {
     const currentDate = new Date().toISOString().split("T")[0];
 
     const formattedInstallments = rows.map((row, index) => ({
-      payDate: row.pay_date ? dayjs(row.pay_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
+      payDate: row.pay_date ? dayjs(row.pay_date, "MMM-DD-YYYY").format("YYYY-MM-DD") : "",
       paymentMethod: row.method,
       numberOfInstallments: parseInt(row.installments),
       actualPay: parseFloat(row.actual_pay),
@@ -898,8 +1056,8 @@ const handleDateFilter = async () => {
       selectedInstallmentId: selectedInstallmentId,
       installments: rows.map((row) => ({
         installmentId: row.installmentId,
-        payDate: row.pay_date ? dayjs(row.pay_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
-        dueDate: row.due_date ? dayjs(row.due_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
+        payDate: row.pay_date ? dayjs(row.pay_date, "MMM-DD-YYYY").format("YYYY-MM-DD") : "",
+        dueDate: row.due_date ? dayjs(row.due_date, "MMM-DD-YYYY").format("YYYY-MM-DD") : "",
         receivedPay: totalReceivedPay
       })),
     };
@@ -928,8 +1086,8 @@ const handleDateFilter = async () => {
 
     const formattedInstallments = rows.map((row) => ({
       installmentId: row.installmentId,
-      payDate: row.pay_date ? dayjs(row.pay_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
-      dueDate: row.due_date ? dayjs(row.due_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
+      payDate: row.pay_date ? dayjs(row.pay_date, "MMM-DD-YYYY").format("YYYY-MM-DD") : "",
+      dueDate: row.due_date ? dayjs(row.due_date, "MMM-DD-YYYY").format("YYYY-MM-DD") : "",
       paymentMethod: row.method,
       numberOfInstallments: parseInt(row.installments),
       actualPay: parseFloat(row.actual_pay),
@@ -1049,8 +1207,8 @@ setShowAddCourse(false);
     const currentDate = new Date().toISOString().split("T")[0];
 
     const formattedInstallments = rows.map((row) => ({
-      payDate: row.pay_date ? dayjs(row.pay_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
-      dueDate: row.due_date ? dayjs(row.due_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
+      payDate: row.pay_date ? dayjs(row.pay_date, "MMM-DD-YYYY").format("YYYY-MM-DD") : "",
+      dueDate: row.due_date ? dayjs(row.due_date, "MMM-DD-YYYY").format("YYYY-MM-DD") : "",
       paymentMethod: row.method,
       numberOfInstallments: parseInt(row.installments),
       actualPay: parseFloat(row.actual_pay),
@@ -1122,8 +1280,8 @@ setShowAddCourse(false);
           selectedInstallmentId: selectedInstallmentId,
           installments: rows.map((row) => ({
             installmentId: row.installmentId,
-            payDate: row.pay_date ? dayjs(row.pay_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
-            dueDate: row.due_date ? dayjs(row.due_date, "DD-MM-YYYY").format("YYYY-MM-DD") : "",
+            payDate: row.pay_date ? dayjs(row.pay_date, "MMM-DD-YYYY").format("YYYY-MM-DD") : "",
+            dueDate: row.due_date ? dayjs(row.due_date, "MMM-DD-YYYY").format("YYYY-MM-DD") : "",
             receivedPay: totalReceivedPay,
           })),
         };
@@ -1189,7 +1347,7 @@ setShowAddCourse(false);
 
   Rows(
     Array.from({ length: 4 }, (_, idx) => ({
-      pay_date: idx === 0 ? today.format('DD-MM-YYYY') : '',
+      pay_date: idx === 0 ? today.format('MMM-DD-YYYY') : '',
       due_date: '',
       method: '',
       actual_pay: '',
@@ -1239,11 +1397,21 @@ setShowAddCourse(false);
                     name="student_ID"
                     value={paymentData.student_ID}
                     onChange={(e) => setPaymentData({ ...paymentData, student_ID: e.target.value })}
+                     disabled={isEditMode}
+  style={{
+    backgroundColor: isEditMode ? "#e9ecef" : "",
+    cursor: isEditMode ? "not-allowed" : "text"
+  }}
                   />
                 </div>
                 <div class="col">
                   <label for="inputEmail4" class="form-label">Student Name</label>
-                  <input type="text" class="schedule-input" id="inputEmail4" name='student_name' value={paymentData.student_name} onChange={handleChange} />
+                  <input type="text" class="schedule-input" id="inputEmail4" name='student_name' value={paymentData.student_name} onChange={handleChange}  disabled={isEditMode}
+  style={{
+    backgroundColor: isEditMode ? "#e9ecef" : "",
+    cursor: isEditMode ? "not-allowed" : "text"
+  }}/>
+                
                 </div>
                 <div className="col">
                   <label className="form-label">Email</label>
@@ -1253,6 +1421,11 @@ setShowAddCourse(false);
                     name="email"
                     value={paymentData.email}
                     onChange={(e) => setPaymentData({ ...paymentData, email: e.target.value })}
+                   disabled={isEditMode}
+  style={{
+    backgroundColor: isEditMode ? "#e9ecef" : "",
+    cursor: isEditMode ? "not-allowed" : "text"
+  }}
                   />
                 </div>
                 <div className="col">
@@ -1263,6 +1436,11 @@ setShowAddCourse(false);
                     name="mobile"
                     value={paymentData.mobile}
                     onChange={(e) => setPaymentData({ ...paymentData, mobile: e.target.value })}
+                     disabled={isEditMode}
+  style={{
+    backgroundColor: isEditMode ? "#e9ecef" : "",
+    cursor: isEditMode ? "not-allowed" : "text"
+  }}
                   />
                 </div>
               </div>
@@ -1275,6 +1453,11 @@ setShowAddCourse(false);
                     name="course_name"
                     value={paymentData.course_name}
                     onChange={handleChange}
+                     disabled={isEditMode}
+  style={{
+    backgroundColor: isEditMode ? "#e9ecef" : "",
+    cursor: isEditMode ? "not-allowed" : "text"
+  }}
                   >
                     <option value="" disabled>Select Course</option>
                     {filterCourse.map((curr) => (
@@ -1290,6 +1473,11 @@ setShowAddCourse(false);
   name="currency"
   value={paymentData.currency}
   onChange={handleChange}
+   disabled={isEditMode}
+  style={{
+    backgroundColor: isEditMode ? "#e9ecef" : "",
+    cursor: isEditMode ? "not-allowed" : "text"
+  }}
 >
   <option value="">Select Currency</option>
   {allowedCurrencies.map((c, index) => (
@@ -1308,16 +1496,29 @@ setShowAddCourse(false);
   value={paymentData.course_fee}
   readOnly
   placeholder="Select currency first"
+   disabled={isEditMode}
+  style={{
+    backgroundColor: isEditMode ? "#e9ecef" : "",
+    cursor: isEditMode ? "not-allowed" : "text"
+  }}
 />
                 </div>
 
                 <div class="col">
                   <label for="inputEmail4" class="form-label">TAX</label>
-                  <input type="text" class="schedule-input" id="inputEmail4" name='tax' value={paymentData.tax} onChange={handleChange} />
+                  <input type="text" class="schedule-input" id="inputEmail4" name='tax' value={paymentData.tax} onChange={handleChange}  disabled={isEditMode}
+  style={{
+    backgroundColor: isEditMode ? "#e9ecef" : "",
+    cursor: isEditMode ? "not-allowed" : "text"
+  }}/>
                 </div>
                 <div class="col">
                   <label for="inputEmail4" class="form-label">Discount</label>
-                  <input type="text" class="schedule-input" id="inputEmail4" name='discount' value={paymentData.discount} onChange={handleChange} />
+                  <input type="text" class="schedule-input" id="inputEmail4" name='discount' value={paymentData.discount} onChange={handleChange}  disabled={isEditMode}
+  style={{
+    backgroundColor: isEditMode ? "#e9ecef" : "",
+    cursor: isEditMode ? "not-allowed" : "text"
+  }} />
                 </div>
                 <div class="col">
                   <label for="inputEmail4" class="form-label">No. of installments</label>
@@ -1438,22 +1639,16 @@ setShowAddCourse(false);
                     {rows.map((curr, index) => (
                       <StyledTableRow key={index}>
                         <StyledTableCell align='center'>
+  <StyledTableCell align='center'>
   <input
     type="text"
     className="table-curriculum"
     name="pay_date"
     placeholder="MMM-DD-YYYY"
-    value={curr.pay_date ? dayjs(curr.pay_date, 'DD-MM-YYYY').format('MMM-DD-YYYY') : ""}
-    onChange={(e) => {
-      const fakeEvent = {
-        target: {
-          name: 'pay_date',
-          value: e.target.value, 
-        },
-      };
-      handleRowChange(index, fakeEvent);
-    }}
+    value={curr.pay_date || ""}
+    onChange={(e) => handleRowChange(index, e)}
   />
+</StyledTableCell>
 </StyledTableCell>
                      <StyledTableCell align='center'>
   <input
@@ -1465,8 +1660,7 @@ setShowAddCourse(false);
     // Displays the date in the format: May-14-2026
     value={
       curr.due_date 
-        ? dayjs(curr.due_date, 'DD-MM-YYYY').format('MMM-DD-YYYY') 
-        : ""
+        
     }
 
     onChange={(e) => {

@@ -909,15 +909,15 @@ const CourseDetail = ({
 
                       required
 
-                      disabled={formMode === "Edit"}
+                      // disabled={formMode === "Edit"}
                       style={{
                         width: "100%",
                         padding: "0.375rem 0.75rem",
                         border: "1px solid #ced4da",
                         borderRadius: "0.375rem",
-                        backgroundColor: formMode === "Edit" ? "#e9ecef" : "#ffffff",
+                        // backgroundColor: formMode === "Edit" ? "#e9ecef" : "#ffffff",
                         color: "#000000",
-                        cursor: formMode === "Edit" ? "not-allowed" : "text"
+                        // cursor: formMode === "Edit" ? "not-allowed" : "text"
                       }}
                     />
                   </div>
@@ -1169,19 +1169,68 @@ const CourseDetail = ({
                       required
                     />
                   </div> */}
-                  <div className="col-md-4">
-                    <label className="form-label">
-                      Course Image {formMode === 'Add' ? <span style={{ color: "red" }}>*</span> : ""}
-                    </label>
-                    <input
-                      type="file"
-                      className="form-control"
-                      name="courseImage"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      required={formMode === 'Add'}
-                    />
-                  </div>
+                <div className="col-md-4">
+  <label className="form-label">
+    Course Image {formMode === 'Add' ? <span style={{ color: "red" }}>*</span> : ""}
+  </label>
+
+  <div
+    style={{
+      border: "1px solid #ced4da",
+      borderRadius: "6px",
+      display: "flex",
+      alignItems: "center",
+      overflow: "hidden",
+      height: "38px",
+      background: "#fff"
+    }}
+  >
+    <label
+      htmlFor="courseImageInput"
+      style={{
+        padding: "8px 12px",
+        background: "#f8f9fa",
+        borderRight: "1px solid #ced4da",
+        cursor: "pointer",
+        margin: 0,
+        whiteSpace: "nowrap"
+      }}
+    >
+      Choose File
+    </label>
+
+    <span
+      style={{
+        paddingLeft: "10px",
+        fontSize: "14px",
+        color: "#555",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap"
+      }}
+    >
+      {typeof formData.courseImage === "string"
+        ? formData.courseImage.split("/").pop()
+        : formData.courseImage?.name || "No file chosen"}
+    </span>
+
+    <input
+      id="courseImageInput"
+      type="file"
+      name="courseImage"
+      accept="image/*"
+      onChange={handleFileChange}
+      required={formMode === "Add"}
+      style={{ display: "none" }}
+    />
+  </div>
+
+  {formMode === "Edit" && (
+    <small style={{ color: "#666" }}>
+      Leave empty if you don't want to change the image
+    </small>
+  )}
+</div>
 
                   <div className="col-md-4">
                     <label className="form-label">
@@ -1337,7 +1386,7 @@ const CourseDetail = ({
                         name="defaultTrainer"
                         value={formData.defaultTrainer}
                         onChange={handleInputChange}
-                        required
+                        // required
                       >
                         <option value="" disabled>
                           Select Trainer

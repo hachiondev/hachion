@@ -252,9 +252,9 @@ export default function LearnSection() {
                 {/* Tools Cover Section - Remains Below Tabs */}
                 <div className={styles.lstools}>
                     <div className={styles.pagiGroup}>
-                        <h3 className={styles.lstoolstitle}>
+                        <h2 className={styles.lstoolstitle}>
                             Tools Cover in {course?.courseName || "this course"}
-                        </h3>
+                        </h2>
 
                         {allTools.length > cardsPerPage && (
                             <div className={styles.cardPaginationContainer}>

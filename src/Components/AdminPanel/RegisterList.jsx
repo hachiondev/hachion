@@ -141,6 +141,7 @@ const [pendingStatusChange, setPendingStatusChange] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [dateOrder, setDateOrder] = useState(null);
 
   // ADDED: State for checkbox selection
   const [selectedIds, setSelectedIds] = useState([]);
@@ -348,6 +349,18 @@ const sortByFollowUp = (order) => {
   });
 
   setFilteredStudent(sorted);
+};
+
+const sortByRegistrationDate = (order) => {
+  const sorted = [...filteredStudent].sort((a, b) => {
+    const dateA = parseDate(a.date);
+    const dateB = parseDate(b.date);
+
+    return order === "asc" ? dateA - dateB : dateB - dateA;
+  });
+
+  setFilteredStudent(sorted);
+  setDateOrder(order);
 };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -1931,7 +1944,36 @@ const formatDate = (dateStr) => {
                       />
                     </StyledTableCell>
                     <StyledTableCell align='center'>S.No.</StyledTableCell>
-                    <StyledTableCell align="center">Date of Registration</StyledTableCell>
+                    <StyledTableCell align="center">
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        Date of Registration
+                        <span style={{ display: "flex", flexDirection: "column", marginLeft: "6px", cursor: "pointer" }}>
+                          <span
+                            style={{
+                              width: 0,
+                              height: 0,
+                              borderLeft: "5px solid transparent",
+                              borderRight: "5px solid transparent",
+                              borderBottom: "7px solid white",
+                              marginBottom: "2px",
+                              opacity: dateOrder === "asc" ? 1 : 0.6,
+                            }}
+                            onClick={() => sortByRegistrationDate("asc")}
+                          />
+                          <span
+                            style={{
+                              width: 0,
+                              height: 0,
+                              borderLeft: "5px solid transparent",
+                              borderRight: "5px solid transparent",
+                              borderTop: "7px solid white",
+                              opacity: dateOrder === "desc" ? 1 : 0.6,
+                            }}
+                            onClick={() => sortByRegistrationDate("desc")}
+                          />
+                        </span>
+                      </div>
+                    </StyledTableCell>
                     <StyledTableCell align='center'>Mode</StyledTableCell>
                     <StyledTableCell align='center'>Student ID</StyledTableCell>
                     <StyledTableCell align='center'>Student Name</StyledTableCell>

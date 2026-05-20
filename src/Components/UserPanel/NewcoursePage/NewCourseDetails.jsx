@@ -168,9 +168,12 @@ useEffect(() => {
         </Helmet>
       )}
 
-      <div className="blogs-header" style={{ marginLeft: "6vw" }}>
-        <nav aria-label="breadcrumb">
+      <div className="blogs-header" style={{ marginLeft: "11.5vw" }}>
+        <nav aria-label="breadcrumb" style={{ display: 'flex', alignItems: 'center' }}>
           <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <Link to="/">Home</Link> <MdKeyboardArrowRight />
+            </li>
             <li className="breadcrumb-item">
               <Link to="/courses">Courses</Link> <MdKeyboardArrowRight />
             </li>

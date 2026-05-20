@@ -145,7 +145,8 @@ const handleNavigation = (course) => {
 
               {/* SOCIAL MEDIA LINKS */}
               <div className='mt-2'>
-                <h6 className='footer-heading text-center'>Social Links</h6>
+                <h3 className='footer-heading text-center'>Connect With Us</h3>
+
                 <div className="footer-link">
                   <a href="https://www.facebook.com/hachion.official/" target="_blank" rel="noopener noreferrer">
                     <img src={facebook} alt="facebook-icon" loading="lazy" />

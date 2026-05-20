@@ -157,6 +157,7 @@ function AppRoutes() {
           />
           <Route path="/become-instructor" element={<BecomeInstructor />} />
           <Route path="/view-all-reviews" element={<ViewReviews />} />
+          <Route path="/courses/:categoryName" element={<Course />} />
           <Route path="/courses" element={<Course />} />
           <Route
   path="/coursedetails/:courseName"

@@ -181,17 +181,37 @@ const AdminCoupon = ({ onChange }) => {
       .catch(console.error);
   }, []);
 
+  // useEffect(() => {
+  //   const filtered = coupon.filter(c =>
+  //     c.course_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     c.code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     c.status?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     c.startDate?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     c.endDate?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     c.type?.toLowerCase().includes(searchTerm.toLowerCase())
+  //   );
+  //   setFilteredCoupon(filtered);
+  // }, [coupon, searchTerm]);
   useEffect(() => {
-    const filtered = coupon.filter(c =>
-      c.course_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.status?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.startDate?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.endDate?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.type?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filtered = coupon.filter((c) => {
+    const search = searchTerm.toLowerCase();
+
+    return (
+      c.courseNames?.join(", ").toLowerCase().includes(search) ||
+      c.countryNames?.join(", ").toLowerCase().includes(search) ||
+      c.couponCode?.toLowerCase().includes(search) ||
+      c.discountType?.toLowerCase().includes(search) ||
+      c.status?.toLowerCase().includes(search) ||
+      c.startDate?.toLowerCase().includes(search) ||
+      c.endDate?.toLowerCase().includes(search) ||
+      String(c.discountValue)?.toLowerCase().includes(search) ||
+      String(c.usageLimit)?.toLowerCase().includes(search)
     );
-    setFilteredCoupon(filtered);
-  }, [coupon, searchTerm]);
+  });
+
+  setFilteredCoupon(filtered);
+  setCurrentPage(1);
+}, [coupon, searchTerm]);
 
   const CheckboxOption = (props) => (
     <components.Option {...props}>

@@ -175,6 +175,7 @@ export default function OfflineEnroll() {
 
 setEnroll(response.data);
 setFilteredEnroll(response.data);
+
       } catch (error) {
         console.error("Error fetching enrollments:", error.message);
       }
@@ -325,12 +326,48 @@ const handleDelete = async (id) => {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+  const { name, value } = e.target;
+
+  if (name === "category_name") {
     setEnrollData((prevData) => ({
       ...prevData,
-      [name]: value,
+      category_name: value,
+      course_name: "",
+      duration: "",
+      batch_id: ""
     }));
-  };
+
+    setBatchIds([]);
+    return;
+  }
+
+  if (name === "course_name") {
+    setEnrollData((prevData) => ({
+      ...prevData,
+      course_name: value,
+      duration: "",
+      batch_id: ""
+    }));
+
+    setBatchIds([]);
+    return;
+  }
+
+  // if (name === "duration") {
+  //   setEnrollData((prevData) => ({
+  //     ...prevData,
+  //     duration: value,
+  //     batch_id: ""
+  //   }));
+
+  //   return;
+  // }
+
+  setEnrollData((prevData) => ({
+    ...prevData,
+    [name]: value,
+  }));
+};
 
   // Handle period change
   const handlePeriodChange = (period) => {
@@ -733,10 +770,10 @@ if (searchTerm) {
   id="batch_id"
   className="form-select"
   name="batch_id"
-  value={enrollData.batch_id}
+  value={enrollData.batch_id || ""}
   onChange={handleChange}
 >
-  <option value="" disabled>
+  <option value="">
     Select Batch
   </option>
 

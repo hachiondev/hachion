@@ -7,14 +7,68 @@ export default function NotFound() {
   const [shouldRender, setShouldRender] = useState(false);
 
   // ✅ URL Redirect Mapping (Wrong → Correct)
-  const urlRedirectMap = {
-    "/course/ai-in-healthcare": "/coursedetails/ai-in-healthcare",
-    "/course/salesforce-admin": "/coursedetails/salesforce-admin",
-    "/coursedetails/ai": "/coursedetails/artificial-intelligence-(-ai-)",
-    "/course/artificial-intelligence-(-ai-)": "/coursedetails/artificial-intelligence",
-    "/hachion%20admin/cyber-security": "/coursedetails/cyber-security",
-  };
+  // const urlRedirectMap = {
+  //   "/course/ai-in-healthcare": "/coursedetails/ai-in-healthcare",
+  //   "/course/salesforce-admin": "/coursedetails/salesforce-admin",
+  //   "/coursedetails/ai": "/coursedetails/artificial-intelligence-(-ai-)",
+  //   "/course/artificial-intelligence-(-ai-)": "/coursedetails/artificial-intelligence",
+  //   "/hachion%20admin/cyber-security": "/coursedetails/cyber-security",
+  // };
 
+  const urlRedirectMap = {
+
+  // Artificial Intelligence
+  "/coursedetails/artificial-intelligence-(-ai-)": "/courses/artificial-intelligence/artificial-intelligence-training",
+  "/coursedetails/machine-learning-with-ai": "/courses/artificial-intelligence/machine-learning-training",
+  "/coursedetails/ai-in-healthcare": "/courses/artificial-intelligence/ai-in-healthcare",
+  "/coursedetails/chatgpt": "/courses/artificial-intelligence/chatgpt-training",
+  "/coursedetails/machine-learning-operations-(mlops)": "/courses/artificial-intelligence/machine-learning-operations-training",
+  "/coursedetails/natural-language-processing-(nlp)": "/courses/artificial-intelligence/natural-language-processing-training",
+  "/coursedetails/agentic-ai": "/courses/artificial-intelligence/agentic-ai-training",
+  "/coursedetails/generative-ai": "/courses/artificial-intelligence/generative-ai-training",
+  "/coursedetails/genai-with-python": "/courses/artificial-intelligence/genai-with-python",
+  "/coursedetails/large-language-models-(-llm-)": "/courses/artificial-intelligence/large-language-models-training",
+  "/coursedetails/gen-ai-with-agentic-ai": "/courses/artificial-intelligence/gen-ai-agentic-ai-training",
+
+  // Business Analyst
+  "/coursedetails/it-business-analyst": "/courses/business-analyst/it-business-analyst",
+  "/coursedetails/business-analyst-healthcare": "/courses/business-analyst/business-analyst-healthcare",
+  "/coursedetails/business-analyst-%e2%80%93-banking-domain": "/courses/business-analyst/business-analyst-banking-domain",
+
+  // Business Intelligence
+  "/coursedetails/tableau-desktop": "/courses/business-intelligence/tableau-desktop",
+  "/coursedetails/big-data": "/courses/business-intelligence/big-data-training",
+  "/coursedetails/spss": "/courses/business-intelligence/spss-training",
+
+  // Career Development
+  "/coursedetails/soft-skills": "/courses/career-development-and-professional-skills/soft-skills",
+
+  // Cloud Courses
+  "/coursedetails/snowflake": "/courses/cloud-courses/snowflake-training",
+  "/coursedetails/mulesoft": "/courses/cloud-courses/mulesoft-training",
+  "/coursedetails/aws-with-devops": "/courses/cloud-courses/aws-devops-training",
+  "/coursedetails/aws-solutions-architect-associate": "/courses/cloud-courses/aws-solutions-architect-certification",
+  "/coursedetails/microsoft-azure-administrator-(az-104)": "/courses/cloud-courses/microsoft-azure-administrator-certification",
+  "/coursedetails/az-400-designing-and-implementing-microsoft-devops-solutions": "/courses/cloud-courses/azure-devops-engineer-certification",
+  "/coursedetails/aws-cloud-practitioner": "/courses/cloud-courses/aws-cloud-practitioner-certification",
+  "/coursedetails/devops": "/courses/cloud-courses/devops-training",
+  "/coursedetails/docker-and-kubernetes-certification-training": "/courses/cloud-courses/docker-kubernetes-certification-training",
+  "/coursedetails/oracle-cloud-scm": "/courses/cloud-courses/oracle-cloud-scm-training",
+  "/coursedetails/datadog": "/courses/cloud-courses/datadog-training",
+  "/coursedetails/oracle-ebs": "/courses/cloud-courses/oracle-ebs-training",
+  "/coursedetails/docker-and-kubernetes-(7-hands-on-projects)": "/courses/cloud-courses/docker-kubernetes-projects",
+  "/coursedetails/databricks": "/courses/cloud-courses/databricks-training",
+  "/coursedetails/aws-data-engineer": "/courses/cloud-courses/aws-data-engineer-training",
+
+  // CRM Courses
+  "/coursedetails/salesforce-admin": "/courses/crm-courses/salesforce-admin",
+  "/coursedetails/salesforce-development": "/courses/crm-courses/salesforce-development",
+  "/coursedetails/servicenow-admin": "/courses/crm-courses/servicenow-admin",
+  "/coursedetails/salesforce-admin+development-(combo-course)": "/courses/crm-courses/salesforce-admin-development",
+  "/coursedetails/salesforce-advanced-admin": "/courses/crm-courses/salesforce-advanced-admin",
+  "/coursedetails/salesforce-business-analyst": "/courses/crm-courses/salesforce-business-analyst",
+
+};
   // ❌ Invalid / Deleted URLs (from your sheet)
   const invalidUrls = [
     "/blogs/machine-learning-with-ai/how-netflix-uses-machine-learning-behind-the-technology-that-keeps-you-watching-50%23:~:text%3dnearly%2520four%2520out%2520of%2520every%2520five%2520shows%2520or%2520movies%2520watched%2520on%2520netflix%2520are%2520driven%2520by%2520personalized%2520recommendations",

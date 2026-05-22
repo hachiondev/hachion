@@ -105,25 +105,6 @@ const slugify = (text = "") =>
     .replace(/\s+/g, "-")
     .replace(/^-+|-+$/g, "");
 
-const CourseDetailsRedirect = () => {
-  const { courseName } = useParams();
-
-  // Example mapping
-  const categoryMap = {
-    "java-full-stack": "full-stack-development",
-    "aws-devops": "cloud-computing",
-  };
-
-  const categoryName =
-    categoryMap[slugify(courseName)] || "courses";
-
-  return (
-    <Navigate
-      to={`/courses/${categoryName}/${courseName}`}
-      replace
-    />
-  );
-};
 function AppRoutes() {
   return (
     <>
@@ -159,11 +140,7 @@ function AppRoutes() {
           <Route path="/view-all-reviews" element={<ViewReviews />} />
           <Route path="/courses/:categoryName" element={<Course />} />
           <Route path="/courses" element={<Course />} />
-          <Route
-  path="/coursedetails/:courseName"
-  element={<CourseDetailsRedirect />}
-/>
-
+        
 {/* <Route
   path="/courses/:courseName"
   element={<NewCourseDetails />}

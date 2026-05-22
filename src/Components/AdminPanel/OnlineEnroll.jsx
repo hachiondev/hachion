@@ -75,10 +75,32 @@ export default function OnlineEnroll() {
   // ADDED: Handle period change
   const handlePeriodChange = (period) => {
     setSelectedPeriod(period);
-    applyFilters(period, selectedMode, startDate, endDate);
+    let newStartDate = null;
+    let newEndDate = null;
+
+    if (period === 'thisWeek') {
+      // Set to Monday to Sunday of current week
+      const today = dayjs();
+      newStartDate = today.startOf('week').add(1, 'day'); // Monday
+      newEndDate = today.endOf('week').add(1, 'day'); // Sunday
+    } else if (period === 'thisMonth') {
+      // Set to first to last day of current month
+      const today = dayjs();
+      newStartDate = today.startOf('month');
+      newEndDate = today.endOf('month');
+    } else if (period === 'thisYear') {
+      // Set to Jan 1 to Dec 31 of current year
+      const today = dayjs();
+      newStartDate = today.startOf('year');
+      newEndDate = today.endOf('year');
+    }
+
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
+    applyFilters(period, selectedMode, newStartDate, newEndDate);
   };
 
-  // ADDED: Handle mode change
+  // ADDED: Handle mode change (filter by enrollmentStatus)
   const handleModeChange = (mode) => {
     setSelectedMode(mode);
     applyFilters(selectedPeriod, mode, startDate, endDate);
@@ -88,12 +110,15 @@ export default function OnlineEnroll() {
   const applyFilters = (period, mode, start, end) => {
     let filtered = [...enrollData];
 
-    // Apply date range filter
+    // Apply date range filter using enroll_date
     if (start || end) {
+      const startTime = start ? dayjs(start).startOf('day').toDate().getTime() : null;
+      const endTime = end ? dayjs(end).endOf('day').toDate().getTime() : null;
+
       filtered = filtered.filter((item) => {
-        const enrollDate = new Date(item.date || item.enroll_date);
-        const startTime = start ? new Date(start).setHours(0, 0, 0, 0) : null;
-        const endTime = end ? new Date(end).setHours(23, 59, 59, 999) : null;
+        const enrollDateValue = item.enroll_date || item.date;
+        if (!enrollDateValue) return false;
+        const enrollDate = dayjs(enrollDateValue).toDate().getTime();
         return (
           (!startTime || enrollDate >= startTime) &&
           (!endTime || enrollDate <= endTime)
@@ -103,35 +128,34 @@ export default function OnlineEnroll() {
 
     // Apply period filter
     if (period) {
-      const today = new Date();
-      const startOfWeek = new Date(today);
-      startOfWeek.setDate(today.getDate() - today.getDay()); // Sunday as first day
-      startOfWeek.setHours(0, 0, 0, 0);
-      
-      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-      const startOfYear = new Date(today.getFullYear(), 0, 1);
+      const today = dayjs();
+      const startOfWeek = today.startOf('week');
+      const startOfMonth = today.startOf('month');
+      const startOfYear = today.startOf('year');
 
       filtered = filtered.filter((item) => {
-        const enrollDate = new Date(item.date || item.enroll_date);
-        
-        switch(period) {
+        const enrollDateValue = item.enroll_date || item.date;
+        if (!enrollDateValue) return false;
+        const enrollDate = dayjs(enrollDateValue);
+        switch (period) {
           case 'thisWeek':
-            return enrollDate >= startOfWeek;
+            return enrollDate.isSame(startOfWeek, 'week') || enrollDate.isAfter(startOfWeek);
           case 'thisMonth':
-            return enrollDate >= startOfMonth;
+            return enrollDate.isSame(startOfMonth, 'month') || enrollDate.isAfter(startOfMonth);
           case 'thisYear':
-            return enrollDate >= startOfYear;
+            return enrollDate.isSame(startOfYear, 'year') || enrollDate.isAfter(startOfYear);
           default:
             return true;
         }
       });
     }
 
-    // Apply mode filter
-    if (mode) {
-      filtered = filtered.filter((item) => 
-        item.mode?.toLowerCase() === mode.toLowerCase()
-      );
+    // Apply mode filter based on enrollmentStatus
+    if (mode && mode !== 'both') {
+      filtered = filtered.filter((item) => {
+        const status = (item.enrollmentStatus || item.mode || '').toString().toLowerCase();
+        return status === mode.toLowerCase();
+      });
     }
 
     setFilteredData(filtered);
@@ -413,7 +437,7 @@ export default function OnlineEnroll() {
                 <StyledTableCell align="center">Mode</StyledTableCell>
                 <StyledTableCell align="center">Status</StyledTableCell>
                 <StyledTableCell align="center">Trainer</StyledTableCell>
-                <StyledTableCell align="center">Completed Date</StyledTableCell>
+                <StyledTableCell align="center">Enrollment Status</StyledTableCell>
                 <StyledTableCell align="center">Resend email count</StyledTableCell>
                 <StyledTableCell align="center">Action</StyledTableCell>
               </TableRow>
@@ -568,7 +592,8 @@ export default function OnlineEnroll() {
                       </div>
                     </StyledTableCell>
                     <StyledTableCell align="center">{row.trainer}</StyledTableCell>
-                    <StyledTableCell align="center">{row.completion_date ? dayjs(row.completion_date).format('MMM-DD-YYYY').toUpperCase() : ''}</StyledTableCell>
+                    <StyledTableCell align="center">{row.enrollmentStatus}</StyledTableCell>
+                    {/* <StyledTableCell align="center">{row.completion_date ? dayjs(row.completion_date).format('MMM-DD-YYYY').toUpperCase() : ''}</StyledTableCell> */}
                     <StyledTableCell align="center">{row.resendCount}</StyledTableCell>
                     <StyledTableCell align="center">
                       <RiDeleteBin6Line

@@ -4,49 +4,80 @@ import "../Blogs.css";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { FaArrowUp } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-// import { useCourses } from "../../../Api/hooks/HomePageApi/NavbarApi/useCourses";
-import { useCategories } from "../../../Api/hooks/SitemapPageApi/useCategories";
-import { useAllCourses } from "../../../Api/hooks/SitemapPageApi/useAllCourses";
-import Loader from "../Common/Loader/Loader";
 
 const Sitemap = () => {
+  const [Category, setCategory] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const API_URL = "https://api.test.hachion.co/course-categories/all";
   const navigate = useNavigate();
-  // const { data: course = [] } = useCourses();
-  const { data: Category = [], isLoading: loadingCategories, error: categoryError } = useCategories();
-  const { data: courses = [], isLoading: loadingCourses, error: coursesError } = useAllCourses();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(API_URL, {
+          headers: {
+            Authorization: "Bearer 98A4V2IB5X6V7B671Y18QPWMU9Q5TG4S",
+            "Content-Type": "application/json",
+          },
+        });
+        setCategory(response.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
   }, []);
 
-  if (loadingCategories || loadingCourses) {
-    return (
-      <Loader />
-    );
+  const slugify = (text = "") =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "");
+  
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get("https://api.test.hachion.co/courses/all");
+        if (Array.isArray(response.data)) {
+          setCourses(response.data);
+        } else {
+          console.error("Unexpected API response format:", response.data);
+          setCourses([]);
+        }
+      } catch (error) {
+        console.error("Error fetching courses:", error.message);
+        setCourses([]);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
+
+  const handleCourseDetails = (course) => {
+
+  if (!course?.courseName || !course?.courseCategory) {
+    console.error("Missing category/course", course);
+    return;
   }
 
-  // ❗ Error UI
-  if (categoryError || coursesError) {
-    return (
-      <div className="error-container">
-        <h3>Something went wrong</h3>
-        <p>Please try again later.</p>
-      </div>
-    );
-  }
+  const formattedName = course.courseName
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9\-]/g, "");
 
-  const handleCategoryClick = (categoryName) => {
-    navigate("/courses", {
-      state: { selectedCategory: categoryName }
-    });
-  };
+  const formattedCategory = course.courseCategory
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9\-]/g, "");
 
-  const handleCourseDetails = (coursename) => {
-    if (coursename) {
-      const formatted = coursename.toLowerCase().replace(/\s+/g, "-");
-      navigate(`/courses/${formatted}`);
-    }
-  };
+  navigate(`/courses/${formattedCategory}/${formattedName}`);
+};
   return (
     <>
       <div className="about-us container">
@@ -66,19 +97,23 @@ const Sitemap = () => {
             <p className="title">All categories</p>
           </div>
           <div className="sitemap-contenet container">
-            <div className="div_category">
-              {Category.map((item, index) => (
-                <div key={index} className="col-12 col-md-6">
-                  <button
-                    className="txtCoursebtn mt-2"
-                    onClick={() => handleCategoryClick(item.name)}
-                  >
-                    {item.name}
-                  </button>
-                </div>
-              ))}
+            <div class="div_category">
+              {Category.map((item, index) => {
+                const formattedCategory = slugify(item.name || item.category_name || item.category || "");
+                return (
+                  <div key={index} class="col-12 col-md-6">
+                    <p class="txtCategory mt-2">
+                      <button
+                        className="txtCoursebtn"
+                        onClick={() => navigate(`/courses/${formattedCategory}`)}
+                      >
+                        {item.name}
+                      </button>
+                    </p>
+                  </div>
+                );
+              })}
             </div>
-
           </div>
         </div>
         <div className="about-us-content" style={{ marginTop: "20px" }}>
@@ -96,8 +131,8 @@ const Sitemap = () => {
                     <button
                       className="txtCoursebtn"
                       onClick={(e) => {
-                        e.stopPropagation();
-                        handleCourseDetails(item.courseName);
+                        e.stopPropagation(); 
+                        handleCourseDetails(item);
                       }}
                     >
                       {item.courseName}

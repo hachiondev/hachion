@@ -178,7 +178,7 @@ useEffect(() => {
               <Link to="/courses">Courses</Link> <MdKeyboardArrowRight />
             </li>
             <li className="breadcrumb-item">
-              <Link to="/courses" state={{ selectedCategory: courseData?.courseCategory }}>
+              <Link to={`/courses/${slugify(courseData?.courseCategory)}`}>
                 {courseData?.courseCategory}
               </Link> <MdKeyboardArrowRight />
             </li>

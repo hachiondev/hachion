@@ -27,6 +27,9 @@ import axios from 'axios';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
 import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormat);
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -64,6 +67,7 @@ export default function OfflineEnroll() {
   const [message, setMessage] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [selectedPeriod, setSelectedPeriod] = useState('');
   const [editedData, setEditedData] = useState({ certificate_image: "", course_name: "", category_name: "", title: "", description: "", });
   const [enrollData, setEnrollData] = useState({
     id: "",
@@ -71,6 +75,9 @@ export default function OfflineEnroll() {
     course_name: "",
     date: currentDate,
     category_name: "",
+    duration: "",
+    batch_id: "",
+    email: "",
     title: "",
     description: "",
   });
@@ -82,6 +89,11 @@ export default function OfflineEnroll() {
   const [selectAll, setSelectAll] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const DURATION_OPTIONS = ["1 month", "2 months", "3 months", "6 months", "1 year"];
+  // const BATCH_ID_OPTIONS = ["Batch A", "Batch B", "Batch C"];
+
+  const [batchIds, setBatchIds] = useState([]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -110,6 +122,9 @@ export default function OfflineEnroll() {
       course_name: "",
       date: currentDate,
       category_name: "",
+      duration: "",
+      batch_id: "",
+      email: "",
       title: "",
       description: "",
     });
@@ -121,6 +136,24 @@ export default function OfflineEnroll() {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handleEnrollInputChange = (e) => {
+    const { name, value } = e.target;
+    setEnrollData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const isEnrollFormValid = () => {
+    return (
+      enrollData.category_name.trim() !== "" &&
+      enrollData.course_name.trim() !== "" &&
+      enrollData.duration.trim() !== "" &&
+      enrollData.batch_id.trim() !== "" &&
+      enrollData.email.trim() !== ""
+    );
   };
 
   const handleClose = () => {
@@ -137,11 +170,11 @@ export default function OfflineEnroll() {
   useEffect(() => {
     const fetchEnrollments = async () => {
       try {
-        const response = await axios.get('https://api.test.hachion.co/enroll');
-        // Filter for offline enrollments only
-        const offlineEnrollments = response.data.filter(item => item.mode === 'Offline');
-        setEnroll(offlineEnrollments);
-        setFilteredEnroll(offlineEnrollments);
+        const response = await axios.get("https://api.test.hachion.co/offline-enrollments");
+       console.log("Offline Enrollment API Response:", response.data);
+
+setEnroll(response.data);
+setFilteredEnroll(response.data);
       } catch (error) {
         console.error("Error fetching enrollments:", error.message);
       }
@@ -165,23 +198,78 @@ export default function OfflineEnroll() {
   // Fetch courses when category changes
   useEffect(() => {
     const fetchCourses = async () => {
-      if (enrollData.category_name) {
-        try {
-          const response = await axios.get("https://api.test.hachion.co/courses/all");
-          const filtered = response.data.filter(
-            (course) => course.courseCategory === enrollData.category_name
-          );
-          setFilterCourse(filtered);
-        } catch (error) {
-          console.error("Error fetching courses:", error.message);
+      if (!enrollData.category_name) {
+        setFilterCourse([]);
+        return;
+      }
+
+      try {
+        const response = await axios.get("https://api.test.hachion.co/courses/category", {
+          params: {
+            courseCategory: enrollData.category_name,
+          },
+        });
+
+        if (Array.isArray(response.data)) {
+          setFilterCourse(response.data);
+        } else {
+          console.warn("No courses returned for category:", enrollData.category_name, response.data);
+          setFilterCourse([]);
         }
-      } else {
+      } catch (error) {
+        if (error.response?.status === 404) {
+          setFilterCourse([]);
+          return;
+        }
+        console.error("Error fetching courses by category:", error.message);
         setFilterCourse([]);
       }
     };
-    
+
     fetchCourses();
   }, [enrollData.category_name]);
+
+  useEffect(() => {
+
+  const fetchBatchIds = async () => {
+
+    if (
+      enrollData.category_name &&
+      enrollData.course_name &&
+      enrollData.duration
+    ) {
+
+      try {
+
+        const response = await axios.get(
+          "https://api.test.hachion.co/batch-ids",
+          {
+            params: {
+              categoryName: enrollData.category_name,
+              courseName: enrollData.course_name,
+              duration: enrollData.duration
+            }
+          }
+        );
+
+        setBatchIds(response.data);
+
+      } catch (error) {
+        console.error("Error fetching batch ids:", error);
+      }
+
+    } else {
+      setBatchIds([]);
+    }
+  };
+
+  fetchBatchIds();
+
+}, [
+  enrollData.category_name,
+  enrollData.course_name,
+  enrollData.duration
+]);
 
   const handleSave = async () => {
     try {
@@ -193,27 +281,44 @@ export default function OfflineEnroll() {
       setMessage("Error updating enrollment.");
     }
   };
+const handleDelete = async (id) => {
 
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`https://api.test.hachion.co/enroll/delete/${id}`);
-      const updatedEnrollments = enroll.filter(item => item.id !== id);
-      setEnroll(updatedEnrollments);
-      setFilteredEnroll(updatedEnrollments);
-      
-      // Remove from selectedIds if present
-      setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
-      
-      setSuccessMessage("✅ Enrollment deleted successfully.");
-      setErrorMessage("");
-      setTimeout(() => setSuccessMessage(""), 3000);
-    } catch (error) {
-      console.error("Error deleting enrollment:", error);
-      setErrorMessage("❌ Failed to delete enrollment.");
+  try {
+
+    await axios.delete(
+      `https://api.test.hachion.co/offline-enroll/delete/${id}`
+    );
+
+    const updatedEnrollments = enroll.filter(
+      item => item.id !== id
+    );
+
+    setEnroll(updatedEnrollments);
+    setFilteredEnroll(updatedEnrollments);
+
+    setSelectedIds(prev =>
+      prev.filter(selectedId => selectedId !== id)
+    );
+
+    setSuccessMessage("✅ Enrollment deleted successfully.");
+    setErrorMessage("");
+
+    setTimeout(() => {
       setSuccessMessage("");
-    }
-  };
+    }, 3000);
 
+  } catch (error) {
+
+    console.error("Error deleting enrollment:", error);
+
+    setErrorMessage("❌ Failed to delete enrollment.");
+    setSuccessMessage("");
+
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 3000);
+  }
+};
   const handleClickOpen = (row) => {
     setEditedData(row);
     setOpen(true);
@@ -227,68 +332,248 @@ export default function OfflineEnroll() {
     }));
   };
 
-  // Updated handleDateFilter to work with filteredEnroll
-  const handleDateFilter = () => {
-    const filtered = enroll.filter((item) => {
-      const date = new Date(item.date || item.enroll_date);
-      const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
-      const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
-      return (!start || date >= start) && (!end || date <= end);
-    });
-    setFilteredEnroll(filtered);
-    setCurrentPage(1);
+  // Handle period change
+  const handlePeriodChange = (period) => {
+    setSelectedPeriod(period);
+    let newStartDate = null;
+    let newEndDate = null;
+
+    if (period === 'thisWeek') {
+      // Set to Monday to Sunday of current week
+      const today = dayjs();
+      newStartDate = today.startOf('week').add(1, 'day'); // Monday
+      newEndDate = today.endOf('week').add(1, 'day'); // Sunday
+    } else if (period === 'thisMonth') {
+      // Set to first to last day of current month
+      const today = dayjs();
+      newStartDate = today.startOf('month');
+      newEndDate = today.endOf('month');
+    } else if (period === 'thisYear') {
+      // Set to Jan 1 to Dec 31 of current year
+      const today = dayjs();
+      newStartDate = today.startOf('year');
+      newEndDate = today.endOf('year');
+    }
+
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
+    applyFilters(period, newStartDate, newEndDate);
   };
+
+  // Apply all filters
+ const applyFilters = (period, start, end) => {
+
+  let filtered = [...enroll];
+
+  // Apply date filter
+  if (start || end) {
+
+    const startTime = start
+      ? dayjs(start).startOf('day').toDate().getTime()
+      : null;
+
+    const endTime = end
+      ? dayjs(end).endOf('day').toDate().getTime()
+      : null;
+
+    filtered = filtered.filter((item) => {
+
+      const enrollDateValue =
+        item.enroll_date || item.date;
+
+      if (!enrollDateValue) return false;
+
+      const enrollDate = dayjs(enrollDateValue)
+        .toDate()
+        .getTime();
+
+      return (
+        (!startTime || enrollDate >= startTime) &&
+        (!endTime || enrollDate <= endTime)
+      );
+
+    });
+  }
+
+  // Apply period filter
+  if (period) {
+
+    const today = dayjs();
+
+    filtered = filtered.filter((item) => {
+
+      const enrollDate = dayjs(
+        item.enroll_date || item.date
+      );
+
+      switch (period) {
+
+        case 'thisWeek':
+          return enrollDate.isSame(today, 'week');
+
+        case 'thisMonth':
+          return enrollDate.isSame(today, 'month');
+
+        case 'thisYear':
+          return enrollDate.isSame(today, 'year');
+
+        default:
+          return true;
+      }
+
+    });
+  }
+// Apply search filter for ALL columns
+if (searchTerm) {
+
+  const searchLower = searchTerm.toLowerCase();
+
+  filtered = filtered.filter((item) => {
+
+    return Object.values(item)
+      .join(' ')
+      .toLowerCase()
+      .includes(searchLower);
+
+  });
+}
+  setFilteredEnroll(filtered);
+  setCurrentPage(1);
+};
+
+  // Updated handleDateFilter to work with filteredEnroll
+ const handleDateFilter = () => {
+  let filtered = [...enroll];
+
+  // Apply date range filter
+  if (startDate || endDate) {
+    const startTime = startDate
+      ? dayjs(startDate).startOf('day').toDate().getTime()
+      : null;
+
+    const endTime = endDate
+      ? dayjs(endDate).endOf('day').toDate().getTime()
+      : null;
+
+    filtered = filtered.filter((item) => {
+      const enrollDateValue = item.enroll_date || item.date;
+
+      if (!enrollDateValue) return false;
+
+      const enrollDate = dayjs(enrollDateValue)
+        .toDate()
+        .getTime();
+
+      return (
+        (!startTime || enrollDate >= startTime) &&
+        (!endTime || enrollDate <= endTime)
+      );
+    });
+  }
+
+  // Apply period filter
+  if (selectedPeriod) {
+    const today = dayjs();
+
+    filtered = filtered.filter((item) => {
+      const enrollDate = dayjs(item.enroll_date || item.date);
+
+      switch (selectedPeriod) {
+        case 'thisWeek':
+          return enrollDate.isSame(today, 'week');
+
+        case 'thisMonth':
+          return enrollDate.isSame(today, 'month');
+
+        case 'thisYear':
+          return enrollDate.isSame(today, 'year');
+
+        default:
+          return true;
+      }
+    });
+  }
+// Apply search filter for ALL columns
+if (searchTerm) {
+
+  const searchLower = searchTerm.toLowerCase();
+
+  filtered = filtered.filter((item) => {
+
+    return Object.values(item)
+      .join(' ')
+      .toLowerCase()
+      .includes(searchLower);
+
+  });
+}
+  setFilteredEnroll(filtered);
+  setCurrentPage(1);
+};
 
   // Updated handleDateReset
   const handleDateReset = () => {
     setStartDate(null);
     setEndDate(null);
+    setSelectedPeriod('');
     setFilteredEnroll(enroll);
     setCurrentPage(1);
   };
 
-  // Updated search functionality
-  useEffect(() => {
-    const filtered = enroll.filter(item => {
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        item.student_ID?.toLowerCase().includes(searchLower) ||
-        item.name?.toLowerCase().includes(searchLower) ||
-        item.email?.toLowerCase().includes(searchLower) ||
-        item.course_name?.toLowerCase().includes(searchLower)
-      );
-    });
-    setFilteredEnroll(filtered);
-    setCurrentPage(1);
-  }, [searchTerm, enroll]);
-
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    const currentDate = new Date().toISOString().split("T")[0];
-    formData.append("date", currentDate);
-    formData.append("course_name", enrollData.course_name);
-    formData.append("category_name", enrollData.category_name);
-    formData.append("title", enrollData.title);
-    formData.append("description", enrollData.description);
-    if (enrollData.certificate_image) {
-      formData.append("certificate_image", enrollData.certificate_image);
-    } else {
-      alert("Please select an image.");
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
+
+    if (!isEnrollFormValid()) {
+      setErrorMessage("Please fill all required fields before submitting.");
+      setSuccessMessage("");
       return;
     }
+
+    setErrorMessage("");
+    setSuccessMessage("");
+    setIsSubmitting(true);
+
     try {
-      const response = await axios.post("https://api.test.hachion.co/certificate/add", formData, {
-      });
-      if (response.status === 201 || response.status === 200) {
-        alert("Enrollment added successfully");
+      const payload = {
+        email: enrollData.email,
+        course_name: enrollData.course_name,
+        enroll_date: currentDate,
+        batch_id: enrollData.batch_id,
+      };
+
+      console.log("Payload:", payload);
+
+      const response = await axios.post(
+        "https://api.test.hachion.co/offline-enroll/add",
+        payload
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        setSuccessMessage("✅ Offline Enrollment Added Successfully");
+        setErrorMessage("");
         handleReset();
+
+        const enrollResponse = await axios.get(
+          "https://api.test.hachion.co/offline-enrollments"
+        );
+
+        setEnroll(enrollResponse.data);
+        setFilteredEnroll(enrollResponse.data);
+
+        setTimeout(() => setSuccessMessage(""), 5000);
       }
     } catch (error) {
-      alert("Error adding enrollment.");
+      console.error("Error adding enrollment:", error);
+      const backendMessage = error.response?.data || "Error adding enrollment.";
+      setErrorMessage(backendMessage);
+      setSuccessMessage("");
+      setTimeout(() => setErrorMessage(""), 5000);
+    } finally {
+      setIsSubmitting(false);
     }
   };
-
   const handleAddTrendingCourseClick = () => {
     setShowAddCourse(true);
   };
@@ -393,9 +678,9 @@ export default function OfflineEnroll() {
             </div>
             <div className='course-details'>
               <div className='course-row'>
-                <div class="col">
-                  <label for="inputState" class="form-label">Category Name</label>
-                  <select id="inputState" class="form-select" name='category_name' value={enrollData.category_name} onChange={handleChange}>
+                <div className="col">
+                  <label htmlFor="inputState" className="form-label">Category Name</label>
+                  <select id="inputState" className="form-select" name='category_name' value={enrollData.category_name} onChange={handleChange}>
                     <option value="" disabled>
                       Select Category
                     </option>
@@ -425,10 +710,89 @@ export default function OfflineEnroll() {
               </div>
 
               <div className='course-row'>
-                <button className='submit-btn' data-bs-toggle='modal'
-                  data-bs-target='#exampleModal' onClick={handleSubmit}>Submit</button>
-                <button className='reset-btn' onClick={handleReset}>Reset</button>
+                <div className="col">
+                  <label htmlFor="duration" className="form-label">Duration</label>
+                  <select
+                    id="duration"
+                    className="form-select"
+                    name="duration"
+                    value={enrollData.duration}
+                    onChange={handleChange}
+                  >
+                    <option value="" disabled>Select Duration</option>
+                    {DURATION_OPTIONS.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="col">
+                  <label htmlFor="batch_id" className="form-label">Batch ID</label>
+                  <select
+  id="batch_id"
+  className="form-select"
+  name="batch_id"
+  value={enrollData.batch_id}
+  onChange={handleChange}
+>
+  <option value="" disabled>
+    Select Batch
+  </option>
+
+  {batchIds.map((batchId, index) => (
+    <option key={index} value={batchId}>
+      {batchId}
+    </option>
+  ))}
+</select>
+
+                </div>
               </div>
+
+              <div className='course-row'>
+                <div className="col">
+                  <label htmlFor="email" className="form-label">Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    className="form-control"
+                    value={enrollData.email}
+                    onChange={handleChange}
+                    placeholder="Enter email"
+                  />
+                </div>
+                
+              </div>
+
+              <div className='course-row'>
+                
+              </div>
+
+              <div className='course-row'>
+                <button
+                  className='submit-btn'
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={!isEnrollFormValid() || isSubmitting}
+                >
+                  {isSubmitting ? "Submitting..." : "Submit"}
+                </button>
+                <button className='reset-btn' type="button" onClick={handleReset} disabled={isSubmitting}>Reset</button>
+              </div>
+
+              {/* Success and Error Messages */}
+              {successMessage && (
+                <div style={{ color: "green", fontWeight: "bold", textAlign: "center", marginTop: "15px", padding: "10px", backgroundColor: "#d4edda", borderRadius: "4px" }}>
+                  {successMessage}
+                </div>
+              )}
+              {errorMessage && (
+                <div style={{ color: "red", fontWeight: "bold", textAlign: "center", marginTop: "15px", padding: "10px", backgroundColor: "#f8d7da", borderRadius: "4px" }}>
+                  {errorMessage}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -449,7 +813,10 @@ export default function OfflineEnroll() {
                   Start Date
                   <DatePicker
                     value={startDate}
-                    onChange={(date) => setStartDate(date)}
+                    onChange={(date) => {
+  setStartDate(date);
+  applyFilters(selectedPeriod, date, endDate);
+}}
                     isClearable
                     sx={{
                       '& .MuiIconButton-root': { color: '#00aeef' }
@@ -458,8 +825,11 @@ export default function OfflineEnroll() {
                   End Date
                   <DatePicker
                     value={endDate}
-                    onChange={(date) => setEndDate(date)}
-                    isClearable
+                   onChange={(date) => {
+  setEndDate(date);
+  applyFilters(selectedPeriod, startDate, date);
+}}              
+ isClearable
                     sx={{
                       '& .MuiIconButton-root': { color: '#00aeef' }
                     }}
@@ -468,10 +838,8 @@ export default function OfflineEnroll() {
                   {/* ADDED: Time Period Dropdown */}
                   <select
                     className="form-select period-select"
-                    onChange={(e) => {
-                      // Handle period selection if needed
-                      console.log(e.target.value);
-                    }}
+                    onChange={(e) => handlePeriodChange(e.target.value)}
+                    value={selectedPeriod}
                     style={{ width: '150px', marginLeft: '10px' }}
                   >
                     <option value="">Select Period</option>
@@ -481,7 +849,7 @@ export default function OfflineEnroll() {
                   </select>
 
                   {/* ADDED: Mode Filter Dropdown */}
-                  <select
+                  {/* <select
                     className="form-select mode-select"
                     onChange={(e) => {
                       // Handle mode selection if needed
@@ -493,7 +861,7 @@ export default function OfflineEnroll() {
                     <option value="online">Online</option>
                     <option value="offline">Offline</option>
                     <option value="both">Both</option>
-                  </select>
+                  </select> */}
                   
                   <button className='filter' onClick={handleDateFilter}>Filter</button>
                   <button className='filter' onClick={handleDateReset}>Reset</button>
@@ -521,8 +889,25 @@ export default function OfflineEnroll() {
                         placeholder="Enter Names, Courses, or Email"
                         aria-label="Search"
                         value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                      />
+                          onChange={(e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    if (!value) {
+      setFilteredEnroll(enroll);
+      return;
+    }
+    const filteredData = enroll.filter((item) => {
+      return Object.values(item)
+        .some((val) =>
+          String(val)
+            .toLowerCase()
+            .includes(value.toLowerCase())
+        );
+    });
+    setFilteredEnroll(filteredData);
+    setCurrentPage(1);
+  }}
+/>
                       <button className="btn-search" type="submit"><IoSearch style={{ fontSize: '2rem' }} /></button>
                     </div>
                     
@@ -568,7 +953,7 @@ export default function OfflineEnroll() {
                   <StyledTableCell align="center">Enrollment Date</StyledTableCell>
                   <StyledTableCell align="center">Time</StyledTableCell>
                   <StyledTableCell align="center">Mode</StyledTableCell>
-                  <StyledTableCell align="center">Completed Date</StyledTableCell>
+                  {/* <StyledTableCell align="center">Completed Date</StyledTableCell> */}
                   <StyledTableCell align="center">Action</StyledTableCell>
                 </TableRow>
               </TableHead>
@@ -586,7 +971,7 @@ export default function OfflineEnroll() {
                       <StyledTableCell align="center">
                         {index + 1 + (currentPage - 1) * rowsPerPage}
                       </StyledTableCell>
-                      <StyledTableCell align="left">{row.student_ID || row.studentId}</StyledTableCell>
+                      <StyledTableCell align="left">{row.studentId || row.studentId}</StyledTableCell>
                       <StyledTableCell align="left">{row.name}</StyledTableCell>
                       <StyledTableCell align="left">{row.email}</StyledTableCell>
                       <StyledTableCell align="center">{row.mobile}</StyledTableCell>
@@ -596,15 +981,23 @@ export default function OfflineEnroll() {
                       </StyledTableCell>
                       <StyledTableCell align="center">{row.time}</StyledTableCell>
                       <StyledTableCell align="center">{row.mode}</StyledTableCell>
-                      <StyledTableCell align="center">
+                      {/* <StyledTableCell align="center">
                         {row.completion_date ? dayjs(row.completion_date).format('MMM-DD-YYYY').toUpperCase() : ''}
-                      </StyledTableCell>
+                      </StyledTableCell> */}
                       <StyledTableCell align="center">
-                        <RiDeleteBin6Line
-                          className="delete"
-                          onClick={() => handleDeleteConfirmation(row.id)}
-                          style={{ cursor: "pointer", color: "red" }}
-                        />
+                       <RiDeleteBin6Line
+  className="delete"
+  onClick={() => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this enrollment?"
+    );
+
+    if (confirmDelete) {
+      handleDelete(row.id);
+    }
+  }}
+  style={{ cursor: "pointer", color: "red" }}
+/>
                       </StyledTableCell>
                     </StyledTableRow>
                   ))
@@ -643,9 +1036,9 @@ export default function OfflineEnroll() {
         </div>
         <DialogContent>
           <div className="course-row">
-            <div class="col">
-              <label for="inputState" class="form-label">Category Name</label>
-              <select id="inputState" class="form-select" name='category_name' value={editedData.category_name} onChange={handleInputChange}>
+            <div className="col">
+              <label htmlFor="inputState" className="form-label">Category Name</label>
+              <select id="inputState" className="form-select" name='category_name' value={editedData.category_name} onChange={handleInputChange}>
                 <option value="" disabled>
                   Select Category
                 </option>
@@ -656,9 +1049,9 @@ export default function OfflineEnroll() {
                 ))}
               </select>
             </div>
-            <div class="col">
-              <label for="inputState" class="form-label">Course Name</label>
-              <select id="inputState" class="form-select" name='course_name' value={editedData.course_name} onChange={handleInputChange}>
+            <div className="col">
+              <label htmlFor="inputState" className="form-label">Course Name</label>
+              <select id="inputState" className="form-select" name='course_name' value={editedData.course_name} onChange={handleInputChange}>
                 <option value="" disabled>
                   Select Course
                 </option>

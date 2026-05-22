@@ -87,7 +87,7 @@ const [leadStatuses, setLeadStatuses] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
 const [isSubmitting, setIsSubmitting] = useState(false);
 const [isUpdating, setIsUpdating] = useState(false);
-  const [editedData, setEditedData] = useState({ student_Id: "", userName: "", email: "", mobile: "", whatsapp: "", location: "", country: "", time_zone: "", analyst_name: "", source: "", remarks: "", comments: "", date: currentDate, visa_status: "", mode: "" });
+  const [editedData, setEditedData] = useState({ student_Id: "", userName: "", email: "", mobile: "", whatsapp: "", location: "", country: "", time_zone: "", analyst_name: "", source: "", remarks: "", comments: "", date: currentDate, visa_status: "", mode: "", coordinator: "" });
   const [mobileError, setMobileError] = useState("");
   const [whatsappError, setWhatsappError] = useState("");
 const [sendingId, setSendingId] = useState(null);
@@ -121,7 +121,8 @@ const [periodFilter, setPeriodFilter] = useState("");
   technology: "",
   stateCity: "",
   leadStatus: "",
-  leadTag: ""   
+  leadTag: ""   ,
+  coordinator: ""
   });
 // ✅ NEW: Update Modal + History States
 const [openUpdateModal, setOpenUpdateModal] = useState(false);
@@ -183,7 +184,8 @@ const [pendingStatusChange, setPendingStatusChange] = useState(null);
     technology: "",
     stateCity: "",
     leadStatus: "",
-    leadTag: ""
+    leadTag: "",
+    coordinator: ""
     });
   }
   const handleSendEmail = async (studentId) => {
@@ -304,6 +306,7 @@ if (failCount > 0) {
       visa_status: "",
       mode: "Offline",
       seoTeam: "",
+      coordinator: "",
     technology: "",
     stateCity: "",
     leadStatus: "",
@@ -451,10 +454,14 @@ const isUpdateFormValid = () => {
   const handleCountrySelect = (country) => {
     setSelectedCountry(country);
     const currentMobile = studentData.mobile || "";
-    const numberPart = currentMobile.includes(" ") ? currentMobile.split(" ")[1] : currentMobile;
+    const currentWhatsapp = studentData.whatsapp || "";
+    const mobileNumberPart = currentMobile.includes(" ") ? currentMobile.split(" ")[1] : currentMobile;
+    const whatsappNumberPart = currentWhatsapp.includes(" ") ? currentWhatsapp.split(" ")[1] : currentWhatsapp;
     setStudentData(prev => ({
       ...prev,
-      mobile: numberPart.trim(),
+      country: country.value,
+      mobile: mobileNumberPart.trim(),
+      whatsapp: whatsappNumberPart.trim(),
     }));
   };
 
@@ -543,6 +550,7 @@ const matchSearch =
 
   (item.date || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
   (item.visa_status || "").toLowerCase().includes(searchTerm.toLowerCase());
+  (item.coordinator || "").toLowerCase().includes(searchTerm.toLowerCase());
       const inRange =
   (!start || regDate >= start) &&
   (!end || regDate <= end);
@@ -655,7 +663,8 @@ useEffect(() => {
       (item.lastCallMadeOn || "").toLowerCase().includes(search) ||
 
       (item.date || "").toLowerCase().includes(search) ||
-      (item.visa_status || "").toLowerCase().includes(search)
+      (item.visa_status || "").toLowerCase().includes(search) ||
+      (item.coordinator || "").toLowerCase().includes(search)
     );
   });
 
@@ -671,9 +680,9 @@ const numberPart = numberParts.join(" ");
 const [wCode, ...wNumberParts] = (row.whatsapp || "").split(" ");
 const wNumberPart = wNumberParts.join(" ");
 
-// ✅ MATCH USING MOBILE COUNTRY CODE (FIX)
+// ✅ MATCH USING BOTH COUNTRY CODE AND NAME (FIX FOR SHARED CODES LIKE +1)
 const matchedCountry = countries.find(
-  (c) => c.code === codePart
+  (c) => c.code === codePart && c.name === (row.country || "")
 );
 
 if (matchedCountry) {
@@ -683,12 +692,25 @@ if (matchedCountry) {
     flag: matchedCountry.flag,
   });
 } else {
-  // ✅ FALLBACK (IMPORTANT)
-  setSelectedCountry({
-    value: row.country || "",
-    code: codePart || "",
-    flag: ""
-  });
+  // ✅ FALLBACK: Try matching only by code if no exact name match
+  const fallbackCountry = countries.find(
+    (c) => c.code === codePart
+  );
+  
+  if (fallbackCountry) {
+    setSelectedCountry({
+      value: fallbackCountry.name,
+      code: fallbackCountry.code,
+      flag: fallbackCountry.flag,
+    });
+  } else {
+    // ✅ LAST RESORT: Use stored country name
+    setSelectedCountry({
+      value: row.country || "",
+      code: codePart || "",
+      flag: ""
+    });
+  }
 }
 
   setStudentData({
@@ -703,6 +725,7 @@ if (matchedCountry) {
     analyst_name: row.analyst_name ?? "",
     source: row.source ?? "Select",
     visa_status: row.visa_status ?? "Select Visa Status",
+    coordinator: row.coordinator ?? "",
     remarks: row.remarks ?? "",
     comments: row.comments ?? "",
     seoTeam: row.seoTeam ?? "",
@@ -907,7 +930,8 @@ const formatDate = (dateStr) => {
        course_name: studentData.technology,
         status: studentData.status || "New",
         time_zone: studentData.time_zone,
-  analyst_name: studentData.analyst_name
+  analyst_name: studentData.analyst_name,
+  coordinator: studentData.coordinator,
     };
     
 
@@ -967,6 +991,7 @@ const formatDate = (dateStr) => {
     safeTrim(studentData.seoTeam) !== "" &&
     safeTrim(studentData.stateCity) !== "" &&
     safeTrim(studentData.leadStatus) !== "" &&
+    safeTrim(studentData.coordinator) !== "" &&
     safeTrim(studentData.status) !== ""
   );
 };
@@ -1124,10 +1149,9 @@ const formatDate = (dateStr) => {
                     setStudentData((prev) => ({
                       ...prev,
                       country: selected.value,
-                      mobile: "",
-                      whatsapp: ""
+                      mobile: (prev.mobile || "").trim(),
+                      whatsapp: (prev.whatsapp || "").trim(),
                     }));
-
                   }}
                   value={
                     selectedCountry.value
@@ -1278,7 +1302,9 @@ const formatDate = (dateStr) => {
                 <input type="text" class="schedule-input"
                   name="time_zone" value={studentData.time_zone} onChange={handleChange} />
               </div>
+              
               <div class="col">
+                
                 <label for="inputState" class="form-label">Entered by <span className="star">*</span></label>
                <select
   className="schedule-input"
@@ -1291,6 +1317,7 @@ const formatDate = (dateStr) => {
     <option key={index} value={emp}>{emp}</option>
   ))}
 </select>
+
               </div>
               <div class="col">
                 <label for="inputState" class="form-label">Visa Status</label>
@@ -1303,6 +1330,27 @@ const formatDate = (dateStr) => {
                   <option>Not Sure</option>
                 </select>
               </div>
+             <div className="col">
+  <label
+    className="form-label"
+    style={{ marginBottom: "8px" }}
+  >
+    Coordinator <span className="star">*</span>
+  </label>
+
+  <select
+  className="form-select"
+  name="coordinator"
+  value={studentData.coordinator}
+  onChange={handleChange}
+>
+         <option value="">Select Co-Ordinator</option>
+        <option>Priyanka</option>
+        <option>Shoeb</option>
+        <option>Shireen</option>
+        <option>Arathi</option>
+      </select>
+      </div>
               <div class="col">
                 <label for="inputState" class="form-label">Source of Enquiry <span className="star">*</span></label>
                <select
@@ -1871,62 +1919,148 @@ const formatDate = (dateStr) => {
                     <button className='filter' onClick={handleDateFilter} >Filter</button>
                     <button className="filter" onClick={handleDateReset}>Reset</button>
                   </div>
-                  <div className='entries'>
-                    <div className='entries-left'>
-                      <p style={{ marginBottom: '0' }}>Show</p>
-                      <div className="btn-group">
-                        <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                          {rowsPerPage}
-                        </button>
-                        <ul className="dropdown-menu">
-                          <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
-                          <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
-                          <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
-                        </ul>
-                      </div>
-                      <p style={{ marginBottom: '0' }}>entries</p>
-                    </div>
-                    <div className='entries-right'>
-                      <div className="search-div" role="search" style={{ border: '1px solid #d3d3d3' }}>
-                        <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search"
-                          value={searchTerm}
-                          onChange={(e) => setSearchTerm(e.target.value)} />
-                        <button className="btn-search" type="submit"  ><IoSearch style={{ fontSize: '2rem' }} /></button>
-                      </div>
-                      
-                     {selectedIds.length > 0 && (
-  <>
-    <button 
-      type="button" 
-      className="btn-category" 
-      onClick={handleBulkDelete}
-      style={{ backgroundColor: '#dc3545', marginRight: '10px' }}
-    >
-      <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
-    </button>
-<button 
-  type="button" 
-  className="btn-category" 
-  onClick={handleBulkSendEmail}
-  disabled={isBulkSending}
+                <div
+  className='entries'
   style={{
-    backgroundColor: isBulkSending ? "#ccc" : "#28a745",
-    cursor: isBulkSending ? "not-allowed" : "pointer",
-    opacity: isBulkSending ? 0.6 : 1
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    gap: '15px',
+    flexWrap: 'wrap',
+    width: '100%'
   }}
 >
- {isBulkSending 
-  ? "Sending..." 
-  : `📧 Send Emails (${validSelectedCount})`}
-</button>
-  </>
-)}
-                      
-                      <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick} >
-                        <FiPlus /> Add Student
-                      </button>
-                    </div>
-                  </div>
+
+  {/* SHOW ENTRIES */}
+  <div
+    className='entries-left'
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      gap: '10px'
+    }}
+  >
+    <p style={{ marginBottom: '0' }}>Show</p>
+
+    <div className="btn-group">
+      <button
+        type="button"
+        className="btn-number dropdown-toggle"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        {rowsPerPage}
+      </button>
+
+      <ul className="dropdown-menu">
+        <li>
+          <a
+            className="dropdown-item"
+            href="#!"
+            onClick={() => handleRowsPerPageChange(10)}
+          >
+            10
+          </a>
+        </li>
+
+        <li>
+          <a
+            className="dropdown-item"
+            href="#!"
+            onClick={() => handleRowsPerPageChange(25)}
+          >
+            25
+          </a>
+        </li>
+
+        <li>
+          <a
+            className="dropdown-item"
+            href="#!"
+            onClick={() => handleRowsPerPageChange(50)}
+          >
+            50
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <p style={{ marginBottom: '0' }}>entries</p>
+  </div>
+
+  {/* SEARCH */}
+  <div
+    className="search-div"
+    role="search"
+    style={{
+      border: '1px solid #d3d3d3',
+      marginLeft: '10px'
+    }}
+  >
+    <input
+      className="search-input"
+      type="search"
+      placeholder="Enter Courses, Category or Keywords"
+      aria-label="Search"
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+    />
+
+    <button className="btn-search" type="submit">
+      <IoSearch style={{ fontSize: '2rem' }} />
+    </button>
+  </div>
+
+  {/* ADD STUDENT */}
+  <button
+    type="button"
+    className="btn-category"
+    onClick={handleAddTrendingCourseClick}
+    style={{
+      marginLeft: '10px'
+    }}
+  >
+    <FiPlus /> Add Student
+  </button>
+
+  {/* BULK BUTTONS */}
+  {selectedIds.length > 0 && (
+    <>
+      <button
+        type="button"
+        className="btn-category"
+        onClick={handleBulkDelete}
+        style={{
+          backgroundColor: '#dc3545'
+        }}
+      >
+        <RiDeleteBin6Line />
+        Delete Selected ({selectedIds.length})
+      </button>
+
+      <button
+        type="button"
+        className="btn-category"
+        onClick={handleBulkSendEmail}
+        disabled={isBulkSending}
+        style={{
+          backgroundColor: isBulkSending
+            ? "#ccc"
+            : "#28a745",
+          cursor: isBulkSending
+            ? "not-allowed"
+            : "pointer",
+          opacity: isBulkSending ? 0.6 : 1
+        }}
+      >
+        {isBulkSending
+          ? "Sending..."
+          : `📧 Send Emails (${validSelectedCount})`}
+      </button>
+    </>
+  )}
+</div>
 
                 </div>
               </div>
@@ -2070,7 +2204,7 @@ const formatDate = (dateStr) => {
                         <StyledTableCell align="center">{row.leadTag}</StyledTableCell>
                         <StyledTableCell align="center">{row.status}</StyledTableCell>
                         <StyledTableCell align="center">{row.remark}</StyledTableCell>
-                        <StyledTableCell align="center">{row.remarkCoordinator}</StyledTableCell>
+                        <StyledTableCell align="center">{row.coordinator}</StyledTableCell>
                         <StyledTableCell align="center">{formatDate(row.callMadeOn)}</StyledTableCell>
                         <StyledTableCell align="center">
   {formatDate(row.lastCallMadeOn)}

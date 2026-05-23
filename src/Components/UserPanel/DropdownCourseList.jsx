@@ -118,7 +118,14 @@ const DropdownCourseList = ({ category,onCourseSelect  }) => {
                 className={`category-menu-item ${isActive ? "active" : ""}`}
                 style={{ padding: "4px 8px", fontWeight: "400" }}
               >
-                <div className="category-menu-text">{course.courseName}</div>
+                <div
+  className="category-menu-text"
+  title={course.courseName}
+>
+  {course.courseName.endsWith(" Training")
+    ? course.courseName.replace(/\s+Training$/i, "")
+    : course.courseName}
+</div>
               </button>
             </li>
           );

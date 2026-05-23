@@ -232,26 +232,39 @@ export default function OfflinePayment() {
     updatedRows[index].proof_image = file;
     Rows(updatedRows);
   };
-  
   useEffect(() => {
-    const requiredFieldsFilled =
-      paymentData.student_ID?.trim() &&
-      paymentData.student_name?.trim() &&
-      paymentData.email?.trim() &&
-      paymentData.mobile?.trim() &&
-      paymentData.course_name?.trim() &&
-      paymentData.currency?.trim() &&
-      !isNaN(parseFloat(paymentData.course_fee)) &&
-      !isNaN(parseFloat(paymentData.tax)) &&
-      !isNaN(parseFloat(paymentData.discount)) &&
-      // !isNaN(parseInt(paymentData.installments)) &&
-      parseInt(paymentData.installments) > 0 &&
-      !isNaN(parseInt(paymentData.days)) &&
-      !isNaN(parseFloat(paymentData.total)) &&
-      !isNaN(parseFloat(paymentData.balance));
 
-    setIsSaveDisabled(!requiredFieldsFilled);
-  }, [paymentData]);
+  const requiredFieldsFilled =
+    paymentData.student_ID?.trim() &&
+    paymentData.student_name?.trim() &&
+    paymentData.email?.trim() &&
+    paymentData.mobile?.trim() &&
+    paymentData.course_name?.trim() &&
+    paymentData.currency?.trim() &&
+    parseInt(paymentData.installments) > 0 &&
+    !isNaN(parseInt(paymentData.days));
+
+  // Find first incomplete row
+  const firstIncompleteIndex = rows.findIndex(
+    (row) => !isRowComplete(row)
+  );
+
+  // If all rows complete
+  const activeIndex =
+    firstIncompleteIndex === -1
+      ? rows.length
+      : firstIncompleteIndex;
+
+  // Previous row must be complete
+  const canSave =
+    activeIndex > 0 &&
+    isRowComplete(rows[activeIndex - 1]);
+
+  setIsSaveDisabled(
+    !requiredFieldsFilled || !canSave
+  );
+
+}, [paymentData, rows]);
 
   const isSendInvoiceDisabled = isSaveDisabled || rows.some(row => {
     const val = parseFloat(row.received_pay);
@@ -566,9 +579,12 @@ useEffect(() => {
   const updatedRows = rows.map((row, index) => ({
     ...row,
     actual_pay:
-      index < installmentCount
-        ? perInstallment
-        : ""
+  row.actual_pay !== "" &&
+  row.actual_pay !== undefined
+    ? row.actual_pay
+    : index < installmentCount
+    ? perInstallment
+    : ""
   }));
 
   Rows(updatedRows);
@@ -749,26 +765,48 @@ if (!count || count <= 0) {
 
       const today = dayjs();
       const updatedRows = [...rows];
-      for (let i = 0; i < 4; i++) {
-        const baseRow = {
-          due_date: i < count ? today.add(dayGap * i, 'day').format('MMM-DD-YYYY') : '',
-          installments: `${i + 1}`,
-        };
+    for (let i = 0; i < 4; i++) {
 
-        if (formMode === "Add") {
-          updatedRows[i] = {
-            ...updatedRows[i],
-            ...baseRow,
-            actual_pay: i < count ? perInstallment : '',
-          };
-        } else {
-          updatedRows[i] = {
-            ...updatedRows[i],
-            ...baseRow,
-            actual_pay: updatedRows[i]?.actual_pay ?? '',
-          };
-        }
-      }
+  const isAllowedRow = i < count;
+
+  updatedRows[i] = {
+
+    ...updatedRows[i],
+
+    due_date: isAllowedRow
+      ? today.add(dayGap * i, 'day').format('MMM-DD-YYYY')
+      : "",
+
+    installments: `${i + 1}`,
+
+    actual_pay: isAllowedRow
+      ? perInstallment
+      : "",
+
+    // 🔥 Clear disabled rows automatically
+    pay_date: isAllowedRow
+      ? updatedRows[i]?.pay_date || (i === 0 ? today.format('MMM-DD-YYYY') : "")
+      : "",
+
+    method: isAllowedRow
+      ? updatedRows[i]?.method || ""
+      : "",
+
+    received_pay: isAllowedRow
+      ? updatedRows[i]?.received_pay || ""
+      : "",
+
+    proof_image: isAllowedRow
+      ? updatedRows[i]?.proof_image || ""
+      : "",
+
+    reference: isAllowedRow
+      ? updatedRows[i]?.reference || ""
+      : "",
+
+    disabled: !isAllowedRow
+  };
+}
 
       Rows(updatedRows);
     }
@@ -793,15 +831,21 @@ useEffect(() => {
   }
 }, [errorMessage]);
 
+const isRowComplete = (row) => {
+
+  return (
+    row.pay_date?.toString().trim() !== "" &&
+    row.method?.toString().trim() !== "" &&
+    row.received_pay?.toString().trim() !== ""
+  );
+
+};
+
   const handleRowChange = (index, e) => {
     const { name, value, files } = e.target;
     const updatedRows = [...rows];
 
-    // if (name === 'proof_image') {
-    //   updatedRows[index][name] = files[0];
-    // } else {
-    //   updatedRows[index][name] = value;
-    // }
+   
     if (name === 'proof_image') {
 
   updatedRows[index][name] = files[0];
@@ -887,6 +931,50 @@ useEffect(() => {
   }
 
   updatedRows[index][name] = value;
+  // 🔥 Auto adjust actual pay based on received pay
+if (name === "received_pay") {
+
+  const receivedAmount = parseFloat(value) || 0;
+
+  // Current actual pay
+  const currentActualPay =
+    parseFloat(updatedRows[index].actual_pay) || 0;
+
+  // Remaining difference
+  const difference =
+    currentActualPay - receivedAmount;
+
+  // Set current row actual pay same as received pay
+  updatedRows[index].actual_pay = receivedAmount;
+
+  // Total installments selected
+  const totalInstallments =
+    parseInt(paymentData.installments || 0);
+
+  // Remaining rows count
+  const remainingRows =
+    totalInstallments - (index + 1);
+
+  // Distribute remaining amount
+  if (remainingRows > 0 && difference !== 0) {
+
+    const splitAmount =
+      difference / remainingRows;
+
+    for (
+      let i = index + 1;
+      i < totalInstallments;
+      i++
+    ) {
+
+      const nextActual =
+        parseFloat(updatedRows[i].actual_pay) || 0;
+
+      updatedRows[i].actual_pay =
+        Math.round(nextActual + splitAmount);
+    }
+  }
+}
 }
 
     Rows(updatedRows);
@@ -1390,7 +1478,7 @@ setShowAddCourse(false);
             <div className='course-details'>
               <div className='course-row'>
                 <div className="col">
-                  <label className="form-label">Student ID</label>
+                  <label className="form-label">Student ID <span style={{ color: "red" }}>*</span></label>
                   <input
                     type="text"
                     className="schedule-input"
@@ -1405,7 +1493,7 @@ setShowAddCourse(false);
                   />
                 </div>
                 <div class="col">
-                  <label for="inputEmail4" class="form-label">Student Name</label>
+                  <label for="inputEmail4" class="form-label">Student Name <span style={{ color: "red" }}>*</span></label>
                   <input type="text" class="schedule-input" id="inputEmail4" name='student_name' value={paymentData.student_name} onChange={handleChange}  disabled={isEditMode}
   style={{
     backgroundColor: isEditMode ? "#e9ecef" : "",
@@ -1414,7 +1502,7 @@ setShowAddCourse(false);
                 
                 </div>
                 <div className="col">
-                  <label className="form-label">Email</label>
+                  <label className="form-label">Email <span style={{ color: "red" }}>*</span></label>
                   <input
                     type="text"
                     className="schedule-input"
@@ -1429,7 +1517,7 @@ setShowAddCourse(false);
                   />
                 </div>
                 <div className="col">
-                  <label className="form-label">Mobile Number</label>
+                  <label className="form-label">Mobile Number <span style={{ color: "red" }}>*</span></label>
                   <input
                     type="text"
                     className="schedule-input"
@@ -1446,7 +1534,7 @@ setShowAddCourse(false);
               </div>
               <div className='course-row'>
                 <div className="col">
-                  <label htmlFor="course" className="form-label">Course Name</label>
+                  <label htmlFor="course" className="form-label">Course Name <span style={{ color: "red" }}>*</span></label>
                   <select
                     id="course"
                     className="form-select"
@@ -1459,7 +1547,7 @@ setShowAddCourse(false);
     cursor: isEditMode ? "not-allowed" : "text"
   }}
                   >
-                    <option value="" disabled>Select Course</option>
+                    <option value="" disabled>Select Course <span style={{ color: "red" }}>*</span></option>
                     {filterCourse.map((curr) => (
                       <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>
                     ))}
@@ -1467,7 +1555,7 @@ setShowAddCourse(false);
                 </div>
                 {/* Currency Dropdown */}
 <div className="col">
-  <label className="form-label">Currency</label>
+  <label className="form-label">Currency <span style={{ color: "red" }}>*</span></label>
  <select
   className="form-select"
   name="currency"
@@ -1488,7 +1576,7 @@ setShowAddCourse(false);
 </select>
 </div>
                 <div className="col">
-                  <label className="form-label">Course Fee</label>
+                  <label className="form-label">Course Fee <span style={{ color: "red" }}>*</span></label>
                   <input
   type="text"
   className="schedule-input"
@@ -1505,7 +1593,7 @@ setShowAddCourse(false);
                 </div>
 
                 <div class="col">
-                  <label for="inputEmail4" class="form-label">TAX</label>
+                  <label for="inputEmail4" class="form-label">TAX <span style={{ color: "red" }}>*</span></label>
                   <input type="text" class="schedule-input" id="inputEmail4" name='tax' value={paymentData.tax} onChange={handleChange}  disabled={isEditMode}
   style={{
     backgroundColor: isEditMode ? "#e9ecef" : "",
@@ -1513,7 +1601,7 @@ setShowAddCourse(false);
   }}/>
                 </div>
                 <div class="col">
-                  <label for="inputEmail4" class="form-label">Discount</label>
+                  <label for="inputEmail4" class="form-label">Discount <span style={{ color: "red" }}>*</span></label>
                   <input type="text" class="schedule-input" id="inputEmail4" name='discount' value={paymentData.discount} onChange={handleChange}  disabled={isEditMode}
   style={{
     backgroundColor: isEditMode ? "#e9ecef" : "",
@@ -1521,11 +1609,11 @@ setShowAddCourse(false);
   }} />
                 </div>
                 <div class="col">
-                  <label for="inputEmail4" class="form-label">No. of installments</label>
+                  <label for="inputEmail4" class="form-label">No. of installments <span style={{ color: "red" }}>*</span></label>
                   <input type="text" class="schedule-input" id="inputEmail4" name='installments' value={paymentData.installments} onChange={handleChange} />
                 </div>
                 <div class="col">
-                  <label for="inputEmail4" class="form-label">Instalment Days</label>
+                  <label for="inputEmail4" class="form-label">Instalment Days <span style={{ color: "red" }}>*</span></label>
                   <input type="text" class="schedule-input" id="inputEmail4" name='days' value={paymentData.days} onChange={handleChange} />
                 </div>
               </div>
@@ -1625,12 +1713,14 @@ setShowAddCourse(false);
                 <Table sx={{ minWidth: 650, marginTop: 2 }} aria-label="customized table">
                   <TableHead>
                     <TableRow>
-                      <StyledTableCell align='center' sx={{ fontSize: '14px' }}> Pay Date</StyledTableCell>
+                      <StyledTableCell align='center' sx={{ fontSize: '14px' }}>
+  Pay Date <span style={{ color: "red" }}>*</span>
+</StyledTableCell>
                       <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Due Date</StyledTableCell>
-                      <StyledTableCell align="center" sx={{ fontSize: '14px' }}> Payment Method</StyledTableCell>
+                      <StyledTableCell align="center" sx={{ fontSize: '14px' }}> Payment Method <span style={{ color: "red" }}>*</span></StyledTableCell>
                       <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Instalment</StyledTableCell>
-                      <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Actual Pay</StyledTableCell>
-                      <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Received Pay</StyledTableCell>
+                      <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Actual Pay <span style={{ color: "red" }}>*</span></StyledTableCell>
+                      <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Received Pay <span style={{ color: "red" }}>*</span></StyledTableCell>
                       <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Proof</StyledTableCell>
                       <StyledTableCell align="center" sx={{ fontSize: '14px' }}>Reference</StyledTableCell>
                     </TableRow>
@@ -1646,6 +1736,33 @@ setShowAddCourse(false);
     name="pay_date"
     placeholder="MMM-DD-YYYY"
     value={curr.pay_date || ""}
+   disabled={
+  index >= parseInt(paymentData.installments || 0) ||
+  (
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+  )
+}
+style={{
+ cursor:
+  index >= parseInt(paymentData.installments || 0) ||
+  (
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+  )
+    ? "not-allowed"
+    : "pointer",
+  backgroundColor:
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+      ? "#f5f5f5"
+      : "",
+  opacity:
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+      ? 0.7
+      : 1
+}}
     onChange={(e) => handleRowChange(index, e)}
   />
 </StyledTableCell>
@@ -1662,7 +1779,33 @@ setShowAddCourse(false);
       curr.due_date 
         
     }
-
+disabled={
+  index >= parseInt(paymentData.installments || 0) ||
+  (
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+  )
+}
+style={{
+  cursor:
+  index >= parseInt(paymentData.installments || 0) ||
+  (
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+  )
+    ? "not-allowed"
+    : "pointer",
+  backgroundColor:
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+      ? "#f5f5f5"
+      : "",
+  opacity:
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+      ? 0.7
+      : 1
+}}
     onChange={(e) => {
       const val = e.target.value;
       
@@ -1681,6 +1824,33 @@ setShowAddCourse(false);
                             className='table-curriculum'
                             name='method'
                             value={curr.method}
+                        disabled={
+  index >= parseInt(paymentData.installments || 0) ||
+  (
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+  )
+}
+style={{
+ cursor:
+  index >= parseInt(paymentData.installments || 0) ||
+  (
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+  )
+    ? "not-allowed"
+    : "pointer",
+  backgroundColor:
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+      ? "#f5f5f5"
+      : "",
+  opacity:
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+      ? 0.7
+      : 1
+}}
                             onChange={(e) => handleRowChange(index, e)}
                           >
                             <option value=''>Select</option>
@@ -1699,6 +1869,33 @@ setShowAddCourse(false);
                             className='table-curriculum'
                             name='actual_pay'
                             value={curr.actual_pay}
+                         disabled={
+  index >= parseInt(paymentData.installments || 0) ||
+  (
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+  )
+}
+style={{
+  cursor:
+  index >= parseInt(paymentData.installments || 0) ||
+  (
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+  )
+    ? "not-allowed"
+    : "pointer",
+  backgroundColor:
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+      ? "#f5f5f5"
+      : "",
+  opacity:
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+      ? 0.7
+      : 1
+}}
                             onChange={(e) => handleRowChange(index, e)}
                           />
                         </StyledTableCell>
@@ -1707,6 +1904,33 @@ setShowAddCourse(false);
                             className='table-curriculum'
                             name='received_pay'
                             value={curr.received_pay}
+                           disabled={
+  index >= parseInt(paymentData.installments || 0) ||
+  (
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+  )
+}
+style={{
+ cursor:
+  index >= parseInt(paymentData.installments || 0) ||
+  (
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+  )
+    ? "not-allowed"
+    : "pointer",
+  backgroundColor:
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+      ? "#f5f5f5"
+      : "",
+  opacity:
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+      ? 0.7
+      : 1
+}}
                             onChange={(e) => handleRowChange(index, e)}
                           />
                         </StyledTableCell>
@@ -1757,13 +1981,39 @@ setShowAddCourse(false);
                               />
                             </div>
                           ) : (
-                            <label style={{ cursor: 'pointer' }}>
+                            <label
+  style={{
+    cursor:
+      index >= parseInt(paymentData.installments || 0) ||
+      (
+        index > 0 &&
+        !isRowComplete(rows[index - 1])
+      )
+        ? "not-allowed"
+        : "pointer",
+    pointerEvents:
+      index >= parseInt(paymentData.installments || 0) ||
+      (
+        index > 0 &&
+        !isRowComplete(rows[index - 1])
+      )
+        ? "none"
+        : "auto",
+  }}
+>
                               <FiUpload className="edit" />
-                              <input
-                                type="file"
-                                style={{ display: 'none' }}
-                                onChange={(e) => handleFileUpload(index, e)}
-                              />
+                             <input
+  type="file"
+  style={{ display: 'none' }}
+  disabled={
+    index >= parseInt(paymentData.installments || 0) ||
+    (
+      index > 0 &&
+      !isRowComplete(rows[index - 1])
+    )
+  }
+  onChange={(e) => handleFileUpload(index, e)}
+/>
                             </label>
                           )}
                         </StyledTableCell>
@@ -1772,6 +2022,33 @@ setShowAddCourse(false);
                             className='table-curriculum'
                             name='reference'
                             value={curr.reference}
+                            disabled={
+  index >= parseInt(paymentData.installments || 0) ||
+  (
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+  )
+}
+style={{
+  cursor:
+  index >= parseInt(paymentData.installments || 0) ||
+  (
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+  )
+    ? "not-allowed"
+    : "pointer",
+  backgroundColor:
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+      ? "#f5f5f5"
+      : "",
+  opacity:
+    index > 0 &&
+    !isRowComplete(rows[index - 1])
+      ? 0.7
+      : 1
+}}
                             onChange={(e) => handleRowChange(index, e)}
                           />
                         </StyledTableCell>
@@ -1796,12 +2073,29 @@ setShowAddCourse(false);
                 {formMode === "Add" ? (
                   <>
                     {/* <button className='submit-btn' onClick={handleSave} disabled={isSaveDisabled}>Save</button> */}
-                  <button 
+                 <button 
   className='submit-btn' 
   onClick={handleSave} 
-  disabled={isLoading || isSaved} 
+  disabled={isSaveDisabled || isLoading || isSaved || isInvoiceSent}
+  style={{
+  backgroundColor:
+    (isSaveDisabled || isLoading || isSaved || isInvoiceSent)
+      ? "#ccc"
+      : "#007bff",
+
+  cursor:
+    (isSaveDisabled || isLoading || isSaved || isInvoiceSent)
+      ? "not-allowed"
+      : "pointer",
+
+  opacity: 1
+}}
 >
-  {isLoading ? "Saving..." : "Save"}
+  {isLoading
+    ? "Saving..."
+    : isSaved || isInvoiceSent
+    ? "Saved"
+    : "Save"}
 </button>
                     <button
                       className='submit-btn'
@@ -1814,7 +2108,28 @@ setShowAddCourse(false);
                   </>
                 ) : (
                   <>
-                    <button className='submit-btn' onClick={handleUpdate}>Update</button>
+                   <button
+  className='submit-btn'
+  onClick={handleUpdate}
+  disabled={isSaveDisabled || isLoading || isInvoiceSent}
+  style={{
+    backgroundColor:
+      (isSaveDisabled || isLoading || isInvoiceSent)
+        ? "#ccc"
+        : "#007bff",
+    cursor:
+      (isSaveDisabled || isLoading || isInvoiceSent)
+        ? "not-allowed"
+        : "pointer",
+    opacity: 1
+  }}
+>
+  {isLoading
+    ? "Updating..."
+    : isInvoiceSent
+    ? "Updated"
+    : "Update"}
+</button>
                     <button
                       className='submit-btn'
                       onClick={handleSendToEmail}

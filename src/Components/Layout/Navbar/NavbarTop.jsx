@@ -90,7 +90,12 @@ const NavbarTop = () => {
     const fetchCourses = async () => {
       try {
         const res = await axios.get("https://api.test.hachion.co/courses/names-and-categories");
-        setCourses(res.data);
+        setCourses(res.data);setCourses(
+  res.data.map((course) => ({
+    ...course,
+    courseName: course.courseName?.trim()
+  }))
+);
       } catch (error) {
         console.error(error);
       }

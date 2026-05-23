@@ -205,8 +205,17 @@ export default function CourseBanner({ onEnroll }) {
 
   const seoKeywords = course.metaKeyword || "";
 
-  const canonicalUrl = `https://www.hachion.co/courses/${encodeURIComponent(courseName)}`;
+  // const canonicalUrl = `https://www.hachion.co/courses/${encodeURIComponent(courseName)}`;
 
+  const categorySlug = course?.courseCategory
+  ? course.courseCategory
+      .toLowerCase()
+      .replace(/&/g, "and")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+  : "courses";
+
+const canonicalUrl = `https://www.hachion.co/courses/${categorySlug}/${encodeURIComponent(courseName)}`;
   const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",

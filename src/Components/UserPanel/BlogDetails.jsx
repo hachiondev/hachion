@@ -21,6 +21,7 @@ import ReadingProgress from "./BlogDetailComponents/ReadingProgress";
 import processBlogContent from "./BlogDetailComponents/processBlogContent";
 import MobileShareButton from "./BlogDetailComponents/MobileShareButton";
 import BlogInquiryForm from "./BlogInquiryForm";
+import { useFaqsByCourse } from "../../Api/hooks/CourseApi/useFaqsByCourse";
 
 
 const BlogDetails = () => {
@@ -35,6 +36,7 @@ const id = /^\d+$/.test(lastPart) ? lastPart : null;
 // const { title } = useParams(); // this will now be short_title
 const navigate = useNavigate();
 const shortTitle = decodeURIComponent(title)?.replace(/-/g, " ");
+const courseNameForApi = shortTitle || "";
 
   const [blogs, setBlogs] = useState([]);
   const [selectedBlog, setSelectedBlog] = useState(null);
@@ -101,7 +103,7 @@ const shortTitle = decodeURIComponent(title)?.replace(/-/g, " ");
     };
     fetchAllBlogs();
   }, []);
-
+const { data: faqs = [] } = useFaqsByCourse(courseNameForApi);
   const filteredBlogs = searchQuery.trim()
     ? blogs.filter(
       (blog) =>
@@ -147,7 +149,7 @@ const shortTitle = decodeURIComponent(title)?.replace(/-/g, " ");
     e.target.src = Blogimageplaceholder;
   };
 
-  const blogUrl = encodeURIComponent(window.location.href);
+  // const blogUrl = encodeURIComponent(window.location.href);
 
   const shareLinks = {
     facebook: () =>
@@ -170,6 +172,36 @@ const shortTitle = decodeURIComponent(title)?.replace(/-/g, " ");
       window.open(gmailUrl, "_blank");
     },
   };
+const blogUrl = window.location.href;
+
+const categorySlug = category_name;
+
+const categoryUrl = `https://www.hachion.co/blogs/${categorySlug}`;
+
+const blogImage = selectedBlog?.blog_image
+  ? `https://api.test.hachion.co/blogs/${selectedBlog.blog_image}`
+  : "https://www.hachion.co/logo.png";
+
+const authorName = "Hachion";
+
+const stripHtml = (html) => {
+  if (!html) return "";
+  return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": `${blogUrl}#faq`,
+  "mainEntity": faqs.map((faq) => ({
+    "@type": "Question",
+    "name": faq.faqTitle || "",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": stripHtml(faq.description || "")
+    }
+  }))
+};
 
   return (
     <>
@@ -205,6 +237,150 @@ const shortTitle = decodeURIComponent(title)?.replace(/-/g, " ");
         <meta property="og:url" content={window.location.href} />
         <meta property="og:type" content={"article"} />
         <meta name="robots" content="index, follow" />
+
+<script type="application/ld+json">
+{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "@id": `${blogUrl}#blogposting`,
+  "headline": selectedBlog?.title || "",
+  "description": selectedBlog?.meta_description || "",
+  "image": blogImage,
+  "url": blogUrl,
+  "datePublished": selectedBlog?.date || "",
+  "dateModified": selectedBlog?.date || "",
+  "inLanguage": "en",
+
+  "author": {
+    "@type": "Person",
+    "@id": `${blogUrl}#author`,
+    "name": authorName
+  },
+
+  "publisher": {
+    "@type": "EducationalOrganization",
+    "@id": "https://www.hachion.co/#organization",
+    "name": "Hachion",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.hachion.co/logo.png"
+    }
+  },
+
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": `${blogUrl}#webpage`
+  }
+})}
+</script>
+
+<script type="application/ld+json">
+{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": `${blogUrl}#author`,
+  "name": authorName,
+  "url": "https://www.hachion.co/",
+  "sameAs": [
+    "https://www.linkedin.com/company/hachion",
+    "https://x.com/hachionofficial"
+  ]
+})}
+</script>
+
+<script type="application/ld+json">
+{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": `${blogUrl}#breadcrumb`,
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.hachion.co"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blogs",
+      "item": "https://www.hachion.co/blogs"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": selectedBlog?.category_name || "Blogs",
+      "item": categoryUrl
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": selectedBlog?.title || "Blog",
+      "item": blogUrl
+    }
+  ]
+})}
+</script>
+
+<script type="application/ld+json">
+{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": `${blogUrl}#webpage`,
+  "url": blogUrl,
+  "name": selectedBlog?.title || "",
+  "description": selectedBlog?.meta_description || "",
+  "inLanguage": "en",
+
+  "breadcrumb": {
+    "@id": `${blogUrl}#breadcrumb`
+  },
+
+  "publisher": {
+    "@id": "https://www.hachion.co/#organization"
+  },
+
+  "primaryImageOfPage": {
+    "@type": "ImageObject",
+    "url": blogImage
+  }
+})}
+</script>
+
+<script type="application/ld+json">
+{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  "@id": "https://www.hachion.co/#organization",
+  "name": "Hachion",
+  "url": "https://www.hachion.co/",
+  "logo": "https://www.hachion.co/logo.png",
+  "image": "https://www.hachion.co/industry-recognized-it-certifications.webp",
+  "description": "Hachion offers professional certification online training courses authored by industry experts.",
+  "telephone": "+1 732-485-2499",
+  "email": "info@hachion.co",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "601 Voyage Trace",
+    "addressLocality": "Leander",
+    "addressRegion": "Texas",
+    "postalCode": "78641",
+    "addressCountry": "USA"
+  },
+  "sameAs": [
+    "https://www.facebook.com/hachion.official/",
+    "https://www.instagram.com/hachion.official/",
+    "https://www.linkedin.com/company/hachion",
+    "https://www.youtube.com/@hachion.official",
+    "https://x.com/hachionofficial"
+  ]
+})}
+</script>
+{faqs.length > 0 && (
+  <script type="application/ld+json">
+    {JSON.stringify(faqSchema)}
+  </script>
+)}
       </Helmet>
 
       <div className="home-background">

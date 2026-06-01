@@ -44,6 +44,7 @@ import { countries as staticCountries } from '../../countryUtils';
 import Select from 'react-select';
 dayjs.extend(customParseFormat);
 
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -95,6 +96,7 @@ const [sendingId, setSendingId] = useState(null);
   const [allEmployees, setAllEmployees] = useState([]);
 const [seoEmployees, setSeoEmployees] = useState([]);
 const [periodFilter, setPeriodFilter] = useState("");
+const [seoTeamFilter, setSeoTeamFilter] = useState("");
   const [selectedCountry, setSelectedCountry] = useState({
     name: '',
     code: '',
@@ -194,8 +196,17 @@ const [pendingStatusChange, setPendingStatusChange] = useState(null);
     setSuccessMessage("");
     setErrorMessage("");
 
+    // await axios.post(`https://api.test.hachion.co/send-email/${studentId}`);
+
     await axios.post(`https://api.test.hachion.co/send-email/${studentId}`);
 
+// ✅ Refresh latest table data from DB
+const response = await axios.get(
+  "https://api.test.hachion.co/registerstudent-with-remarks"
+);
+
+setRegisterStudent(response.data);
+setFilteredStudent(response.data);
     setSuccessMessage("✅ Email sent successfully!");
     setErrorMessage("");
 
@@ -491,7 +502,7 @@ setFilteredStudent(mappedData);
   const fetchEmployees = async () => {
     try {
       const allRes = await axios.get("https://api.test.hachion.co/employees/enteredBy");
-      const seoRes = await axios.get("https://api.test.hachion.co/employees/seo-team");
+      const seoRes = await axios.get("https://api.test.hachion.co/seo-team");
 
       setAllEmployees(allRes.data);
       setSeoEmployees(seoRes.data);
@@ -555,6 +566,10 @@ const matchSearch =
   (!start || regDate >= start) &&
   (!end || regDate <= end);
 
+  const matchesSeoTeam =
+  !seoTeamFilter ||
+  (item.seoTeam || "").toLowerCase() === seoTeamFilter.toLowerCase();
+
 // ✅ NEW MODE FILTER
 const matchesMode =
   !modeFilter ||                       // All Modes
@@ -567,7 +582,14 @@ const matchesTag =
 const matchesStatus =
   !statusFilter || item.leadStatus === statusFilter;
 
-return matchSearch && inRange && matchesMode && matchesTag && matchesStatus;
+return (
+  matchSearch &&
+  inRange &&
+  matchesMode &&
+  matchesTag &&
+  matchesStatus &&
+  matchesSeoTeam
+);
     });
     setFilteredStudent(filtered);
     setCurrentPage(1);
@@ -581,6 +603,7 @@ return matchSearch && inRange && matchesMode && matchesTag && matchesStatus;
      setModeFilter("");
      setDemoFilter("");
 setStatusFilter("");
+setSeoTeamFilter("");
 
     setFilteredStudent(registerStudent);
     setCurrentPage(1);
@@ -605,11 +628,31 @@ setStatusFilter("");
     }
   };
 
+  // const handleDeleteConfirmation = (id) => {
+  //   if (window.confirm("Are you sure you want to delete this Student?")) {
+  //     handleDelete(id);
+  //   }
+  // };
   const handleDeleteConfirmation = (id) => {
-    if (window.confirm("Are you sure you want to delete this Student?")) {
-      handleDelete(id);
-    }
-  };
+  const confirmed = window.confirm(
+    "Are you sure you want to delete this Student?"
+  );
+
+  if (!confirmed) return;
+
+  const password = window.prompt(
+    "Enter Password to Delete:"
+  );
+
+  if (password === null) return; // Cancel clicked
+
+  if (password !== "Trainings@Hachion") {
+    alert("❌ Invalid Password");
+    return;
+  }
+
+  handleDelete(id);
+};
 
   const handleDelete = async (id) => {
     try {
@@ -1914,6 +1957,26 @@ const formatDate = (dateStr) => {
   <option value="">Demo</option>
   {leadTags.map((tag, index) => (
     <option key={index} value={tag}>{tag}</option>
+  ))}
+</select>
+<select
+  value={seoTeamFilter}
+  onChange={(e) => setSeoTeamFilter(e.target.value)}
+  style={{
+    marginLeft: "10px",
+    height: "36px",
+    borderRadius: "15px",
+    border: "1px solid #ccc",
+    padding: "0 12px",
+    outline: "none"
+  }}
+>
+  <option value="">SEO Team</option>
+
+  {seoEmployees.map((team, index) => (
+    <option key={index} value={team}>
+      {team}
+    </option>
   ))}
 </select>
                     <button className='filter' onClick={handleDateFilter} >Filter</button>

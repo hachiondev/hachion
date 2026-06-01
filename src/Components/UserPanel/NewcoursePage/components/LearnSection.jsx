@@ -285,14 +285,14 @@ export default function LearnSection() {
                                     <div className={styles.lstoolname}>
                                         {tool.toolsName}
                                     </div>
-                                    <a
+                                    {/* <a
                                         className={styles.lstoollink}
                                         href={tool.toolsLink}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
                                         Download link
-                                    </a>
+                                    </a> */}
                                 </div>
                             ))}
                         </div>

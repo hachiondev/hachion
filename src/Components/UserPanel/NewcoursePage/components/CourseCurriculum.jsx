@@ -259,10 +259,10 @@ export default function CourseCurriculum({ onViewDemoClass }) {
 
 
 
-          <p>
+          {/* <p>
             {courseDetails?.aboutCourse ||
               "Master industry-level skills — unlock hands-on modules, video learning sessions, and real project work."}
-          </p>
+          </p> */}
 
           <button className={styles.ccdownload} onClick={downloadPdf}>
             <img src="/Download.png" alt="Download" height={24} />Download Detailed Curriculum

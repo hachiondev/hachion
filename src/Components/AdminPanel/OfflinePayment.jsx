@@ -777,6 +777,19 @@ useEffect(() => {
     const actualTotalFee = Math.round(courseFee + tax - discount);
     const perInstallment = count > 0 ? Math.round(actualTotalFee / count) : 0;
 
+    if (
+  name === "discount" ||
+  name === "tax" ||
+  name === "course_fee" ||
+  name === "installments"
+) {
+  const updatedRows = rows.map((row, index) => ({
+    ...row,
+    actual_pay: index < count ? perInstallment : ""
+  }));
+
+  Rows(updatedRows);
+}
     const totalReceived = rows.reduce((sum, row) => {
       const received = parseFloat(row.received_pay) || 0;
       return sum + received;

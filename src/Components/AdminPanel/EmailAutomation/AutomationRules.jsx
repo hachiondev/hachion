@@ -31,6 +31,9 @@ const AutomationRules = () => {
   const [endDate, setEndDate] = useState("");
   const [sendTime, setSendTime] = useState(null);
   const [frequencyDays, setFrequencyDays] = useState("");
+  const isAddRuleEnabled =
+  leadStatus.trim() !== "" &&
+  timezone.trim() !== "";
 
   // =====================================================
 // EDIT POPUP STATES
@@ -95,6 +98,14 @@ const [editFrequencyDays, setEditFrequencyDays] = useState("");
     }
   };
 
+  const handleReset = () => {
+  setLeadStatus("");
+  setTimezone("");
+  setStartDate("");
+  setEndDate("");
+  setSendTime(null);
+  setFrequencyDays("");
+};
   // =====================================================
   // ADD RULE
   // =====================================================
@@ -503,21 +514,30 @@ const [hours, minutes] =
             Filter
           </button> */}
 
-          <button className={styles["custom-reset-btn"]}>
-            Reset
-          </button>
+      <button
+  className={styles["custom-reset-btn"]}
+  onClick={handleReset}
+>
+  Reset
+</button>
 
         </div>
 
         {/* ADD RULE */}
         <div className={styles["add-rule-wrapper"]}>
 
-          <button
-            className={styles["add-rule-btn"]}
-            onClick={handleAddRule}
-          >
-            + Add Rule
-          </button>
+         <button
+  className={styles["add-rule-btn"]}
+  onClick={handleAddRule}
+  disabled={!isAddRuleEnabled}
+  style={{
+    backgroundColor: isAddRuleEnabled ? "" : "#bdbdbd",
+    cursor: isAddRuleEnabled ? "pointer" : "not-allowed",
+    opacity: isAddRuleEnabled ? 1 : 0.7
+  }}
+>
+  + Add Rule
+</button>
 
         </div>
 

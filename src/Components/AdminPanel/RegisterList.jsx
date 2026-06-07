@@ -196,8 +196,6 @@ const [pendingStatusChange, setPendingStatusChange] = useState(null);
     setSuccessMessage("");
     setErrorMessage("");
 
-    // await axios.post(`https://api.test.hachion.co/send-email/${studentId}`);
-
     await axios.post(`https://api.test.hachion.co/send-email/${studentId}`);
 
 // ✅ Refresh latest table data from DB
@@ -435,6 +433,7 @@ const payload = {
     setLatestUpdate(newUpdate);
     setHistory(prev => [newUpdate, ...prev]);
 
+    await fetchStudent();
     setUpdateForm({
       remark: "",
       status: "",
@@ -476,27 +475,29 @@ const isUpdateFormValid = () => {
     }));
   };
 
-  useEffect(() => {
-    const fetchStudent = async () => {
-      try {
-        const response = await axios.get('https://api.test.hachion.co/registerstudent-with-remarks');
-        const mappedData = response.data.map(item => ({
-  ...item,
+ const fetchStudent = async () => {
+  try {
+    const response = await axios.get(
+      "https://api.test.hachion.co/registerstudent-with-remarks"
+    );
 
-  // ✅ handle both cases
-  time_zone: item.time_zone || item.timeZone || "",
-  analyst_name: item.analyst_name || item.analystName || ""
-}));
-        setRegisterStudent(mappedData);
-setFilteredStudent(mappedData);
+    const mappedData = response.data.map(item => ({
+      ...item,
+      time_zone: item.time_zone || item.timeZone || "",
+      analyst_name: item.analyst_name || item.analystName || ""
+    }));
 
-      } catch (error) {
-        console.error("Error fetching student list:", error.message);
-      }
-    };
-    fetchStudent();
-    setFilteredStudent(registerStudent)
-  }, []);
+    setRegisterStudent(mappedData);
+    setFilteredStudent(mappedData);
+
+  } catch (error) {
+    console.error("Error fetching student list:", error.message);
+  }
+};
+
+useEffect(() => {
+  fetchStudent();
+}, []);
 
   useEffect(() => {
   const fetchEmployees = async () => {
@@ -661,16 +662,24 @@ setSeoTeamFilter("");
       setRegisterStudent((prev) => prev.filter((s) => s.id !== id));
       setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
       
+      await fetchStudent();
       // Remove from selectedIds if present
       setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
       
       setSuccessMessage("✅ Student deleted successfully.");
       setErrorMessage("");
-    } catch (error) {
-      console.error("Error deleting Student:", error);
-      setErrorMessage("❌ Failed to delete student. Please try again.");
-      setSuccessMessage("");
-    }
+    } 
+    catch (error) {
+  console.error("Error deleting Student:", error);
+
+  if (error.response && error.response.data) {
+    setErrorMessage(`❌ ${error.response.data}`);
+  } else {
+    setErrorMessage("❌ Failed to delete student. Please try again.");
+  }
+
+  setSuccessMessage("");
+}
   };
 useEffect(() => {
   const filtered = registerStudent.filter(item => {
@@ -767,7 +776,8 @@ if (matchedCountry) {
     time_zone: row.time_zone ?? "",
     analyst_name: row.analyst_name ?? "",
     source: row.source ?? "Select",
-    visa_status: row.visa_status ?? "Select Visa Status",
+    // visa_status: row.visa_status ?? "Select Visa Status",
+    visa_status: row.visa_status || row.visaStatus || "Select Visa Status",
     coordinator: row.coordinator ?? "",
     remarks: row.remarks ?? "",
     comments: row.comments ?? "",
@@ -846,6 +856,8 @@ setHistory(formattedHistory);
       setRegisterStudent((prev) =>
         prev.map((s) => s.id === studentData.id ? response.data : s)
       );
+      await fetchStudent();
+
       setMessage("Student updated successfully!");
       setIsUpdating(false);
       setShowAddCourse(false);
@@ -981,6 +993,7 @@ const formatDate = (dateStr) => {
     try {
       const response = await axios.post("https://api.test.hachion.co/registerstudent/add", dataToSubmit);
       if (response.status === 200) {
+          await fetchStudent();
         setIsSubmitting(false);
         setSuccessMessage("✅ Student added successfully.");
         setErrorMessage("");
@@ -2266,7 +2279,23 @@ const formatDate = (dateStr) => {
                         <StyledTableCell align="center">{row.leadStatus}</StyledTableCell>
                         <StyledTableCell align="center">{row.leadTag}</StyledTableCell>
                         <StyledTableCell align="center">{row.status}</StyledTableCell>
-                        <StyledTableCell align="center">{row.remark}</StyledTableCell>
+                        {/* <StyledTableCell align="center">{row.remark}</StyledTableCell> */}
+                        <StyledTableCell align="center">
+  <div
+    style={{
+      maxHeight: "80px",
+      overflowY: "auto",
+      overflowX: "hidden",
+      textAlign: "left",
+      padding: "5px",
+      whiteSpace: "pre-wrap",
+      wordBreak: "break-word",
+      minWidth: "250px"
+    }}
+  >
+    {row.remark || "-"}
+  </div>
+</StyledTableCell>
                         <StyledTableCell align="center">{row.coordinator}</StyledTableCell>
                         <StyledTableCell align="center">{formatDate(row.callMadeOn)}</StyledTableCell>
                         <StyledTableCell align="center">

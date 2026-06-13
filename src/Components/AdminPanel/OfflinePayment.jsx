@@ -256,21 +256,41 @@ export default function OfflinePayment() {
       : firstIncompleteIndex;
 
   // Previous row must be complete
-  const canSave =
-    activeIndex > 0 &&
-    isRowComplete(rows[activeIndex - 1]);
+  // const canSave =
+  //   activeIndex > 0 &&
+  //   isRowComplete(rows[activeIndex - 1]);
 
-  setIsSaveDisabled(
-    !requiredFieldsFilled || !canSave
-  );
+  // setIsSaveDisabled(
+  //   !requiredFieldsFilled || !canSave
+  // );
+  // ✅ Check only enabled installment rows
+// ✅ Check only allowed installment rows
+const enabledRows = rows.filter(
+  (_, index) => index < parseInt(paymentData.installments || 0)
+);
+
+// ✅ At least one installment row should be completed
+const hasAtLeastOneCompletedRow =
+  enabledRows.some((row) => isRowComplete(row));
+
+// ✅ Enable Save/Update once first row completed
+setIsSaveDisabled(
+  !requiredFieldsFilled || !hasAtLeastOneCompletedRow
+);
 
 }, [paymentData, rows]);
 
-  const isSendInvoiceDisabled = isSaveDisabled || rows.some(row => {
-    const val = parseFloat(row.received_pay);
-    return !isNaN(val) && val > 0;
-  });
-
+ const parentFieldsFilled =
+  paymentData.student_ID?.trim() &&
+  paymentData.student_name?.trim() &&
+  paymentData.email?.trim() &&
+  paymentData.mobile?.trim() &&
+  paymentData.course_name?.trim() &&
+  paymentData.currency?.trim() &&
+  paymentData.tax !== "" &&
+  paymentData.discount !== "";
+  
+const isSendInvoiceDisabled = !parentFieldsFilled;
   useEffect(() => {
     if (rows.length === 0) {
       const today = dayjs();
@@ -333,24 +353,49 @@ export default function OfflinePayment() {
 const reminderStatus = row.reminderEnabled === false ? false : true;
 setReminderEnabled(reminderStatus);
 
-    setPaymentData({
-      student_ID: row.student_ID || "",
-      student_name: row.student_name || "",
-      email: row.email || "",
-      mobile: row.mobile || "",
-      course_name: row.course_name || "",
-      currency: row.currency || "",
-      course_fee: row.course_fee || "",
-      tax: row.tax || 0,
-      discount: row.discount || 0,
-      installments: row.installments || "",
-      days: row.days || "",
-      total: row.total || "",
-      balance: row.balance ?? "",
-      status: row.status ?? "",
-      reminderEnabled: reminderStatus
-    });
+    // setPaymentData({
+    //   student_ID: row.student_ID || "",
+    //   student_name: row.student_name || "",
+    //   email: row.email || "",
+    //   mobile: row.mobile || "",
+    //   course_name: row.course_name || "",
+    //   currency: row.currency || "",
+    //   course_fee: row.course_fee || "",
+    //   tax: row.tax || 0,
+    //   discount: row.discount || 0,
+    //   installments: row.installments || "",
+    //   days: row.days || "",
+    //   total: row.total || "",
+    //   balance: row.balance ?? "",
+    //   status: row.status ?? "",
+    //   reminderEnabled: reminderStatus
+    // });
+// ✅ Calculate latest balance from installments during Edit Open
+const totalReceived = (row.rawInstallments || []).reduce(
+  (sum, inst) => sum + (parseFloat(inst.receivedPay) || 0),
+  0
+);
 
+const latestBalance =
+  (parseFloat(row.total) || 0) - totalReceived;
+
+setPaymentData({
+  student_ID: row.student_ID || "",
+  student_name: row.student_name || "",
+  email: row.email || "",
+  mobile: row.mobile || "",
+  course_name: row.course_name || "",
+  currency: row.currency || "",
+  course_fee: row.course_fee || "",
+  tax: row.tax || 0,
+  discount: row.discount || 0,
+  installments: row.installments || "",
+  days: row.days || "",
+  total: row.total || "",
+  balance: latestBalance,
+  status: row.status ?? "",
+  reminderEnabled: reminderStatus
+});
     const rowData = (row.rawInstallments || []).map((inst) => ({
       pay_date: inst.payDate ? dayjs(inst.payDate).format("MMM-DD-YYYY") : "",
       due_date: inst.dueDate ? dayjs(inst.dueDate).format("MMM-DD-YYYY") : "",
@@ -400,7 +445,7 @@ const handleReminderToggle = async (event) => {
   setSuccessMessage(`✅ Reminder ${stopReminderValue} successfully.`);
   await fetchPayments();
 
-  setShowAddCourse(false);
+  // setShowAddCourse(false);
 
   setErrorMessage("");
 } else {
@@ -594,7 +639,10 @@ useEffect(() => {
     ...prev,
     course_fee: finalAmount,
     total: totalAmount,
-    balance: totalAmount
+    balance:
+  formMode === "Edit"
+    ? prev.balance
+    : totalAmount
   }));
 
 }, [
@@ -729,6 +777,19 @@ useEffect(() => {
     const actualTotalFee = Math.round(courseFee + tax - discount);
     const perInstallment = count > 0 ? Math.round(actualTotalFee / count) : 0;
 
+    if (
+  name === "discount" ||
+  name === "tax" ||
+  name === "course_fee" ||
+  name === "installments"
+) {
+  const updatedRows = rows.map((row, index) => ({
+    ...row,
+    actual_pay: index < count ? perInstallment : ""
+  }));
+
+  Rows(updatedRows);
+}
     const totalReceived = rows.reduce((sum, row) => {
       const received = parseFloat(row.received_pay) || 0;
       return sum + received;
@@ -985,21 +1046,33 @@ if (name === "received_pay") {
         setLastModifiedInstallmentId(modifiedInstallmentId);
       }
     }
-    const courseFee = parseFloat(paymentData.course_fee) || 0;
-    const tax = parseFloat(paymentData.tax) || 0;
-    const discount = parseFloat(paymentData.discount) || 0;
-    const actualTotalFee = courseFee + tax - discount;
+    // const courseFee = parseFloat(paymentData.course_fee) || 0;
+    // const tax = parseFloat(paymentData.tax) || 0;
+    // const discount = parseFloat(paymentData.discount) || 0;
+    // const actualTotalFee = courseFee + tax - discount;
 
-    const totalReceived = updatedRows.reduce((sum, row) => {
-      const received = parseFloat(row.received_pay) || 0;
-      return sum + received;
-    }, 0);
+    // const totalReceived = updatedRows.reduce((sum, row) => {
+    //   const received = parseFloat(row.received_pay) || 0;
+    //   return sum + received;
+    // }, 0);
 
-    setPaymentData((prev) => ({
-      ...prev,
-      total: actualTotalFee,
-      balance: Math.max(actualTotalFee - totalReceived, 0),
-    }));
+    // setPaymentData((prev) => ({
+    //   ...prev,
+    //   total: actualTotalFee,
+    //   balance: Math.max(actualTotalFee - totalReceived, 0),
+    // }));
+    // ✅ Stable balance calculation for Edit Mode
+const totalAmount =
+  parseFloat(paymentData.total) || 0;
+
+const totalReceived = updatedRows.reduce((sum, row) => {
+  return sum + (parseFloat(row.received_pay) || 0);
+}, 0);
+
+setPaymentData((prev) => ({
+  ...prev,
+  balance: Math.max(totalAmount - totalReceived, 0),
+}));
   };
 
   const handleSave = async (e) => {
@@ -1061,7 +1134,7 @@ if (name === "received_pay") {
         setInvoiceNumber(response.data.invoiceNumber);
         setIsSaved(true);
 await fetchPayments();
-setShowAddCourse(false);
+// setShowAddCourse(false);
         if (response.data.invoiceNumber) {
           setInvoiceNumber(response.data.invoiceNumber);
         } else {
@@ -1135,7 +1208,7 @@ const handleDateFilter = async () => {
       mobile: paymentData.mobile,
       balancePay: parseFloat(paymentData.balance),
       courseName: paymentData.course_name,
-      
+       currency: paymentData.currency,
       courseFee: parseFloat(paymentData.course_fee),
       discount: parseFloat(paymentData.discount),
       tax: parseFloat(paymentData.tax),
@@ -1239,7 +1312,7 @@ const handleDateFilter = async () => {
         setIsSaved(true);
         await fetchPayments();
 
-setShowAddCourse(false);
+// setShowAddCourse(false);
       }
     } catch (error) {
       setSuccessMessage("");
@@ -1262,6 +1335,7 @@ setShowAddCourse(false);
         courseName: paymentData.course_name,
         invoiceNumber: invoiceNumber,
         balancePay: parseFloat(paymentData.balance),
+        currency: paymentData.currency,
         totalAmount: parseFloat(paymentData.total),
         reminderEnabled: reminderEnabled
       };
@@ -1360,6 +1434,7 @@ setShowAddCourse(false);
           mobile: paymentData.mobile,
           balancePay: parseFloat(paymentData.balance),
           courseName: paymentData.course_name,
+          currency: paymentData.currency,
           courseFee: parseFloat(paymentData.course_fee),
           discount: parseFloat(paymentData.discount),
           tax: parseFloat(paymentData.tax),
@@ -1650,7 +1725,8 @@ setShowAddCourse(false);
                 <button
                   className='filter'
                   onClick={handleSendReminder}
-                  disabled={isSaveDisabled}
+                  disabled={!invoiceNumber}
+
                   style={{
                     backgroundColor: isSaveDisabled ? "#ccc" : "#007bff",
                     color: isSaveDisabled ? "#666" : "#fff",
@@ -1666,26 +1742,14 @@ setShowAddCourse(false);
                   Send Reminder
                 </button>
 
-                {/* <button
-                  className='filter'
-                  onClick={handleSaveAndSendInvoice}
-                  disabled={isSendInvoiceDisabled }
-                  style={{
-                    backgroundColor: isSendInvoiceDisabled ? "#ccc" : "#007bff",
-                    color: isSendInvoiceDisabled ? "#666" : "#fff",
-                    opacity: 1,
-                    cursor: isSendInvoiceDisabled ? "not-allowed" : "pointer",
-                    pointerEvents: isSendInvoiceDisabled ? "none" : "auto",
-                    border: "none",
-                    padding: "8px 16px",
-                    borderRadius: "5px",
-                  }}
-                >
-                  Send Invoice
-                </button> */}
                <button
   className='filter'
-  onClick={handleSaveAndSendInvoice}
+  // onClick={handleSaveAndSendInvoice}
+  onClick={
+  formMode === "Edit"
+    ? handleSendToEmail
+    : handleSaveAndSendInvoice
+}
   // Disable if it's loading, already sent, or other conditions met
   disabled={isSendInvoiceDisabled || isLoading || isInvoiceSent}
   style={{

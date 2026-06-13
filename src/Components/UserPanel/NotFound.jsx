@@ -6,16 +6,33 @@ export default function NotFound() {
   const { pathname } = useLocation();
   const [shouldRender, setShouldRender] = useState(false);
 
-  // ✅ URL Redirect Mapping (Wrong → Correct)
-  // const urlRedirectMap = {
-  //   "/course/ai-in-healthcare": "/coursedetails/ai-in-healthcare",
-  //   "/course/salesforce-admin": "/coursedetails/salesforce-admin",
-  //   "/coursedetails/ai": "/coursedetails/artificial-intelligence-(-ai-)",
-  //   "/course/artificial-intelligence-(-ai-)": "/coursedetails/artificial-intelligence",
-  //   "/hachion%20admin/cyber-security": "/coursedetails/cyber-security",
-  // };
-
   const urlRedirectMap = {
+
+    "/coursedetails": "/courses",
+    "/coursedetails/accounting-&-finance": "/courses/accounting-and-finance",
+"/coursedetails/act": "/courses/act",
+"/coursedetails/artificial-intelligence": "/courses/artificial-intelligence",
+"/coursedetails/big-data-&-streaming-technologies": "/courses/big-data-and-streaming-technologies",
+"/coursedetails/business-analyst": "/courses/business-analyst",
+"/coursedetails/business-intelligence": "/courses/business-intelligence",
+"/coursedetails/career-development-&-professional-skills": "/courses/career-development-and-professional-skills",
+"/coursedetails/cloud-courses": "/courses/cloud-courses",
+"/coursedetails/crm-courses": "/courses/crm-courses",
+"/coursedetails/cyber-security": "/courses/cyber-security",
+"/coursedetails/data-science-&-business-analytics": "/courses/data-science-and-business-analytics",
+"/coursedetails/linux-&-system-administration": "/courses/linux-and-system-administration",
+"/coursedetails/management-courses": "/courses/management-courses",
+"/coursedetails/marketing-&-business": "/courses/marketing-and-business",
+"/coursedetails/microsoft": "/courses/microsoft",
+"/coursedetails/mobile-app-development": "/courses/mobile-app-development",
+"/coursedetails/networking-courses": "/courses/networking-courses",
+"/coursedetails/programming": "/courses/programming",
+"/coursedetails/qa-testing": "/courses/qa-testing",
+"/coursedetails/sap": "/courses/sap",
+"/coursedetails/sat": "/courses/sat",
+"/coursedetails/summer-training": "/courses/summer-training",
+"/coursedetails/web-development": "/courses/web-development",
+"/coursedetails/workday": "/courses/workday",
 
   // Artificial Intelligence
   "/coursedetails/artificial-intelligence-(-ai-)": "/courses/artificial-intelligence/artificial-intelligence-training",
@@ -33,6 +50,7 @@ export default function NotFound() {
   // Business Analyst
   "/coursedetails/it-business-analyst": "/courses/business-analyst/it-business-analyst",
   "/coursedetails/business-analyst-healthcare": "/courses/business-analyst/business-analyst-healthcare",
+  "/coursedetails/business-analyst-–-banking-domain": "/courses/business-analyst/business-analyst-banking-domain",
   "/coursedetails/business-analyst-%e2%80%93-banking-domain": "/courses/business-analyst/business-analyst-banking-domain",
 
   // Business Intelligence
@@ -67,7 +85,113 @@ export default function NotFound() {
   "/coursedetails/salesforce-admin+development-(combo-course)": "/courses/crm-courses/salesforce-admin-development",
   "/coursedetails/salesforce-advanced-admin": "/courses/crm-courses/salesforce-advanced-admin",
   "/coursedetails/salesforce-business-analyst": "/courses/crm-courses/salesforce-business-analyst",
+// CRM Courses
+"/coursedetails/salesforce-cpq": "/courses/crm-courses/salesforce-cpq",
+"/coursedetails/salesforce-ai": "/courses/crm-courses/salesforce-ai",
+"/coursedetails/workflow-automation": "/courses/crm-courses/workflow-automation",
+"/coursedetails/servicenow-development": "/courses/crm-courses/servicenow-development",
+"/coursedetails/servicenow-combo": "/courses/crm-courses/servicenow-combo",
 
+// Accounting and Finance
+"/coursedetails/quickbooks": "/courses/accounting-and-finance/quickbooks",
+"/coursedetails/payroll-management": "/courses/accounting-and-finance/payroll-management",
+
+// ACT
+"/coursedetails/act(english)": "/courses/act/act-english",
+"/coursedetails/act(math)": "/courses/act/act-math",
+
+// Big Data and Streaming Technologies
+"/coursedetails/apache-kafka": "/courses/big-data-and-streaming-technologies/apache-kafka",
+
+// Cyber Security
+"/coursedetails/certified-ethical-hacker-(ceh)": "/courses/cyber-security/certified-ethical-hacker-certification",
+"/coursedetails/computer-hacking-forensic-investigator-(chfi)": "/courses/cyber-security/computer-hacking-forensic-investigator-certification",
+"/coursedetails/security-operations-center-(soc)-analyst": "/courses/cyber-security/security-operations-center-analyst-training",
+"/coursedetails/identity-and-access-management-(iam)": "/courses/cyber-security/identity-access-management-training",
+"/coursedetails/accessibility-&-penetration-testing": "/courses/cyber-security/accessibility-penetration-testing",
+
+// Data Science and Business Analytics
+"/coursedetails/data-science-with-python": "/courses/data-science-and-business-analytics/data-science-with-python",
+"/coursedetails/data-analytics": "/courses/data-science-and-business-analytics/data-analytics",
+"/coursedetails/power-bi": "/courses/data-science-and-business-analytics/power-bi-training",
+"/coursedetails/sql": "/courses/data-science-and-business-analytics/sql-training",
+"/coursedetails/business-analytics": "/courses/data-science-and-business-analytics/business-analytics",
+"/coursedetails/data-science-with-python-&-ml": "/courses/data-science-and-business-analytics/data-science-machine-learning-training",
+"/coursedetails/data-analytics-capstone-project": "/courses/data-science-and-business-analytics/data-analytics-capstone-project",
+"/coursedetails/data-analytics-with-advance-python": "/courses/data-science-and-business-analytics/data-analytics-advance-python",
+"/coursedetails/pyspark-certification-training-course": "/courses/data-science-and-business-analytics/pyspark-certification-training",
+"/coursedetails/sql-with-python": "/courses/data-science-and-business-analytics/sql-training-with-python",
+"/coursedetails/teradata": "/courses/data-science-and-business-analytics/teradata",
+"/coursedetails/pl-sql": "/courses/data-science-and-business-analytics/pl-sql",
+
+// Linux and System Administration
+"/coursedetails/red-hat-administration-d0280": "/courses/linux-and-system-administration/red-hat-administration-d0280",
+"/coursedetails/red-hat-administration-d0188": "/courses/linux-and-system-administration/red-hat-administration-d0188",
+
+// Management Courses
+"/coursedetails/project-management-certification-(pmp-with-35-pdus)": "/courses/management-courses/pmp-certification-training",
+"/coursedetails/certified-scrum-master-(-csm-)": "/courses/management-courses/certified-scrum-master-certification",
+"/coursedetails/certified-scrum-product-owner-(cspo)": "/courses/management-courses/certified-scrum-product-owner-certification",
+"/coursedetails/program-management-professional": "/courses/management-courses/program-management-professional",
+"/coursedetails/professional-scrum-master-(psm)": "/courses/management-courses/professional-scrum-master-certification",
+"/coursedetails/advanced-certified-scrum-master-acsm": "/courses/management-courses/advanced-certified-scrum-master-certification",
+
+// Marketing and Business
+"/coursedetails/digital-marketing": "/courses/marketing-and-business/digital-marketing",
+
+// Microsoft
+"/coursedetails/azure-data-engineer": "/courses/microsoft/azure-data-engineer-training",
+"/coursedetails/azure-devops": "/courses/microsoft/azure-devops-training",
+"/coursedetails/microsoft-dynamics-365": "/courses/microsoft/microsoft-dynamics-365",
+
+// Mobile App Development
+"/coursedetails/ios-app-development": "/courses/mobile-app-development/ios-app-development",
+"/coursedetails/android-app-development": "/courses/mobile-app-development/android-app-development",
+"/coursedetails/react-native": "/courses/mobile-app-development/react-native-training",
+
+// Networking Courses
+"/coursedetails/python-automation-network-engineer": "/courses/networking-courses/python-automation-network-engineer-training",
+"/coursedetails/ccna-(cisco-certified-network-associate)": "/courses/networking-courses/ccna-certification-training",
+"/coursedetails/ccnp-(cisco-certified-network-professional)": "/courses/networking-courses/ccnp-certification-training",
+
+// Programming
+"/coursedetails/java-full-stack": "/courses/programming/java-full-stack-development-training",
+"/coursedetails/dotnet": "/courses/programming/dotnet-development-training",
+"/coursedetails/python": "/courses/programming/python-programming-training",
+"/coursedetails/python-capstone-project": "/courses/programming/python-capstone-project",
+"/coursedetails/java-with-python": "/courses/programming/java-with-python",
+
+// QA Testing
+"/coursedetails/qa-automation-(selenium-with-java)": "/courses/qa-testing/selenium-java-automation-training",
+"/coursedetails/qa-manual-testing": "/courses/qa-testing/qa-manual-testing",
+"/coursedetails/performance-testing": "/courses/qa-testing/performance-testing",
+"/coursedetails/qa-combo-course-(manual-&-automation)": "/courses/qa-testing/qa-combo-manual-automation",
+"/coursedetails/cucumber-automation": "/courses/qa-testing/cucumber-automation",
+"/coursedetails/tosca-automation": "/courses/qa-testing/tosca-automation",
+"/coursedetails/playwright-with-python": "/courses/qa-testing/playwright-python-automation-training",
+"/coursedetails/qa-automation-(python)": "/courses/qa-testing/python-automation-testing-training",
+
+// SAP
+"/coursedetails/sap-hana": "/courses/sap/sap-hana",
+"/coursedetails/sap-tosca-automation": "/courses/sap/sap-tosca-automation",
+
+// SAT
+"/coursedetails/sat-(math)": "/courses/sat/sat-math",
+"/coursedetails/sat-(english)": "/courses/sat/sat-english",
+
+// Summer Training
+"/coursedetails/python-programming-for-kids": "/courses/summer-training/python-programming-for-kids",
+
+// Web Development
+"/coursedetails/ruby-on-rails(ror)": "/courses/web-development/ruby-on-rails-ror",
+"/coursedetails/full-stack-web-development": "/courses/web-development/full-stack-web-development-training",
+"/coursedetails/angular-frontend-development": "/courses/web-development/angular-frontend-development-training",
+"/coursedetails/streamlit": "/courses/web-development/streamlit-training",
+"/coursedetails/graphql-with-mern": "/courses/web-development/graphql-mern-training",
+
+// Workday
+"/coursedetails/workday-hcm": "/courses/workday/workday-hcm-training",
+"/coursedetails/workday-finance": "/courses/workday/workday-finance-training",
 };
   // ❌ Invalid / Deleted URLs (from your sheet)
   const invalidUrls = [
@@ -138,7 +262,10 @@ useEffect(() => {
   meta.content = "noindex,follow";
   document.head.appendChild(meta);
 
-  let cleanPath = pathname.split("?")[0].replace(/\/$/, "");
+  // let cleanPath = pathname.split("?")[0].replace(/\/$/, "");
+  let cleanPath = decodeURIComponent(
+  pathname.split("?")[0].replace(/\/$/, "")
+).toLowerCase();
 
   // ✅ Case 1: Redirect immediately (NO UI)
   if (urlRedirectMap[cleanPath]) {

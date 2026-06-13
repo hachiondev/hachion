@@ -273,6 +273,35 @@
 .popup-buttons button {
   min-width: 100px;
 }
-.MuiPickersPopper-root {
+:global(.MuiPickersPopper-root) {
   z-index: 999999 !important;
+}
+.entries {
+  margin-bottom: 20px;
+}
+
+.entries-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.entries-left p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.btn-group {
+  position: relative;
+}
+
+.btn-number {
+  min-width: 50px;
+  height: 36px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0 12px;
 }

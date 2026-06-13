@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './AutomationRules.module.css';
+import styles from './AutomationRules.module.css';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
@@ -31,6 +31,9 @@ const AutomationRules = () => {
   const [endDate, setEndDate] = useState("");
   const [sendTime, setSendTime] = useState(null);
   const [frequencyDays, setFrequencyDays] = useState("");
+  const isAddRuleEnabled =
+  leadStatus.trim() !== "" &&
+  timezone.trim() !== "";
 
   // =====================================================
 // EDIT POPUP STATES
@@ -95,6 +98,14 @@ const [editFrequencyDays, setEditFrequencyDays] = useState("");
     }
   };
 
+  const handleReset = () => {
+  setLeadStatus("");
+  setTimezone("");
+  setStartDate("");
+  setEndDate("");
+  setSendTime(null);
+  setFrequencyDays("");
+};
   // =====================================================
   // ADD RULE
   // =====================================================
@@ -416,14 +427,14 @@ const [hours, minutes] =
 };
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className="automation-rules-container">
+      <div className={styles["automation-rules-container"]}>
 
         {/* FILTERS */}
-        <div className="automation-filters">
+        <div className={styles["automation-filters"]}>
 
           {/* LEAD STATUS */}
           <select
-            className="automation-input"
+            className={styles["automation-input"]}
             value={leadStatus}
             onChange={(e) => setLeadStatus(e.target.value)}
           >
@@ -438,7 +449,7 @@ const [hours, minutes] =
 
           {/* TIMEZONE */}
           <select
-            className="automation-input"
+            className={styles["automation-input"]}
             value={timezone}
             onChange={(e) => setTimezone(e.target.value)}
           >
@@ -454,7 +465,7 @@ const [hours, minutes] =
           {/* START DATE */}
           <input
             type="date"
-            className="automation-input"
+            className={styles["automation-input"]}
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
           />
@@ -462,7 +473,7 @@ const [hours, minutes] =
           {/* END DATE */}
           <input
             type="date"
-            className="automation-input"
+            className={styles["automation-input"]}
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
           />
@@ -488,7 +499,7 @@ const [hours, minutes] =
 
           {/* FREQUENCY */}
           <select
-            className="automation-input"
+            className={styles["automation-input"]}
             value={frequencyDays}
             onChange={(e) => setFrequencyDays(e.target.value)}
           >
@@ -503,32 +514,41 @@ const [hours, minutes] =
             Filter
           </button> */}
 
-          <button className="custom-reset-btn">
-            Reset
-          </button>
+      <button
+  className={styles["custom-reset-btn"]}
+  onClick={handleReset}
+>
+  Reset
+</button>
 
         </div>
 
         {/* ADD RULE */}
-        <div className="add-rule-wrapper">
+        <div className={styles["add-rule-wrapper"]}>
 
-          <button
-            className="add-rule-btn"
-            onClick={handleAddRule}
-          >
-            + Add Rule
-          </button>
+         <button
+  className={styles["add-rule-btn"]}
+  onClick={handleAddRule}
+  disabled={!isAddRuleEnabled}
+  style={{
+    backgroundColor: isAddRuleEnabled ? "" : "#bdbdbd",
+    cursor: isAddRuleEnabled ? "pointer" : "not-allowed",
+    opacity: isAddRuleEnabled ? 1 : 0.7
+  }}
+>
+  + Add Rule
+</button>
 
         </div>
 
         {/* SHOW ENTRIES */}
-        <div className="entries">
-          <div className="entries-left">
+        <div className={styles["entries"]}>
+          <div className={styles["entries-left"]}>
             <p>Show</p>
-            <div className="btn-group">
+            <div className={styles["btn-group"]}>
 
               <button
-                className="btn-number dropdown-toggle"
+                className={`${styles["btn-number"]} dropdown-toggle`}
                 data-bs-toggle="dropdown"
               >
                 {rowsPerPage}
@@ -552,8 +572,8 @@ const [hours, minutes] =
         </div>
 
         {/* TABLE */}
-        <div className="table-responsive">
-          <table className="automation-table">
+        <div className={styles["table-responsive"]}>
+          <table className={styles["automation-table"]}>
             <thead>
               <tr>
                 <th>
@@ -599,7 +619,7 @@ const [hours, minutes] =
 
                   {/* LEAD STATUS */}
                   <td>
-                    <span className="warm-badge">
+                    <span className={styles["warm-badge"]}>
                       {rule.leadStatus || "-"}
                     </span>
                   </td>
@@ -623,7 +643,7 @@ const [hours, minutes] =
                   {/* STATUS */}
                   <td>
 
-                    <span className="enabled-badge">
+                    <span className={styles["enabled-badge"]}>
                       {rule.enabled ? "Enabled" : "Disabled"}
                     </span>
 
@@ -637,7 +657,7 @@ const [hours, minutes] =
                   {/* ACTIONS */}
 
                   <td>
-                    <div className="action-buttons">
+                    <div className={styles["action-buttons"]}>
 
 {(() => {
 
@@ -711,50 +731,48 @@ if (
   <>
 
     <button
-      className={
-        isExpired
-          ? "expired-btn"
-          : "edit-btn"
-      }
+  className={
+    isExpired
+      ? styles["expired-btn"]
+      : styles["edit-btn"]
+  }
 
-      disabled={isExpired}
+  disabled={isExpired}
 
-      onClick={() => handleEditRule(rule)}
-    >
-      {isExpired ? "Lock" : "Edit"}
-    </button>
+  onClick={() => handleEditRule(rule)}
+>
+  {isExpired ? "Lock" : "Edit"}
+</button>
 
-    <button
-      className="run-btn"
-      disabled={runningRuleId === rule.id}
-      onClick={() => handleRunAutomation(rule)}
-    >
-      {runningRuleId === rule.id
-        ? "Running..."
-        : "Run"}
-    </button>
+<button
+  className={styles["run-btn"]}
+  disabled={runningRuleId === rule.id}
+  onClick={() => handleRunAutomation(rule)}
+>
+  {runningRuleId === rule.id
+    ? "Running..."
+    : "Run"}
+</button>
 
-    <button
-      className={
-        isExpired
-          ? "expired-btn"
-          : rule.enabled
-          ? "disable-btn"
-          : "enable-btn"
-      }
+<button
+  className={
+    isExpired
+      ? styles["expired-btn"]
+      : rule.enabled
+      ? styles["disable-btn"]
+      : styles["enable-btn"]
+  }
 
-      disabled={isExpired}
+  disabled={isExpired}
 
-      onClick={() => handleToggleRule(rule)}
-    >
-
-      {isExpired
-        ? "Expired"
-        : rule.enabled
-        ? "Disable"
-        : "Enable"}
-
-    </button>
+  onClick={() => handleToggleRule(rule)}
+>
+  {isExpired
+    ? "Expired"
+    : rule.enabled
+    ? "Disable"
+    : "Enable"}
+</button>
 
   </>
 
@@ -792,16 +810,16 @@ if (
 
 {showEditPopup && (
 
-  <div className="popup-overlay">
+  <div className={styles["popup-overlay"]}>
 
-    <div className="popup-container">
+    <div className={styles["popup-container"]}>
 
       <h3>Edit Automation Rule</h3>
 
       {/* LEAD STATUS */}
 
       {/* <select
-        className="automation-input"
+        className={styles["automation-input"]}
         value={editLeadStatus}
         disabled
       >
@@ -812,7 +830,7 @@ if (
 
 <input
   type="text"
-  className="automation-input disabled-input"
+  className={`${styles["automation-input"]} ${styles["disabled-input"]}`}
   value={editLeadStatus}
   disabled
 />
@@ -820,7 +838,7 @@ if (
 
     <input
   type="text"
-  className="automation-input disabled-input"
+  className={`${styles["automation-input"]} ${styles["disabled-input"]}`}
   value={editTimezone}
   disabled
 />
@@ -829,7 +847,7 @@ if (
 
       <input
         type="date"
-        className="automation-input"
+        className={styles["automation-input"]}
         value={editStartDate}
         onChange={(e) =>
           setEditStartDate(e.target.value)
@@ -840,7 +858,7 @@ if (
 
       <input
         type="date"
-        className="automation-input"
+        className={styles["automation-input"]}
         value={editEndDate}
         onChange={(e) =>
           setEditEndDate(e.target.value)
@@ -881,7 +899,7 @@ if (
       {/* FREQUENCY */}
 
       <select
-        className="automation-input"
+        className={styles["automation-input"]}
         value={editFrequencyDays}
         onChange={(e) =>
           setEditFrequencyDays(e.target.value)
@@ -895,17 +913,17 @@ if (
 
       {/* BUTTONS */}
 
-      <div className="popup-buttons">
+      <div className={styles["popup-buttons"]}>
 
         <button
-          className="enable-btn"
+          className={styles["enable-btn"]}
           onClick={handleUpdateRule}
         >
           Update
         </button>
 
         <button
-          className="disable-btn"
+          className={styles["disable-btn"]}
           onClick={() =>
             setShowEditPopup(false)
           }

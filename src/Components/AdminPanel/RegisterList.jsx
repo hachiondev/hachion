@@ -44,6 +44,7 @@ import { countries as staticCountries } from '../../countryUtils';
 import Select from 'react-select';
 dayjs.extend(customParseFormat);
 
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#00AEEF',
@@ -95,6 +96,7 @@ const [sendingId, setSendingId] = useState(null);
   const [allEmployees, setAllEmployees] = useState([]);
 const [seoEmployees, setSeoEmployees] = useState([]);
 const [periodFilter, setPeriodFilter] = useState("");
+const [seoTeamFilter, setSeoTeamFilter] = useState("");
   const [selectedCountry, setSelectedCountry] = useState({
     name: '',
     code: '',
@@ -196,6 +198,13 @@ const [pendingStatusChange, setPendingStatusChange] = useState(null);
 
     await axios.post(`https://api.test.hachion.co/send-email/${studentId}`);
 
+// ✅ Refresh latest table data from DB
+const response = await axios.get(
+  "https://api.test.hachion.co/registerstudent-with-remarks"
+);
+
+setRegisterStudent(response.data);
+setFilteredStudent(response.data);
     setSuccessMessage("✅ Email sent successfully!");
     setErrorMessage("");
 
@@ -424,6 +433,7 @@ const payload = {
     setLatestUpdate(newUpdate);
     setHistory(prev => [newUpdate, ...prev]);
 
+    await fetchStudent();
     setUpdateForm({
       remark: "",
       status: "",
@@ -465,33 +475,35 @@ const isUpdateFormValid = () => {
     }));
   };
 
-  useEffect(() => {
-    const fetchStudent = async () => {
-      try {
-        const response = await axios.get('https://api.test.hachion.co/registerstudent-with-remarks');
-        const mappedData = response.data.map(item => ({
-  ...item,
+ const fetchStudent = async () => {
+  try {
+    const response = await axios.get(
+      "https://api.test.hachion.co/registerstudent-with-remarks"
+    );
 
-  // ✅ handle both cases
-  time_zone: item.time_zone || item.timeZone || "",
-  analyst_name: item.analyst_name || item.analystName || ""
-}));
-        setRegisterStudent(mappedData);
-setFilteredStudent(mappedData);
+    const mappedData = response.data.map(item => ({
+      ...item,
+      time_zone: item.time_zone || item.timeZone || "",
+      analyst_name: item.analyst_name || item.analystName || ""
+    }));
 
-      } catch (error) {
-        console.error("Error fetching student list:", error.message);
-      }
-    };
-    fetchStudent();
-    setFilteredStudent(registerStudent)
-  }, []);
+    setRegisterStudent(mappedData);
+    setFilteredStudent(mappedData);
+
+  } catch (error) {
+    console.error("Error fetching student list:", error.message);
+  }
+};
+
+useEffect(() => {
+  fetchStudent();
+}, []);
 
   useEffect(() => {
   const fetchEmployees = async () => {
     try {
       const allRes = await axios.get("https://api.test.hachion.co/employees/enteredBy");
-      const seoRes = await axios.get("https://api.test.hachion.co/employees/seo-team");
+      const seoRes = await axios.get("https://api.test.hachion.co/seo-team");
 
       setAllEmployees(allRes.data);
       setSeoEmployees(seoRes.data);
@@ -555,6 +567,10 @@ const matchSearch =
   (!start || regDate >= start) &&
   (!end || regDate <= end);
 
+  const matchesSeoTeam =
+  !seoTeamFilter ||
+  (item.seoTeam || "").toLowerCase() === seoTeamFilter.toLowerCase();
+
 // ✅ NEW MODE FILTER
 const matchesMode =
   !modeFilter ||                       // All Modes
@@ -567,7 +583,14 @@ const matchesTag =
 const matchesStatus =
   !statusFilter || item.leadStatus === statusFilter;
 
-return matchSearch && inRange && matchesMode && matchesTag && matchesStatus;
+return (
+  matchSearch &&
+  inRange &&
+  matchesMode &&
+  matchesTag &&
+  matchesStatus &&
+  matchesSeoTeam
+);
     });
     setFilteredStudent(filtered);
     setCurrentPage(1);
@@ -581,6 +604,7 @@ return matchSearch && inRange && matchesMode && matchesTag && matchesStatus;
      setModeFilter("");
      setDemoFilter("");
 setStatusFilter("");
+setSeoTeamFilter("");
 
     setFilteredStudent(registerStudent);
     setCurrentPage(1);
@@ -605,11 +629,31 @@ setStatusFilter("");
     }
   };
 
+  // const handleDeleteConfirmation = (id) => {
+  //   if (window.confirm("Are you sure you want to delete this Student?")) {
+  //     handleDelete(id);
+  //   }
+  // };
   const handleDeleteConfirmation = (id) => {
-    if (window.confirm("Are you sure you want to delete this Student?")) {
-      handleDelete(id);
-    }
-  };
+  const confirmed = window.confirm(
+    "Are you sure you want to delete this Student?"
+  );
+
+  if (!confirmed) return;
+
+  const password = window.prompt(
+    "Enter Password to Delete:"
+  );
+
+  if (password === null) return; // Cancel clicked
+
+  if (password !== "Trainings@Hachion") {
+    alert("❌ Invalid Password");
+    return;
+  }
+
+  handleDelete(id);
+};
 
   const handleDelete = async (id) => {
     try {
@@ -618,16 +662,24 @@ setStatusFilter("");
       setRegisterStudent((prev) => prev.filter((s) => s.id !== id));
       setFilteredStudent((prev) => prev.filter((s) => s.id !== id));
       
+      await fetchStudent();
       // Remove from selectedIds if present
       setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
       
       setSuccessMessage("✅ Student deleted successfully.");
       setErrorMessage("");
-    } catch (error) {
-      console.error("Error deleting Student:", error);
-      setErrorMessage("❌ Failed to delete student. Please try again.");
-      setSuccessMessage("");
-    }
+    } 
+    catch (error) {
+  console.error("Error deleting Student:", error);
+
+  if (error.response && error.response.data) {
+    setErrorMessage(`❌ ${error.response.data}`);
+  } else {
+    setErrorMessage("❌ Failed to delete student. Please try again.");
+  }
+
+  setSuccessMessage("");
+}
   };
 useEffect(() => {
   const filtered = registerStudent.filter(item => {
@@ -724,7 +776,8 @@ if (matchedCountry) {
     time_zone: row.time_zone ?? "",
     analyst_name: row.analyst_name ?? "",
     source: row.source ?? "Select",
-    visa_status: row.visa_status ?? "Select Visa Status",
+    // visa_status: row.visa_status ?? "Select Visa Status",
+    visa_status: row.visa_status || row.visaStatus || "Select Visa Status",
     coordinator: row.coordinator ?? "",
     remarks: row.remarks ?? "",
     comments: row.comments ?? "",
@@ -803,6 +856,8 @@ setHistory(formattedHistory);
       setRegisterStudent((prev) =>
         prev.map((s) => s.id === studentData.id ? response.data : s)
       );
+      await fetchStudent();
+
       setMessage("Student updated successfully!");
       setIsUpdating(false);
       setShowAddCourse(false);
@@ -938,6 +993,7 @@ const formatDate = (dateStr) => {
     try {
       const response = await axios.post("https://api.test.hachion.co/registerstudent/add", dataToSubmit);
       if (response.status === 200) {
+          await fetchStudent();
         setIsSubmitting(false);
         setSuccessMessage("✅ Student added successfully.");
         setErrorMessage("");
@@ -1916,6 +1972,26 @@ const formatDate = (dateStr) => {
     <option key={index} value={tag}>{tag}</option>
   ))}
 </select>
+<select
+  value={seoTeamFilter}
+  onChange={(e) => setSeoTeamFilter(e.target.value)}
+  style={{
+    marginLeft: "10px",
+    height: "36px",
+    borderRadius: "15px",
+    border: "1px solid #ccc",
+    padding: "0 12px",
+    outline: "none"
+  }}
+>
+  <option value="">SEO Team</option>
+
+  {seoEmployees.map((team, index) => (
+    <option key={index} value={team}>
+      {team}
+    </option>
+  ))}
+</select>
                     <button className='filter' onClick={handleDateFilter} >Filter</button>
                     <button className="filter" onClick={handleDateReset}>Reset</button>
                   </div>
@@ -2203,7 +2279,23 @@ const formatDate = (dateStr) => {
                         <StyledTableCell align="center">{row.leadStatus}</StyledTableCell>
                         <StyledTableCell align="center">{row.leadTag}</StyledTableCell>
                         <StyledTableCell align="center">{row.status}</StyledTableCell>
-                        <StyledTableCell align="center">{row.remark}</StyledTableCell>
+                        {/* <StyledTableCell align="center">{row.remark}</StyledTableCell> */}
+                        <StyledTableCell align="center">
+  <div
+    style={{
+      maxHeight: "80px",
+      overflowY: "auto",
+      overflowX: "hidden",
+      textAlign: "left",
+      padding: "5px",
+      whiteSpace: "pre-wrap",
+      wordBreak: "break-word",
+      minWidth: "250px"
+    }}
+  >
+    {row.remark || "-"}
+  </div>
+</StyledTableCell>
                         <StyledTableCell align="center">{row.coordinator}</StyledTableCell>
                         <StyledTableCell align="center">{formatDate(row.callMadeOn)}</StyledTableCell>
                         <StyledTableCell align="center">

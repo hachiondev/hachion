@@ -17,7 +17,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { saveRedirectUrl } from "../../../../redirectAfterLogin";
 import { useUserProfile } from "../../../../Api/hooks/CourseApi/useUserProfile";
 import { useCurriculumAll } from "../../../../Api/hooks/CurriculumApi/useCurriculumAll";
-
+import { useFaqsByCourse } from "../../../../Api/hooks/CourseApi/useFaqsByCourse";
 
 dayjs.extend(customParseFormat);
 function extractYoutubeInfo(url) {
@@ -129,6 +129,7 @@ export default function CourseBanner({ onEnroll }) {
   const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
 
   const { data: course, isLoading, isError } = useCourseByName(courseNameForApi);
+  const { data: faqs = [] } = useFaqsByCourse(courseNameForApi);
 
   const youtubeInfo = extractYoutubeInfo(course?.youtubeLink);
   const hasYoutubeDemo = youtubeInfo.type !== null;
@@ -216,27 +217,36 @@ export default function CourseBanner({ onEnroll }) {
   : "courses";
 
 const canonicalUrl = `https://www.hachion.co/courses/${categorySlug}/${encodeURIComponent(courseName)}`;
-  const breadcrumbSchema = {
+  const categoryUrl = `https://www.hachion.co/courses/${categorySlug}`;
+
+const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
-  itemListElement: [
+  "@id": `${canonicalUrl}`,
+  "itemListElement": [
     {
       "@type": "ListItem",
-      position: 1,
-      name: "Home",
-      item: "https://www.hachion.co/"
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.hachion.co"
     },
     {
       "@type": "ListItem",
-      position: 2,
-      name: "Courses",
-      item: "https://www.hachion.co/courses"
+      "position": 2,
+      "name": "Courses",
+      "item": "https://www.hachion.co/courses"
     },
     {
       "@type": "ListItem",
-      position: 3,
-      name: title,
-      item: canonicalUrl
+      "position": 3,
+      "name": course.courseCategory,
+      "item": categoryUrl
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": course.metaTitle || course.courseName,
+      "item": canonicalUrl
     }
   ]
 };
@@ -467,7 +477,19 @@ const canonicalUrl = `https://www.hachion.co/courses/${categorySlug}/${encodeURI
     // 3️⃣ Nothing available
     alert("No syllabus PDF available.");
   };
-
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": `${canonicalUrl}`,
+  "mainEntity": faqs.map((faq) => ({
+    "@type": "Question",
+    "name": faq.faqTitle || "",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": stripHtml(faq.description || "")
+    }
+  }))
+};
 
   return (
 
@@ -493,52 +515,132 @@ const canonicalUrl = `https://www.hachion.co/courses/${categorySlug}/${encodeURI
         <meta name="twitter:description" content={seoDescription} />
         <meta name="twitter:image" content={ogImage} />
 
-         <script type="application/ld+json">
-    {JSON.stringify(breadcrumbSchema)}
-  </script>
-  <script type="application/ld+json">
-{`
-{
- "@context": "https://schema.org",
- "@type": "Course",
- "name": "${title}",
- "description": "${seoDescription}",
- "url": "${canonicalUrl}",
- "provider": {
-   "@type": "Organization",
-   "name": "Hachion",
-   "url": "https://www.hachion.co"
- }
-}
-`}
-</script>
-
+        
+  <script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "@id": "https://www.hachion.co/#organization",
+      "name": "Hachion",
+      "url": "https://www.hachion.co/",
+      "logo": "https://www.hachion.co/logo.png",
+      "image": "https://www.hachion.co/industry-recognized-it-certifications.webp",
+      "description":
+        "Hachion offers professional certification online training courses authored by industry experts. Learn the high in-demand skills from our experts.",
+      "telephone": "+1 732-485-2499",
+      "email": "info@hachion.co",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "601 Voyage Trace",
+        "addressLocality": "Leander",
+        "addressRegion": "Texas",
+        "postalCode": "78641",
+        "addressCountry": "USA"
+      },
+      "sameAs": [
+        "https://www.facebook.com/hachion.official/",
+        "https://www.instagram.com/hachion.official/",
+        "https://www.linkedin.com/company/hachion",
+        "https://www.youtube.com/@hachion.official",
+        "https://x.com/hachionofficial"
+      ]
+    })
+  }}
+/>
 <script type="application/ld+json">
 {`
 {
   "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What is Salesforce Admin Certification?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Salesforce Admin Certification is an entry-level credential that validates your skills in managing and customizing Salesforce to meet business needs."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Why Should I Get Salesforce Admin Certified?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Getting certified can enhance your career prospects in cloud-based customer relationship management and increase earning potential."
-      }
-    }
-  ]
+  "@type": "WebPage",
+  "@id": "${canonicalUrl}",
+  "url": "${canonicalUrl}",
+  "name": "${stripHtml(course.metaTitle) || stripHtml(course.courseName)}",
+  "description": "${course.metaDescription}",
+  "inLanguage": "en",
+  "primaryImageOfPage": "https://api.test.hachion.co/${course.courseImage}",
+  "breadcrumb": {
+    "@id": "${canonicalUrl}"
+  },
+  "publisher": {
+    "@type": "EducationalOrganization",
+    "name": "Hachion",
+    "url": "https://www.hachion.co"
+  }
 }
 `}
 </script>
+ <script type="application/ld+json">
+{`
+${JSON.stringify(breadcrumbSchema)}
+`}
+</script>
+<script type="application/ld+json">
+{`
+{
+  "@context": "https://schema.org",
+  "@type": "Course",
+  "@id": "${canonicalUrl}/#course",
+  "name": "${stripHtml(course.metaTitle) || stripHtml(course.courseName)}",
+  "description": "${course.metaDescription}",
+  "url": "${canonicalUrl}",
+  "image": "https://api.test.hachion.co/${course.courseImage}",
+  "courseMode": "Online",
+  "inLanguage": "en",
+
+  "educationalCredentialAwarded": "${course.courseName} Certification",
+
+  "provider": {
+    "@type": "EducationalOrganization",
+    "@id": "https://www.hachion.co",
+    "name": "Hachion",
+    "url": "https://www.hachion.co"
+  },
+
+  "hasCourseInstance": {
+  "@type": "CourseInstance",
+  "courseMode": "Online"
+},
+
+"offers": {
+  "@type": "Offer",
+  "url": "${canonicalUrl}",
+  "category": "Online Paid Course",
+  "price": "${Math.min(
+    ...[
+      course.amount,
+      course.samount,
+      course.sqamount,
+      course.camount,
+      course.mamount
+    ]
+      .filter((price) => price != null && price > 0)
+      .map(Number)
+  )} to ${Math.max(
+    ...[
+      course.amount,
+      course.samount,
+      course.sqamount,
+      course.camount,
+      course.mamount
+    ]
+      .filter((price) => price != null && price > 0)
+      .map(Number)
+  )}",
+  "priceCurrency": "USD",
+  "availability": "https://schema.org/InStock"
+}}
+`}
+</script>
+
+
+{faqs.length > 0 && (
+  <script type="application/ld+json">
+    {JSON.stringify(faqSchema)}
+  </script>
+)}
+
       </Helmet>
       <section className={styles.bnwrap}>
         {showOfferStrip && (

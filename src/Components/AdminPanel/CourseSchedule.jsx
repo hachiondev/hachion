@@ -64,7 +64,10 @@ export default function CourseSchedule() {
   const [filterCourse, setFilterCourse] = useState([]);
   const [open, setOpen] = useState(false);
   const [showAddCourse, setShowAddCourse] = useState(false);
-  const [message, setMessage] = useState(false);
+  // const [message, setMessage] = useState(false);
+  const [message, setMessage] = useState("");
+const [errorMessage, setErrorMessage] = useState("");
+const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -145,11 +148,64 @@ export default function CourseSchedule() {
     setRows(updatedRows);
   };
   const addRow = () => {
-    setRows([...rows, {
-      id: Date.now(), batchId: "", schedule_date: "", scheduleFrequency: "", schedule_week: '',
-      schedule_time: "", schedule_duration: "", schedule_mode: "",  meeting: ""
-    }]);
-  };
+
+  const lastRow = rows[rows.length - 1];
+
+  // First check current row filled or not
+  if (
+    !lastRow.schedule_date ||
+    !lastRow.schedule_time ||
+    !lastRow.schedule_duration ||
+    !lastRow.schedule_mode ||
+    !lastRow.scheduleFrequency ||
+    !lastRow.meeting
+  ) {
+    setErrorMessage("Please fill current row before adding new row");
+
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 4000);
+
+    return;
+  }
+
+  // Check duplicate inside frontend rows
+  const isDuplicate = rows.some(
+    (row, index) =>
+      index !== rows.length - 1 &&
+      row.schedule_date === lastRow.schedule_date &&
+      row.schedule_time === lastRow.schedule_time &&
+      row.schedule_mode === lastRow.schedule_mode
+  );
+
+  if (isDuplicate) {
+    setErrorMessage(
+      "Duplicate schedule already added with same date, time and mode"
+    );
+
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 4000);
+
+    return;
+  }
+
+  // Add new row
+  setRows([
+    ...rows,
+    {
+      id: Date.now(),
+      batchId: "",
+      schedule_date: "",
+      scheduleFrequency: "",
+      schedule_week: "",
+      schedule_time: "",
+      schedule_duration: "",
+      schedule_mode: "",
+      meeting: "",
+    },
+  ]);
+};
 
   const deleteRow = (id) => {
     setRows(rows.filter(row => row.id !== id));
@@ -292,6 +348,8 @@ export default function CourseSchedule() {
     });
   };
   const handleSubmit = async () => {
+
+    setIsSubmitting(true);
     const newErrors = [];
 
     let hasError = false;
@@ -333,12 +391,47 @@ export default function CourseSchedule() {
       newErrors[index] = rowErrors;
     });
 
-    if (hasError) {
-      setFormErrors(newErrors);
-      alert("Please fix the errors before submitting.");
-      return;
-    }
+    // if (hasError) {
+    //   setFormErrors(newErrors);
+    //   alert("Please fix the errors before submitting.");
+    //   return;
+    // }
 
+    if (hasError) {
+  setFormErrors(newErrors);
+  setIsSubmitting(false);
+  return;
+}
+
+/* Duplicate child row validation */
+const duplicateSet = new Set();
+
+for (const row of rows) {
+
+  const duplicateKey =
+    `${courseData.schedule_category_name}|` +
+    `${courseData.schedule_course_name}|` +
+    `${row.schedule_date}|` +
+    `${row.schedule_time}|` +
+    `${row.schedule_mode}`;
+
+  if (duplicateSet.has(duplicateKey)) {
+
+    setErrorMessage(
+      "Duplicate schedule found. Same Category, Course, Date and Time already entered."
+    );
+
+    setIsSubmitting(false);
+
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 30000);
+
+    return;
+  }
+
+  duplicateSet.add(duplicateKey);
+}
     const uploadPromises = rows.map(async (row) => {
       const formattedCourseData = {
         batchId: courseData.batchId,
@@ -366,32 +459,88 @@ export default function CourseSchedule() {
           formattedCourseData
         );
         return response.status === 201 || response.status === 200;
-      } catch (error) {
-        console.error("Error adding schedule:", error.response?.data || error.message);
-        return false;
-      }
+      } 
+      catch (error) {
+
+  const errorMessage =
+    error.response?.data?.message ||
+    error.response?.data ||
+    "Schedule already exists with same category, course, date, time and mode";
+
+  throw new Error(errorMessage);
+}
     });
 
-    const results = await Promise.all(uploadPromises);
-    const allSuccessful = results.every((status) => status);
+    // const results = await Promise.all(uploadPromises);
+    // const allSuccessful = results.every((status) => status);
 
-    if (allSuccessful) {
-      alert("All schedule entries added successfully.");
-      setShowAddCourse(false);
-      setRows([{
-        id: Date.now(),
-        schedule_date: "",
-        schedule_week: "",
-        schedule_time: "",
-        schedule_duration: "",
-        schedule_mode: "",
-        trainer_name: "",
-        created_date: "",
-        meeting: ""
-      }]);
-    } else {
-      alert("Some schedule entries failed to upload. Please check the console for errors.");
-    }
+    // if (allSuccessful) {
+    //   alert("All schedule entries added successfully.");
+    //   setShowAddCourse(false);
+    //   setRows([{
+    //     id: Date.now(),
+    //     schedule_date: "",
+    //     schedule_week: "",
+    //     schedule_time: "",
+    //     schedule_duration: "",
+    //     schedule_mode: "",
+    //     trainer_name: "",
+    //     created_date: "",
+    //     meeting: ""
+    //   }]);
+    // } else {
+    //   alert("Some schedule entries failed to upload. Please check the console for errors.");
+    // }
+    try {
+
+  const results = await Promise.all(uploadPromises);
+  const allSuccessful = results.every((status) => status);
+
+  if (allSuccessful) {
+
+    setMessage("Schedule added successfully.");
+    setErrorMessage("");
+
+    setShowAddCourse(false);
+
+    setRows([{
+      id: Date.now(),
+      schedule_date: "",
+      schedule_week: "",
+      schedule_time: "",
+      schedule_duration: "",
+      schedule_mode: "",
+      trainer_name: "",
+      created_date: "",
+      meeting: ""
+    }]);
+
+    
+    const response = await axios.get(
+      "https://api.test.hachion.co/schedulecourse?userType=admin"
+    );
+
+    setCourses(response.data);
+    setFilteredCourses(response.data);
+
+    setIsSubmitting(false);
+
+setTimeout(() => {
+  setMessage("");
+}, 5000);
+  }
+
+} catch (error) {
+
+  setErrorMessage(error.message || "Schedule already exists.");
+  setMessage("");
+
+  setIsSubmitting(false);
+
+setTimeout(() => {
+  setErrorMessage("");
+}, 5000);
+}
   };
   const isFormValid = () => {
     if (!courseData.schedule_category_name || !courseData.schedule_course_name || !courseData.trainer_name) {
@@ -1024,15 +1173,29 @@ export default function CourseSchedule() {
                   </Table>
                 </TableContainer>
                 <div className="course-row">
-                  <button
-                    className="submit-btn"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
-                    onClick={handleSubmit}
-                    disabled={!isFormValid()}
-                  >
-                    Submit
-                  </button>
+                 <div>
+  <button
+    className="submit-btn"
+    // data-bs-toggle="modal"
+    // data-bs-target="#exampleModal"
+    onClick={handleSubmit}
+    disabled={!isFormValid() || isSubmitting}
+>
+  {isSubmitting ? "Submitting..." : "Submit"}
+  </button>
+
+  {errorMessage && (
+    <div
+      style={{
+        color: "red",
+        fontSize: "14px",
+        marginTop: "5px",
+      }}
+    >
+      {errorMessage}
+    </div>
+  )}
+</div>
                   <button className="reset-btn" onClick={handleReset}>
                     Reset
                   </button>
@@ -1279,7 +1442,20 @@ export default function CourseSchedule() {
               onPageChange={handlePageChange}
             />
           </div>
-          {message && <div className="success-message">{message}</div>}
+          {/* {message && <div className="success-message">{message}</div>} */}
+          {message && (
+  <div
+    className="success-message"
+    style={{
+      textAlign: "center",
+      marginTop: "10px",
+      color: "green",
+      fontWeight: "600"
+    }}
+  >
+    {message}
+  </div>
+)}
         </div>
       )}
       <Dialog

@@ -159,12 +159,8 @@ export default function AdminTools() {
 
   const isEditMode = !!toolsData.tool_id;
   const isRowValid = (row) => {
-    return (
-      row.toolsLink &&
-      row.toolsLink.trim() !== ""
-
-    );
-  };
+  return true;
+};
 
   const isFormValid = React.useMemo(() => {
     if (!toolsData.category_name || !toolsData.courseName) {
@@ -359,10 +355,10 @@ export default function AdminTools() {
 
     const row = rows[0];
 
-    if (!row.toolsName || !row.toolsLink) {
-      setErrorMessage("Tools name and link are required");
-      return;
-    }
+   if (!row.toolsName) {
+  setErrorMessage("Tools name is required");
+  return;
+}
 
     if (toolsData.tool_id) {
       updateTool(
@@ -392,13 +388,17 @@ export default function AdminTools() {
       return;
     }
 
-    const validRows = rows.filter(
-      r =>
-        r.toolsName &&
-        r.toolsLink &&
-        (r.toolImages instanceof File || typeof r.toolImages === "string")
-    );
-
+    // const validRows = rows.filter(
+    //   r =>
+    //     r.toolsName &&
+    //     r.toolsLink &&
+    //     (r.toolImages instanceof File || typeof r.toolImages === "string")
+    // );
+const validRows = rows.filter(
+  r =>
+    r.toolsName &&
+    (r.toolImages instanceof File || typeof r.toolImages === "string")
+);
     if (validRows.length === 0) {
       setErrorMessage("Please add at least one valid tool");
       return;
@@ -804,7 +804,7 @@ export default function AdminTools() {
                       <StyledTableCell align="center">Tools Images <span className="required">*</span></StyledTableCell>
                       <StyledTableCell align="center">Tools Name
                       </StyledTableCell>
-                      <StyledTableCell align="center">Tools Download Link <span className="required">*</span></StyledTableCell>
+                      <StyledTableCell align="center">Tools Download Link </StyledTableCell>
                       <StyledTableCell align="center" sx={{ width: '150px' }}>Add/Delete Row</StyledTableCell>
                     </TableRow>
                   </TableHead>

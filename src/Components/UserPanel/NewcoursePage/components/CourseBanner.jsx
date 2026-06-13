@@ -107,7 +107,7 @@ export default function CourseBanner({ onEnroll }) {
   const email = userData?.email || null;
   const encodedCourseName = encodeURIComponent(courseName);
   const { data } = useCurriculumAll(encodedCourseName);
-
+const [showFullDescription, setShowFullDescription] = useState(false);
   const curriculum = data?.curriculum || [];
 
   const courseNameForApi = courseName
@@ -193,9 +193,20 @@ export default function CourseBanner({ onEnroll }) {
   course.courseName ||
   "Course";
 
-  const subtitle =
-    stripHtml(course.aboutCourse) ||
-    "Course overview coming soon.";
+  // const subtitle =
+  //   stripHtml(course.aboutCourse) ||
+  //   "Course overview coming soon.";
+  
+
+const fullSubtitle =
+  stripHtml(course.aboutCourse) ||
+  "Course overview coming soon.";
+
+const subtitle =
+  showFullDescription
+    ? fullSubtitle
+    : fullSubtitle.split(" ").slice(0, 35).join(" ") +
+      (fullSubtitle.split(" ").length > 35 ? "..." : "");
   const seoTitle =
     course.metaTitle ||
     `${course.courseName} Training Course & Certification | Hachion`;
@@ -222,7 +233,7 @@ const canonicalUrl = `https://www.hachion.co/courses/${categorySlug}/${encodeURI
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
-  "@id": `${canonicalUrl}`,
+  "@id": `${canonicalUrl}#breadcrumb`,
   "itemListElement": [
     {
       "@type": "ListItem",
@@ -516,39 +527,37 @@ const faqSchema = {
         <meta name="twitter:image" content={ogImage} />
 
         
-  <script
-  type="application/ld+json"
-  dangerouslySetInnerHTML={{
-    __html: JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "EducationalOrganization",
-      "@id": "https://www.hachion.co/#organization",
-      "name": "Hachion",
-      "url": "https://www.hachion.co/",
-      "logo": "https://www.hachion.co/logo.png",
-      "image": "https://www.hachion.co/industry-recognized-it-certifications.webp",
-      "description":
-        "Hachion offers professional certification online training courses authored by industry experts. Learn the high in-demand skills from our experts.",
-      "telephone": "+1 732-485-2499",
-      "email": "info@hachion.co",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "601 Voyage Trace",
-        "addressLocality": "Leander",
-        "addressRegion": "Texas",
-        "postalCode": "78641",
-        "addressCountry": "USA"
-      },
-      "sameAs": [
-        "https://www.facebook.com/hachion.official/",
-        "https://www.instagram.com/hachion.official/",
-        "https://www.linkedin.com/company/hachion",
-        "https://www.youtube.com/@hachion.official",
-        "https://x.com/hachionofficial"
-      ]
-    })
-  }}
-/>
+  <script type="application/ld+json">
+{`
+{
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  "@id": "https://www.hachion.co/#organization",
+  "name": "Hachion",
+  "url": "https://www.hachion.co/",
+  "logo": "https://www.hachion.co/logo.png",
+  "image": "https://www.hachion.co/industry-recognized-it-certifications.webp",
+  "description": "Hachion offers professional certification online training courses authored by industry experts. Learn the high in-demand skills from our experts.",
+  "telephone": "+1 732-485-2499",
+  "email": "info@hachion.co",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "601 Voyage Trace",
+    "addressLocality": "Leander",
+    "addressRegion": "Texas",
+    "postalCode": "78641",
+    "addressCountry": "USA"
+  },
+  "sameAs": [
+    "https://www.facebook.com/hachion.official/",
+    "https://www.instagram.com/hachion.official/",
+    "https://www.linkedin.com/company/hachion",
+    "https://www.youtube.com/@hachion.official",
+    "https://x.com/hachionofficial"
+  ]
+}
+`}
+</script>
 <script type="application/ld+json">
 {`
 {
@@ -589,7 +598,7 @@ ${JSON.stringify(breadcrumbSchema)}
   "courseMode": "Online",
   "inLanguage": "en",
 
-  "educationalCredentialAwarded": "${course.courseName} Certification",
+  "educationalCredentialAwarded": "${course.courseName} Completion Certification",
 
   "provider": {
     "@type": "EducationalOrganization",
@@ -604,10 +613,8 @@ ${JSON.stringify(breadcrumbSchema)}
 },
 
 "offers": {
-  "@type": "Offer",
-  "url": "${canonicalUrl}",
-  "category": "Online Paid Course",
-  "price": "${Math.min(
+  "@type": "AggregateOffer",
+  "lowPrice": "${Math.min(
     ...[
       course.amount,
       course.samount,
@@ -617,7 +624,8 @@ ${JSON.stringify(breadcrumbSchema)}
     ]
       .filter((price) => price != null && price > 0)
       .map(Number)
-  )} to ${Math.max(
+  )}",
+  "highPrice": "${Math.max(
     ...[
       course.amount,
       course.samount,
@@ -630,7 +638,7 @@ ${JSON.stringify(breadcrumbSchema)}
   )}",
   "priceCurrency": "USD",
   "availability": "https://schema.org/InStock"
-}}
+}
 `}
 </script>
 
@@ -662,7 +670,24 @@ ${JSON.stringify(breadcrumbSchema)}
               </div>
 
 
-              <p className={styles.bnsub}>{subtitle}</p>
+              {/* <p className={styles.bnsub}>{subtitle}</p> */}
+              <p className={styles.bnsub}>
+  {subtitle}
+
+  {fullSubtitle.split(" ").length > 35 && (
+    <span
+      onClick={() => setShowFullDescription(!showFullDescription)}
+      style={{
+        color: "#00bfff",
+        cursor: "pointer",
+        fontWeight: "600",
+        marginLeft: "6px",
+      }}
+    >
+      {showFullDescription ? "Read Less" : "Read More"}
+    </span>
+  )}
+</p>
 
               <p className={styles.bnby}>
                 By <strong>{author}</strong> in <strong>{categories.join(", ")}</strong>

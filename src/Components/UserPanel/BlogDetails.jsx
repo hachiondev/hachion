@@ -180,7 +180,7 @@ const categoryUrl = `https://www.hachion.co/blogs/${categorySlug}`;
 
 const blogImage = selectedBlog?.blog_image
   ? `https://api.test.hachion.co/blogs/${selectedBlog.blog_image}`
-  : "https://www.hachion.co/logo.png";
+  : "https://www.hachion.co/static/media/logo.01fbce12140022ec183e.webp";
 
 const authorName = "Hachion";
 
@@ -252,10 +252,10 @@ const faqSchema = {
   "inLanguage": "en",
 
   "author": {
-    "@type": "Person",
-    "@id": `${blogUrl}#author`,
-    "name": authorName
-  },
+  "@type": "Organization",
+  "@id": "https://www.hachion.co/#organization",
+  "name": "Hachion"
+},
 
   "publisher": {
     "@type": "EducationalOrganization",
@@ -263,7 +263,7 @@ const faqSchema = {
     "name": "Hachion",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://www.hachion.co/logo.png"
+      "url": "https://www.hachion.co/static/media/logo.01fbce12140022ec183e.webp"
     }
   },
 
@@ -354,7 +354,7 @@ const faqSchema = {
   "@id": "https://www.hachion.co/#organization",
   "name": "Hachion",
   "url": "https://www.hachion.co/",
-  "logo": "https://www.hachion.co/logo.png",
+  "logo": "https://www.hachion.co/static/media/logo.01fbce12140022ec183e.webp",
   "image": "https://www.hachion.co/industry-recognized-it-certifications.webp",
   "description": "Hachion offers professional certification online training courses authored by industry experts.",
   "telephone": "+1 732-485-2499",

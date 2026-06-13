@@ -44,6 +44,10 @@ export const Home = () => {
     <>
       <Helmet>
         <title>Online IT Training: Get Certified, Find Your Dream Job</title>
+          <meta
+    name="google-site-verification"
+    content="OSFzh41XFoqi1NXy_zU_2YvFyv7NRVFql8TF6PpbrsM"
+  />
         <meta
           name="description"
           content="Hachion offers professional certification online training courses authored by industry experts. Learn the high in-demand skills from our experts."

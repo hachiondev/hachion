@@ -1,0 +1,33 @@
+package com.hachionUserDashboard.repository;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.hachionUserDashboard.entity.Curriculum;
+
+@Repository
+public interface CurriculumRepository extends JpaRepository<Curriculum, Integer> {
+
+	@Query(value = "SELECT * FROM curriculum WHERE curriculum_pdf = :curriculumPdf", nativeQuery = true)
+	Optional<Curriculum> findPdfByExactName(@Param("curriculumPdf") String curriculumPdf);
+
+	@Query(value = "SELECT * FROM curriculum WHERE assessment_pdf = :assessmentPdf", nativeQuery = true)
+	Optional<Curriculum> findPdfByAssessmentExactName(@Param("assessmentPdf") String assessmentPdf);
+
+	@Query(value = "SELECT assessment_pdf FROM curriculum WHERE course_name = :courseName ORDER BY curriculum_id ASC", nativeQuery = true)
+	List<String> findAssessmentFileNamesByCourseName(@Param("courseName") String courseName);
+
+	@Query(value = "SELECT * FROM curriculum WHERE "
+			+ "LOWER(REPLACE(REPLACE(REPLACE(course_name, ' ', ''), '-', ''), '_', '')) = :normalizedCourse", nativeQuery = true)
+	List<Curriculum> findByNormalizedCourse(@Param("normalizedCourse") String normalizedCourse);
+	
+//	@Query(value = "SELECT curriculum_pdf FROM curriculum WHERE LOWER(course_name) = LOWER(:courseName)", nativeQuery = true)
+//	String findCurriculumByCourseName(@Param("courseName") String courseName);
+	@Query(value = "SELECT DISTINCT curriculum_pdf FROM curriculum WHERE LOWER(course_name) = LOWER(:courseName)", nativeQuery = true)
+	List<String> findCurriculumByCourseName(@Param("courseName") String courseName);
+}

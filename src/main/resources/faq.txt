@@ -1,0 +1,214 @@
+
+Q: What does Hachion do?
+A: Hachion offers training programs and placement support to help individuals build successful careers in the tech industry.
+
+Q: Where is Hachion located?
+A: Hachion is based in Texas  but our training and services are accessible online from anywhere.
+
+Q: How can I contact Hachion?
+A: You can reach us via email at trainings@hachion.co or call us at +1(732) 485-2499
+
+Training-related Queries
+Q: What courses do you offer?
+A: We offer various IT courses, you can explore our courses on website
+
+Q: Are the classes online or in-person?
+A: All our classes are conducted online with flexible timings.
+
+Q: Do I need prior IT experience to join?
+A: Not at all! Our programs are designed for beginners, including those from non-IT backgrounds.
+
+Q: What is the duration of your training programs?
+A: Our courses typically range from 4 to 12 weeks, depending on the program.
+
+Q: Will I get assignments and hands-on practice?
+A: Yes! We provide 100+ assignments and real-world projects to practice.
+
+Placement-related Queries
+Q: Do you provide job placement assistance?
+A: Yes, we offer placement support, resume building, mock interviews, and referrals to partner companies.
+
+Q: What kind of companies do your trainees get placed in?
+A: Our students have been placed in top IT companies and startups in QA and automation roles.
+
+Q: What is the success rate of placements?
+A: We have a strong placement record, especially for students who complete assignments and mock interviews.
+
+Q: What is the email of hachion?
+A: tranings@hachion.co.
+
+Pricing and Enrollment
+Q: What is the fee for your courses?
+A: Our course fees vary. Please share your contact details, and our team will provide personalized pricing.
+
+Q: How can I enroll in a course?
+A: You can enroll directly through our website or talk to a representative through this chat.
+
+Q: Do you offer any discounts or free trials?
+A: We offer occasional discounts and demo classes. Please check with our team for current offers.
+
+1. Quick Replies (Main Menu Options)
+These are the buttons or keywords users can quickly tap or type:
+
+Courses Offered
+
+Placement Support
+
+Enrollment Process
+
+Schedule a Demo
+
+Talk to a Human
+
+Contact Us
+
+2. FAQs (Auto-Response Questions)
+When users ask open questions, the bot can respond with pre-set answers.
+
+Courses & Training
+Q: What courses do you offer?
+A: We offer QA Manual Testing, Automation, API Testing, SQL, and more. Tap Courses Offered to view details.
+
+Q: Do I need a technical background?
+A: Not at all. Our programs are beginner-friendly and suited for non-IT backgrounds.
+
+Q: Are classes online or offline?
+A: Our classes are 100% online with live interaction.
+
+Placement
+Q: Will I get a job after training?
+A: We offer strong placement support including resume building, mock interviews, and company referrals.
+
+Q: What’s your placement success rate?
+A: Many of our students land jobs within 2–4 months after completing the course and mock interview rounds.
+
+Fees & Enrollment
+Q: What is the course fee?
+A: Fees vary by course. Please share your email/phone and we’ll send you a brochure.
+
+Q: Can I get a free trial/demo?
+A: Yes! You can schedule a free demo class. Tap Schedule a Demo to book your slot.
+
+3. Guided Conversations
+This is where the chatbot guides the user step-by-step through a process.
+
+Example: Course Inquiry Flow
+Bot: What course are you interested in?
+Options: Manual Testing | Automation | API | SQL | Not Sure
+→ (User selects one)
+Bot: Great choice! This course covers [brief detail]. Would you like to:
+Options: View Syllabus | See Pricing | Schedule Demo
+
+Example: Schedule a Demo
+Bot: Please share your name and email to schedule your free demo class.
+→ (User enters info)
+Bot: Thank you! Our team will reach out shortly to confirm your demo slot.
+
+Example: Talk to a Human
+Bot: Connecting you to a support team member… Please wait a moment.
+(Or transfer to WhatsApp/chat agent/live representative.)
+
+ What are the prerequisites for joining a course?
+ A: No prerequisites! We train freshers, career switchers, and working professionals alike.
+Q: What makes Hachion different from other training providers?
+ A: We focus on hands-on learning, real-world assignments, career support, and personal mentorship to help you get hired.
+Q: Do you provide course completion certificates?
+ A: Yes, you will receive a Hachion Course Completion Certificate after successfully finishing the program.
+Q: Are classes live or pre-recorded?
+ A: We offer live interactive sessions with recordings available for revision.
+Q: Can I attend a demo class before enrolling?
+ A: Yes! We encourage everyone to attend a free demo before deciding.
+ Do you help with resume preparation?
+ A: Absolutely! We guide you in crafting a job-winning resume tailored for tech roles.
+Q: Will you conduct mock interviews?
+ A: Yes, mock interviews are part of our placement preparation strategy.
+Q: What’s the average salary after course completion?
+ A: Salary depends on your background and performance, but freshers often start between ₹3L–₹6L per annum.
+Q: What are the class timings?
+ A: We have weekday and weekend batches. Morning and evening slots are available—flexible to suit your schedule.
+Q: Can I switch batches if I miss a session?
+ A: Yes, we offer flexibility in attending missed classes in a different batch or through recordings.
+ Do you offer installment options?
+A: Yes, we offer an Installment Option for all our courses.
+
+Q: How will I access the classes?
+ A: Classes are conducted via Zoom or Google Meet. Access details will be shared before batch starts.
+Q: What if I face technical issues during class?
+ A: Our support team is always available to help you resolve any technical glitches quickly.
+Q: How do I register for a course?
+ A: Select your interested course and get registered
+Q: What happens after I register?
+ A: You’ll get a confirmation email, course schedule, and onboarding guide before your classes begin.
+Q: Can I speak with a mentor before enrolling?
+ A: Yes, we can schedule a call with a trainer or counselor to help you decide.
+Which is the best course to choose as I am from a non-IT background or new to IT?”
+No worries! Many of our top students come from non-IT backgrounds.
+ If you’re just starting, we recommend beginning with QA Testing Salesforce Business analyst. These courses are beginner-friendly, require no coding knowledge, and are a great way to step into the tech world.
+Would you like to: 👉 Learn more about These courses Speak with a counselor
+Schedule a free demo
+
+Q: I’m confused between Manual and Automation testing. Which one should I choose?
+ A: If you're new to IT, start with Manual Testing to build a strong foundation, then move into Automation once you're comfortable.
+Q: Can I switch to IT from a non-technical domain like HR, BPO, or Teaching?
+ A: Yes! Many of our learners have successfully switched from HR, Teaching, BPO, and other fields to tech roles through our guided training.
+Q: Will I get one-on-one mentorship?
+ A: Yes, we offer personalized mentorship to support you throughout your learning journey.
+Can I access recordings if I miss a class?
+A: Yes! All classes are recorded and shared so you can learn at your own pace.
+
+Q: Do companies really hire people without IT degrees?
+ A: Yes! What matters most is your practical knowledge and project experience, which our training provides.
+Q: Will I get to work on real-time projects?
+ A: Yes, we provide practical assignments and real-time projects to build your experience and confidence.
+Q: Do you offer internship opportunities?
+ A: We do have internship-like training setups with project exposure that simulate real working environments.
+Q: Is there a money-back guarantee if I don't get placed?
+ A: While we don’t offer refunds, we continue to support you until you land a job, including interview prep and referrals.
+Q: Can I pay after placement?
+ A: Currently, we offer flexible EMI options. Pay-after-placement options may be discussed case-by-case.
+
+QA Testing 
+https://hachion.co/courseDetails
+
+About QA Manual Testing
+https://hachion.co/courseDetails/qa-manual-testing
+
+QA Automation Testing
+https://hachion.co/courseDetails/qa-automation-(selenium-with-java)
+
+Qa combo Course
+https://hachion.co/courseDetails/qa-combo-course-(manual-&-automation)
+
+Salesforce admin
+https://hachion.co/courseDetails/salesforce-admin
+
+Salesforce Combo course
+https://hachion.co/courseDetails/salesforce-admin+development-(combo-course)\
+
+Salesforce Development
+https://hachion.co/courseDetails/salesforce-development
+
+ServiceNow Admin
+https://hachion.co/courseDetails/servicenow-admin
+
+ServiceNow Development
+https://hachion.co/courseDetails/servicenow-development
+
+ServiceNow Combo course
+https://hachion.co/courseDetails/servicenow-admin+development-(combo-course)
+
+Salesforce admin advance
+https://hachion.co/courseDetails/salesforce-advanced-admin
+
+Tableau
+https://hachion.co/courseDetails/tableau-desktop
+
+Big Data
+https://hachion.co/courseDetails/big-data
+
+Programming C++
+https://hachion.co/courseDetails/programming-with-c++
+
+Java Full Stack
+https://hachion.co/courseDetails/java-full-stack
+

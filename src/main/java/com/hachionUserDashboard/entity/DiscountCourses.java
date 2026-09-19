@@ -1,0 +1,128 @@
+package com.hachionUserDashboard.entity;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.hachionUserDashboard.service.StringListConverter;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Entity
+@Table(name = "discount_courses")
+public class DiscountCourses {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "discount_id")
+	private Long discountId;
+
+	@Column(name = "course_names")
+	@Convert(converter = StringListConverter.class)
+	private List<String> courseNames;
+
+	@Column(name = "country_names")
+	@Convert(converter = StringListConverter.class)
+	private List<String> countryNames;
+
+	@Column(name = "discount_percentage")
+	private Integer discountPercentage;
+
+	@Column(name = "start_date")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
+	private LocalDate startDate;
+
+	@Column(name = "end_date")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
+	private LocalDate endDate;
+
+	@Column(name = "status")
+	private String status;
+
+	@Column(name = "created_date")
+	private LocalDate createdDate;
+
+	@Column(name = "number_of_hits")
+	private Integer numberOfHits;
+
+	public Long getDiscountId() {
+		return discountId;
+	}
+
+	public void setDiscountId(Long discountId) {
+		this.discountId = discountId;
+	}
+
+	public List<String> getCourseNames() {
+		return courseNames;
+	}
+
+	public void setCourseNames(List<String> courseNames) {
+		this.courseNames = courseNames;
+	}
+
+	public List<String> getCountryNames() {
+		return countryNames;
+	}
+
+	public void setCountryNames(List<String> countryNames) {
+		this.countryNames = countryNames;
+	}
+
+	public Integer getDiscountPercentage() {
+		return discountPercentage;
+	}
+
+	public void setDiscountPercentage(Integer discountPercentage) {
+		this.discountPercentage = discountPercentage;
+	}
+
+	public LocalDate getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
+	}
+
+	public LocalDate getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(LocalDate endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public LocalDate getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(LocalDate createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Integer getNumberOfHits() {
+		return numberOfHits;
+	}
+
+	public void setNumberOfHits(Integer numberOfHits) {
+		this.numberOfHits = numberOfHits;
+	}
+
+}

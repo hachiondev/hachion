@@ -1,0 +1,65 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+src/main/resources/application.properties
+src/main/resources/application-dev.properties
+src/main/resources/application-prod.properties
+src/main/resources/application-test.properties
+src/main/resources/service-account.json
+
+# Local/server env files for secrets such as TWILIO_ACCOUNT_SID /
+# TWILIO_AUTH_TOKEN - never committed, regardless of name/location.
+.env
+.env.*
+!.env.example
+
+# Stray backup files left next to live source during editing - never meant
+# to be committed, and some previously carried since-removed secrets.
+*.bak
+
+# Real uploaded student/course files and generated certificates - runtime
+# data, not source, and contains real student PII.
+/uploads/
+/certificates/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+bin/
+*.class
+.metadata/
+mvnw
+mvnw.cmd
+service-account.json
+
+# Runtime uploads and JVM crash logs
+/HachionUserDashboard/uploads/
+hs_err_pid*.log

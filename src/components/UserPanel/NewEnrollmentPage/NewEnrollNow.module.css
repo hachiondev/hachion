@@ -1,0 +1,673 @@
+/* Container */
+.enContainer {
+  min-height: 100vh;
+  padding: 40px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Wrapper */
+.enWrapper {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  width: 100%;
+  max-width: 860px;
+  overflow: hidden;
+  transform: translateY(0);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.enWrapper:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Header */
+.enHeader {
+  background: linear-gradient(90deg, #00aef0 0%, #2563eb 100%);
+  padding: 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.enHeader::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+}
+
+.enTitle {
+  font-size: 24px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 10px;
+  position: relative;
+  animation: slideInDown 0.6s ease-out 0.2s both;
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.enSubtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  line-height: 1.5;
+  position: relative;
+  animation: slideInDown 0.6s ease-out 0.4s both;
+}
+
+/* Content */
+.enContent {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: #ffffff;
+}
+
+/* Section */
+.enSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: fadeInUp 0.6s ease-out 0.6s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.enLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: #000;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.enCourseDisplay {
+  background: linear-gradient(90deg, #f8fafc 0%, #f1f5f9 100%);
+  color: #1e293b;
+  font-weight: 500;
+  cursor: not-allowed;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1.5px solid #e2e8f0;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.enCourseDisplay:hover {
+  border-color: #cbd5e1;
+}
+
+/* Row & Col */
+.enRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  animation: fadeInUp 0.6s ease-out 0.7s both;
+}
+
+.enCol {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Select Dropdown */
+.enSelect {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M3.5 5.25L7 8.75L10.5 5.25' stroke='%236b7280' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+  font-weight: 400;
+}
+
+.enSelect:hover {
+  border-color: #94a3b8;
+}
+
+.enSelect:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Section Title */
+.enSectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f1f5f9;
+  margin-top: 6px;
+  animation: fadeInUp 0.6s ease-out 0.8s both;
+}
+
+/* Read-only input styling */
+.readOnlyInput {
+  background: linear-gradient(90deg, #f8fafc 0%, #f1f5f9 100%) !important;
+  color: #1e293b !important;
+  font-weight: 400 !important;
+  cursor: not-allowed !important;
+  border: 1.5px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  padding: 12px 14px !important;
+  transition: all 0.3s ease !important;
+  font-size: 14px !important;
+}
+
+.readOnlyInput:hover {
+  border-color: #cbd5e1 !important;
+}
+
+.couponInput {
+  background: #ffffff !important;
+  border: 1.5px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  padding: 12px 14px !important;
+  font-size: 14px !important;
+  transition: all 0.3s ease !important;
+  font-weight: 400 !important;
+}
+
+.couponInput:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  outline: none !important;
+}
+
+/* Required star */
+.requiredStar {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.requiredStarInline {
+  color: #ef4444;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+/* Error and Success Messages */
+.errorMessage {
+  color: #dc2626;
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 400;
+  padding: 10px 14px;
+  background: #fef2f2;
+  border-radius: 8px;
+  border: 1px solid #fecaca;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: shake 0.5s ease;
+}
+
+.errorMessage::before {
+  content: "⚠️";
+  font-size: 12px;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.successMessage {
+  color: #059669;
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 400;
+  padding: 10px 14px;
+  background: #f0fdf4;
+  border-radius: 8px;
+  border: 1px solid #bbf7d0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: slideInRight 0.5s ease;
+}
+
+.successMessage::before {
+  content: "✅";
+  font-size: 12px;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Terms & Conditions */
+.enTerms {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1.5px solid #e2e8f0;
+  margin-top: 6px;
+  animation: fadeInUp 0.6s ease-out 0.9s both;
+  transition: all 0.3s ease;
+}
+
+.enTerms:hover {
+  border-color: #cbd5e1;
+  background: #f1f5f9;
+}
+
+.enCheckbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 5px;
+  background: #ffffff;
+  transition: all 0.3s ease;
+  appearance: none;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.enCheckbox:checked {
+  background: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.enCheckbox:checked::after {
+  content: "✓";
+  position: absolute;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.enCheckbox:hover {
+  border-color: #94a3b8;
+}
+
+.enTermsLabel {
+  font-size: 13px;
+  color: #000;
+  line-height: 1.5;
+  cursor: pointer;
+  font-weight: 400;
+}
+
+.enLink {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.enLink:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+/* Footer */
+.enFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px;
+  margin-top: 12px;
+  background: linear-gradient(90deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 12px;
+  border: 1.5px solid #e2e8f0;
+  animation: fadeInUp 0.6s ease-out 1s both;
+}
+
+.enTotalSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.enTotalLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: #000;
+  letter-spacing: 0.5px;
+}
+
+.enTotalAmount {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e3a8a;
+}
+
+/* Button Group */
+.buttonGroup {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+/* Pay Button */
+.enPayBtn {
+  background: linear-gradient(90deg, #059669 0%, #10b981 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  min-width: 160px;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.3px;
+}
+
+.enPayBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.enPayBtn:hover:not(.disabledBtn) {
+  background: linear-gradient(90deg, #047857 0%, #0ea271 100%);
+  transform: translateY(-2px);
+}
+
+.enPayBtn:hover:not(.disabledBtn)::before {
+  transform: translateX(100%);
+}
+
+.enPayBtn:active:not(.disabledBtn) {
+  transform: translateY(-1px);
+}
+
+/* Second button style */
+.enPayBtn:nth-child(2) {
+  background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+}
+
+.enPayBtn:nth-child(2):hover:not(.disabledBtn) {
+  background: linear-gradient(90deg, #1d4ed8 0%, #2563eb 100%);
+}
+
+/* Installment Button Styles - New CSS Classes */
+.installmentBtnContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 180px;
+}
+
+.paymentBtn {
+  background: linear-gradient(90deg, #8b5cf6 0%, #a78bfa 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  min-width: 180px;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.3px;
+  opacity: 1;
+}
+
+.paymentBtn:hover:not(:disabled) {
+  background: linear-gradient(90deg, #7c3aed 0%, #8b5cf6 100%);
+  transform: translateY(-2px);
+}
+
+.paymentBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: linear-gradient(90deg, #94a3b8 0%, #cbd5e1 100%) !important;
+  transform: none !important;
+}
+
+.paymentBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.paymentBtn:hover:not(:disabled)::before {
+  transform: translateX(100%);
+}
+
+.paymentBtn:active:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+/* Installment Status Messages */
+.installmentStatusMessage {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  width: 230px;
+    text-align: center;
+}
+
+.rejectedStatus {
+  color: #dc2626;
+}
+
+.pendingStatus {
+  color: #f59e0b;
+}
+
+.disabledBtn {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+  background: linear-gradient(90deg, #94a3b8 0%, #cbd5e1 100%) !important;
+  transform: none !important;
+}
+
+.disabledBtn:hover {
+  transform: none !important;
+}
+
+/* No Schedule Styles */
+.noScheduleWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+  border-radius: 16px;
+  text-align: center;
+}
+
+.noScheduleText {
+  font-size: 16px;
+  color: #64748b;
+  max-width: 500px;
+  line-height: 1.5;
+  font-weight: 400;
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .enContainer {
+    padding: 30px 16px;
+  }
+
+  .enWrapper {
+    border-radius: 14px;
+  }
+
+  .enHeader {
+    padding: 24px 20px;
+  }
+
+  .enContent {
+    padding: 24px 20px;
+    gap: 18px;
+  }
+
+  .enRow {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .enFooter {
+    flex-direction: column;
+    gap: 18px;
+    align-items: stretch;
+    padding: 18px;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .enPayBtn {
+    width: 100%;
+    min-width: auto;
+    padding: 14px 20px;
+  }
+
+  .paymentBtn {
+    width: 100%;
+    min-width: auto;
+    padding: 14px 20px;
+  }
+
+  .installmentBtnContainer {
+    width: 100%;
+  }
+
+  .enTitle {
+    font-size: 20px;
+  }
+  
+  .enTotalAmount {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .enHeader {
+    padding: 20px 16px;
+  }
+  
+  .enContent {
+    padding: 20px 16px;
+    gap: 16px;
+  }
+  
+  .enTitle {
+    font-size: 18px;
+  }
+  
+  .enSubtitle {
+    font-size: 13px;
+  }
+  
+  .enFooter {
+    padding: 16px;
+  }
+  
+  .enTotalAmount {
+    font-size: 16px;
+  }
+  
+  .noScheduleText {
+    font-size: 14px;
+    padding: 24px 16px;
+  }
+}
+
+/* Animation for form elements */
+.enSection, .enRow, .enSectionTitle, .enTerms, .enFooter {
+  opacity: 0;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-out;
+}

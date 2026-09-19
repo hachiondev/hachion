@@ -1,0 +1,2149 @@
+:root {
+  --ink: #0f172a;
+  --muted: #5b6472;
+  --border: #e6e8ee;
+  --panel: #ffffff;
+  --soft: #f5f7fb;
+  --brand: #1aa6df;
+  --brand2: #21c3ff;
+  --live: #d4f7dc;
+  --demo: #e6f4ff;
+  --shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+}
+
+.dcwrap {
+  background: linear-gradient(106.65deg,
+      rgba(194, 214, 252, 0.5) 6.06%,
+      rgba(254, 233, 233, 0.5) 97.67%);
+  padding: 30px 0;
+}
+
+/* Happy Hours banner */
+.offerBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* background: linear-gradient(90deg,#9b6bff,#6f6bff 60%); */
+  background: linear-gradient(90deg, #b270f4 0%, #4e70fa 100%);
+  color: #fff;
+  padding: 40px 26px;
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(107, 84, 255, 0.12);
+  margin-bottom: 18px;
+}
+
+.offerLeft {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.offerIcon {
+  width: 64px;
+  height: 64px;
+}
+
+.offerIcon img {
+  width: 64px;
+  height: 64px;
+}
+
+.offerText {}
+
+.offerTitle {
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.offerSubtitle {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.92);
+  margin-top: 4px;
+}
+
+.offerCountdown {
+  background: #fff;
+  color: #000000;
+  padding: 16px 26px;
+  border-radius: 999px;
+  font-weight: 400;
+}
+
+.endsLabel {
+  color: rgba(0, 0, 0, 0.9);
+  font-weight: 500;
+  margin-right: 6px;
+}
+
+.hrLabel {
+  background: #545499;
+  padding: 5px;
+  color: #fff;
+  border-radius: 5px;
+}
+
+/* Offer pill */
+.dcoffer {
+  width: fit-content;
+  margin: 8px auto 18px;
+  background: #00aeef;
+  color: #fff;
+  border-radius: 999px;
+  padding: 12px 26px;
+  font-weight: 600;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+  font-size: 20px;
+}
+
+/* Head */
+.dchead {
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  position: relative;
+  padding: 18px 0px;
+}
+
+.dcheadText {
+  flex: 1;
+  min-width: 0;
+}
+
+.dchead h2 {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 4px 0;
+  text-align: left;
+}
+
+.bnbtnprimary {
+  font-weight: 500;
+  font-size: 16px;
+  background: #00aeef;
+  color: #fff;
+  height: 48px;
+  border-radius: 28px;
+  padding: 0 22px;
+  font-weight: 800;
+  cursor: pointer;
+  border: 0;
+}
+
+.dchead p {
+  color: #000;
+  /* max-width: 760px; */
+  margin: 0;
+  text-align: left;
+  font-size: 16px;
+}
+
+.feeAmount {
+  background: linear-gradient(135deg, #ff5c01, #ff8c42);
+  border-radius: 20px;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 4px 12px;
+  white-space: nowrap;
+  box-shadow: 0 3px 6px rgba(255, 92, 1, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  width: 100px;
+}
+
+/* timezone */
+.dctimezone {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  padding: 15px 30px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.dctimezone label {
+  font-weight: 400;
+  color: #000000;
+  font-size: 14px;
+}
+
+.dcselect {
+  position: relative;
+  background: #fff;
+  border: 1px solid #000000;
+  border-radius: 50px;
+  /* min-width: 260px; */
+}
+
+.dcselectTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 40px 10px 14px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #0e1320;
+  font-size: 14px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.dcselectTrigger:hover {
+  /* background: #f9fafb; */
+}
+
+.dcselect select {
+  appearance: none;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-weight: 400;
+  color: #000000;
+  font-size: 14px;
+  display: none;
+}
+
+.dcselectOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+}
+
+.dcselectMenu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 6px;
+}
+
+.dcselectOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+  border-radius: 6px;
+  transition: all 0.2s;
+  font-weight: 400;
+}
+
+.dcselectOption:hover {
+  background: #f0f9ff;
+  color: #0083b0;
+}
+
+.dcselectOptionActive {
+  background: linear-gradient(90deg, #1aa6df, #21c3ff);
+  color: #fff;
+  font-weight: 600;
+}
+
+.dcselectOptionActive:hover {
+  background: linear-gradient(90deg, #1aa6df, #21c3ff);
+  color: #fff;
+}
+
+.dcselectOption svg {
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.dccaret {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #7a8694;
+  transition: transform 0.2s;
+  pointer-events: none;
+}
+
+.dccaretOpen {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.faqchevron {
+  color: #36c5ff;
+}
+
+/* Tabs */
+.dctabs {
+  margin: 18px auto;
+  background: #fff;
+  border: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.dctab {
+  padding: 12px 14px;
+  background: #fff;
+  border: 0;
+  cursor: pointer;
+  font-weight: 700;
+  color: #6a7381;
+  border-right: 1px solid var(--border);
+  display: flex;
+  font-size: 16px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dctab:last-child {
+  border-right: 0;
+}
+
+.dctabisactive {
+  background: var(--brand);
+  color: #fff;
+}
+
+.enrollActions {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.notifyOptions {
+  margin-top: 5px;
+  width: 100%;
+}
+
+.checkboxGroup {
+  display: flex;
+  /* flex-wrap: wrap; */
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.notifyLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  white-space: nowrap;
+}
+
+.checkboxInput {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #0072ff;
+  /* Modern browser support for checkbox color */
+}
+
+.checkboxText {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+
+/* Grid area */
+.dcgrid {
+  margin: 10px auto 0;
+  display: grid;
+  grid-template-columns: 1fr 0.9fr;
+  gap: 18px;
+}
+
+/* Grid items default to min-width: auto, which refuses to shrink a column
+   narrower than its content's own intrinsic minimum width. The right
+   column renders admin-authored rich text (liveTraining) verbatim via
+   dangerouslySetInnerHTML - some course records have long runs of Word/
+   Google-Docs-pasted text joined by &nbsp; instead of normal spaces, which
+   have no breakable point at all. For a course with that content, the
+   intrinsic minimum width of that one run is however wide the whole run
+   renders at, which forced this column wider than its 0.9fr share and
+   threw the two-column layout out of alignment - reproducible with ANY
+   course whose stored content has this shape, not a Graphic-Design-
+   specific issue. min-width: 0 lets both columns shrink to their grid
+   track's actual width instead of their content's; see .dcinfotext and
+   .liveTrainingHtml below for the matching wrap fix that keeps that
+   still-unbreakable text on-screen once the column can no longer expand
+   to fit it.
+*/
+.dcgrid > * {
+  min-width: 0;
+}
+
+/* Slots grid */
+.dcslots {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+  margin-top: 10px;
+}
+
+.dcslot {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 25px 20px;
+  box-shadow: var(--shadow);
+  transition: all 0.2s ease;
+  /* Add transition for smooth effect */
+  cursor: pointer;
+  /* Make it clear it's clickable */
+}
+
+
+
+.dcslotActive {
+  border: 1px solid #1fb6ff !important;
+  box-shadow: 0 0 0 3px rgb(31 182 255) !important;
+  position: relative;
+}
+
+.dcslotdate {
+  color: #000;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.dcslotcount {
+  margin: 8px 0 10px;
+  color: #0b1222;
+  font-size: 16px;
+}
+
+.dcslotbadge {
+  width: fit-content;
+  padding: 8px 8px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 10px;
+  margin: auto;
+}
+
+.dcslotbadgeislive {
+  background: var(--live);
+  color: #0a7a28;
+}
+
+.dcslotbadgeisdemo {
+  background: var(--demo);
+  color: #1674e1;
+  cursor: pointer;
+}
+
+/* Select All button - Fixed alignment */
+.selectAllBtn {
+  margin-bottom: 15px;
+  /* Increased for better spacing */
+  padding: 8px 16px;
+  /* Slightly larger padding */
+  background: #2a7cf7;
+  color: #fff;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  width: 120px;
+  /* Fixed width instead of 100% */
+  text-align: center;
+  transition: all 0.2s ease;
+  align-self: flex-start;
+  /* Align to left */
+}
+
+/* Details panel */
+.dcdetails {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* gap: 14px; */
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.dcdetailscol {
+  /* background:#fff;  */
+  /* border:1px solid var(--border);  */
+  /* border-radius:12px; */
+  padding: 12px;
+  box-shadow: var(--shadow);
+}
+
+.dcdetailscol h4{
+  font-size: 20px;
+}
+
+.noLiveSlotsContainer {
+  margin-top: 10px;
+}
+
+.noLiveClass {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-align: center;
+  display: grid;
+  place-items: center;
+  gap: 6px;
+  padding: 12px;
+  box-shadow: var(--shadow);
+  width: 400px;
+  margin-top: 10px;
+}
+
+.noLiveSlot {
+background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px 0px;
+    box-shadow: var(--shadow);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.dcdetailrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  gap: 7px;
+}
+
+.dcdetailrow2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border-radius: 10px;
+  background: #fff;
+  gap: 7px;
+}
+
+/* ========================================
+   ENROLLED CONTAINER STYLES
+   ======================================== */
+.enrolledContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.enrolledBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: not-allowed;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+  transition: all 0.3s ease;
+}
+
+.enrolledBadge .checkIcon {
+  flex-shrink: 0;
+}
+
+.resendBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: white;
+  color: #2563eb;
+  border: 2px solid #2563eb;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.resendBtn:hover:not(:disabled) {
+  background: #2563eb;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+.resendBtn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.resendBtn:disabled {
+  background: #f3f4f6;
+  color: #9ca3af;
+  border-color: #e5e7eb;
+  cursor: not-allowed;
+}
+
+.resendBtn svg {
+  flex-shrink: 0;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  animation: spin 0.8s linear infinite;
+}
+
+/* ========================================
+   ENROLL ACTIONS CARD STYLES
+   ======================================== */
+.enrollActionsCard {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+  width: 100%;
+  padding-bottom: 64px;
+}
+
+.enrollPrimaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 24px;
+  margin-top: 20px;
+  background: linear-gradient(135deg, #00aeef 0%, #0077cc 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(10, 187, 231, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.enrollPrimaryBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+
+.enrollPrimaryBtn:hover::before {
+  transform: translateX(100%);
+}
+
+.enrollPrimaryBtn:hover {
+  transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 174, 239, 0.3);
+    background: linear-gradient(135deg, #0099d6 0%, #0066aa 100%);
+}
+
+.enrollPrimaryBtn:active {
+  transform: translateY(0);
+}
+
+.enrollPrimaryBtn svg {
+  flex-shrink: 0;
+}
+
+/* ========================================
+   NOTIFICATION CARD STYLES
+   ======================================== */
+.notificationCard {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notificationHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.notificationHeader svg {
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.notificationTitle {
+  font-weight: 600;
+}
+
+.checkboxContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ========================================
+   CUSTOM CHECKBOX STYLES
+   ======================================== */
+.customCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  background: white;
+  border: 1px solid #e2e8f0;
+}
+
+.customCheckbox:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+/* .checkboxInput {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+} */
+
+.checkboxIcon {
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.2s ease;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #334155;
+  user-select: none;
+}
+
+.checkboxLabel svg {
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+.enrollPrimaryBtn:focus-visible,
+.resendBtn:focus-visible,
+.customCheckbox:focus-within {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.checkboxInput:focus-visible~.checkboxCustom {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.dcdetailrow+.dcdetailrow {
+  margin-top: 10px;
+}
+
+.dcmuted {
+  color: #000;
+  font-weight: 700;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+}
+
+.dcdetailtime {
+  font-weight: 800;
+  color: #0e1320;
+  margin: 2px 0;
+  font-size: 12px;
+}
+
+.dcdetailmeta {
+  color: #000;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.dcbtn {
+  background: var(--brand);
+  border: 0;
+  color: #fff;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 10px 30px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.dcbtnDisabled {
+  background-color: #ccc;
+  color: #555;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 10px 30px;
+  cursor: pointer;
+  font-size: 13px;
+  border: 0;
+  cursor: not-allowed;
+}
+
+
+.dcempty {
+  text-align: center;
+  display: grid;
+  place-items: center;
+  gap: 6px;
+  padding: 12px;
+  box-shadow: var(--shadow);
+}
+
+.dcemptyicon {
+  font-size: 28px;
+  /* margin-bottom: 20px; */
+}
+
+.dcemptyicon img {
+  height: 70px;
+}
+
+.dcemptytitle {
+  font-weight: 700;
+}
+
+.dcemptytext {
+  color: #000000;
+  padding: 0px 40px;
+}
+
+.dclink {
+  color: #1175b1;
+  font-weight: 400;
+  text-decoration: underline;
+  border: none;
+  background: none;
+  font-size: 14px;
+}
+
+/* Request Custom Batch Section */
+.dcrequestSection {
+  /* grid-column: 1 / -1; */
+}
+
+.dcrequestCard {
+  /* border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  min-height: 500px;
+  display: flex;
+  align-items: flex-end;
+  background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%); */
+}
+
+.dcrequestImage {
+  /* position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; */
+}
+
+.dcrequestImage img {
+  width: 100%;
+  /* height: 100%;
+  object-fit: cover;
+  object-position: center; */
+}
+
+.dcrequestOverlay {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.97);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  /* border-radius: 16px; */
+  padding: 6px 40px;
+  /* margin: 28px;
+  width: calc(100% - 56px);
+  max-width: 680px; */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.dcrequestForm {
+  display: flex;
+  flex-direction: column;
+  /* gap: 18px; */
+}
+
+.dcrequestDays {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 5px;
+}
+
+.dcrequestLabel {
+  font-size: 16px;
+  font-weight: 500;
+  color: #0e1320;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.dcrequestCheckboxes {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.dcrequestCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  position: relative;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.dcrequestCheckbox input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: relative;
+  height: 20px;
+  width: 20px;
+  background-color: #fff;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.dcrequestCheckbox:hover .checkmark {
+  border-color: #0083b0;
+}
+
+
+.dcrequestCheckbox input:checked~.checkmark {
+  /* background-color: #0e1320; */
+  border-color: #0e1320;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.dcrequestCheckbox input:checked~.checkmark:after {
+  display: block;
+}
+
+.dcrequestCheckbox .checkmark:after {
+  left: 6px;
+  top: 3px;
+  width: 5px;
+  height: 9px;
+  border: solid #000;
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg);
+}
+
+.dcrequestCheckbox span:not(.checkmark) {
+  font-size: 16px;
+  font-weight: 400;
+  color: #0e1320;
+  margin-right: 20px;
+  margin-left: 5px;
+}
+
+.dcrequestRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 26px;
+  width: 90%;
+}
+
+.dcrequestField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dcrequestSelect {
+  background: #fff;
+  /* border: 2px solid #e5e7eb; */
+  border-radius: 10px;
+  padding: 12px 36px 12px 14px;
+  font-size: 14px;
+  color: #0e1320;
+  font-weight: 400;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23666' d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  transition: all 0.2s;
+}
+
+.dcrequestSelect:focus {
+  outline: none;
+  border-color: #0083b0;
+  box-shadow: 0 0 0 3px rgba(0, 131, 176, 0.1);
+}
+
+/* Custom Dropdown for Request Batch */
+.dcrequestSelectWrapper {
+  position: relative;
+}
+
+.dcrequestSelectTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border: 1px solid #000000;
+  border-radius: 10px;
+  padding: 12px 40px 12px 14px;
+  font-size: 14px;
+  color: #0e1320;
+  font-weight: 400;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: all 0.2s;
+}
+
+/* .dcrequestSelectTrigger:hover {
+  border-color: #0083b0;
+  background: #f9fafb;
+} */
+
+.dcrequestSelectOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+}
+
+.dcrequestSelectMenu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 6px;
+}
+
+.dcrequestSelectOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+  border-radius: 6px;
+  transition: all 0.2s;
+  font-weight: 400;
+}
+
+.dcrequestSelectOption:hover {
+  background: #f0f9ff;
+  color: #0083b0;
+}
+
+.dcrequestSelectOptionActive {
+  background: linear-gradient(90deg, #1aa6df, #21c3ff);
+  color: #fff;
+  font-weight: 600;
+}
+
+.dcrequestSelectOptionActive:hover {
+  background: linear-gradient(90deg, #1aa6df, #21c3ff);
+  color: #fff;
+}
+
+.dcrequestSelectOption svg {
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.dcrequestCaret {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #7a8694;
+  transition: transform 0.2s;
+  pointer-events: none;
+}
+
+.dcrequestCaretOpen {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.dcrequestBtn {
+  background: linear-gradient(90deg, var(--brand), var(--brand2));
+  border: 0;
+  color: #fff;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 14px 30px;
+  cursor: pointer;
+  width: fit-content;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 10px;
+  /* background: #00b4db;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 48px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: fit-content;
+  box-shadow: 0 4px 14px rgba(0, 180, 219, 0.3); */
+}
+
+/* 
+.dcrequestBtn:hover {
+  background: #0099c0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 180, 219, 0.4);
+}
+
+.dcrequestBtn:active {
+  transform: translateY(0);
+} */
+
+/* Right info card */
+.dcinfo {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+  align-self: start;
+}
+
+.dcinfohead {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.dcinfoicon {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: #eaf6ff;
+  color: #1674e1;
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.dcinfoicon img {
+  height: 70px;
+}
+
+.dcinfotitle {
+  font-weight: 700;
+  color: #0e1320;
+  font-size: 30px;
+}
+
+.dcinfosubdescription {
+  color: #000000;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.dcinfotext {
+  color: #000;
+  margin: 8px 0 10px;
+  font-size: 14px;
+  line-height: 1.2;
+  /* Renders admin-authored liveTraining HTML verbatim - forces wrapping
+     even inside a run of text with no normal spaces to break at (see the
+     min-width: 0 comment on .dcgrid above for why that shape of content
+     exists and how it broke the two-column layout). */
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.dcinfolist {
+  margin: 8px 0 10px;
+  padding-left: 20px;
+  color: #000;
+  font-size: 17px;
+}
+
+.dcinfolist li {
+  margin-bottom: 6px;
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .dcslots {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .dcgrid {
+    grid-template-columns: 1fr;
+  }
+
+  .dctimezone {
+    position: static;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .offerBanner {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .offerCountdown {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .dcrequestOverlay {
+    max-width: 100%;
+    /* width: calc(100% - 40px); */
+    /* margin: 20px; */
+    padding: 28px 30px;
+  }
+
+  .dcrequestCard {
+    min-height: 450px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dcwrap {
+    padding: 14px;
+  }
+
+  .offerLeft {
+    gap: 1px;
+  }
+
+  .offerBanner {
+    /* flex-direction: row; */
+  }
+
+  .offerTitle {
+    font-size: 24px;
+  }
+
+  .offerIcon {
+    align-content: center;
+    text-align-last: center;
+  }
+
+  .offerIcon img {
+    width: 40px;
+    height: 40px;
+    align-content: center;
+  }
+
+  .offerSubtitle {
+    font-size: 20px;
+  }
+
+  .offerCountdown {
+    font-size: 20px;
+    text-align: center;
+    padding: 10px 20px;
+  }
+
+  .dchead {
+    display: block;
+    padding: 0px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .dchead h2 {
+    font-size: 35px;
+  }
+
+  .dchead p {
+    font-size: 22px;
+  }
+
+  .dctimezone {
+    padding: 15px 8px;
+  }
+
+  .dctimezone label {
+    font-size: 12px;
+  }
+
+  .dcselect select {
+    font-size: 12px;
+  }
+
+  .dctabs {
+    background: transparent;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dctabs .tabLabel {
+    font-size: 20px;
+    font-weight: 400;
+  }
+
+  .dctabs .dctab {
+    margin: 6px;
+    padding: 4px 4px;
+    font-size: 18px;
+    font-weight: 400;
+    min-height: 43px;
+    border-radius: 10px;
+    color: #000;
+  }
+
+  .dctabs .dctabisactive {
+    color: #fff;
+  }
+
+  .dcslots .dcslot {
+    padding: 20px 18px;
+  }
+
+  .dcslotdate {
+    font-size: 24px;
+  }
+
+  .dcslotcount {
+    font-size: 20px;
+  }
+
+  .dcslots .dcslotbadge {
+    font-weight: 500;
+    font-size: 18px;
+  }
+
+  .dcdetailscol h4 {
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  .dcdetailrow {
+    font-size: 18px;
+    font-weight: 600;
+    color: #000000;
+    /* display: block; */
+  }
+
+  .dcdetailtime {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .dcdetailmeta {
+    font-size: 18px;
+    font-weight: 400;
+  }
+
+  .dcemptytitle {
+    font-weight: 600;
+  }
+
+  .dcemptytext {
+    font-weight: 400;
+    font-size: 20px;
+  }
+
+  .dcdetailscol {
+    box-shadow: none;
+  }
+
+  .dcbtn {
+    padding: 6px 30px;
+    font-size: 18px;
+    font-weight: 600;
+    /* margin-top: 20px; */
+  }
+
+  .dclink {
+    margin-bottom: 30px;
+    font-size: 20px;
+  }
+
+  .dcinfoicon {
+    height: 40px;
+    width: 40px;
+  }
+
+  .dcinfoicon img {
+    height: 40px;
+    width: 40px;
+  }
+
+  .dcinfotitle {
+    font-size: 35px;
+    font-weight: 500;
+  }
+
+  .dcinfosubdescription {
+    font-size: 24px;
+  }
+
+  .dcinfotext {
+    font-size: 22px;
+    font-weight: 400;
+  }
+
+  .dcinfolist {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .dcinfolist h4 {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .dcselectTrigger {
+    font-size: 10px;
+  }
+
+  .dcrequestLabel {
+    font-size: 26px;
+  }
+
+  .dcrequestCheckbox span:not(.checkmark) {
+    font-size: 20px;
+  }
+
+  .dcrequestSelectTrigger,
+  .dcrequestSelectOption {
+    font-size: 18px;
+  }
+
+  .dcrequestRow {
+    width: auto;
+  }
+
+  .checkboxGroup {
+    gap: 15px;
+  }
+
+  .checkboxText {
+    font-size: 17px;
+  }
+
+  .bnbtnprimary {
+    font-size: 20px;
+    padding: 5px 40px 5px 40px;
+  }
+
+  .dcmuted {
+    font-size: 14px;
+  }
+
+  .feeAmount {
+    font-size: 22px;
+    width: 130px;
+  }
+
+  .noLiveSlotsContainer {
+    justify-content: space-between;
+  }
+
+  .noLiveSlot {
+    height: 155px;
+    width: 185px;
+    ;
+  }
+
+  .noLiveClass {
+    width: 466px;
+  }
+
+  .enrolledBadge,
+  .resendBtn,
+  .enrollPrimaryBtn {
+    font-size: 13px;
+    padding: 10px 16px;
+  }
+
+  .notificationCard {
+    padding: 10px 12px;
+  }
+
+  .checkboxLabel {
+    font-size: 13px;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .dcwrap {
+    padding: 14px;
+  }
+
+  .offerLeft {
+    gap: 1px;
+  }
+
+  .offerBanner {
+    /* flex-direction: row; */
+  }
+
+  .offerTitle {
+    font-size: 16px;
+  }
+
+  .offerIcon {
+    align-content: center;
+    text-align-last: center;
+  }
+
+  .offerIcon img {
+    width: 40px;
+    height: 40px;
+    align-content: center;
+  }
+
+  .offerSubtitle {
+    font-size: 14px;
+  }
+
+  .offerCountdown {
+    font-size: 14px;
+    text-align: center;
+    padding: 10px 20px;
+  }
+
+  .dchead {
+    display: block;
+    padding: 0px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .dchead h2 {
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .dcinfosubdescription {
+    font-size: 14px;
+  }
+
+  .dctabs .tabLabel {
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .dchead p {
+    font-size: 14px;
+    text-align: justify;
+  }
+
+  .dctimezone {
+    padding: 15px 8px;
+  }
+
+  .dctimezone label {
+    font-size: 12px;
+  }
+
+  .dcselect select {
+    font-size: 12px;
+  }
+
+  .dctabs {
+    display: flex;
+    gap: 12px;
+    overflow-x: hidden;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .dctab {}
+
+  .dctabs>* {
+    flex: 0 0 75%;
+    /* adjust if needed */
+    min-width: 140px;
+  }
+
+  /* optional: smooth snap */
+  .dctabs {
+    scroll-snap-type: x mandatory;
+  }
+
+  .dctabs>* {
+    scroll-snap-align: start;
+  }
+
+  /* optional: hide scrollbar */
+  .dctabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .dctabs .dctab {
+    margin: 6px;
+    padding: 8px 0px;
+    font-size: 18px;
+    font-weight: 400;
+    min-height: 43px;
+    border-radius: 10px;
+    color: #000;
+    flex: 0 0 auto;
+    min-width: 240px;
+  }
+
+  .dctabs .dctabisactive {
+    color: #fff;
+  }
+
+  .dcslots .dcslot {
+    padding: 15px 8px;
+    width: 123px;
+  }
+
+  .dcslotdate {
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .dcslotcount {
+    font-size: 14px;
+  }
+
+  .dcslots .dcslotbadge {
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .dcslots {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+  }
+
+  .dcdetailscol h4 {
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .dcdetailrow {
+    font-size: 18px;
+    font-weight: 600;
+    color: #000000;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px;
+    /* display: block; */
+  }
+
+  .dcdetailtime {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .dcdetailmeta {
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .dcemptytitle {
+    font-weight: 600;
+  }
+
+  .dcemptytext {
+    font-weight: 400;
+    font-size: 14px;
+    width: 300px;
+  }
+
+  .dcemptyicon img {
+    height: 50px;
+  }
+
+  .dcdetailscol {
+    box-shadow: none;
+    padding: 25px;
+  }
+
+  .dcbtn {
+    padding: 6px 80px;
+    font-size: 15px;
+    font-weight: 500;
+    /* margin-top: 20px; */
+  }
+
+  .dclink {
+    margin-bottom: 15px;
+    font-size: 14px;
+  }
+
+  .dcinfoicon {
+    height: 40px;
+    width: 40px;
+  }
+
+  .dcinfoicon img {
+    height: 40px;
+    width: 40px;
+  }
+
+  .dcinfotitle {
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .dcinfotext {
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .dcinfolist {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .dcinfolist h4 {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .dcselectTrigger {
+    font-size: 10px;
+  }
+
+  .dcrequestRow {
+    grid-template-columns: repeat(1, 1fr);
+    width: auto;
+    gap: 10px;
+  }
+
+  .dcrequestLabel {
+    font-size: 14px;
+  }
+
+  .dcrequestCheckbox {
+    font-size: 10px;
+  }
+
+  .dcrequestCheckbox span:not(.checkmark) {
+    font-size: 14px;
+  }
+
+  .dcrequestSelectTrigger,
+  .dcrequestSelectOption {
+    font-size: 14px;
+  }
+
+  .dcdetails {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .checkboxGroup {
+    gap: 10px;
+    flex-wrap: nowrap;
+    /* Keep on same line even on mobile */
+    justify-content: space-evenly;
+  }
+
+  .checkboxText {
+    font-size: 14px;
+  }
+
+  .checkboxInput {
+    width: 14px;
+    height: 14px;
+  }
+
+  .feeAmount {
+    font-size: 14px;
+    width: 110px;
+  }
+
+  .noLiveSlotsContainer {
+    flex-direction: column;
+    /* align-items: center; */
+  }
+
+  .noLiveSlot {
+    height: 39px;
+        width: 385px;
+  }
+
+  .noLiveClass {
+    width: 386px;
+  }
+
+  .bnbtnprimary {
+    font-size: 16px;
+    padding: 5px 40px 5px 40px;
+    margin: 20px;
+  }
+
+
+  .dcmuted {
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
+
+@media (max-width: 375px) {
+  .dcwrap {
+    padding: 6px;
+  }
+
+  .offerLeft {
+    gap: 1px;
+  }
+
+  .offerBanner {
+    /* flex-direction: row; */
+  }
+
+  .offerTitle {
+    font-size: 16px;
+  }
+
+  .offerIcon {
+    align-content: center;
+    text-align-last: center;
+  }
+
+  .offerIcon img {
+    width: 40px;
+    height: 40px;
+    align-content: center;
+  }
+
+  .offerSubtitle {
+    font-size: 14px;
+  }
+
+  .offerCountdown {
+    font-size: 14px;
+    text-align: center;
+    padding: 10px 20px;
+  }
+
+  .dchead {
+    display: block;
+    padding: 0px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .dchead h2 {
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .dcinfosubdescription {
+    font-size: 14px;
+  }
+
+  .dctabs .tabLabel {
+    font-size: 14px;
+    font-weight: 400;
+    padding: 4px;
+  }
+
+  .dchead p {
+    font-size: 14px;
+    text-align: justify;
+  }
+
+  .dctimezone {
+    padding: 15px 8px;
+  }
+
+  .dctimezone label {
+    font-size: 12px;
+  }
+
+  .dcselect select {
+    font-size: 12px;
+  }
+
+  .dctabs {
+    background: transparent;
+    grid-template-columns: repeat(1fr);
+  }
+
+  .dctabs .dctab {
+    margin: 6px;
+    padding: 8px 4px;
+    font-size: 18px;
+    font-weight: 400;
+    min-height: 43px;
+    border-radius: 10px;
+    color: #000;
+  }
+
+  .dctabs .dctabisactive {
+    color: #fff;
+  }
+
+  .dcslots .dcslot {
+    padding: 15px;
+    width: 155px;
+  }
+
+  .dcslotdate {
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .dcslotcount {
+    font-size: 14px;
+  }
+
+  .dcslots .dcslotbadge {
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .dcslots {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+  }
+
+  .dcdetailscol h4 {
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .dcdetailrow {
+    font-size: 18px;
+    font-weight: 600;
+    color: #000000;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px;
+    /* display: block; */
+  }
+
+  .dcdetailtime {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .dcdetailmeta {
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .dcemptytitle {
+    font-weight: 600;
+  }
+
+  .dcemptytext {
+    font-weight: 400;
+    font-size: 14px;
+    width: 300px;
+  }
+
+  .dcemptyicon img {
+    height: 50px;
+  }
+
+  .dcdetailscol {
+    box-shadow: none;
+    padding: 25px;
+  }
+
+  .dcbtn {
+    padding: 6px 80px;
+    font-size: 15px;
+    font-weight: 500;
+    /* margin-top: 20px; */
+  }
+
+  .dclink {
+    margin-bottom: 15px;
+    font-size: 14px;
+  }
+
+  .dcinfoicon {
+    height: 40px;
+    width: 40px;
+  }
+
+  .dcinfoicon img {
+    height: 40px;
+    width: 40px;
+  }
+
+  .dcinfotitle {
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .dcinfotext {
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .dcinfolist {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .dcinfolist h4 {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .dcselectTrigger {
+    font-size: 10px;
+  }
+
+  .dcrequestRow {
+    grid-template-columns: repeat(1, 1fr);
+    width: auto;
+    gap: 10px;
+  }
+
+  .dcrequestLabel {
+    font-size: 14px;
+  }
+
+  .dcrequestCheckbox {
+    font-size: 10px;
+  }
+
+  .dcrequestCheckbox span:not(.checkmark) {
+    font-size: 12px;
+  }
+
+  .dcrequestSelectTrigger,
+  .dcrequestSelectOption {
+    font-size: 14px;
+  }
+
+  .dcdetails {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .checkboxGroup {
+    gap: 10px;
+    flex-wrap: nowrap;
+    /* Keep on same line even on mobile */
+    justify-content: space-evenly;
+  }
+
+  .checkboxText {
+    font-size: 14px;
+  }
+
+  .checkboxInput {
+    width: 14px;
+    height: 14px;
+  }
+
+  .feeAmount {
+    font-size: 14px;
+    width: 110px;
+  }
+
+  .noLiveSlotsContainer {
+    flex-direction: column;
+    /* align-items: center; */
+  }
+
+  .noLiveSlot {
+height: 39px;
+        width: 315px;
+  }
+
+  .noLiveClass {
+    width: 316px;
+  }
+
+  .bnbtnprimary {
+    font-size: 16px;
+    padding: 5px 40px 5px 40px;
+    margin: 20px;
+  }
+
+
+  .dcmuted {
+    font-size: 12px;
+    font-weight: 400;
+  }
+}

@@ -1,0 +1,84 @@
+/* Scoped copy of the .corporate (and related) rules from
+   CoursePage/Course.css (lines ~1707-1747 + responsive variants at
+   1024px/768px), used only by this homepage teaser section. The original
+   rules stay in Course.css untouched (other pages - Aboutus, Founder,
+   ShareKnowledgeBanner, MeetInstructorBanner - reach the same class names
+   via other CSS files' page-level bundling and weren't safe to re-point
+   without a much larger audit). This file exists purely so the homepage
+   doesn't have to pull in Course.css's ~150KB of course-catalog-grid/
+   sidebar/filter CSS just for these small rules - confirmed via Lighthouse
+   as 94-96% unused on "/". (.know-more is separately covered by the
+   existing Buttons.css import, not part of this file.) */
+
+.corporate {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  height: auto;
+  width: 100%;
+}
+
+.corporate-data {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20%;
+  width: 80%;
+}
+
+.corporate-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.corporate-banner-text {
+  font-weight: 400;
+  color: #fff;
+  line-height: 48px;
+  letter-spacing: -1.2px;
+  text-align: left;
+}
+
+.corporate-image {
+  width: 45%;
+  height: auto;
+}
+
+@media (max-width: 1024px) {
+  .corporate-image {
+    width: 50%;
+  }
+}
+
+@media (max-width: 768px) {
+  .corporate {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    width: 100%;
+    margin: 30px 0;
+  }
+
+  .corporate-data {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    gap: 10%;
+    width: 80%;
+  }
+
+  .corporate-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .corporate-image {
+    width: 100%;
+    height: auto;
+  }
+}

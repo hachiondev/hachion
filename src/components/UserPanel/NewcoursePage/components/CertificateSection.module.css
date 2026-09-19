@@ -1,0 +1,641 @@
+:root {
+  --ink: #0f172a;
+  --muted: #6b7280;
+  --border: #e7e9f0;
+  --panel: #ffffff;
+  --chip: #fef9c3;
+  --accBG: #eef4ff;
+  --shareBG: #eaf6ff;
+  --dlBG: #e7fff4;
+  --shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+}
+
+.cfwrap {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  background: #fff;
+}
+
+.cfhead {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.cfhead h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.cfhead p {
+  color: #000000;
+  margin-top: 6px;
+  font-weight: 300;
+  font-size: 16px;
+}
+
+/* Grid */
+.cfgrid {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 22px;
+}
+
+/* LEFT */
+.cftitlerow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.cfround {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--chip);
+}
+
+.cfh3 {
+  font-weight: 700;
+  color: #0e1320;
+  font-size: 20px;
+}
+
+.cfsub {
+  color: #000000;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.cfchecks {
+  margin: 12px 0 32px;
+  display: grid;
+  gap: 10px;
+  font-size: 16px;
+}
+
+.cfchecks li {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: #11202b;
+  font-weight: 600;
+}
+
+.cfaccredit {
+  background: linear-gradient(106.65deg,
+      rgba(194, 214, 252, 0.5) 13.13%,
+      rgba(254, 233, 233, 0.5) 104.74%);
+
+  border: 1px solid #e1e8ff;
+  border-radius: 4px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+  margin-bottom: 30px;
+}
+
+.cfacctitle {
+  font-weight: 700;
+  color: #0f1822;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.cfaccgrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.cfaccitem {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.cfacchead {
+  font-weight: 700;
+  color: #0e1420;
+  font-size: 20px;
+}
+
+.cfaccsub {
+  color: #000000;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.cffeatures {
+  margin-top: 6px;
+}
+
+.cfftitle {
+  font-weight: 700;
+  color: #0e1420;
+  margin-bottom: 8px;
+  font-size: 20px;
+}
+
+.cffgrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.cffgrid ul {
+  display: grid;
+  gap: 8px;
+  color: #000000;
+  list-style: disc;
+  font-size: 16px;
+}
+
+/* RIGHT */
+.cfright {
+  display: flex;
+  align-items: center;
+}
+
+.cfcert {
+  position: relative;
+  width: 100%;
+  /* Lets .ovChip's `cqw` font-size units scale off this box's own rendered
+     width (the certificate image's width) rather than the viewport, so
+     overlay text stays proportional to the certificate at any column/screen
+     size. */
+  container-type: inline-size;
+}
+
+/* Holds the image + its dynamic overlay together so both rotate/scale as
+   one unit on hover - the overlay text stays pinned to the certificate
+   artwork instead of drifting off it mid-animation. */
+.cfcertFrame {
+  position: relative;
+  transform: scale(1.02);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.cfcertFrame:hover {
+  transform: rotate(358deg);
+}
+
+.cfcertFrame img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* Dynamic certificate data, drawn on top of the cer.png template image
+   (this preview's own base image - the real generated PDF in
+   Certificateimp.java uses a different base image, Certificate_Genarated.jpg,
+   with its own separately-tuned coordinates). Every zone below is an OPAQUE
+   cover block first (so it fully masks whatever sample text/icons are baked
+   into the template's pixels at that spot - a translucent chip sized to its
+   own text is not enough, it just floats over the sample content instead of
+   replacing it), with the real value drawn inside. Percentages are
+   resolution-independent so they track the image at any rendered size. */
+.cfoverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ovZone {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #fff;
+  color: #1a2332;
+  font-size: clamp(7px, 1.5cqw, 12px);
+  line-height: 1.25;
+  text-align: center;
+  padding: 0 2%;
+}
+
+.ovName {
+  left: 31%;
+  width: 62%;
+  top: 36%;
+  height: 10.5%;
+  align-items: flex-end;
+  padding-bottom: 1%;
+  font-weight: 700;
+  color: #0e49a8;
+  font-size: clamp(11px, 2.6cqw, 20px);
+}
+
+.ovCourse {
+  left: 29%;
+  width: 66%;
+  top: 45.5%;
+  height: 16.5%;
+  flex-direction: column;
+  gap: 2%;
+  font-style: italic;
+}
+
+.ovCourse strong {
+  font-style: normal;
+  color: #0e49a8;
+}
+
+/* Covers the template's baked sample icon grid (Salesforce/Java/Manual
+   Testing/AI/Automation/Java) below its "Technologies & Tools Covered:"
+   heading, then lists the real skills in its place - matching the same
+   cover-then-draw treatment Certificateimp.java uses for the real PDF. */
+.ovSkills {
+  left: 1.5%;
+  width: 27.5%;
+  top: 54.5%;
+  height: 32.5%;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background: #16233f;
+  color: #fff;
+  text-align: left;
+  list-style: none;
+  margin: 0;
+  flex-direction: column;
+  gap: 2%;
+}
+
+/* Certificate ID sits right of the pre-existing "Instantly downloadable"
+   bubble (.cfdl, bottom-left corner) rather than under it - the bubble
+   paints on top (later in DOM order) and would otherwise hide this zone.
+   The real generated PDF (which has no such decorative bubble) places its
+   Certificate ID further left; this is the one deliberate position
+   difference between preview and PDF, forced by that extra UI chrome. */
+/* Sits underneath the three footer text zones below and spans the same
+   band as their combined extent - the individual zones alone left gaps
+   between them where the baked footer line ("Certificate ID: HC.../Verify
+   at:.../Support:...") still showed through. */
+.ovFooterCover {
+  position: absolute;
+  left: 31%;
+  width: 66%;
+  top: 85.5%;
+  height: 5%;
+  background: #fff;
+}
+
+.ovCertId {
+  left: 47%;
+  width: 17%;
+  top: 85.5%;
+  height: 5%;
+  justify-content: flex-start;
+  text-align: left;
+  font-size: clamp(5.5px, 1cqw, 8px);
+}
+
+.ovSupport {
+  left: 64%;
+  width: 18%;
+  top: 85.5%;
+  height: 5%;
+  font-size: clamp(5.5px, 1cqw, 8px);
+}
+
+.ovDate {
+  left: 82%;
+  width: 17%;
+  top: 85.5%;
+  height: 5%;
+  justify-content: flex-start;
+  text-align: left;
+  font-size: clamp(5.5px, 1cqw, 8px);
+}
+
+/* Bubbles */
+.cfbubble {
+  position: absolute;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.cfbico {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+}
+
+.cfbtitle {
+  font-weight: 700;
+  color: #0f1822;
+}
+
+.cfbsub {
+  color: #7a8696;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.cfshare {
+  right: 16px;
+  top: -7px;
+}
+
+.cfshare .cfbico {
+  background: var(--shareBG);
+}
+
+.cfleft {
+  padding: 0;
+  margin: 0;
+}
+
+.cfdl {
+  left: 16px;
+  bottom: -7px;
+}
+
+.cfdl .cfbico {
+  background: var(--dlBG);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .cfgrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .cfwrap .cfhead h2 {
+    font-size: 36px;
+  }
+
+  .cfwrap .cfhead p {
+    font-size: 22px;
+    /* Increased to 20px */
+  }
+
+  .cfh3 {
+    width: auto;
+    font-size: 22px;
+    /* Approximately 20px */
+  }
+
+  .cfsub {
+    font-size: 20px;
+    /* Increased to 20px */
+  }
+
+  .cfgrid {
+    display: block;
+  }
+
+  .cfchecks {
+    font-size: 20px;
+    /* Approximately 20px */
+  }
+
+  .cfacctitle {
+    font-size: 22px;
+    /* Approximately 20px */
+    font-weight: 600;
+  }
+
+  .cfaccitem img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .cfacchead {
+    font-size: 20px;
+    /* Increased to 20px */
+    font-weight: 600;
+  }
+
+  .cfaccsub {
+    font-size: 20px;
+    /* Approximately 20px */
+  }
+
+  .cfftitle {
+    font-size: 22px;
+    /* Approximately 20px */
+    font-weight: 600;
+  }
+
+  .cffgrid {
+    font-size: 21px;
+    /* Approximately 20px */
+    grid-template-columns: 1fr;
+  }
+
+  .cfbtitle {
+    font-weight: 600;
+    color: #000000;
+    font-size: 18px;
+    /* Approximately 20px */
+  }
+
+  .cfbsub {
+    font-size: 16px;
+    /* Approximately 20px */
+  }
+
+  .cfbico {
+    width: 28px;
+    height: 28px;
+  }
+
+  .cfbubble {
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cfwrap .cfhead h2 {
+    font-size: 24px;
+  }
+
+  .cfwrap .cfhead p {
+    font-size: 14px;
+    /* Increased to 20px */
+  }
+
+  .cfh3 {
+    width: auto;
+    font-size: 20px;
+    /* Approximately 20px */
+  }
+
+  .cfsub {
+    font-size: 14px;
+    /* Increased to 20px */
+  }
+
+  .cfgrid {
+    display: block;
+  }
+
+  .cfchecks {
+    font-size: 14px;
+    /* Approximately 20px */
+  }
+
+  .cfacctitle {
+    font-size: 20px;
+    /* Approximately 20px */
+    font-weight: 600;
+  }
+
+  .cfaccitem img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .cfacchead {
+    font-size: 16px;
+    /* Increased to 20px */
+    font-weight: 600;
+  }
+
+  .cfaccsub {
+    font-size: 14px;
+    /* Approximately 20px */
+  }
+
+  .cfftitle {
+    font-size: 20px;
+    /* Approximately 20px */
+    font-weight: 600;
+  }
+
+  .cffgrid {
+    font-size: 14px;
+    /* Approximately 20px */
+    grid-template-columns: 1fr;
+    gap: 0px;
+  }
+
+  .cfbtitle {
+    font-weight: 600;
+    color: #000000;
+    font-size: 18px;
+    /* Approximately 20px */
+  }
+
+  .cfbsub {
+    font-size: 16px;
+    /* Approximately 20px */
+  }
+
+  .cfbico {
+    width: 28px;
+    height: 28px;
+  }
+
+  .cfbubble {
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 375px) {
+  .cfwrap .cfhead h2 {
+    font-size: 24px;
+  }
+
+  .cfwrap .cfhead p {
+    font-size: 14px;
+    /* Increased to 20px */
+  }
+
+  .cfh3 {
+    width: auto;
+    font-size: 20px;
+    /* Approximately 20px */
+  }
+
+  .cfsub {
+    font-size: 14px;
+    /* Increased to 20px */
+  }
+
+  .cfgrid {
+    display: block;
+  }
+
+  .cfchecks {
+    font-size: 14px;
+    /* Approximately 20px */
+  }
+
+  .cfacctitle {
+    font-size: 20px;
+    /* Approximately 20px */
+    font-weight: 600;
+  }
+
+  .cfaccitem img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .cfacchead {
+    font-size: 16px;
+    /* Increased to 20px */
+    font-weight: 600;
+  }
+
+  .cfaccsub {
+    font-size: 14px;
+    /* Approximately 20px */
+  }
+
+  .cfftitle {
+    font-size: 20px;
+    /* Approximately 20px */
+    font-weight: 600;
+  }
+
+  .cffgrid {
+    font-size: 14px;
+    /* Approximately 20px */
+    grid-template-columns: 1fr;
+    gap: 0px;
+  }
+
+  .cfbtitle {
+    font-weight: 600;
+    color: #000000;
+    font-size: 12px;
+    /* Approximately 20px */
+  }
+
+  .cfbsub {
+    font-size: 12px;
+    /* Approximately 20px */
+  }
+
+  .cfbico {
+    width: 28px;
+    height: 28px;
+  }
+
+  .cfbubble {
+    padding: 8px 12px;
+  }
+}

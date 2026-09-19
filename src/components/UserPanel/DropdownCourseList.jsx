@@ -1,0 +1,104 @@
+'use client';
+
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "./CoursePage/Course.css";
+import { useRouter } from "next/navigation";
+const DropdownCourseList = ({
+  category,
+  onCourseSelect
+}) => {
+  const [courses, setCourses] = useState([]);
+  const [filtered, setFiltered] = useState([]);
+  const [activeCourse, setActiveCourse] = useState(null);
+  const [hoveredCourse, setHoveredCourse] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  useEffect(() => {
+    let isMounted = true;
+    const fetchCourses = async () => {
+      try {
+        const {
+          data
+        } = await axios.get(`https://api.hachion.co/courses/summary`);
+        const rows = Array.isArray(data) ? data : [];
+        const mapped = rows.map(row => ({
+          id: row[0],
+          courseName: row[1],
+          seoH1Title: row[2],
+          courseImage: row[3],
+          numberOfClasses: row[4],
+          level: row[5],
+          amount: row[6],
+          discount: row[7],
+          total: row[8],
+          iamount: row[9],
+          idiscount: row[10],
+          itotal: row[11],
+          courseCategory: row[12]
+        }));
+        if (isMounted) setCourses(mapped);
+      } catch (err) {
+        console.error("Error fetching courses:", err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+    fetchCourses();
+    return () => isMounted = false;
+  }, []);
+
+  useEffect(() => {
+    if (category && courses.length > 0) {
+      const filteredList = courses.filter(course => course.courseCategory === category);
+      setFiltered(filteredList);
+
+      if (filteredList.length > 0) {
+        setActiveCourse(filteredList[0].courseName);
+      } else {
+        setActiveCourse(null);
+      }
+    }
+  }, [category, courses]);
+  const handleCourseClick = course => {
+    setActiveCourse(course.courseName);
+    const courseSlug = course.courseName.toLowerCase().replace(/\s+/g, "-");
+    const categorySlug = course.courseCategory.toLowerCase().replace(/\s+/g, "-");
+    router.push(`/courses/${categorySlug}/${courseSlug}`);
+    if (onCourseSelect) onCourseSelect();
+  };
+  if (loading) {
+    return <div className="scrollable-category-list">
+        <ul className="category-menu">
+          {Array.from({
+          length: 6
+        }).map((_, index) => <li key={index}>
+              <div className="skeleton-explore-text title" style={{
+            padding: "4px 8px"
+          }}>
+                <div className="skeleton-text-line"></div>
+              </div>
+            </li>)}
+        </ul>
+      </div>;
+  }
+  if (filtered.length === 0) return <p className="dropdown-no-courses">No courses in {category}</p>;
+  return <div className="scrollable-category-list">
+      <ul className="category-menu">
+        {filtered.map((course, index) => {
+        const isActive = hoveredCourse === course.courseName || !hoveredCourse && activeCourse === course.courseName;
+        return <li key={course.id || index}>
+              <button onMouseEnter={() => setHoveredCourse(course.courseName)} onMouseLeave={() => setHoveredCourse(null)} onClick={() => handleCourseClick(course)} className={`category-menu-item ${isActive ? "active" : ""}`} style={{
+            padding: "4px 8px",
+            fontWeight: "400"
+          }}>
+                <div className="category-menu-text" title={course.courseName}>
+  {course.courseName.endsWith(" Training") ? course.courseName.replace(/\s+Training$/i, "") : course.courseName}
+            </div>
+              </button>
+            </li>;
+      })}
+      </ul>
+    </div>;
+};
+export default DropdownCourseList;

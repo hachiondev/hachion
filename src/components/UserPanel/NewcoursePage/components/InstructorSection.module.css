@@ -1,0 +1,498 @@
+:root {
+  --ink: #0f172a;
+  --muted: #667085;
+  --border: #e6e8ee;
+  --card: #ffffff;
+  --soft: #f6f8fb;
+  --brand: #1aa6df;
+  --brand2: #ffd84a;
+  --shadow: 0 18px 36px rgba(15, 23, 42, .08);
+}
+
+.iswrap {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.ishead {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.ishead h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.ishead p {
+  color: #000000;
+  margin-top: 16px;
+  font-size: 16px;
+  margin-bottom: 46px;
+  font-weight: 300;
+}
+
+.iscard {
+  max-width: 1350px;
+  margin: 0 auto;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 30px;
+}
+
+.istoprow {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.isbottomrow {
+  grid-column: 1 / -1;
+}
+
+.isnamesection {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* photo */
+.isphoto {
+  flex-shrink: 0;
+}
+
+.isphoto img {
+  width: 160px;
+  height: 180px;
+  object-fit: contain;
+}
+
+/* content */
+.iscontent {
+  padding: 0px 10px;
+}
+
+.istopline {
+  display: grid;
+  grid-template-columns: 2fr 300px;
+  align-items: center;
+}
+
+.isinfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.isname {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+}
+
+.isbadge {
+  width: fit-content;
+  background: #F6EF26;
+  color: #1d1a00;
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: 999px;
+  padding: 4px 18px;
+}
+
+.istitle {
+  color: rgba(31, 171, 255, 1);
+  font-weight: 500;
+  font-size: 16px;
+}
+
+/* stats */
+.isstats {
+  margin-top: 18px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.isstat {
+  border-radius: 12px;
+  padding: 16px 18px;
+  min-width: 180px;
+  text-align: left;
+  background: #f3f6ff;
+  border: 1px solid #e7ecff;
+}
+
+.isstat:nth-child(2) {
+  background: #f0fdf4;
+  border-color: #dcfce7;
+}
+
+.isstat:nth-child(3) {
+  background: #fef3c7;
+  border-color: #fde68a;
+}
+
+.isstatico {
+  display: inline-flex;
+  margin-bottom: 6px;
+  margin-right: 10px;
+}
+
+.isstatico img {
+  width: 24px;
+  height: 24px;
+}
+
+.isstat:nth-child(1) .isstatico {
+  color: #2663EB;
+}
+
+.isstat:nth-child(2) .isstatico {
+  color: #16A349;
+}
+
+.isstat:nth-child(3) .isstatico {
+  color: #CA8A03;
+}
+
+.isstatval {
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.isstat:nth-child(1) .isstatval {
+  color: #2663EB;
+}
+
+.isstat:nth-child(2) .isstatval {
+  color: #16A349;
+}
+
+.isstat:nth-child(3) .isstatval {
+  color: #CA8A03;
+}
+
+.isstatlab {
+  font-weight: 700;
+  font-size: 13px;
+  text-align: center;
+  color: #000
+}
+
+.isbio {
+  margin-top: 14px;
+  color: #000000;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+.issubhead {
+  margin-top: 5px;
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 20px;
+}
+
+.islist {
+  margin-top: 8px;
+  color: #000000;
+  display: grid;
+  gap: 8px;
+  list-style: disc;
+}
+
+/* actions */
+.isactions {
+  margin-top: 16px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.isbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  padding: 10px 24px;
+  border-radius: 999px;
+  font-weight: 400;
+  background: linear-gradient(90deg, var(--brand), #38c7ff);
+  color: #fff;
+  cursor: pointer;
+  line-height: 5px;
+}
+
+.isbtnoutline {
+  background: #fff;
+  border: 1px solid var(--border);
+  color: #000000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .04);
+}
+
+.isbtn .ico,
+.isbtnoutline .ico {
+  display: inline-flex;
+}
+
+.isbtn .ico img {
+  height: 22px;
+}
+
+/* ===== RESPONSIVE FIXES START HERE ===== */
+
+/* Tablet: 769px - 1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .istopline {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .isstat {
+    min-width: 160px;
+    padding: 14px 16px;
+  }
+  
+  .isstatval {
+    font-size: 20px;
+  }
+  
+  .isstatlab {
+    font-size: 12px;
+  }
+}
+
+/* Large Mobile/Tablet: 481px - 768px */
+@media (max-width: 768px) {
+  .istopline {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    text-align: center;
+  }
+  
+  .iscontent {
+    padding: 0 15px;
+  }
+  
+  .isname {
+    font-size: 26px;
+  }
+  
+  .isbadge {
+    font-size: 13px;
+    padding: 6px 16px;
+    margin: 0 auto;
+  }
+  
+  .istitle {
+    font-size: 15px;
+    margin-top: 10px;
+    text-align: center;
+  }
+  
+  .isstats {
+    justify-content: center;
+  }
+  
+  .isstat {
+    min-width: 150px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  
+  .isstatval {
+    font-size: 20px;
+  }
+  
+  .isstatlab {
+    font-size: 12px;
+  }
+  
+  .isbio {
+    font-size: 15px;
+    text-align: left;
+  }
+  
+  .issubhead {
+    font-size: 18px;
+    text-align: center;
+  }
+  
+  .islist {
+    padding-left: 20px;
+    font-size: 14px;
+  }
+  
+  .isactions {
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .isbtn {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+}
+
+/* Mobile: 376px - 480px */
+@media (max-width: 480px) {
+  .iscard {
+    padding: 15px;
+    gap: 20px;
+  }
+  
+  .isnamesection {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .isphoto img {
+    width: 140px;
+    height: 160px;
+  }
+  
+  .istopline {
+    gap: 15px;
+  }
+  
+  .isname {
+    font-size: 24px;
+  }
+  
+  .isbadge {
+    font-size: 12px;
+    padding: 5px 14px;
+  }
+  
+  .istitle {
+    font-size: 14px;
+  }
+  
+  .isstats {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .isstat {
+    min-width: 100%;
+    max-width: 280px;
+    padding: 12px 14px;
+  }
+  
+  .isstatval {
+    font-size: 18px;
+  }
+  
+  .isstatlab {
+    font-size: 11px;
+  }
+  
+  .isbio {
+    font-size: 14px;
+  }
+  
+  .issubhead {
+    font-size: 16px;
+  }
+  
+  .islist {
+    font-size: 13px;
+    padding-left: 18px;
+  }
+  
+  .isactions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .isbtn {
+    width: 100%;
+    max-width: 250px;
+    justify-content: center;
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+}
+
+/* Small Mobile: up to 375px */
+@media (max-width: 375px) {
+  .iscard {
+    padding: 12px;
+    gap: 15px;
+  }
+  
+  .ishead h2 {
+    font-size: 22px;
+  }
+  
+  .ishead p {
+    font-size: 14px;
+    margin-bottom: 30px;
+  }
+  
+  .isphoto img {
+    width: 120px;
+    height: 140px;
+  }
+  
+  .iscontent {
+    padding: 0;
+  }
+  
+  .isname {
+    font-size: 22px;
+  }
+  
+  .isbadge {
+    font-size: 11px;
+    padding: 4px 12px;
+  }
+  
+  .istitle {
+    font-size: 13px;
+  }
+  
+  .isstat {
+    padding: 10px 12px;
+  }
+  
+  .isstatval {
+    font-size: 16px;
+  }
+  
+  .isstatlab {
+    font-size: 10px;
+  }
+  
+  .isbio {
+    font-size: 13px;
+  }
+  
+  .issubhead {
+    font-size: 15px;
+  }
+  
+  .islist {
+    font-size: 12px;
+    padding-left: 16px;
+  }
+  
+  .isbtn {
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+  
+  .isbtn .ico img {
+    height: 18px;
+  }
+}

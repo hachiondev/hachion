@@ -1,0 +1,886 @@
+'use client';
+
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { styled } from '@mui/material/styles';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
+import { tableCellClasses } from '@mui/material/TableCell';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import { IoSearch } from "react-icons/io5";
+import { IoMdCloseCircleOutline } from "react-icons/io";
+import { FaEdit } from 'react-icons/fa';
+import { FiPlus } from 'react-icons/fi';
+import { RiDeleteBin6Line } from 'react-icons/ri';
+import axios from 'axios';
+import dayjs from "dayjs";
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import AdminPagination from './AdminPagination';
+import { MdKeyboardArrowRight } from 'react-icons/md';
+import './Admin.css';
+dayjs.extend(customParseFormat);
+const StyledTableCell = styled(TableCell)(({
+  theme
+}) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: '#00AEEF',
+    color: theme.palette.common.white,
+    borderRight: '1px solid white',
+    padding: '3px 5px'
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+    padding: '3px 4px',
+    borderRight: '1px solid #e0e0e0'
+  }
+}));
+const StyledTableRow = styled(TableRow)(({
+  theme
+}) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover
+  },
+  '&:last-child td, &:last-child th': {
+    border: 0
+  }
+}));
+export default function CandidateCertificate() {
+  const [course, setCourse] = useState([]);
+  const [courseCategory, setCourseCategory] = useState([]);
+  const [filterCourse, setFilterCourse] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [certificate, setCertificate] = useState([]);
+  const [filteredCertificate, setFilteredCertificate] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [showPreview, setShowPreview] = useState(false);
+  const [showAddCourse, setShowAddCourse] = useState(false);
+  const [certificateList, setCertificateList] = useState([]);
+  const [editedData, setEditedData] = useState({
+    student_id: "",
+    student_name: "",
+    email: "",
+    course_name: "",
+    status: "",
+    grade: "",
+    completed_date: "",
+    certificate_img: "",
+    certificate_id: "",
+    certificate_number: ""
+  });
+  const [certificateData, setCertificateData] = useState({
+    student_id: "",
+    student_name: "",
+    email: "",
+    course_name: "",
+    status: "",
+    grade: "",
+    completed_date: "",
+    certificate_img: "",
+    certificate_id: "",
+    certificate_number: ""
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [students, setStudents] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // ADDED: State for checkbox selection
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const handlePageChange = useCallback(page => {
+    setCurrentPage(page);
+    window.scrollTo(0, window.scrollY);
+  }, []);
+  const handleRowsPerPageChange = useCallback(rows => {
+    setRowsPerPage(rows);
+    setCurrentPage(1);
+  }, []);
+  const displayedCourse = useMemo(() => filteredCertificate.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage), [filteredCertificate, currentPage, rowsPerPage]);
+
+  // ADDED: Handle Select All checkbox
+  const handleSelectAll = event => {
+    if (event.target.checked) {
+      const allIds = displayedCourse.map(cert => cert.certificateId);
+      setSelectedIds(allIds);
+      setSelectAll(true);
+    } else {
+      setSelectedIds([]);
+      setSelectAll(false);
+    }
+  };
+
+  // ADDED: Handle individual checkbox
+  const handleSelectOne = id => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+      setSelectAll(false);
+    } else {
+      const newSelectedIds = [...selectedIds, id];
+      setSelectedIds(newSelectedIds);
+      // Check if all items are selected
+      if (newSelectedIds.length === displayedCourse.length) {
+        setSelectAll(true);
+      }
+    }
+  };
+
+  // ADDED: Update selectAll state when page changes
+  useEffect(() => {
+    const allCurrentPageIds = displayedCourse.map(cert => cert.certificateId);
+    const allSelected = allCurrentPageIds.length > 0 && allCurrentPageIds.every(id => selectedIds.includes(id));
+    setSelectAll(allSelected);
+  }, [currentPage, displayedCourse, selectedIds]);
+
+  // ADDED: Handle bulk delete
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) {
+      setErrorMessage("❌ Please select at least one certificate to delete");
+      setSuccessMessage("");
+      setTimeout(() => setErrorMessage(""), 3000);
+      return;
+    }
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'certificate' : 'certificates'}?`;
+    if (window.confirm(confirmMessage)) {
+      try {
+        // Delete all selected certificates
+        const deletePromises = selectedIds.map(id => axios.delete(`https://api.hachion.co/certificate/delete/${id}`));
+        await Promise.all(deletePromises);
+
+        // Update state
+        const updatedCertificates = certificateList.filter(item => !selectedIds.includes(item.certificateId));
+        setCertificateList(updatedCertificates);
+        setFilteredCertificate(updatedCertificates);
+        setSelectedIds([]);
+        setSelectAll(false);
+        setSuccessMessage(`✅ ${selectedIds.length} ${selectedIds.length === 1 ? 'certificate' : 'certificates'} deleted successfully`);
+        setErrorMessage("");
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 6000);
+      } catch (error) {
+        console.error("Error deleting certificates:", error);
+        setSuccessMessage("");
+        setErrorMessage("❌ Error deleting some certificates. Please try again.");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 6000);
+      }
+    }
+  };
+  const handleFileChange = e => {
+    setSelectedFile(e.target.files[0]);
+    setShowPreview(false);
+    setPreviewUrl(null);
+  };
+  const handleGenerate = async () => {
+    if (!certificateData.student_id || !certificateData.student_name || !certificateData.course_name || !certificateData.completed_date || !certificateData.grade || !certificateData.email || !certificateData.status || !certificateData.certificate_number) {
+      setSuccessMessage("");
+      setErrorMessage("❌ Please fill in all required fields before generating the certificate.");
+      return;
+    }
+    const payload = {
+      studentId: certificateData.student_id,
+      studentName: certificateData.student_name,
+      courseName: certificateData.course_name,
+      // completionDate: dayjs(certificateData.completed_date, 'DD-MM-YYYY').format('YYYY-MM-DD'),
+      completionDate: certificateData.completed_date,
+      studentEmail: certificateData.email,
+      status: certificateData.status,
+      grade: certificateData.grade,
+      certificateNumber: certificateData.certificate_number
+    };
+    try {
+      const response = await fetch(`https://api.hachion.co/certificate/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+      if (response.ok) {
+        const certificateId = response.headers.get('Certificate-Id');
+        if (certificateId) {
+          // Point the preview iframe at the real download-for-view endpoint
+          // (server sets Content-Disposition: inline; filename=`${studentId}_Certificate.pdf`)
+          // instead of a blob: URL built from the raw response body. A blob:
+          // URL carries no filename - if an admin saves straight from the
+          // browser's built-in PDF-viewer button instead of the "Save
+          // Certificate" button below, the browser has nothing to name the
+          // file with and falls back to a random name.
+          setPreviewUrl(`https://api.hachion.co/certificate/downloadForView/${certificateId}`);
+          setCertificateData(prevData => ({
+            ...prevData,
+            certificate_id: certificateId
+          }));
+        } else {
+          const blob = await response.blob();
+          setPreviewUrl(URL.createObjectURL(blob));
+        }
+        setErrorMessage("");
+        setSuccessMessage("✅ Certificate generated successfully.");
+      } else {
+        // The backend now returns the actual failure reason as a plain-text
+        // body (e.g. a bad completion-date format, or a PDF write error)
+        // instead of an empty 500 - shown here instead of a generic message
+        // so a real failure isn't indistinguishable from "nothing happened".
+        const backendMessage = await response.text().catch(() => "");
+        setSuccessMessage("");
+        setErrorMessage(`❌ ${backendMessage || "Failed to generate certificate."}`);
+      }
+    } catch (error) {
+      setSuccessMessage("");
+      setErrorMessage("❌ An error occurred while generating the certificate.");
+    }
+  };
+  const handleImgReset = () => {
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    setShowPreview(false);
+  };
+  const handleReset = useCallback(() => {
+    setCertificateData({
+      student_id: "",
+      student_name: "",
+      email: "",
+      course_name: "",
+      status: "",
+      grade: "",
+      completed_date: "",
+      certificate_img: "",
+      certificate_id: "",
+      certificate_number: ""
+    });
+  }, []);
+  const handleInputChange = useCallback(e => {
+    const {
+      name,
+      value
+    } = e.target;
+    setEditedData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    setCertificateData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  }, []);
+  const handleClose = useCallback(() => {
+    setOpen(false);
+  }, []);
+  const handleSave = useCallback(async () => {
+    try {
+      const response = await axios.put(`https://api.hachion.co/certificate/${editedData.id}`, editedData);
+      setCertificate(prev => prev.map(curr => curr.id === editedData.id ? response.data : curr));
+      setMessage("Certificate updated successfully!");
+      setTimeout(() => setMessage(""), 5000);
+      setOpen(false);
+    } catch (error) {
+      setMessage("Error updating Certificate.");
+    }
+  }, [editedData]);
+  const handleChange = e => {
+    const {
+      name,
+      value
+    } = e.target;
+    setCertificateData(prevData => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
+  // Selecting a Student ID from the dropdown (a known student, from the
+  // `students` list already fetched for the chosen course) auto-fills
+  // Student Full Name too, instead of requiring it to be picked
+  // separately - the two selects previously had no relationship, so an
+  // admin could pick one student's ID and a different student's name by
+  // mistake. Certificate ID is also auto-synced to the same Student ID
+  // here (per explicit instruction: Student ID == Certificate ID in the
+  // admin portal) - still a separately editable field afterward, just
+  // defaults to matching.
+  const handleStudentIdChange = e => {
+    const { value } = e.target;
+    const matched = students.find(student => student.studentId === value);
+    setCertificateData(prevData => ({
+      ...prevData,
+      student_id: value,
+      student_name: matched ? matched.userName : prevData.student_name,
+      certificate_number: value
+    }));
+  };
+  useEffect(() => {
+    const fetchCourseNames = async () => {
+      try {
+        const response = await fetch(`https://api.hachion.co/enroll/coursenames`);
+        const data = await response.json();
+        const formattedData = data.map((courseName, index) => ({
+          id: index,
+          courseName: courseName
+        }));
+        setFilterCourse(formattedData);
+      } catch (error) {
+        // Error handling
+      }
+    };
+    fetchCourseNames();
+  }, []);
+  useEffect(() => {
+    if (certificateData.course_name) {
+      const fetchStudents = async () => {
+        try {
+          const response = await fetch(`https://api.hachion.co/api/v1/user/students/${certificateData.course_name}`);
+          const data = await response.json();
+          // The backend can return the same student more than once for a
+          // course (e.g. duplicate enrollment rows) - deduped here by
+          // studentId so the dropdowns don't show/select the same ID
+          // twice and React doesn't warn about duplicate list keys.
+          const uniqueStudents = Array.isArray(data)
+            ? Array.from(new Map(data.map(student => [student.studentId, student])).values())
+            : data;
+          setStudents(uniqueStudents);
+        } catch (error) {
+          // Error handling
+        }
+      };
+      fetchStudents();
+    }
+  }, [certificateData.course_name]);
+  useEffect(() => {
+    const fetchByStudentId = async () => {
+      if (certificateData.student_id) {
+        try {
+          const res = await fetch(`https://api.hachion.co/api/v1/user/lookup?studentId=${certificateData.student_id}`);
+          const data = await res.json();
+          setCertificateData(prev => ({
+            ...prev,
+            student_name: data.userName,
+            email: data.email
+          }));
+        } catch (err) {
+          // Error handling
+        }
+      }
+    };
+    fetchByStudentId();
+  }, [certificateData.student_id]);
+  useEffect(() => {
+    const fetchByUserName = async () => {
+      if (certificateData.student_name) {
+        try {
+          const res = await fetch(`https://api.hachion.co/api/v1/user/lookup?userName=${certificateData.student_name}`);
+          const data = await res.json();
+          setCertificateData(prev => ({
+            ...prev,
+            student_id: data.studentId,
+            email: data.email
+          }));
+        } catch (err) {
+          console.error("Error fetching by user name:", err);
+        }
+      }
+    };
+    fetchByUserName();
+  }, [certificateData.student_name]);
+  useEffect(() => {
+    const fetchCompletionDate = async () => {
+      if (certificateData.course_name && certificateData.student_name) {
+        try {
+          const res = await fetch(`https://api.hachion.co/api/v1/user/completiondate`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              courseName: certificateData.course_name,
+              userName: certificateData.student_name
+            })
+          });
+          // A 404 here is a normal, expected outcome (no tracked
+          // completion date for this student/course), not a failure -
+          // the backend returns a plain-text message in that case, not
+          // JSON, so calling res.json() unconditionally threw a parse
+          // error on every such student. Leave completed_date as-is
+          // (admin fills it in manually) instead of crashing.
+          if (!res.ok) return;
+          const data = await res.json();
+          // Kept in ISO (YYYY-MM-DD): this both binds correctly to the
+          // native <input type="date"> below (which requires ISO in its
+          // `value`, silently rendering blank for anything else) and is
+          // sent as-is in the /certificate/generate payload, which the
+          // backend parses with LocalDate.parse() (strict ISO). Reformatting
+          // this to DD-MM-YYYY for display previously broke both: the date
+          // picker showed blank for auto-filled dates, and generation for
+          // an existing student with a tracked completion date failed with
+          // a date-parse error masked by the generic "Failed to generate
+          // certificate" message below.
+          const formattedDate = dayjs(data.completionDate).format('YYYY-MM-DD');
+          setCertificateData(prev => ({
+            ...prev,
+            completed_date: formattedDate
+          }));
+        } catch (err) {
+          console.error("Error fetching completion date:", err);
+        }
+      }
+    };
+    fetchCompletionDate();
+  }, [certificateData.course_name, certificateData.student_name]);
+  const handleSendEmail = async () => {
+    const certificateId = certificateData.certificate_id;
+    if (!certificateId) {
+      setSuccessMessage("");
+      setErrorMessage("❌ Certificate ID not available.");
+      return;
+    }
+    try {
+      const response = await fetch(`https://api.hachion.co/certificate/send-email/${certificateId}`, {
+        method: 'POST'
+      });
+      if (response.ok) {
+        setErrorMessage("");
+        setSuccessMessage("✅ Email sent successfully.");
+      } else {
+        setSuccessMessage("");
+        setErrorMessage("❌ Failed to send email.");
+      }
+    } catch (error) {
+      console.error("Error sending email:", error);
+      setSuccessMessage("");
+      setErrorMessage("❌ An error occurred while sending the email.");
+    }
+  };
+  useEffect(() => {
+    const fetchCertificateData = async () => {
+      try {
+        const response = await fetch(`https://api.hachion.co/certificate/all`);
+        const data = await response.json();
+        setCertificateList(data);
+        setFilteredCertificate(data);
+      } catch (error) {
+        console.error("Error fetching certificate data:", error);
+      }
+    };
+    fetchCertificateData();
+  }, []);
+
+  // A certificate row having studentId/courseName/completionDate says the DB
+  // record is complete - it does NOT say the PDF is actually still on disk
+  // (see CertificateSection's regenerate-on-missing-file fix on the backend
+  // for why a record can outlive its file). A plain "View PDF" link here
+  // when the file is gone just 404s with no explanation - checked per
+  // currently-displayed row (HEAD, same pattern as the student dashboard's
+  // UserCertificate.jsx) instead of claiming success and hiding the problem.
+  const [pdfAvailability, setPdfAvailability] = useState({});
+  useEffect(() => {
+    let cancelled = false;
+    const idsToCheck = displayedCourse.filter(c => pdfAvailability[c.certificateId] === undefined);
+    if (idsToCheck.length === 0) return;
+    (async () => {
+      const entries = await Promise.all(idsToCheck.map(async c => {
+        try {
+          const res = await fetch(`https://api.hachion.co/certificate/downloadForView/${c.certificateId}`, { method: 'HEAD' });
+          return [c.certificateId, res.ok];
+        } catch {
+          return [c.certificateId, null]; // network/CORS failure - unknown, not "missing"
+        }
+      }));
+      if (cancelled) return;
+      setPdfAvailability(prev => {
+        const next = { ...prev };
+        entries.forEach(([id, ok]) => { next[id] = ok; });
+        return next;
+      });
+    })();
+    return () => { cancelled = true; };
+  }, [displayedCourse, pdfAvailability]);
+
+  // UPDATED: handleDelete function to remove from selectedIds
+  const handleDelete = async id => {
+    try {
+      await axios.delete(`https://api.hachion.co/certificate/delete/${id}`);
+      const updatedList = certificateList.filter(item => item.certificateId !== id);
+      setCertificateList(updatedList);
+      setFilteredCertificate(updatedList);
+
+      // Remove from selectedIds if present
+      setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
+      setErrorMessage("");
+      setSuccessMessage("✅ Certificate deleted successfully.");
+    } catch (error) {
+      console.error("Delete failed:", error);
+      setSuccessMessage("");
+      setErrorMessage("❌ Failed to delete certificate.");
+    }
+  };
+  const handleDateFilter = () => {
+    const filtered = certificate.filter(item => {
+      const itemDate = dayjs(item.completed_date, 'DD-MM-YYYY'); // make sure completed_date format is consistent
+
+      const matchesSearch = searchTerm === '' || [item.student_id, item.student_name, item.email, item.course_name, item.status, item.grade, item.certificate_id, item.completed_date].map(field => String(field || '').toLowerCase()).some(field => field.includes(searchTerm.toLowerCase()));
+      const inDateRange = (!startDate || itemDate.isSameOrAfter(startDate, 'month')) && (!endDate || itemDate.isSameOrBefore(endDate, 'month'));
+      return matchesSearch && inDateRange;
+    });
+    setFilteredCertificate(filtered);
+    setCurrentPage(1);
+  };
+  const handleDateReset = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setSearchTerm('');
+    setFilteredCertificate(certificate);
+    setCurrentPage(1);
+  };
+  const handleDeleteConfirmation = id => {
+    if (window.confirm("Are you sure you want to delete this certificate")) {
+      handleDelete(id);
+    }
+  };
+  const handleClickOpen = useCallback(row => {
+    setEditedData(row);
+    setOpen(true);
+  }, []);
+  useEffect(() => {
+    const fetchCandidateCertificate = async () => {
+      try {
+        // /courses/all only returns course_status = 'active' courses (the
+        // public listing) - swapped for /courses/allforadmin (same shape,
+        // no status filter) so a certificate can be generated for a
+        // student in a course that's real but still in draft/inactive
+        // status, same reasoning as RegularVideo.jsx's course dropdown.
+        const response = await axios.get(`https://api.hachion.co/courses/allforadmin`);
+        setCourseCategory(response.data);
+      } catch (error) {
+        // Error handling
+      }
+    };
+    fetchCandidateCertificate();
+  }, []);
+  const handleSubmit = async e => {
+    e.preventDefault();
+    const certificateId = certificateData.certificate_id;
+    if (!certificateId) {
+      setSuccessMessage("");
+      setErrorMessage("❌ Certificate ID not available.");
+      return;
+    }
+    try {
+      const response = await fetch(`https://api.hachion.co/certificate/download/${certificateId}`);
+      if (!response.ok) {
+        throw new Error("Failed to download certificate.");
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      // Trigger file download
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${certificateData.student_id}_Certificate.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setErrorMessage("");
+      setSuccessMessage("✅ Certificate downloaded successfully.");
+    } catch (error) {
+      console.error("Download error:", error);
+      setSuccessMessage("");
+      setErrorMessage("❌ Failed to download certificate.");
+    }
+  };
+  const handleAddTrendingCourseClick = () => {
+    setShowAddCourse(true);
+  };
+  return <>
+      {showAddCourse ? <div className='course-category'>
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb">
+              <li className="breadcrumb-item">
+                <a href="#!" onClick={() => setShowAddCourse(false)}>Generated Certificate</a> <MdKeyboardArrowRight />
+              </li>
+              <li className="breadcrumb-item active" aria-current="page">
+                Generate Certificate
+              </li>
+            </ol>
+          </nav>
+          <div className='category'>
+            <div className='category-header'>
+              <p style={{
+            marginBottom: 0
+          }}>Generate Certificate </p>
+              {successMessage && <p style={{
+            color: "green",
+            fontWeight: "bold"
+          }}>{successMessage}</p>}
+              {errorMessage && <p style={{
+            color: "red",
+            fontWeight: "bold"
+          }}>{errorMessage}</p>}
+            </div>
+            <div className='course-details'>
+              <div className='course-row'>
+                <div className="col">
+                  <label htmlFor="course" className="form-label">Course Name</label>
+                  <select id="course" className="form-select" name="course_name" value={certificateData.course_name} onChange={handleChange}>
+                    <option value="" disabled>Select Course</option>
+                    {filterCourse.map(curr => <option key={curr.id} value={curr.courseName}>{curr.courseName}</option>)}
+                  </select>
+                </div>
+
+                {/* Student ID Selection */}
+                <div className="col">
+                  <label htmlFor="student_id" className="form-label">Student ID</label>
+                  <select className="form-select" id="student_id" name="student_id" value={certificateData.student_id} onChange={handleStudentIdChange}>
+                    <option value="">Select Student ID</option>
+                    {students.map(student => <option key={student.studentId} value={student.studentId}>
+                        {student.studentId}
+                      </option>)}
+                  </select>
+                </div>
+                <div className="col">
+                  <label htmlFor="student_name" className="form-label">Student Full Name</label>
+                  <select className="form-select" id="student_name" name="student_name" value={certificateData.student_name} onChange={handleChange}>
+                    <option value="">Select Student Name</option>
+                    {students.map(student => <option key={student.studentId} value={student.userName}>
+                        {student.userName}
+                      </option>)}
+                  </select>
+                </div>
+              </div>
+              <div className='course-row'>
+                <div className="col">
+                  <label htmlFor="email" className="form-label">Email</label>
+                  <input type="text" className="schedule-input" id="email" name="email" value={certificateData.email} onChange={handleChange} />
+                </div>
+                <div className="col">
+                  <label htmlFor="inputState" className="form-label">Status</label>
+                  <select id="inputState" className="form-select" name='status' value={certificateData.status} onChange={handleChange}>
+                    <option value="">Select Status</option>
+                    <option value="Completed">Completed</option>
+                    <option value="In Progress">Progress</option>
+                    <option value="Pending">Pending</option>
+                  </select>
+                </div>
+                <div className="col">
+                  <label htmlFor="inputEmail4" className="form-label">Grade</label>
+                  <input type="text" id="inputState" className="form-control" name="grade" value={certificateData.grade || ''} onChange={handleInputChange} placeholder="Enter grade" />
+                </div>
+                <div className="col">
+                  <label htmlFor="inputEmail4" className="form-label">Completed Date</label>
+                  <input type="date" id="inputState" className="form-control" name="completed_date" value={certificateData.completed_date || ''} onChange={handleInputChange} placeholder="dd-mm-yyyy" />
+                </div>
+              </div>
+              <div className="course-row">
+                <div className='course-column'>
+                  <div className="col">
+                    <label className="form-label">Certificate ID</label>
+                    <input type="text" className="schedule-input" id="inputEmail4" name='certificate_number' value={certificateData.certificate_number} onChange={handleChange} placeholder="Enter Certificate ID" />
+                  </div>
+                  <button type="button" onClick={handleGenerate} className="generate-btn" disabled={certificateData.status !== "Completed"} // Disabled if status is not "Completed"
+              >
+                    Generate
+                  </button>
+                  <button type="button" onClick={() => {
+                handleReset();
+                handleImgReset();
+              }} className='generate-btn'>
+                    RESET
+                  </button>
+                </div>
+                <div className="col">
+                  <label className="form-label">Certificate Preview</label>
+                  <div className='cert-img'>
+                    {previewUrl ? <iframe src={previewUrl} title="Certificate Preview" width="100%" height="400px" style={{
+                  border: "1px solid #ccc"
+                }}></iframe> : <span style={{
+                  color: "#aaa"
+                }}>Preview will appear here</span>}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className='course-row'>
+              <button className='generate-btn' data-bs-toggle='modal' data-bs-target='#exampleModal' onClick={handleSubmit} disabled={!certificateData.certificate_id}>Save Certificate</button>
+              {successMessage && <p style={{
+            color: "green",
+            fontWeight: "bold"
+          }}>{successMessage}</p>}
+              {errorMessage && <p style={{
+            color: "red",
+            fontWeight: "bold"
+          }}>{errorMessage}</p>}
+              <button className='generate-btn' onClick={handleSendEmail} disabled={!certificateData.certificate_id}>
+                Send to Email
+              </button>
+            </div>
+          </div>
+        </div> : <div>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <div className='course-category'>
+              <div className='category'>
+                <div className='category-header'>
+                  <p style={{
+                marginBottom: 0
+              }}>Course Certificate</p>
+                </div>
+                
+                {/* ADDED: Success and Error Messages */}
+                {successMessage && <div style={{
+              color: "green",
+              fontWeight: "bold",
+              textAlign: "center",
+              marginTop: "10px"
+            }}>{successMessage}</div>}
+                {errorMessage && <div style={{
+              color: "red",
+              fontWeight: "bold",
+              textAlign: "center",
+              marginTop: "10px"
+            }}>{errorMessage}</div>}
+                
+                <div className='date-schedule'>
+                  Start Date
+                  <DatePicker views={['year', 'month']} label="Start Month" value={startDate} onChange={newValue => setStartDate(newValue)} format="MMMM YYYY" sx={{
+                '& .MuiIconButton-root': {
+                  color: '#00aeef'
+                }
+              }} />
+                  End Date
+                  <DatePicker views={['year', 'month']} label="End Month" value={endDate} onChange={newValue => setEndDate(newValue)} format="MMMM YYYY" sx={{
+                '& .MuiIconButton-root': {
+                  color: '#00aeef'
+                }
+              }} />
+                  <button className='filter' onClick={handleDateFilter}>Filter</button>
+                  <button className="filter" onClick={handleDateReset}>Reset</button>
+                </div>
+                <div className='entries'>
+                  <div className='entries-left'>
+                    <p style={{
+                  marginBottom: '0'
+                }}>Show</p>
+                    <div className="btn-group">
+                      <button type="button" className="btn-number dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        {rowsPerPage}
+                      </button>
+                      <ul className="dropdown-menu">
+                        <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(10)}>10</a></li>
+                        <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(25)}>25</a></li>
+                        <li><a className="dropdown-item" href="#!" onClick={() => handleRowsPerPageChange(50)}>50</a></li>
+                      </ul>
+                    </div>
+                    <p style={{
+                  marginBottom: '0'
+                }}>entries</p>
+                  </div>
+                  <div className='entries-right'>
+                    <div className="search-div" role="search" style={{
+                  border: '1px solid #d3d3d3'
+                }}>
+                      <input className="search-input" type="search" placeholder="Enter Courses, Category or Keywords" aria-label="Search" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+                      <button className="btn-search" type="submit"><IoSearch style={{
+                      fontSize: '2rem'
+                    }} /></button>
+                    </div>
+                    
+                    {/* ADDED: Bulk Delete Button */}
+                    {selectedIds.length > 0 && <button type="button" className="btn-category" onClick={handleBulkDelete} style={{
+                  backgroundColor: '#dc3545',
+                  marginRight: '10px'
+                }}>
+                        <RiDeleteBin6Line /> Delete Selected ({selectedIds.length})
+                      </button>}
+                    
+                    <button type="button" className="btn-category" onClick={handleAddTrendingCourseClick}>
+                      <FiPlus /> Generate Certificate
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </LocalizationProvider>
+          <TableContainer component={Paper}>
+            <Table sx={{
+          minWidth: 700
+        }} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  {/* ADDED: Select All Checkbox */}
+                  <StyledTableCell align='center'>
+                    <Checkbox checked={selectAll} onChange={handleSelectAll} indeterminate={selectedIds.length > 0 && selectedIds.length < displayedCourse.length} />
+                  </StyledTableCell>
+                  <StyledTableCell align='center'>S.No.</StyledTableCell>
+                  <StyledTableCell align='center'>Student ID</StyledTableCell>
+                  <StyledTableCell align='center'>Student Full Name</StyledTableCell>
+                  <StyledTableCell align='center'>Email</StyledTableCell>
+                  <StyledTableCell align="center">Course Name</StyledTableCell>
+                  <StyledTableCell align="center">Course Status</StyledTableCell>
+                  <StyledTableCell align="center">Grade</StyledTableCell>
+                  <StyledTableCell align="center">Certificate PDF</StyledTableCell>
+                  <StyledTableCell align="center">Certificate ID</StyledTableCell>
+                  <StyledTableCell align="center">Completed Date</StyledTableCell>
+                  <StyledTableCell align="center">Action</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {displayedCourse.length > 0 ? displayedCourse.map((curr, index) => <StyledTableRow key={curr.certificateId}>
+                      {/* ADDED: Individual Checkbox */}
+                      <StyledTableCell align='center'>
+                        <Checkbox checked={selectedIds.includes(curr.certificateId)} onChange={() => handleSelectOne(curr.certificateId)} />
+                      </StyledTableCell>
+                      <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
+                      <StyledTableCell align="center">{curr.studentId}</StyledTableCell>
+                      <StyledTableCell align="center">{curr.studentName}</StyledTableCell>
+                      <StyledTableCell align="center">{curr.studentEmail}</StyledTableCell>
+                      <StyledTableCell align="center">{curr.courseName}</StyledTableCell>
+                      <StyledTableCell align="center">{curr.status}</StyledTableCell>
+                      <StyledTableCell align="center">{curr.grade}</StyledTableCell>
+                      <StyledTableCell align="center">
+                        {curr.studentId && curr.courseName && curr.completionDate ? pdfAvailability[curr.certificateId] === false ? <span style={{
+                    color: '#dc3545',
+                    fontWeight: 'bold',
+                    cursor: 'help'
+                  }} title="Certificate record exists but the PDF file is missing on the server. Re-select this student and course under Generate Certificate and click Generate again to regenerate it.">
+                              File Missing
+                            </span> : <a href={`https://api.hachion.co/certificate/downloadForView/${curr.certificateId}`} target="_blank" rel="noopener noreferrer">
+                            View PDF
+                          </a> : 'Not Available'}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">{curr.certificateNumber}</StyledTableCell>
+                      <StyledTableCell align="center">{dayjs(curr.completionDate).format("MM-DD-YYYY").toUpperCase()}</StyledTableCell>
+                      <StyledTableCell align="center">
+                        <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-around',
+                  alignItems: 'center'
+                }}>
+                          <RiDeleteBin6Line className="delete" onClick={() => handleDeleteConfirmation(curr.certificateId)} />
+                        </div>
+                      </StyledTableCell>
+                    </StyledTableRow>) : <StyledTableRow>
+                      {/* UPDATED: Changed colSpan from 10 to 12 to include checkbox column */}
+                      <StyledTableCell colSpan={12} align="center">
+                        No data available.
+                      </StyledTableCell>
+                    </StyledTableRow>}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {successMessage && <p style={{
+        color: "green",
+        fontWeight: "bold"
+      }}>{successMessage}</p>}
+          {errorMessage && <p style={{
+        color: "red",
+        fontWeight: "bold"
+      }}>{errorMessage}</p>}
+          <div className='pagination-container'>
+            <AdminPagination currentPage={currentPage} rowsPerPage={rowsPerPage} totalRows={certificateList.length} onPageChange={handlePageChange} />
+          </div>
+          {message && <div className="success-message">{message}</div>}
+        </div>}
+    </>;
+}

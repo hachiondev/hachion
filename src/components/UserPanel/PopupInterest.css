@@ -1,0 +1,230 @@
+/* Ported from the CRA app's Dashboard.css (.popup-interest/.pathfinder-*
+   rules). The original styled the shared field via a repeated
+   id="pathfinder" (invalid HTML — duplicate IDs across multiple fields on
+   one form) with the actual .form-control-pathfinder class doing nothing
+   until a mobile-only compound selector. Rewritten as a plain class rule
+   so it works correctly regardless of each field's id, and each field can
+   have its own unique id. */
+.have-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.interest-modal-content {
+  background-color: white;
+  border-radius: 20px;
+  width: auto;
+}
+
+.popup-interest {
+  width: 600px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #b3b3b3;
+}
+
+.pathfinder-form {
+  margin-left: 5%;
+  margin-right: 5%;
+  padding: 10px 0;
+}
+
+.pathfinder-header {
+  border-radius: 2vh 2vh 0 0;
+  background: #00aeef;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 2vh;
+  align-items: center;
+}
+
+.pathfinder-header p {
+  margin-bottom: 0;
+}
+
+.form-control-pathfinder {
+  width: 550px;
+  max-width: 100%;
+  height: 50px;
+  outline: none;
+  border: 1px solid #b3b3b3;
+  padding: 5px;
+}
+
+.Pathfinder-label {
+  display: block;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  padding: 3px;
+  white-space: normal;
+  color: #000000;
+}
+
+/* Selected-interest box + react-select multi-select chips (Pathfinder1's
+   "areas of interest" field) — the plain Bootstrap .border/.rounded/.p-2
+   defaults had no background/hover/selected treatment of their own. */
+.pathfinder-select__control {
+  border-color: #b3b3b3 !important;
+  border-radius: 4px !important;
+  min-height: 50px !important;
+}
+.pathfinder-select__control--is-focused {
+  border-color: #00aeef !important;
+  box-shadow: 0 0 0 1px #00aeef !important;
+}
+.pathfinder-select__multi-value {
+  background-color: #e6f8fe !important;
+  border: 1px solid #00aeef !important;
+  border-radius: 20px !important;
+}
+.pathfinder-select__multi-value__label {
+  color: #006489 !important;
+}
+.pathfinder-select__multi-value__remove:hover {
+  background-color: #00aeef !important;
+  color: #fff !important;
+  border-radius: 0 20px 20px 0 !important;
+}
+/* React-select's own option text color was resolving to a near-white gray
+   here (visually confirmed ~#eee text on this menu's light backgrounds —
+   effectively invisible), so every option state needs an explicit,
+   readable color rather than relying on the library default. */
+.pathfinder-select__option {
+  color: #000000 !important;
+}
+.pathfinder-select__option--is-focused {
+  background-color: #e6f8fe !important;
+  color: #006489 !important;
+}
+.pathfinder-select__option--is-selected {
+  background-color: #00aeef !important;
+  color: #ffffff !important;
+}
+
+.pathfinder-interest-box {
+  max-height: 150px;
+  overflow-y: auto;
+  margin-top: 10px;
+  padding: 8px;
+  border: 1px solid #b3b3b3;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.pathfinder-interest-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background-color: #e6f8fe;
+  border: 1px solid #00aeef;
+  margin-bottom: 6px;
+  transition: background-color 0.2s;
+}
+.pathfinder-interest-chip:last-child {
+  margin-bottom: 0;
+}
+.pathfinder-interest-chip:hover {
+  background-color: #d3f1fc;
+}
+
+.pathfinder-button-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* .path-button (Next/Back/Submit) and .edit-path-button (Skip Now) —
+   used by all 4 PopupInterest steps. Buttons.css already defines both
+   (with .edit-path-button as a white/blue outline button), but none of
+   the PopupInterest*.jsx files import Buttons.css — only this file — so
+   on a render not preceded by a page that happened to load Buttons.css,
+   both classes were undefined and fell back to unstyled browser-default
+   buttons. Defined here instead, both blue/white per spec. */
+.path-button {
+  background-color: #00AEEF;
+  color: white;
+  padding: 8px 24px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.path-button:hover:not(:disabled) {
+  background-color: #0098d6;
+}
+
+.path-button:disabled {
+  background-color: #00AEEF;
+  color: white;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.edit-path-button {
+  background-color: #00AEEF;
+  color: white;
+  padding: 8px 24px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.edit-path-button:hover {
+  background-color: #0098d6;
+}
+
+/* Skip/Next and Back/Next button pairs (all 4 PopupInterest steps) use
+   Bootstrap's `form-group row` + `col-auto` classes to sit side by side.
+   Register.css's unrelated `.form-group { flex-direction: column }` rule
+   (a real generic form-field-stacking rule used elsewhere) collides with
+   it on this same element, and which one wins was coming down to CSS
+   bundle load order rather than anything predictable. The compound
+   selector here (two classes) always beats either single-class rule on
+   specificity, so it wins regardless of load order. */
+.form-group.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .popup-interest {
+    width: 350px;
+  }
+
+  .pathfinder-header {
+    font-size: 1.2rem;
+    padding: 1.5vh;
+  }
+
+  .form-control-pathfinder {
+    width: 300px;
+    height: 35px;
+    font-size: 12px;
+    padding: 5px;
+  }
+
+  .Pathfinder-label {
+    font-size: 12px;
+  }
+}

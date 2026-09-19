@@ -1,0 +1,888 @@
+:root {
+  --ink: #000000;
+  --muted: #6b7280;
+  --border: #e6e8ee;
+  --panel: #ffffff;
+  --soft: #f6f7fb;
+  --blue: #4f8ef7;
+  --accent: #1aa6df;
+  --shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.ccwrap {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  background: #f4f4f4;
+}
+
+.cchead {
+  text-align: center;
+  margin: 0 auto 18px;
+}
+
+.cchead h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.cchead p {
+  color: #000000;
+  font-size: 16px;
+  font-weight: 300;
+  margin: 20px auto 20px;
+}
+
+.ccdownload {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  background: #fff;
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-weight: 400;
+  color: #000000;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  font-size: 14px;
+}
+
+/* GRID */
+.ccgrid {
+  margin: 10px auto 0;
+  display: grid;
+  grid-template-columns: 1.7fr 0.8fr;
+  gap: 18px;
+}
+
+.ccgridbody {
+  background: white;
+  padding: 30px 20px;
+}
+
+/* Accordion */
+.ccacc+.ccacc {
+  margin-top: 12px;
+}
+
+.ccacchead {
+  width: 100%;
+  display: flex;
+  gap: 12px;
+  background: #dbe0e64d;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  justify-content: space-between;
+}
+
+.ccaccheadisopen {
+  border-color: #dfe8ff;
+  box-shadow: 0 12px 24px rgba(79, 142, 247, 0.12);
+}
+
+.cctitle {
+  width: 100%;
+  text-align: left;
+}
+
+.ccnum {
+width: 30px;
+    height: 25px;
+  border-radius: 8px;
+  background: #7ba7d7;
+  color: #000;
+  display: grid;
+  place-items: center;
+  font-weight: 500;
+  font-size: 17px;
+}
+
+.ccttlmain {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 8px;
+}
+
+.ccttlsub {
+  color: #000000;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.ccaccpanel {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.2s ease;
+  border-radius: 0 0 10px 10px;
+  background: white;
+  margin: 0;
+}
+
+.ccaccpanelopen {
+  height: auto;
+  padding: 6px 0 0 8px;
+  font-size: 16px;
+}
+
+.ccrow {
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  background: #f9fafc;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 8px 10px 8px 0;
+  cursor: pointer;
+}
+
+.ccrowtitle {
+  color: #000000;
+  font-weight: 500;
+}
+
+.ccrowmeta {
+  color: #000000;
+  font-weight: 400;
+}
+
+/* Right sidebar */
+.ccright {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cccard {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: var(--shadow);
+  overflow: auto;
+  height: 390px;
+}
+
+.cccard2 {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: var(--shadow);
+  overflow: auto;
+  height: 273px;
+}
+
+.cccardhead {
+  font-weight: 700;
+  color: #000000;
+  padding: 6px 8px;
+  font-size: 20px;
+}
+
+.ccstar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ccproj {
+  padding: 6px 0;
+  display: grid;
+  gap: 10px;
+}
+
+.ccprojrow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  /* background: linear-gradient(180deg, #f8fbff, #f2f6fd); */
+  background: linear-gradient(90.02deg, rgba(123, 167, 215, 0.25) 7.17%, rgba(255, 233, 233, 0.2) 98.89%);
+
+  border: 1px solid #e3ecfd;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.ccbadge {
+  width: 26px;
+  height: 26px;
+  border-radius: 50px;
+  background: #7ba7d7;
+  color: #000;
+  font-weight: 500;
+  display: grid;
+  place-items: center;
+  margin-top: 2px;
+}
+
+.ccprojtitle {
+  font-weight: 600;
+  color: #000000;
+}
+
+.ccprojsub {
+  color: #000000;
+  font-weight: 300;
+}
+
+.ccwhy {
+  display: grid;
+  gap: 10px;
+  color: #2d3748;
+  padding: 6px 8px 10px 22px;
+}
+
+.cccapsul {
+  padding: 6px 12px;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  margin-right: 8px;
+  cursor: pointer;
+  background: #f9f9f9;
+  color: #000;
+  transition: all 0.2s ease;
+}
+
+.cccapsul:hover {
+  background: #e6f0ff;
+  border-color: #0057ff;
+}
+
+.cccapsul.activeCap {
+  background: #0057ff !important;
+  color: #fff !important;
+  border-color: #0057ff !important;
+}
+
+
+
+/* Assignment and Video buttons */
+.ccassess {
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  margin: 10px 0;
+}
+
+.ccassess:hover {
+  background: #218838;
+}
+
+.ccvideocontainer {
+  padding: 10px 0;
+}
+
+.ccvideobtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.ccvideobtn:hover {
+  background: #c82333;
+}
+
+/* View More Button Styles */
+.viewMoreContainer {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.viewMoreBtn {
+  background: linear-gradient(90deg, var(--blue), var(--accent));
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(79, 142, 247, 0.3);
+}
+
+.viewMoreBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(79, 142, 247, 0.4);
+}
+
+.viewMoreArrow {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+/* Modal Styles (replacing inline styles) */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modalContent {
+  width: 560px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.28);
+}
+
+.modalImage {
+  width: 45%;
+  text-align: center;
+}
+
+.modalImg {
+  width: 100%;
+  border-radius: 8px;
+  transform: scaleX(-1);
+}
+
+.modalText {
+  width: 55%;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.modalText h3 {
+  margin: 0 0 10px 0;
+  font-size: 20px;
+  color: #333;
+}
+
+.modalText p {
+  margin: 0 0 15px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.modalButtons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.modalLoginBtn {
+  padding: 10px 22px;
+  background: #0057ff;
+  color: #fff;
+  border-radius: 6px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.modalLoginBtn:hover {
+  background: #0041cc;
+}
+
+.modalCancelBtn {
+  padding: 10px 22px;
+  background: #f1f1f1;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.modalCancelBtn:hover {
+  background: #e0e0e0;
+}
+
+/* Add these to your existing CSS */
+
+/* Text link styles (not button) */
+.readMoreLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #2563eb;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: -2px;
+  padding: 4px 0;
+  text-decoration: none;
+  background: none;
+  border: none;
+  transition: color 0.2s ease;
+}
+
+.readMoreLink:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.readMoreLink:focus {
+  /* outline: 2px solid #2563eb; */
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.readMoreIcon {
+  font-size: 12px;
+  margin-left: 2px;
+}
+
+/* For debugging - make it very visible */
+.readMoreLink.debug {
+  color: #ff0000 !important;
+  font-weight: bold !important;
+  text-decoration: underline !important;
+  font-size: 16px !important;
+  border: 2px solid #ff0000 !important;
+  padding: 8px !important;
+  background-color: #fff0f0 !important;
+}
+
+/* Enhanced collapsed state with fade effect */
+.ccprojsub.collapsed {
+  position: relative;
+  max-height: 3em;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* Ensure project content area is properly sized */
+.ccprojcontent {
+  flex: 1;
+  width: 100%;
+  position: relative;
+}
+
+/* Project description text */
+.ccprojsub {
+  line-height: 1.5;
+  transition: max-height 0.3s ease;
+  color: #000000;
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.ccprojsub ul{
+  padding: 0;
+}
+
+.ccprojsub.expanded {
+  max-height: 500px;
+  display: block;
+}
+
+/* Remove old button styles if they exist */
+.readMoreBtn {
+  display: none; /* Hide button styles if they exist */
+}
+
+.noDataMessage {
+  text-align: center;
+  padding: 40px 20px;
+  color: #000000;
+  font-size: 16px;
+}
+
+.noDataMessage p {
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .ccgrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .ccwrap {
+    padding-top: 35px;
+    padding-bottom: 35px;
+  }
+
+  .ccwrap .cchead h2 {
+    font-size: 36px; /* 35px → 36px */
+  }
+
+  .cchead p {
+    font-size: 24px; /* 22px → 24px */
+  }
+
+  .ccdownload {
+    font-size: 22px; /* 20px → 22px */
+  }
+
+  .ccgridbody {
+    padding: 16px;
+  }
+
+  .cctitle .ccttlmain {
+    font-size: 22px; /* 20px → 22px */
+  }
+
+  .ccnum {
+    height: 26px; /* 24px → 26px */
+    font-size: 16px; /* 14px → 16px */
+  }
+
+  .ccttlsub {
+    color: #000000;
+    font-weight: 600;
+    font-size: 14px; /* 10px → 14px */
+  }
+
+  .ccttlsub span {
+    font-size: 14px; /* 10px → 14px */
+    padding: 4px 8px; /* 2px 6px → 4px 8px */
+    margin-bottom: 6px; /* 4px → 6px */
+    display: inline-block;
+  }
+
+  .ccrowtitle {
+    font-size: 24px; /* 22px → 24px */
+    font-weight: 400;
+  }
+
+  .ccrowmeta {
+    font-size: 14px; /* 10px → 14px */
+  }
+
+  .ccprojsub {
+    font-size: 20px; /* 17px → 20px */
+  }
+
+  .cccardhead {
+    font-size: 28px; /* 26px → 28px */
+  }
+
+  .cccard {
+    height: 320px;
+  }
+  .cccard2 {
+    height: 285px;
+  }
+
+  .ccwhy {
+    font-size: 24px; /* 22px → 24px */
+    font-weight: 400;
+  }
+
+  .cccapsul {
+    font-size: 20px; /* 18px → 20px */
+  }
+
+  .ccprojtitle {
+    font-size: 22px; /* 20px → 22px */
+  }
+
+  .viewMoreBtn {
+    padding: 16px 36px; /* 14px 32px → 16px 36px */
+    font-size: 20px; /* 18px → 20px */
+  }
+
+  /* Modal responsive */
+  .modalContent {
+    width: 90%;
+    flex-direction: column;
+  }
+
+  .modalImage {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .modalText {
+    width: 100%;
+    padding-left: 0;
+  }
+
+    .readMoreLink {
+    font-size: 15px;
+  }
+  
+  .ccprojsub {
+    font-size: 15px;
+  }
+
+}
+
+@media (max-width: 480px) {
+  .ccwrap {
+    padding-top: 35px;
+    padding-bottom: 35px;
+  }
+
+  .ccwrap .cchead h2 {
+    font-size: 24px; /* 28px → 30px */
+  }
+
+  .cchead p {
+    font-size: 14px; /* 16px → 20px */
+    margin: 5px auto 10px;
+  }
+
+  .ccdownload {
+    font-size: 14px; /* 16px → 18px */
+  }
+
+  .ccgridbody {
+    padding: 16px;
+    width: 410px;
+  }
+
+  .cctitle .ccttlmain {
+    font-size: 14px; /* 18px → 20px */
+  }
+
+  .ccnum {
+            height: 20px;
+        width: 20px;
+        font-size: 10px;/* 14px → 16px */
+  }
+
+  .ccttlsub {
+    color: #000000;
+    font-weight: 600;
+    display: flex;
+    width: 280px;
+  }
+
+  .ccttlsub span {
+    font-size: 14px; /* 10px → 14px */
+    padding: 4px 8px; /* 2px 6px → 4px 8px */
+    margin-bottom: 6px; /* 4px → 6px */
+    display: inline-block;
+  }
+
+  .ccrowtitle {
+    font-size: 16px; /* 18px → 22px */
+    font-weight: 400;
+  }
+
+  .ccrowmeta {
+    font-size: 14px; /* 10px → 14px */
+  }
+
+  .cccardhead {
+    font-size: 20px; /* 24px → 26px */
+  }
+
+  .cccard {
+    height: 320px;
+  }
+
+  .ccwhy {
+    font-size: 14px; /* 18px → 22px */
+    font-weight: 400;
+    margin: 0;
+    padding: 6px px 0px 22px;
+  }
+
+  .cccapsul {
+    font-size: 11px; /* 17px → 20px */
+    margin: 0px 2px 0;
+  }
+
+  .ccprojtitle {
+    font-size: 14px; /* 20px → 24px */
+  }
+
+  .viewMoreBtn {
+    padding: 14px 28px; /* 12px 24px → 14px 28px */
+    font-size: 18px; /* 16px → 18px */
+  }
+
+  .cccard2 {
+    height: 220px;
+  }
+
+    .readMoreLink {
+    font-size: 14px;
+  }
+  
+  .ccprojsub {
+    font-size: 14px;
+  }
+  .home-start-button{
+    font-size: 14px !important;
+  }
+
+    .ccacchead{
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .ccacchead svg{
+    width: 25px;
+        height: 25px;
+  }
+
+  .ccrow{
+    padding: 8px 12px;
+    margin: 4px 10px 8px 0;
+    gap: 2px;
+  }
+
+  .ccbadge{
+    width: 20px;
+        height: 20px;
+        font-size: 10px;
+  }
+  
+}
+
+@media (max-width: 375px) {
+  .ccwrap {
+    padding-top: 35px;
+    padding-bottom: 35px;
+  }
+
+  .ccwrap .cchead h2 {
+    font-size: 24px;
+  }
+
+  .cchead p {
+    font-size: 16px; /* 16px → 18px */
+  }
+
+  .ccdownload {
+    font-size: 16px; /* 14px → 16px */
+  }
+
+  .ccgridbody {
+    padding: 16px;
+    width: 330px;
+  }
+
+  .cctitle .ccttlmain {
+    font-size: 13px; /* 14px → 16px */
+  }
+
+  .ccnum {
+    height: 15px;
+    width: 15px;
+    font-size: 10px; /* 14px → 16px */
+  }
+
+  .ccttlsub {
+    color: #000000;
+    font-weight: 600;
+    font-size: 14px; /* 10px → 14px */
+    width: 200px;
+  }
+
+  .ccttlsub span {
+    font-size: 14px; /* 10px → 14px */
+    padding: 4px 8px; /* 2px 6px → 4px 8px */
+    margin-bottom: 6px; /* 4px → 6px */
+    display: inline-block;
+  }
+
+  .ccrowtitle {
+    font-size: 14px; /* 16px → 18px */
+    font-weight: 400;
+  }
+
+  .ccrowmeta {
+    font-size: 14px; /* 10px → 14px */
+  }
+
+  .ccprojtitle {
+    font-size: 14px; /* 16px → 18px */
+  }
+
+  .ccprojsub {
+    font-size: 14px; /* 14px → 16px */
+  }
+
+  .cccard {
+    height: 310px;
+  }
+
+  .cccardhead {
+    font-size: 17px; /* 18px → 20px */
+  }
+
+  .ccwhy {
+    font-size: 14px; /* 16px → 18px */
+    font-weight: 400;
+  }
+
+  .cccapsul {
+    font-size: 10px; /* 14px → 16px */
+    margin: 2px; /* 2.5px → 4px */
+    padding: 2px 15px;
+  }
+
+  .viewMoreBtn {
+    padding: 12px 24px; /* 10px 20px → 12px 24px */
+    font-size: 16px; /* 14px → 16px */
+  }
+
+  .modalButtons {
+    flex-direction: column;
+  }
+
+  .cccard2 {
+    height: 235px;
+  }
+
+  .ccacchead{
+    gap: 5px;
+  }
+
+    .home-start-button{
+    font-size: 14px !important;
+  }
+
+      .ccacchead svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .ccrow {
+        padding: 4px 12px;
+        margin: 4px 10px 8px 0;
+        gap: 2px;
+    }
+}

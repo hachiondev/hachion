@@ -1,0 +1,500 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+import { FaPhone, FaChevronUp, FaChevronDown, FaCheckCircle, FaLock, FaQuestionCircle } from "react-icons/fa";
+import { Form, Button, Spinner } from "react-bootstrap";
+import CountryFlag from "@/components/common/CountryFlag";
+import { AiFillCaretDown } from "react-icons/ai";
+import Image from "next/image";
+import blinkerIcon from "@/assets/blinker_d.webp";
+import styles from "./QueryFormWidget.module.css";
+import { useTopBarApi } from "@/Api/hooks/HomePageApi/useTopBarApi";
+import { countries, getDefaultCountry } from "@/countryUtils";
+import MobileQueryForm from "./MobileQueryForm";
+
+const QueryFormWidget = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [formData, setFormData] = useState({ query: "", phone: "", email: "" });
+  const [errors, setErrors] = useState({});
+  const [emailValid, setEmailValid] = useState(null);
+  const [isCountryMenuOpenDesktop, setIsCountryMenuOpenDesktop] = useState(false);
+  const [isCountryMenuOpenMobile, setIsCountryMenuOpenMobile] = useState(false);
+  const mobileInputRef = useRef(null);
+  const countryDropdownRefDesktop = useRef(null);
+  const countryDropdownRefMobile = useRef(null);
+  const [selectedCountry, setSelectedCountry] = useState(getDefaultCountry());
+  const [hasUserClosed, setHasUserClosed] = useState(false);
+  const [isFirstVisit, setIsFirstVisit] = useState(false);
+  const { countryCode, whatsappNumber, whatsappLink, isLoading: countryLoading } = useTopBarApi();
+
+  useEffect(() => {
+    const userClosedWidget = sessionStorage.getItem("queryWidgetClosed");
+    const hasVisitedBefore = sessionStorage.getItem("queryWidgetVisited");
+    if (userClosedWidget === "true") {
+      setHasUserClosed(true);
+    }
+    if (!hasVisitedBefore) {
+      setIsFirstVisit(true);
+      sessionStorage.setItem("queryWidgetVisited", "true");
+    }
+  }, []);
+
+  useEffect(() => {
+    const showTimer = setTimeout(() => {
+      setIsVisible(true);
+    }, 60000);
+    return () => clearTimeout(showTimer);
+  }, []);
+
+  useEffect(() => {
+    if (isVisible && isFirstVisit && !hasUserClosed) {
+      setIsOpen(true);
+    }
+  }, [isVisible, isFirstVisit, hasUserClosed]);
+
+  useEffect(() => {
+    if (countryCode && !countryLoading) {
+      const matchedCountry = countries.find((c) => c.flag === countryCode);
+      if (matchedCountry) {
+        setSelectedCountry(matchedCountry);
+      }
+    }
+  }, [countryCode, countryLoading]);
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
+    const userEmail = (userData.email || "").trim();
+    if (!userEmail) {
+      return;
+    }
+    setFormData((prev) => ({ ...prev, email: userEmail }));
+    const fetchUserProfile = async () => {
+      try {
+        const response = await fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${userEmail}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch profile");
+        }
+        const data = await response.json();
+        if (data?.mobile) {
+          const clean = String(data.mobile).includes(" ") ? String(data.mobile).split(" ")[1].trim() : String(data.mobile).trim();
+          const digitsOnly = clean.replace(/\D/g, "");
+          setFormData((prev) => ({ ...prev, phone: digitsOnly }));
+        }
+        if (data?.country) {
+          const matched = countries.find((c) => c.name.toLowerCase() === data.country.toLowerCase());
+          if (matched) {
+            setSelectedCountry(matched);
+          }
+        }
+      } catch (err) {
+        console.error("Profile fetch failed:", err);
+      }
+    };
+    fetchUserProfile();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (countryDropdownRefDesktop.current && !countryDropdownRefDesktop.current.contains(event.target)) {
+        setIsCountryMenuOpenDesktop(false);
+      }
+      if (countryDropdownRefMobile.current && !countryDropdownRefMobile.current.contains(event.target)) {
+        setIsCountryMenuOpenMobile(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) {
+      const timer = setTimeout(() => {
+        setIsSuccess(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
+  const handleCountrySelect = (country) => {
+    setSelectedCountry(country);
+    setIsCountryMenuOpenDesktop(false);
+    setIsCountryMenuOpenMobile(false);
+    setTimeout(() => {
+      if (mobileInputRef.current) {
+        mobileInputRef.current.focus();
+      }
+    }, 100);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === "email") {
+      if (value.trim() === "") {
+        setEmailValid(null);
+      } else {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const isValidFormat = emailRegex.test(value);
+        if (!isValidFormat) {
+          setEmailValid(false);
+        } else {
+          const lowerEmail = value.toLowerCase();
+          const domainPart = lowerEmail.split("@")[1];
+          const gmailComTypos = [
+            "gamil.com", "gmial.com", "gmai.com", "gmaill.com", "gmil.com", "gnail.com", "gmal.com", "gmeil.com",
+            "gmaul.com", "gimail.com", "gmail.con", "gmail.cmo", "gmail.ocm", "gmail.cm", "gmail.comm", "gmail.ccom",
+            "gmail.co", "gmail.om", "gmail.vom", "gmail.xom", "gamil.con", "gmial.cmo", "gmai.cm", "gmaill.comm",
+            "gmil.ccom", "gnail.co", "gmal.om", "gmeil.vom", "gmaul.xom", "gimail.con",
+          ];
+          const hasGmailComTypo = gmailComTypos.includes(domainPart);
+          setEmailValid(!hasGmailComTypo);
+        }
+      }
+    }
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const handlePhoneChange = (e) => {
+    const value = e.target.value;
+    const numbersOnly = value.replace(/\D/g, "");
+    setFormData((prev) => ({ ...prev, phone: numbersOnly }));
+    if (errors.phone) {
+      setErrors((prev) => ({ ...prev, phone: "" }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.query.trim()) {
+      newErrors.query = "Query is required.";
+    } else if (formData.query.length > 300) {
+      newErrors.query = "Query cannot exceed 300 characters.";
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address.";
+    } else {
+      const lowerEmail = formData.email.toLowerCase();
+      const domainPart = lowerEmail.split("@")[1];
+      const gmailComTypos = [
+        "gamil.com", "gmial.com", "gmai.com", "gmaill.com", "gmil.com", "gnail.com", "gmal.com", "gmeil.com",
+        "gmaul.com", "gimail.com", "gmail.con", "gmail.cmo", "gmail.ocm", "gmail.cm", "gmail.comm", "gmail.ccom",
+        "gmail.co", "gmail.om", "gmail.vom", "gmail.xom", "gamil.con", "gmial.cmo", "gmai.cm", "gmaill.comm",
+        "gmil.ccom", "gnail.co", "gmal.om", "gmeil.vom", "gmaul.xom", "gimail.con",
+      ];
+      if (gmailComTypos.includes(domainPart)) {
+        newErrors.email = 'Did you mean "gmail.com"? Please check your email address.';
+      }
+    }
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Mobile number is required.";
+    } else if (!/^\d{10}$/.test(formData.phone)) {
+      newErrors.phone = "Enter a valid mobile number (10 digits).";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      const sanitizedMobile = formData.phone.trim().replace(/^(\+)?/, "");
+      const fullMobileNumber = `${selectedCountry.code} ${sanitizedMobile}`;
+      const submitData = {
+        email: formData.email,
+        phone: fullMobileNumber,
+        comments: formData.query,
+        location: selectedCountry?.name || "",
+        timeZone: selectedCountry.timezone,
+        country: selectedCountry.name,
+      };
+      const response = await fetch(`https://api.hachion.co/ask-query/send-to-webhook`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(submitData),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      await response.json();
+      setIsSuccess(true);
+      setFormData({ query: "", phone: "", email: "" });
+      setErrors({});
+      setEmailValid(null);
+      localStorage.removeItem("queryWidgetClosed");
+      setHasUserClosed(false);
+      setTimeout(() => {
+        setIsOpen(false);
+      }, 3000);
+    } catch (error) {
+      console.error("Submission error:", error);
+      setIsSuccess(true);
+      setFormData((prev) => ({ ...prev, query: "" }));
+      setErrors({});
+      setEmailValid(null);
+      localStorage.removeItem("queryWidgetClosed");
+      setHasUserClosed(false);
+      setTimeout(() => {
+        setIsOpen(false);
+      }, 3000);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setHasUserClosed(true);
+    sessionStorage.setItem("queryWidgetClosed", "true");
+  };
+
+  const handleToggle = () => {
+    if (isOpen) {
+      handleClose();
+    } else {
+      setIsOpen(true);
+    }
+  };
+
+  const mobileViewProps = {
+    isOpen,
+    isVisible,
+    isSubmitting,
+    isSuccess,
+    formData,
+    errors,
+    emailValid,
+    isCountryMenuOpenMobile,
+    selectedCountry,
+    countryCode,
+    countryLoading,
+    whatsappLink,
+    whatsappNumber,
+    mobileInputRef,
+    countryDropdownRefMobile,
+    handleClose,
+    handleToggle,
+    handleSubmit,
+    handleChange,
+    handlePhoneChange,
+    handleCountrySelect,
+    setIsCountryMenuOpenMobile,
+    setEmailValid,
+    setErrors,
+    setIsSuccess,
+    setFormData,
+    setHasUserClosed,
+  };
+
+  return (
+    <>
+      {/* Desktop Widget - Bottom Right */}
+      {isVisible && (
+        <div className={`${styles.widgetContainer} ${isOpen ? styles.open : ""}`}>
+          <div
+            className={`${styles.widgetHeader} d-flex align-items-center justify-content-between`}
+            role="button"
+            onClick={handleToggle}
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleToggle();
+              }
+            }}
+          >
+            <h3 className={`m-0 d-flex align-items-center ${styles.widgetTitle}`}>
+              Have a Question? We're Here to Help
+              <span className={styles.buttonIcon}>
+                <FaQuestionCircle size={16} className={styles.blinkIcon} />
+              </span>
+            </h3>
+            <span className={styles.chevronIcon}>{isOpen ? <FaChevronUp size={12} /> : <FaChevronDown size={12} />}</span>
+          </div>
+
+          {/* Widget Content */}
+          <div className={styles.widgetContent}>
+            <div className={styles.formContentWrapper}>
+              <div className={styles.widgetBody}>
+                {!isSuccess ? (
+                  <>
+                    {/* Contact Info - More Compact */}
+                    <div className={`d-flex align-items-center ${styles.contactInfo}`}>
+                      <div className={`d-flex align-items-center justify-content-center ${styles.contactIcon}`}>
+                        <FaPhone size={12} />
+                      </div>
+                      <div className={styles.contactDetails}>
+                        <a href={whatsappLink} className={`d-block ${styles.phoneLink}`} target="_blank" rel="noopener noreferrer">
+                          {whatsappNumber}
+                          <span className={styles.contactActions}> [Call Now] [WhatsApp]</span>
+                        </a>
+                        <span className={`d-block ${styles.availability}`}>Get expert guidance within 24 hours</span>
+                      </div>
+                    </div>
+
+                    {/* Form */}
+                    <Form onSubmit={handleSubmit} className={styles.queryForm}>
+                      {/* Query Textarea - Smaller */}
+                      <Form.Group className={styles.formGroup}>
+                        <Form.Control
+                          as="textarea"
+                          rows={2}
+                          placeholder="Tell us about your course interest, batch timing, or any doubts you have*"
+                          name="query"
+                          value={formData.query}
+                          onChange={handleChange}
+                          maxLength={300}
+                          required
+                          className={`${styles.textareaInput} ${errors.query ? "is-invalid" : ""}`}
+                          disabled={isSubmitting}
+                        />
+                        <div className={styles.charCount}>{formData.query.length}/300</div>
+                        {errors.query && <div className="invalid-feedback d-block">{errors.query}</div>}
+                      </Form.Group>
+
+                      {/* Phone Field */}
+                      <Form.Group className={styles.formGroup}>
+                        <Form.Label className={styles.formLabel}>
+                          Phone Number<span className="required-star">*</span>
+                          {countryLoading && <Spinner animation="border" size="sm" className="ms-1" />}
+                        </Form.Label>
+                        <div className={styles.phoneFieldContainer}>
+                          <div className={styles.countryDropdownWrapper} ref={countryDropdownRefDesktop}>
+                            <button
+                              type="button"
+                              onClick={() => setIsCountryMenuOpenDesktop(!isCountryMenuOpenDesktop)}
+                              className={styles.countrySelectButton}
+                              disabled={isSubmitting}
+                            >
+                              <CountryFlag code={selectedCountry.flag} className={styles.countryFlagIcon} height="14" width="20" />
+                              <span className={styles.countryCodeDisplay}>{selectedCountry.code}</span>
+                              <AiFillCaretDown className={styles.caretIcon} />
+                            </button>
+
+                            {isCountryMenuOpenDesktop && (
+                              <div className={styles.countryMenu}>
+                                {countries.map((country) => (
+                                  <div
+                                    key={`${country.name}-${country.code}`}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleCountrySelect(country);
+                                    }}
+                                    className={`${styles.countryMenuItem} ${country.flag === countryCode ? styles.detectedCountry : ""}`}
+                                  >
+                                    <CountryFlag code={country.flag} className={styles.countryFlagIcon} height="12" width="18" />
+                                    <span>
+                                      {country.name} ({country.code})
+                                      {country.flag === countryCode && <span className={styles.detectedBadge}>Detected</span>}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+
+                          <input
+                            type="tel"
+                            className={`${styles.phoneNumberInput} ${errors.phone ? "is-invalid" : ""}`}
+                            ref={mobileInputRef}
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handlePhoneChange}
+                            placeholder="Mobile number"
+                            autoComplete="tel-national"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            disabled={isSubmitting}
+                          />
+                        </div>
+                        {errors.phone && <div className="invalid-feedback d-block">{errors.phone}</div>}
+                      </Form.Group>
+
+                      {/* Email Field */}
+                      <Form.Group className={styles.formGroup}>
+                        <Form.Label className={styles.formLabel}>
+                          Email<span className="required-star">*</span>
+                        </Form.Label>
+                        <div className={styles.emailFieldContainer}>
+                          <Form.Control
+                            type="email"
+                            placeholder="Your email address"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                            className={`${styles.emailInput} ${errors.email ? "is-invalid" : ""}`}
+                            disabled={isSubmitting}
+                          />
+                          {emailValid !== null && (
+                            <span className={`${styles.emailLockIcon} ${emailValid ? styles.validEmail : styles.invalidEmail}`}>
+                              <FaLock />
+                            </span>
+                          )}
+                        </div>
+                        {errors.email && <div className="invalid-feedback d-block">{errors.email}</div>}
+                      </Form.Group>
+                      <div className={styles.privacyNote}>We'll only use this to contact you about your query</div>
+
+                      <Button type="submit" variant="primary" className={`w-100 ${styles.submitButton}`} disabled={isSubmitting}>
+                        {isSubmitting ? (
+                          <>
+                            <Spinner animation="border" size="sm" className="me-1" />
+                            Submitting...
+                          </>
+                        ) : (
+                          "Get Support"
+                        )}
+                      </Button>
+                      <div className={styles.ratingBadge}>⭐ 4.8/5 by 120K+ learners</div>
+                    </Form>
+                  </>
+                ) : (
+                  /* Success Message - More Compact */
+                  <div className={styles.successContainer}>
+                    <div className={styles.successIcon}>
+                      <FaCheckCircle size={40} />
+                    </div>
+                    <h4 className={styles.successTitle}>Thank You!</h4>
+                    <p className={styles.successMessage}>Your query has been submitted. Our team will contact you soon.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Modal - Using the new MobileQueryForm component */}
+      <MobileQueryForm {...mobileViewProps} />
+
+      {/* Mobile Sticky Footer */}
+      {isVisible && (
+        <div className={styles.mobileFooter}>
+          <a href={whatsappLink} className={`${styles.footerButton} ${styles.callButton}`} target="_blank" rel="noopener noreferrer">
+            <FaPhone className={styles.footerIcon} />
+            <span>Get Expert Guidance</span>
+          </a>
+          <button className={`${styles.footerButton} ${styles.queryButton}`} onClick={handleToggle}>
+            <Image width={16} height={16} src={blinkerIcon} alt="Query" className={styles.footerIconImg} />
+            <span>Ask Question</span>
+          </button>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default QueryFormWidget;

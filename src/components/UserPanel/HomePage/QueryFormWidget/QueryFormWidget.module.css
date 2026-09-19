@@ -1,0 +1,1031 @@
+/* QueryFormWidget.module.css */
+.widgetContainer {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  z-index: 9999;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  color: #000000; /* Black text for container */
+}
+
+.widgetHeader {
+  background: linear-gradient(135deg, #00AEEF 0%, #0088cc 100%);
+  color: white;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 4px 12px rgba(0, 174, 239, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  order: 2;
+}
+
+.widgetContainer.open .widgetHeader {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  order: 1;
+}
+
+.widgetHeader:hover {
+  box-shadow: 0 4px 15px rgba(0, 174, 239, 0.3);
+  background: linear-gradient(135deg, #00C6FF 0%, #0099E6 100%);
+}
+
+.widgetTitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  flex: 1;
+  color: white; /* Keep header text white */
+}
+
+.widgetContent {
+  background: white;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-left: 1px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  opacity: 0;
+  max-height: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  order: 1;
+  color: #000000; /* Black text */
+}
+
+.widgetContainer.open .widgetContent {
+  opacity: 1;
+  max-height: 480px;
+  order: 2;
+  overflow: visible;
+}
+
+.formContentWrapper {
+  background: white;
+  pointer-events: none;
+}
+
+.widgetContainer.open .formContentWrapper {
+  pointer-events: auto;
+}
+
+.buttonIcon {
+  display: flex;
+  align-items: center;
+}
+
+.blinkImage {
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.chevronIcon {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.chevronIcon svg {
+  fill: white;
+}
+
+.widgetBody {
+  padding: 16px 16px 20px;
+  max-height: 480px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  color: #000000; /* Black text */
+}
+
+/* Support Banner - Hidden */
+.supportBanner {
+  display: none;
+}
+
+/* Contact Info - Compact */
+.contactInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 3px solid #00AEEF;
+  margin-bottom: 16px;
+  color: #000000; /* Black text */
+}
+
+.contactIcon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #00AEEF;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.contactIcon svg {
+  width: 14px;
+  height: 14px;
+  fill: white;
+}
+
+.contactDetails {
+  display: flex;
+  flex-direction: column;
+  color: #000000; /* Black text */
+}
+
+.phoneLink {
+  color: #00AEEF !important; /* Keep this blue as specified */
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 12px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.phoneLink:hover {
+  color: #0088cc !important;
+  text-decoration: underline;
+}
+
+.phoneLink span {
+  font-size: 11px;
+  color: #000000 !important; /* Black text for the span inside phoneLink */
+  font-weight: 400;
+}
+
+.availability {
+  color: #000000; /* Black text */
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+/* Form */
+.queryForm {
+  margin-top: 0;
+  position: relative;
+  color: #000000; /* Black text */
+}
+
+.formGroup {
+  margin-bottom: 6px;
+}
+
+.formLabel {
+  display: block !important;
+  margin-bottom: 0px;
+  font-size: 12px !important;
+  color: #000000; /* Black text */
+}
+
+.required-star {
+  color: #00AEEF;
+  font-size: 14px;
+  margin-left: 2px;
+}
+
+/* Textarea */
+.textareaInput {
+  width: 100% !important;
+  padding: 8px 12px !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 6px;
+  font-size: 13px !important;
+  transition: all 0.2s ease;
+  box-sizing: border-box !important;
+  min-height: 80px !important;
+  resize: vertical;
+  font-family: inherit;
+  color: #000000; /* Black text */
+}
+
+.textareaInput:focus {
+  outline: none !important;
+  border-color: #00AEEF !important;
+  box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.1) !important;
+}
+
+.textareaInput::placeholder {
+  color: #666666; /* Keep placeholder gray */
+}
+
+/* Phone Field */
+.phoneFieldContainer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  position: relative;
+}
+
+.countryDropdownWrapper {
+  position: relative;
+  z-index: 1000;
+}
+
+.countrySelectButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 10px;
+  background: white;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 85px;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #000000; /* Black text */
+}
+
+.countrySelectButton:hover {
+  border-color: #00AEEF !important;
+  background-color: #f8f9fa;
+}
+
+.countryFlagIcon {
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.countryCodeDisplay {
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000; /* Black text */
+}
+
+.caretIcon {
+  color: #00AEEF;
+  font-size: 10px;
+}
+
+.countryMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  max-height: 180px;
+  overflow-y: auto;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e0e0e0;
+  z-index: 10001 !important;
+  min-width: 220px;
+  color: #000000; /* Black text */
+}
+
+.countryMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 12px;
+  color: #000000; /* Black text */
+}
+
+.countryMenuItem:hover {
+  background-color: #f0f9ff;
+}
+
+.detectedCountry {
+  background-color: rgba(0, 174, 239, 0.05);
+  border-left: 2px solid #00AEEF;
+}
+
+.detectedBadge {
+  color: #28a745;
+  font-size: 10px;
+  margin-left: 4px;
+}
+
+.charCount {
+  font-size: 11px;
+  color: #000000; /* Black text */
+  text-align: right;
+  margin-top: 4px;
+}
+
+.textareaInput:focus + .charCount {
+  color: #000000; /* Black text */
+}
+
+.phoneNumberInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 6px;
+  font-size: 13px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  color: #000000; /* Black text */
+}
+
+.phoneNumberInput:focus {
+  outline: none !important;
+  border-color: #00AEEF !important;
+  box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.1) !important;
+}
+
+.phoneNumberInput::placeholder {
+  color: #666666; /* Keep placeholder gray */
+  font-size: 12px;
+}
+
+/* Email Field Container */
+.emailFieldContainer {
+  position: relative;
+  width: 100%;
+}
+
+/* Email Input */
+.emailInput {
+  width: 100%;
+  padding: 8px 35px 8px 12px !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 6px;
+  font-size: 13px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  color: #000000; /* Black text */
+}
+
+.emailInput:focus {
+  outline: none !important;
+  border-color: #00AEEF !important;
+  box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.1) !important;
+}
+
+.emailInput::placeholder {
+  color: #666666; /* Keep placeholder gray */
+  font-size: 12px;
+}
+
+/* Email Lock Icon */
+.emailLockIcon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.validEmail {
+  color: #28a745;
+  animation: lockPulse 0.3s ease;
+}
+
+.invalidEmail {
+  color: #dc3545;
+  animation: lockShake 0.3s ease;
+}
+
+/* Validation */
+.is-invalid {
+  border-color: #dc3545 !important;
+}
+
+.is-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
+}
+
+.invalid-feedback {
+  font-size: 11px;
+  color: #dc3545;
+  margin-top: 4px;
+  display: block;
+  font-weight: 400;
+}
+
+/* Submit Button */
+.submitButton {
+  width: 100% !important;
+  background: linear-gradient(135deg, #00AEEF 0%, #0088cc 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 10px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+  transition: all 0.2s ease !important;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-top: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 174, 239, 0.2) !important;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, #00C6FF 0%, #0099E6 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 174, 239, 0.3) !important;
+}
+
+.submitButton:active:not(:disabled) {
+  transform: translateY(0) !important;
+}
+
+.submitButton:disabled {
+  opacity: 0.65 !important;
+  cursor: not-allowed !important;
+}
+
+.submitButton .spinner-border {
+  width: 14px;
+  height: 14px;
+  border-width: 2px;
+}
+
+/* Rating Badge */
+.ratingBadge {
+  font-size: 11px;
+  color: #000000; /* Black text */
+  text-align: center;
+  margin-top: 8px;
+  display: block;
+}
+
+/* Success Message */
+.successContainer {
+  padding: 30px 20px;
+  text-align: center;
+  height: 40vh;
+  animation: fadeInScale 0.3s ease-out;
+  color: #000000; /* Black text */
+}
+
+.successIcon {
+  color: #28a745;
+  margin-bottom: 12px;
+}
+
+.successIcon svg {
+  filter: drop-shadow(0 2px 5px rgba(40, 167, 69, 0.2));
+}
+
+.successTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #000000; /* Black text */
+  margin-bottom: 8px;
+}
+
+.successMessage {
+  font-size: 13px;
+  color: #000000; /* Black text */
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+
+/* Scrollbar */
+.widgetBody::-webkit-scrollbar,
+.countryMenu::-webkit-scrollbar {
+  width: 4px;
+}
+
+.widgetBody::-webkit-scrollbar-track,
+.countryMenu::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.widgetBody::-webkit-scrollbar-thumb,
+.countryMenu::-webkit-scrollbar-thumb {
+  background: #00AEEF;
+  border-radius: 2px;
+}
+
+.widgetBody::-webkit-scrollbar-thumb:hover,
+.countryMenu::-webkit-scrollbar-thumb:hover {
+  background: #0088cc;
+}
+
+/* Mobile Sticky Footer */
+.mobileFooter {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 9998;
+  padding: 8px 12px;
+  gap: 8px;
+  color: #000000; /* Black text */
+}
+
+/* Mobile Modal */
+.mobileModal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  animation: fadeIn 0.2s ease;
+}
+
+.mobileModalContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  max-height: 85vh;
+  overflow-y: auto;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  animation: slideUpModal 0.2s ease;
+  color: #000000; /* Black text */
+}
+
+.mobileCloseButton {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.mobileCloseButton:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.blinkIcon {
+  animation: blink 1.5s infinite;
+  width: 10px;
+  color: white;
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5));
+}
+
+/* If you want different colors for different states */
+.blinkIcon.primary {
+  color: #00AEEF;
+}
+
+.blinkIcon.white {
+  color: white;
+}
+
+.blinkIcon.warning {
+  color: #ffc107;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUpModal {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.footerButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.callButton {
+  background: white;
+  color: #000000 !important; /* Black text */
+  border: 1px solid #e0e0e0;
+}
+
+.callButton:hover {
+  background: #f8f9fa;
+  transform: translateY(-1px);
+}
+
+.queryButton {
+  background: linear-gradient(135deg, #00AEEF 0%, #0088cc 100%);
+  color: white !important;
+  box-shadow: 0 2px 6px rgba(0, 174, 239, 0.2);
+}
+
+.queryButton:hover {
+  background: linear-gradient(135deg, #00C6FF 0%, #0099E6 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 174, 239, 0.3);
+}
+
+.footerIcon {
+  font-size: 14px;
+}
+
+.footerIconImg {
+  filter: brightness(0) invert(1);
+  width: 14px;
+  height: 14px;
+}
+
+.emailInput {
+  width: 100%;
+  padding: 8px 12px;
+  padding-right: 35px;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 6px;
+  font-size: 13px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  color: #000000; /* Black text */
+}
+
+/* Email Lock Icon */
+.emailLockIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.emailLockIcon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.validEmail svg {
+  color: #28a745;
+}
+
+.invalidEmail svg {
+  color: #dc3545;
+}
+
+/* Privacy Note */
+.privacyNote {
+  font-size: 11px;
+  color: #000000; /* Black text */
+  margin: -4px 0 8px 0;
+  text-align: left;
+  font-style: italic;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .widgetContainer {
+    display: none;
+  }
+
+  .mobileFooter {
+    display: flex;
+  }
+
+  .mobileModal {
+    display: block;
+  }
+
+  .widgetBody {
+    padding: 16px;
+    max-height: none;
+  }
+
+  .countryMenu {
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mobileFooter {
+    padding: 6px 10px;
+  }
+
+  .footerButton {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .widgetBody {
+    padding: 14px;
+  }
+
+  .contactInfo {
+    padding: 8px 10px;
+  }
+
+  .phoneLink {
+    font-size: 12px;
+  }
+
+  .phoneLink span {
+    font-size: 10px;
+    color: #000000 !important; /* Black text */
+  }
+
+  .availability {
+    font-size: 10px;
+    color: #000000; /* Black text */
+  }
+
+  .countrySelectButton {
+    min-width: 75px;
+    padding: 7px 8px;
+    font-size: 11px;
+    color: #000000; /* Black text */
+  }
+
+  .countryCodeDisplay {
+    font-size: 11px;
+    color: #000000; /* Black text */
+  }
+
+  .countryMenu {
+    min-width: 180px;
+  }
+
+  .countryMenuItem {
+    font-size: 11px;
+    padding: 7px 10px;
+    color: #000000; /* Black text */
+  }
+
+  .detectedBadge {
+    font-size: 9px;
+    color: #28a745; /* Keep detected badge green */
+  }
+
+  .textareaInput {
+    font-size: 12px !important;
+    min-height: 80px !important;
+    padding: 7px 10px !important;
+    color: #000000; /* Black text */
+  }
+
+  .phoneNumberInput,
+  .emailInput {
+    font-size: 12px;
+    padding: 7px 10px;
+    color: #000000; /* Black text */
+  }
+
+  .emailInput {
+    padding: 7px 30px 7px 10px !important;
+  }
+
+  .phoneNumberInput::placeholder,
+  .emailInput::placeholder {
+    font-size: 11px;
+    color: #666666; /* Keep placeholder gray */
+  }
+
+  .formLabel {
+    font-size: 11px;
+    margin-bottom: 3px;
+    color: #000000; /* Black text */
+  }
+
+  .emailLockIcon {
+    font-size: 12px;
+    right: 10px;
+  }
+
+  .submitButton {
+    font-size: 12px !important;
+    padding: 9px !important;
+  }
+
+  .ratingBadge {
+    font-size: 10px;
+    margin-top: 6px;
+    color: #000000; /* Black text */
+  }
+
+  .successContainer {
+    padding: 20px 15px;
+  }
+
+  .successIcon svg {
+    width: 35px;
+    height: 35px;
+  }
+
+  .successTitle {
+    font-size: 18px;
+    color: #000000; /* Black text */
+  }
+
+  .successMessage {
+    font-size: 12px;
+    color: #000000; /* Black text */
+  }
+
+  .emailInput {
+    font-size: 12px;
+    padding: 7px 10px;
+    padding-right: 32px;
+    color: #000000; /* Black text */
+  }
+
+  .emailLockIcon svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .privacyNote {
+    font-size: 10px;
+    margin: -2px 0 6px 0;
+    color: #000000; /* Black text */
+  }
+
+  .blinkIcon{
+    width: 14px;
+  }
+}
+
+@media (max-width: 375px) {
+  .mobileFooter {
+    padding: 5px 8px;
+  }
+
+  .footerButton {
+    padding: 7px 8px;
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  .widgetBody {
+    padding: 12px;
+  }
+
+  .contactInfo {
+    padding: 7px 8px;
+  }
+
+  .contactIcon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .contactIcon svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .phoneLink {
+    font-size: 11px;
+  }
+
+  .phoneLink span {
+    font-size: 9px;
+    color: #000000 !important; /* Black text */
+  }
+
+  .countrySelectButton {
+    min-width: 70px;
+    padding: 6px 6px;
+    font-size: 10px;
+    color: #000000; /* Black text */
+  }
+
+  .countryFlagIcon {
+    width: 16px;
+    height: 12px;
+  }
+
+  .textareaInput {
+    font-size: 11px !important;
+    padding: 6px 8px !important;
+    min-height: 89px !important;
+    color: #000000; /* Black text */
+  }
+
+  .phoneNumberInput,
+  .emailInput {
+    font-size: 11px;
+    padding: 6px 8px;
+    color: #000000; /* Black text */
+  }
+
+  .emailInput {
+    padding: 6px 28px 6px 8px !important;
+  }
+
+  .emailLockIcon {
+    font-size: 11px;
+    right: 8px;
+  }
+
+  .formLabel {
+    font-size: 10px;
+    color: #000000; /* Black text */
+  }
+
+  .submitButton {
+    font-size: 11px !important;
+    padding: 8px !important;
+  }
+
+  .ratingBadge {
+    font-size: 9px;
+    margin-top: 4px;
+    color: #000000; /* Black text */
+  }
+
+  .successIcon svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .successTitle {
+    font-size: 16px;
+    color: #000000; /* Black text */
+  }
+
+  .successMessage {
+    font-size: 11px;
+    color: #000000; /* Black text */
+  }
+
+  .emailInput {
+    font-size: 11px;
+    padding: 6px 8px;
+    padding-right: 30px;
+    color: #000000; /* Black text */
+  }
+
+  .privacyNote {
+    font-size: 9px;
+    margin: -1px 0 4px 0;
+    color: #000000; /* Black text */
+  }
+}

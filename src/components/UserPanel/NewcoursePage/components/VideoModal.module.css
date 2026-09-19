@@ -1,0 +1,53 @@
+.vmOverlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:1100;
+  padding:20px;
+}
+
+.vmModal{
+  width:100%;
+  max-width:980px;
+  border-radius:12px;
+  background: #000;
+  position:relative;
+  box-shadow:0 10px 40px rgba(0,0,0,0.4);
+  overflow:hidden;
+}
+
+.vmClose{
+  position:absolute;
+  top:12px;
+  right:12px;
+  z-index:20;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: #fff;
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  font-size:22px;
+  cursor:pointer;
+}
+
+.vmContent{
+  width:100%;
+  height:100%;
+}
+
+.vmVideo{
+  display:block;
+  width:100%;
+  height:80vh;
+  max-height:80vh;
+  background:#000;
+}
+
+@media (max-width:768px){
+  .vmVideo{ height:50vh; }
+  .vmModal{ border-radius:8px; }
+}

@@ -2,6 +2,8 @@ package com.hachionUserDashboard.dto;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 public class UnsubscribeResponse {
 
 	private Long unsubscribeId;
@@ -21,6 +23,31 @@ public class UnsubscribeResponse {
 	private String comments;
 
 	private String chooseDuration;
+
+	// Outcome of POST /unsubscribe (UNSUBSCRIBED or ALREADY_UNSUBSCRIBED) plus a
+	// user-facing message. Field-level NON_NULL keeps the admin GET /unsubscribe
+	// list payload unchanged - these are only populated on the POST response.
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private String status;
+
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private String message;
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
 	public Long getUnsubscribeId() {
 		return unsubscribeId;

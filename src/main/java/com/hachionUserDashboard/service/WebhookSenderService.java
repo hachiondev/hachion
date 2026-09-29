@@ -646,6 +646,11 @@ public class WebhookSenderService {
 
 		HttpEntity<Map<String, String>> entity = new HttpEntity<>(payload, headers);
 
-		restTemplate.postForEntity(CHAT_WEBHOOK_URL, entity, String.class);
+		try {
+			restTemplate.postForEntity(CHAT_WEBHOOK_URL, entity, String.class);
+			System.out.println("✅ Enrollment popup webhook sent successfully.");
+		} catch (Exception e) {
+			System.err.println("❌ Failed to send enrollment popup webhook: " + e.getMessage());
+		}
 	}
 }

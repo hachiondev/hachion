@@ -1,5 +1,6 @@
 package com.hachionUserDashboard.controller;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -71,9 +72,17 @@ public class GoogleSignupController {
 		// Return the DB user data instead of just OIDC user info (keeps it consistent)
 		RegisterStudent existing = dbUser.get();
 
-		return ResponseEntity.ok(Map.of("email", existing.getEmail(), "name", existing.getUserName(), "picture",
-				existing.getProfileImage() // if stored
-		));
+		// Map.of() throws NullPointerException on any null value, and most
+		// students have no profile_image (the Google login path never stores
+		// one) - so right after a successful Google login this endpoint threw,
+		// GlobalExceptionHandler turned it into a 400, and the frontend (which
+		// treats any non-OK /api/me as "not logged in") showed the user as
+		// logged out. A null-tolerant map keeps the same JSON shape.
+		Map<String, Object> body = new LinkedHashMap<>();
+		body.put("email", existing.getEmail());
+		body.put("name", existing.getUserName() != null ? existing.getUserName() : user.getFullName());
+		body.put("picture", existing.getProfileImage() != null ? existing.getProfileImage() : user.getPicture());
+		return ResponseEntity.ok(body);
 	}
 
 	@PostMapping("/intent")

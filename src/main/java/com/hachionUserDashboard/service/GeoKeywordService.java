@@ -176,8 +176,16 @@ public class GeoKeywordService {
 
 	public GeoKeywordResponse getGeoKeywordsByCourseName(String courseName) {
 
-		GeoKeywordGroup group = groupRepo.findByCourseNameIgnoreCase(courseName)
-				.orElseThrow(() -> new RuntimeException("No GeoKeywords found for given Course"));
+		// Geo keywords are optional per course (a course freshly created from the
+		// admin panel has none), so "none configured" is an empty result, not
+		// an error - throwing here surfaced as a 400 on every such course page.
+		GeoKeywordGroup group = groupRepo.findByCourseNameIgnoreCase(courseName).orElse(null);
+		if (group == null) {
+			GeoKeywordResponse empty = new GeoKeywordResponse();
+			empty.setCourseName(courseName);
+			empty.setGeoKeywords(List.of());
+			return empty;
+		}
 
 		List<GeoKeyword> keywords = keywordRepo.findByGroup(group);
 

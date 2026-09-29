@@ -4,10 +4,12 @@ package com.hachionUserDashboard.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.hachionUserDashboard.dto.UnsubscribeRequest;
@@ -20,6 +22,13 @@ import Service.UnsubscribeService;
 
 @Service
 public class UnsubscribeServiceImpl implements UnsubscribeService {
+
+	public static final String STATUS_UNSUBSCRIBED = "UNSUBSCRIBED";
+	public static final String STATUS_ALREADY_UNSUBSCRIBED = "ALREADY_UNSUBSCRIBED";
+
+	// Deliberately simple shape check (something@something.tld, no spaces);
+	// the address is only ever used to look up an existing registration.
+	private static final Pattern EMAIL_PATTERN = Pattern.compile("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
 
 	@Autowired
 	public UnsubscribeRepository unsubscribeRepository;
@@ -58,8 +67,17 @@ public class UnsubscribeServiceImpl implements UnsubscribeService {
 //		return unsubscribeResponse;
 //	}
 
+	// One transaction so the registerstudent status flip and the unsubscribe
+	// log row commit (or roll back) together.
 	@Override
+	@Transactional
 	public UnsubscribeResponse createUnsubscribeDetails(UnsubscribeRequest unsubscribeRequest) {
+
+		String requestedEmail = unsubscribeRequest == null ? null : unsubscribeRequest.getEmail();
+		if (requestedEmail == null || !EMAIL_PATTERN.matcher(requestedEmail.trim()).matches()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Please enter a valid email address.");
+		}
+		unsubscribeRequest.setEmail(requestedEmail.trim());
 
 		List<Object[]> studentDataList = registerStudentRepository
 				.findUserNameAndStatusByEmail(unsubscribeRequest.getEmail());
@@ -80,7 +98,14 @@ public class UnsubscribeServiceImpl implements UnsubscribeService {
 	
 		if ("DISABLED".equalsIgnoreCase(status)) {
 
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Your email subscription is already disabled.");
+			// Idempotent: nothing to change and nothing new to log, so report the
+			// current state as a success rather than an error.
+			UnsubscribeResponse alreadyUnsubscribed = new UnsubscribeResponse();
+			alreadyUnsubscribed.setEmail(unsubscribeRequest.getEmail());
+			alreadyUnsubscribed.setUserName(dbUserName);
+			alreadyUnsubscribed.setStatus(STATUS_ALREADY_UNSUBSCRIBED);
+			alreadyUnsubscribed.setMessage("This email is already unsubscribed.");
+			return alreadyUnsubscribed;
 		}
 		UnsubscribeEntity unsubscribeEntity = new UnsubscribeEntity();
 		String userName = unsubscribeRequest.getUserName();
@@ -106,6 +131,9 @@ public class UnsubscribeServiceImpl implements UnsubscribeService {
 //		webhookSenderService.sendUnsubscribeNotification(unsubscribeRequest);
 
 		UnsubscribeResponse unsubscribeResponse = createUnsubscribeEntityResponse(unsubscribeEntityResponse);
+
+		unsubscribeResponse.setStatus(STATUS_UNSUBSCRIBED);
+		unsubscribeResponse.setMessage("You have been unsubscribed successfully.");
 
 		return unsubscribeResponse;
 	}

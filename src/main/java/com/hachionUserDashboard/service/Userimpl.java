@@ -433,7 +433,7 @@ public class Userimpl implements UserService {
 	@Override
 	public Object setpassword(String email, String newPassword) {
 		RegisterStudent user = userRepository.findByEmail(email);
-		user.setPassword(newPassword);
+		user.setPassword(passwordEncoder.encode(newPassword));
 		userRepository.save(user);
 		return "New Password set successfully login with new password";
 	}

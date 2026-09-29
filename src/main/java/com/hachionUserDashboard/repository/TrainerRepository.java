@@ -57,7 +57,7 @@ public interface TrainerRepository extends JpaRepository<Trainer, Integer> {
 	TrainerSumCount trainerSumCountForCourse(@Param("trainerName") String trainerName,
 			@Param("courseName") String courseName);
 
-	@Query(value = "SELECT DISTINCT trainer_name FROM trainer WHERE course_name = :courseName", nativeQuery = true)
+	@Query(value = "SELECT DISTINCT trainer_name FROM trainer WHERE LOWER(TRIM(course_name)) = LOWER(TRIM(:courseName))", nativeQuery = true)
 	List<String> gettingTrainerNamesByCourse(@Param("courseName") String courseName);
 
 	@Query(value = "SELECT * FROM trainer WHERE LOWER(course_name) = LOWER(:courseName) ORDER BY trainer_id ASC", nativeQuery = true)

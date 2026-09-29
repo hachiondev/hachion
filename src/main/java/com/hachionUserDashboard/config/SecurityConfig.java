@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
@@ -111,7 +112,20 @@ public class SecurityConfig {
 	@Bean
 	public AuthenticationFailureHandler googleAuthFailureHandler() {
 		return (request, response, exception) -> {
-			System.out.println("== OAuth2 Failure == " + exception.getMessage());
+			// Diagnostic fields only. Never log the query string (carries the
+			// authorization code/state), tokens or the client secret: getRequestURI()
+			// is path-only, and the OAuth error code is a fixed identifier such as
+			// invalid_client / invalid_token_response / authorization_request_not_found.
+			String errorCode = exception instanceof OAuth2AuthenticationException oae && oae.getError() != null
+					? oae.getError().getErrorCode()
+					: "n/a";
+			Throwable root = exception;
+			while (root.getCause() != null && root.getCause() != root) {
+				root = root.getCause();
+			}
+			System.out.println("== OAuth2 Failure == " + exception.getMessage() + " | uri=" + request.getRequestURI()
+					+ " | type=" + exception.getClass().getSimpleName() + " | errorCode=" + errorCode
+					+ " | rootCause=" + root.getClass().getName());
 			String target = feBase + feLoginPath + "?error=GOOGLE_AUTH_FAILED";
 			response.sendRedirect(target);
 		};
@@ -120,20 +134,19 @@ public class SecurityConfig {
 	@Bean
 	public AuthenticationSuccessHandler authenticationSuccessHandler() {
 	  return (request, response, authentication) -> {
-	    // Log raw header
+	    // Cookie names only: values include the JSESSIONID of the session
+	    // that was just authenticated, so logging them (as this used to, raw
+	    // header included) put live session tokens in the server log.
 	    System.out.println("== OAuth2 Success ==");
-	    System.out.println("Raw Cookie header: " + request.getHeader("Cookie"));
-
-	    
-	    // Log individual cookies
 	    var cookies = request.getCookies();
 	    if (cookies == null || cookies.length == 0) {
 	      System.out.println("No cookies received on callback.");
 	    } else {
-	      System.out.println("Cookies received:");
+	      var names = new StringBuilder();
 	      for (var c : cookies) {
-	        System.out.println("  " + c.getName() + "=" + c.getValue() + " ; path=" + c.getPath());
+	        names.append(names.length() == 0 ? "" : ", ").append(c.getName());
 	      }
+	      System.out.println("Cookies received (names only): " + names);
 	    }
 
 	    

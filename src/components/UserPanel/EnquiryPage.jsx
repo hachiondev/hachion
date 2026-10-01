@@ -14,6 +14,7 @@ import twitter from "@/assets/twitter.webp";
 import youtube from "@/assets/youtube.webp";
 import linkedin from "@/assets/linkedin.webp";
 import instagram from "@/assets/instagram.webp";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const EMPTY_ARRAY = [];
 
@@ -55,7 +56,7 @@ const EnquiryPage = () => {
   useEffect(() => {
     const fetchValidForms = async () => {
       try {
-        const res = await fetch(`https://api.hachion.co/employees/google-form-urls`);
+        const res = await fetch(`${API_BASE_URL}/employees/google-form-urls`);
         const data = await res.json();
         const formNames = data.map((url) => url.split("enquiryform/")[1]);
         setValidForms(formNames);
@@ -167,7 +168,7 @@ const EnquiryPage = () => {
         seoTeam: capitalize(refName || "default"),
         whatsappConsent: formData.whatsappConsent,
       };
-      const res = await fetch(`https://api.hachion.co/enquiryformcreate`, {
+      const res = await fetch(`${API_BASE_URL}/enquiryformcreate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

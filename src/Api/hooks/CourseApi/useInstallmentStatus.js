@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const checkInstallmentStatus = async (studentId, courseName, batchId) => {
-  const response = await axios.get(`https://api.hachion.co/razorpay/checkInstallment`, {
+  const response = await axios.get(`${API_BASE_URL}/razorpay/checkInstallment`, {
     params: { studentId, courseName, batchId },
   });
   return response.data;

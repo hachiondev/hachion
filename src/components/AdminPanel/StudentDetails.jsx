@@ -36,6 +36,7 @@ import axios from 'axios';
 import AdminPagination from './AdminPagination';
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { MdKeyboardArrowRight } from 'react-icons/md';
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -123,7 +124,7 @@ const StudentDetails = () => {
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/registerstudent`);
+        const response = await axios.get(`${API_BASE_URL}/registerstudent`);
         setRegisterStudent(response.data); // Use the curriculum state
       } catch (error) {
         console.error("Error fetching student list:", error.message);

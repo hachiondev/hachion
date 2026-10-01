@@ -17,6 +17,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import AdminPagination from './AdminPagination';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import './Admin.css';
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({
   theme
@@ -148,7 +149,7 @@ export default function CandidateCertificate() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected certificates
-        const deletePromises = selectedIds.map(id => axios.delete(`https://api.hachion.co/certificate/delete/${id}`));
+        const deletePromises = selectedIds.map(id => axios.delete(`${API_BASE_URL}/certificate/delete/${id}`));
         await Promise.all(deletePromises);
 
         // Update state
@@ -195,7 +196,7 @@ export default function CandidateCertificate() {
       certificateNumber: certificateData.certificate_number
     };
     try {
-      const response = await fetch(`https://api.hachion.co/certificate/generate`, {
+      const response = await fetch(`${API_BASE_URL}/certificate/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -212,7 +213,7 @@ export default function CandidateCertificate() {
           // browser's built-in PDF-viewer button instead of the "Save
           // Certificate" button below, the browser has nothing to name the
           // file with and falls back to a random name.
-          setPreviewUrl(`https://api.hachion.co/certificate/downloadForView/${certificateId}`);
+          setPreviewUrl(`${API_BASE_URL}/certificate/downloadForView/${certificateId}`);
           setCertificateData(prevData => ({
             ...prevData,
             certificate_id: certificateId
@@ -275,7 +276,7 @@ export default function CandidateCertificate() {
   }, []);
   const handleSave = useCallback(async () => {
     try {
-      const response = await axios.put(`https://api.hachion.co/certificate/${editedData.id}`, editedData);
+      const response = await axios.put(`${API_BASE_URL}/certificate/${editedData.id}`, editedData);
       setCertificate(prev => prev.map(curr => curr.id === editedData.id ? response.data : curr));
       setMessage("Certificate updated successfully!");
       setTimeout(() => setMessage(""), 5000);
@@ -316,7 +317,7 @@ export default function CandidateCertificate() {
   useEffect(() => {
     const fetchCourseNames = async () => {
       try {
-        const response = await fetch(`https://api.hachion.co/enroll/coursenames`);
+        const response = await fetch(`${API_BASE_URL}/enroll/coursenames`);
         const data = await response.json();
         const formattedData = data.map((courseName, index) => ({
           id: index,
@@ -333,7 +334,7 @@ export default function CandidateCertificate() {
     if (certificateData.course_name) {
       const fetchStudents = async () => {
         try {
-          const response = await fetch(`https://api.hachion.co/api/v1/user/students/${certificateData.course_name}`);
+          const response = await fetch(`${API_BASE_URL}/api/v1/user/students/${certificateData.course_name}`);
           const data = await response.json();
           // The backend can return the same student more than once for a
           // course (e.g. duplicate enrollment rows) - deduped here by
@@ -354,7 +355,7 @@ export default function CandidateCertificate() {
     const fetchByStudentId = async () => {
       if (certificateData.student_id) {
         try {
-          const res = await fetch(`https://api.hachion.co/api/v1/user/lookup?studentId=${certificateData.student_id}`);
+          const res = await fetch(`${API_BASE_URL}/api/v1/user/lookup?studentId=${certificateData.student_id}`);
           const data = await res.json();
           setCertificateData(prev => ({
             ...prev,
@@ -372,7 +373,7 @@ export default function CandidateCertificate() {
     const fetchByUserName = async () => {
       if (certificateData.student_name) {
         try {
-          const res = await fetch(`https://api.hachion.co/api/v1/user/lookup?userName=${certificateData.student_name}`);
+          const res = await fetch(`${API_BASE_URL}/api/v1/user/lookup?userName=${certificateData.student_name}`);
           const data = await res.json();
           setCertificateData(prev => ({
             ...prev,
@@ -390,7 +391,7 @@ export default function CandidateCertificate() {
     const fetchCompletionDate = async () => {
       if (certificateData.course_name && certificateData.student_name) {
         try {
-          const res = await fetch(`https://api.hachion.co/api/v1/user/completiondate`, {
+          const res = await fetch(`${API_BASE_URL}/api/v1/user/completiondate`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -438,7 +439,7 @@ export default function CandidateCertificate() {
       return;
     }
     try {
-      const response = await fetch(`https://api.hachion.co/certificate/send-email/${certificateId}`, {
+      const response = await fetch(`${API_BASE_URL}/certificate/send-email/${certificateId}`, {
         method: 'POST'
       });
       if (response.ok) {
@@ -457,7 +458,7 @@ export default function CandidateCertificate() {
   useEffect(() => {
     const fetchCertificateData = async () => {
       try {
-        const response = await fetch(`https://api.hachion.co/certificate/all`);
+        const response = await fetch(`${API_BASE_URL}/certificate/all`);
         const data = await response.json();
         setCertificateList(data);
         setFilteredCertificate(data);
@@ -483,7 +484,7 @@ export default function CandidateCertificate() {
     (async () => {
       const entries = await Promise.all(idsToCheck.map(async c => {
         try {
-          const res = await fetch(`https://api.hachion.co/certificate/downloadForView/${c.certificateId}`, { method: 'HEAD' });
+          const res = await fetch(`${API_BASE_URL}/certificate/downloadForView/${c.certificateId}`, { method: 'HEAD' });
           return [c.certificateId, res.ok];
         } catch {
           return [c.certificateId, null]; // network/CORS failure - unknown, not "missing"
@@ -502,7 +503,7 @@ export default function CandidateCertificate() {
   // UPDATED: handleDelete function to remove from selectedIds
   const handleDelete = async id => {
     try {
-      await axios.delete(`https://api.hachion.co/certificate/delete/${id}`);
+      await axios.delete(`${API_BASE_URL}/certificate/delete/${id}`);
       const updatedList = certificateList.filter(item => item.certificateId !== id);
       setCertificateList(updatedList);
       setFilteredCertificate(updatedList);
@@ -552,7 +553,7 @@ export default function CandidateCertificate() {
         // no status filter) so a certificate can be generated for a
         // student in a course that's real but still in draft/inactive
         // status, same reasoning as RegularVideo.jsx's course dropdown.
-        const response = await axios.get(`https://api.hachion.co/courses/allforadmin`);
+        const response = await axios.get(`${API_BASE_URL}/courses/allforadmin`);
         setCourseCategory(response.data);
       } catch (error) {
         // Error handling
@@ -569,7 +570,7 @@ export default function CandidateCertificate() {
       return;
     }
     try {
-      const response = await fetch(`https://api.hachion.co/certificate/download/${certificateId}`);
+      const response = await fetch(`${API_BASE_URL}/certificate/download/${certificateId}`);
       if (!response.ok) {
         throw new Error("Failed to download certificate.");
       }
@@ -845,7 +846,7 @@ export default function CandidateCertificate() {
                     cursor: 'help'
                   }} title="Certificate record exists but the PDF file is missing on the server. Re-select this student and course under Generate Certificate and click Generate again to regenerate it.">
                               File Missing
-                            </span> : <a href={`https://api.hachion.co/certificate/downloadForView/${curr.certificateId}`} target="_blank" rel="noopener noreferrer">
+                            </span> : <a href={`${API_BASE_URL}/certificate/downloadForView/${curr.certificateId}`} target="_blank" rel="noopener noreferrer">
                             View PDF
                           </a> : 'Not Available'}
                       </StyledTableCell>

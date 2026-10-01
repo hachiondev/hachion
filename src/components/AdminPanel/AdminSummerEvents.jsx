@@ -30,6 +30,7 @@ import Switch from '@mui/material/Switch';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
 import dayjs from 'dayjs';
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -101,7 +102,7 @@ export default function AdminSummerEvents() {
   };
   const fetchCourseNamesByCategory = async categoryName => {
     if (!categoryName) return [];
-    const url = `https://api.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(categoryName)}`;
+    const url = `${API_BASE_URL}/courses/coursenames-by-category?categoryName=${encodeURIComponent(categoryName)}`;
     try {
       const {
         data
@@ -183,7 +184,7 @@ export default function AdminSummerEvents() {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/summerevents`);
+        const response = await axios.get(`${API_BASE_URL}/summerevents`);
         setSummerCourse(response.data);
         setFilteredCourse(response.data || []);
       } catch (error) {
@@ -209,7 +210,7 @@ export default function AdminSummerEvents() {
   };
   const handleSave = async () => {
     try {
-      const response = await axios.put(`https://api.hachion.co/summerevents/update/${editedData.summerevents_id}`, editedData);
+      const response = await axios.put(`${API_BASE_URL}/summerevents/update/${editedData.summerevents_id}`, editedData);
       setSummerCourse(prev => prev.map(curr => curr.summerevents_id === editedData.summerevents_id ? response.data : curr));
       setMessage("Summer Course updated successfully!");
       setTimeout(() => setMessage(""), 5000);
@@ -221,10 +222,10 @@ export default function AdminSummerEvents() {
   };
   const handleDelete = async summerevents_id => {
     try {
-      const response = await axios.delete(`https://api.hachion.co/summerevents/delete/${summerevents_id}`);
+      const response = await axios.delete(`${API_BASE_URL}/summerevents/delete/${summerevents_id}`);
       console.log("Summer Courses deleted successfully:", response.data);
       // Refresh the course list
-      const updatedResponse = await axios.get(`https://api.hachion.co/summerevents`);
+      const updatedResponse = await axios.get(`${API_BASE_URL}/summerevents`);
       setSummerCourse(updatedResponse.data);
       setFilteredCourse(updatedResponse.data || []);
 
@@ -284,7 +285,7 @@ export default function AdminSummerEvents() {
       date: currentDate
     };
     try {
-      const response = await axios.post(`https://api.hachion.co/summerevents/add`, dataToSubmit);
+      const response = await axios.post(`${API_BASE_URL}/summerevents/add`, dataToSubmit);
       if (response.status === 201) {
         alert(response.data);
         setCourseData([...courseData, dataToSubmit]);
@@ -300,7 +301,7 @@ export default function AdminSummerEvents() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/course-categories/all`);
+        const response = await axios.get(`${API_BASE_URL}/course-categories/all`);
         setCategory(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -364,10 +365,10 @@ export default function AdminSummerEvents() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected courses
-        await Promise.all(selectedIds.map(id => axios.delete(`https://api.hachion.co/summerevents/delete/${id}`)));
+        await Promise.all(selectedIds.map(id => axios.delete(`${API_BASE_URL}/summerevents/delete/${id}`)));
 
         // Update state
-        const updatedResponse = await axios.get(`https://api.hachion.co/summerevents`);
+        const updatedResponse = await axios.get(`${API_BASE_URL}/summerevents`);
         setSummerCourse(updatedResponse.data);
         setFilteredCourse(updatedResponse.data || []);
         setSelectedIds([]);

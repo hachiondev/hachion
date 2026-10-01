@@ -31,6 +31,7 @@ import Switch from '@mui/material/Switch';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
 import dayjs from 'dayjs';
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -97,7 +98,7 @@ export default function TrendingCourseTable() {
   };
   const fetchCourseNamesByCategory = async categoryName => {
     if (!categoryName) return [];
-    const url = `https://api.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(categoryName)}`;
+    const url = `${API_BASE_URL}/courses/coursenames-by-category?categoryName=${encodeURIComponent(categoryName)}`;
     try {
       const {
         data
@@ -175,7 +176,7 @@ export default function TrendingCourseTable() {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/trendingcourse`);
+        const response = await axios.get(`${API_BASE_URL}/trendingcourse`);
         setTrendingCourse(response.data);
         setFilteredCourse(response.data || []);
       } catch (error) {
@@ -201,7 +202,7 @@ export default function TrendingCourseTable() {
   };
   const handleSave = async () => {
     try {
-      const response = await axios.put(`https://api.hachion.co/trendingcourse/update/${editedData.trendingcourse_id}`, editedData);
+      const response = await axios.put(`${API_BASE_URL}/trendingcourse/update/${editedData.trendingcourse_id}`, editedData);
       setTrendingCourse(prev => prev.map(curr => curr.trendingcourse_id === editedData.trendingcourse_id ? response.data : curr));
       setFilteredCourse(prev => prev.map(curr => curr.trendingcourse_id === editedData.trendingcourse_id ? response.data : curr));
       setSuccessMessage("✅ Trending course updated successfully.");
@@ -217,7 +218,7 @@ export default function TrendingCourseTable() {
   };
   const handleDelete = async trendingcourse_id => {
     try {
-      await axios.delete(`https://api.hachion.co/trendingcourse/delete/${trendingcourse_id}`);
+      await axios.delete(`${API_BASE_URL}/trendingcourse/delete/${trendingcourse_id}`);
 
       // Remove from selectedIds if present
       setSelectedIds(prev => prev.filter(id => id !== trendingcourse_id));
@@ -274,7 +275,7 @@ export default function TrendingCourseTable() {
       date: currentDate
     };
     try {
-      const response = await axios.post(`https://api.hachion.co/trendingcourse/add`, dataToSubmit);
+      const response = await axios.post(`${API_BASE_URL}/trendingcourse/add`, dataToSubmit);
       if (response.status === 201) {
         const newTrendingCourse = {
           trendingcourse_id: Date.now(),
@@ -304,7 +305,7 @@ export default function TrendingCourseTable() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/course-categories/all`);
+        const response = await axios.get(`${API_BASE_URL}/course-categories/all`);
         setCategory(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -368,7 +369,7 @@ export default function TrendingCourseTable() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected courses
-        await Promise.all(selectedIds.map(id => axios.delete(`https://api.hachion.co/trendingcourse/delete/${id}`)));
+        await Promise.all(selectedIds.map(id => axios.delete(`${API_BASE_URL}/trendingcourse/delete/${id}`)));
 
         // Update state
         const updatedCourses = trendingCourse.filter(item => !selectedIds.includes(item.trendingcourse_id));

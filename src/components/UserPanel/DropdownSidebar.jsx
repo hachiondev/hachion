@@ -4,18 +4,18 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { MdArrowForwardIos } from "react-icons/md";
 import "./CoursePage/Course.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 const DropdownSidebar = ({
   onSelectCategory
 }) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [menuItems, setMenuItems] = useState([]);
-  const API_URL = `https://api.hachion.co/course-categories/all`;
+  const API_URL = `${API_BASE_URL}/course-categories/all`;
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(API_URL, {
-          const response = await axios.get(API_URL);        });
+        const response = await axios.get(API_URL);
         setMenuItems(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error);

@@ -35,6 +35,7 @@ import Switch from '@mui/material/Switch';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
 import dayjs from 'dayjs';
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -131,7 +132,7 @@ export default function Support() {
   useEffect(() => {
     const fetchSupport = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/support`);
+        const response = await axios.get(`${API_BASE_URL}/support`);
         setSupport(response.data);
         setFilteredSupport(response.data);
       } catch (error) {
@@ -187,7 +188,7 @@ export default function Support() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected supports
-        const deletePromises = selectedIds.map(support_id => axios.delete(`https://api.hachion.co/support/delete/${support_id}`));
+        const deletePromises = selectedIds.map(support_id => axios.delete(`${API_BASE_URL}/support/delete/${support_id}`));
         await Promise.all(deletePromises);
 
         // Update state
@@ -235,7 +236,7 @@ export default function Support() {
   // UPDATED: handleDelete function to handle both single and bulk delete
   const handleDelete = async ids => {
     try {
-      const deletePromises = ids.map(support_id => axios.delete(`https://api.hachion.co/support/delete/${support_id}`));
+      const deletePromises = ids.map(support_id => axios.delete(`${API_BASE_URL}/support/delete/${support_id}`));
       await Promise.all(deletePromises);
 
       // Update state
@@ -280,7 +281,7 @@ export default function Support() {
   };
   const handleSave = async () => {
     try {
-      const response = await axios.put(`https://api.hachion.co/support/update/${editedData.support_id}`, editedData);
+      const response = await axios.put(`${API_BASE_URL}/support/update/${editedData.support_id}`, editedData);
       setSupport(prev => prev.map(curr => curr.support_id === editedData.support_id ? response.data : curr));
       setFilteredSupport(prev => prev.map(curr => curr.support_id === editedData.support_id ? response.data : curr));
 
@@ -323,7 +324,7 @@ export default function Support() {
       date: currentDate
     };
     try {
-      const response = await axios.post(`https://api.hachion.co/support/add`, dataToSubmit);
+      const response = await axios.post(`${API_BASE_URL}/support/add`, dataToSubmit);
       if (response.status === 200) {
         setSuccessMessage("Support added successfully");
         setErrorMessage("");

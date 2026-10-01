@@ -23,6 +23,7 @@ import { GoPlus } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
+import { API_BASE_URL } from "@/lib/apiBase";
 const sortImages = arr => arr.slice().sort((a, b) => (a.categoryName || '').localeCompare(b.categoryName || '', 'en', {
   sensitivity: 'base'
 }) || (a.courseName || '').localeCompare(b.courseName || '', 'en', {
@@ -218,7 +219,7 @@ export default function AdminUploadImage() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected images
-        const deletePromises = selectedIds.map(fileName => axios.delete(`https://api.hachion.co/upload_images/delete/${fileName}`));
+        const deletePromises = selectedIds.map(fileName => axios.delete(`${API_BASE_URL}/upload_images/delete/${fileName}`));
         await Promise.all(deletePromises);
 
         // Update state
@@ -247,7 +248,7 @@ export default function AdminUploadImage() {
   const handleDelete = async fileName => {
     if (!window.confirm("Are you sure you want to delete this image?")) return;
     try {
-      await axios.delete(`https://api.hachion.co/upload_images/delete/${fileName}`);
+      await axios.delete(`${API_BASE_URL}/upload_images/delete/${fileName}`);
 
       // Update both images and filteredImages
       const updatedImages = images.filter(item => item.fileName !== fileName);
@@ -269,7 +270,7 @@ export default function AdminUploadImage() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/course-categories/all`);
+        const response = await axios.get(`${API_BASE_URL}/course-categories/all`);
         setCourse(response.data || []);
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -281,7 +282,7 @@ export default function AdminUploadImage() {
     if (imageData.category_name) {
       const fetchCourses = async () => {
         try {
-          const response = await axios.get(`https://api.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(imageData.category_name)}`);
+          const response = await axios.get(`${API_BASE_URL}/courses/coursenames-by-category?categoryName=${encodeURIComponent(imageData.category_name)}`);
           setCourseNames(response.data || []);
         } catch (error) {
           console.error("Error fetching course names:", error.message);
@@ -293,7 +294,7 @@ export default function AdminUploadImage() {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const resp = await axios.get(`https://api.hachion.co/upload_images/all`);
+        const resp = await axios.get(`${API_BASE_URL}/upload_images/all`);
         if (resp && resp.data) setImages(resp.data);
       } catch (err) {
         console.error("Error fetching images:", err);
@@ -450,7 +451,7 @@ export default function AdminUploadImage() {
                       fd.append('files', r.tool_image);
                     }
                   });
-                  const response = await axios.post(`https://api.hachion.co/upload_images/upload`, fd, {
+                  const response = await axios.post(`${API_BASE_URL}/upload_images/upload`, fd, {
                     headers: {
                       'Content-Type': 'multipart/form-data'
                     }
@@ -458,7 +459,7 @@ export default function AdminUploadImage() {
                   setSuccessMessage(response.data || "Images uploaded successfully");
 
                   // Refresh images list
-                  const resp = await axios.get(`https://api.hachion.co/upload_images/all`);
+                  const resp = await axios.get(`${API_BASE_URL}/upload_images/all`);
                   setImages(resp.data || []);
                 } catch (err) {
                   setErrorMessage(err.response?.data || "Error uploading images");

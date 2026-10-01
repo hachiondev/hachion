@@ -34,6 +34,7 @@ import AdminPagination from './AdminPagination';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -160,7 +161,7 @@ export default function WorkshopSchedule() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/course-categories/all`);
+        const response = await axios.get(`${API_BASE_URL}/course-categories/all`);
         setCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -171,7 +172,7 @@ export default function WorkshopSchedule() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/courses/all`);
+        const response = await axios.get(`${API_BASE_URL}/courses/all`);
         setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -255,7 +256,7 @@ export default function WorkshopSchedule() {
       formDataToSend.append("bannerImage", formData.bannerImage); // only add if exists
     }
     try {
-      const response = await axios.post(`https://api.hachion.co/workshopschedule/add`, formDataToSend, {
+      const response = await axios.post(`${API_BASE_URL}/workshopschedule/add`, formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
@@ -280,7 +281,7 @@ export default function WorkshopSchedule() {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/workshopschedule`);
+        const response = await axios.get(`${API_BASE_URL}/workshopschedule`);
         setCourses(response.data);
         setFilteredCourses(response.data);
         //   setFilteredTrainers(response.data); // Set initial filtered categories to all data
@@ -343,7 +344,7 @@ export default function WorkshopSchedule() {
         console.error("Error: ID is undefined or null");
         return;
       }
-      const response = await axios.delete(`https://api.hachion.co/workshopschedule/delete/${id}`);
+      const response = await axios.delete(`${API_BASE_URL}/workshopschedule/delete/${id}`);
       console.log("Workshop deleted successfully:", response.data);
 
       // Update state
@@ -374,7 +375,7 @@ export default function WorkshopSchedule() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected workshops
-        await Promise.all(selectedIds.map(id => axios.delete(`https://api.hachion.co/workshopschedule/delete/${id}`)));
+        await Promise.all(selectedIds.map(id => axios.delete(`${API_BASE_URL}/workshopschedule/delete/${id}`)));
 
         // Update state
         setCourses(prev => prev.filter(item => !selectedIds.includes(item.id)));
@@ -417,7 +418,7 @@ export default function WorkshopSchedule() {
       if (editedRow.bannerImage) {
         formDataToSend.append("bannerImage", editedRow.bannerImage);
       }
-      const response = await axios.put(`https://api.hachion.co/workshopschedule/update/${selectedRow.id}`, formDataToSend, {
+      const response = await axios.put(`${API_BASE_URL}/workshopschedule/update/${selectedRow.id}`, formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
@@ -784,7 +785,7 @@ export default function WorkshopSchedule() {
                       </StyledTableCell>
                       <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
                       <StyledTableCell align="center">
-                        {course.banner_image ? <img src={`https://api.hachion.co/${course.banner_image}`} alt={`Banner`} style={{
+                        {course.banner_image ? <img src={`${API_BASE_URL}/${course.banner_image}`} alt={`Banner`} style={{
                   width: "100px",
                   height: "50px"
                 }} /> : 'No Banner'}

@@ -12,6 +12,7 @@ import { useCoursesSummary } from "@/Api/hooks/HomePageApi/TrainingApi/useCourse
 import { getRuleDiscountPct, getActiveRuleFor } from "../../TrendingSection/utils/discountUtils";
 import Image from "next/image";
 import "../../../Corporate.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 const fmt = n => Math.round(Number(n) || 0).toLocaleString();
 const DiscountCards = () => {
   const router = useRouter();
@@ -128,7 +129,7 @@ const DiscountCards = () => {
         const displayMrp = isIN ? baseMrp : baseMrp * fxFromUSD;
         const rulePct = getRuleDiscountPct(course.courseName, country, discountRules, regionNames);
         const effectiveNow = displayMrp * (1 - rulePct / 100);
-        return <DiscountCourseCard key={course.id || idx} heading={course.courseName} courseCategory={course.courseCategory} month={course.numberOfClasses} image={`https://api.hachion.co/${course.courseImage}`} course_id={course.id} discountPercentage={rulePct} amount={`${currency} ${fmt(effectiveNow)}`} totalAmount={`${fmt(displayMrp)}`} trainer_name={course.trainerName} level={course.level} onClick={() => handleCardClick(course)} className="course-card" timeLeftLabel={countdowns[course.id ?? course.courseName] || ""} />;
+        return <DiscountCourseCard key={course.id || idx} heading={course.courseName} courseCategory={course.courseCategory} month={course.numberOfClasses} image={`${API_BASE_URL}/${course.courseImage}`} course_id={course.id} discountPercentage={rulePct} amount={`${currency} ${fmt(effectiveNow)}`} totalAmount={`${fmt(displayMrp)}`} trainer_name={course.trainerName} level={course.level} onClick={() => handleCardClick(course)} className="course-card" timeLeftLabel={countdowns[course.id ?? course.courseName] || ""} />;
       })}
       </div>
 

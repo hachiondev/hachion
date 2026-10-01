@@ -8,6 +8,7 @@ import CardsPagination from "./Common/CardsPagination";
 import "./Corporate.css";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const countryToCurrencyMap = {
   IN: "INR",
@@ -48,7 +49,7 @@ const LeadingExpert = () => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        const [corporateRes, allCoursesRes, trainersRes] = await Promise.all([axios.get(`https://api.hachion.co/corporatecourse`), axios.get(`https://api.hachion.co/courses/all`), axios.get(`https://api.hachion.co/trainers`)]);
+        const [corporateRes, allCoursesRes, trainersRes] = await Promise.all([axios.get(`${API_BASE_URL}/corporatecourse`), axios.get(`${API_BASE_URL}/courses/all`), axios.get(`${API_BASE_URL}/trainers`)]);
         const activeCorporateCourses = (corporateRes.data || []).filter(item => item.status === true);
         const allCourses = allCoursesRes.data || [];
         const allTrainers = trainersRes.data || [];
@@ -61,7 +62,7 @@ const LeadingExpert = () => {
             return {
               ...(matchedCourse || {}),
               courseName: corpCourse.course_name,
-              image: matchedCourse ? `https://api.hachion.co/${matchedCourse.courseImage}` : "",
+              image: matchedCourse ? `${API_BASE_URL}/${matchedCourse.courseImage}` : "",
               id: matchedCourse ? matchedCourse.id : Math.random(),
               amount: matchedCourse ? matchedCourse.amount : 0,
               numberOfClasses: matchedCourse ? matchedCourse.numberOfClasses : "",
@@ -88,7 +89,7 @@ const LeadingExpert = () => {
       try {
         const {
           data
-        } = await axios.get(`https://api.hachion.co/discounts-courses`);
+        } = await axios.get(`${API_BASE_URL}/discounts-courses`);
         setDiscountRules(Array.isArray(data) ? data : []);
       } catch (e) {
         console.error("Failed to load discount rules", e);

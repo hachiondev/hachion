@@ -10,6 +10,8 @@ import axios from 'axios';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { getRedirectUrl, clearRedirectUrl } from '@/redirectAfterLogin';
+import { API_BASE_URL } from "@/lib/apiBase";
+import { sharedCookieAttrs } from "@/lib/authCookies";
 
 const Login = () => {
   const [passwordType, setPasswordType] = useState('password');
@@ -68,7 +70,7 @@ const Login = () => {
       const confirmedEmail = sessionStorage.getItem("statusConfirmedEmail");
       if (confirmedEmail !== email) {
         try {
-          const statusResponse = await axios.get(`https://api.hachion.co/get-status?email=${email}`);
+          const statusResponse = await axios.get(`${API_BASE_URL}/get-status?email=${email}`);
 
           if (typeof statusResponse.data === "string" && statusResponse.data.toLowerCase().includes("disabled")) {
             proceedLogin = window.confirm("Your account is disabled. Are you sure you want to activate this student?");
@@ -96,7 +98,7 @@ const Login = () => {
         setIsLoading(false);
         return;
       }
-      const response = await axios.post(`https://api.hachion.co/api/v1/user/login`, loginData);
+      const response = await axios.post(`${API_BASE_URL}/api/v1/user/login`, loginData);
       if (response.data.status === true) {
         sessionStorage.removeItem("statusConfirmedEmail");
         const loginuserData = {
@@ -162,15 +164,16 @@ const Login = () => {
     // to look harmless for this login button, but it meant the "flow"
     // cookie mechanism was silently broken - and on RegisterHere.jsx's
     // Google button, which needs flow=signup, the same host-only cookie
-    // made every Google sign-up get treated as a login attempt.
-    document.cookie = "flow=login; Domain=hachion.co; Max-Age=300; Path=/; SameSite=None; Secure";
+    // made every Google sign-up get treated as a login attempt. (localhost:
+    // see sharedCookieAttrs.)
+    document.cookie = "flow=login; Max-Age=300; " + sharedCookieAttrs("Domain=hachion.co; Path=/; SameSite=None; Secure");
     localStorage.setItem("pendingOAuth", "login");
     try {
       // redirect: "manual" stops the browser from following this endpoint's
       // logout-success redirect (which points at a non-app URL blocked by
       // CSP) — the response itself is unused here, only the server-side
       // session clear matters.
-      await fetch(`https://api.hachion.co/logout`, {
+      await fetch(`${API_BASE_URL}/logout`, {
         method: "POST",
         credentials: "include",
         redirect: "manual"
@@ -178,11 +181,10 @@ const Login = () => {
     } catch {
       // best-effort session clear before starting a fresh OAuth flow
     }
-    let url = `https://api.hachion.co/oauth2/authorization/google`;
-    if (window.location.hostname === "localhost") {
-      url += `?redirect_uri=${encodeURIComponent("http://localhost:3000/login/oauth2/code/google")}`;
-    }
-    window.location.href = url;
+    // No redirect_uri here: Spring builds it from the active profile's
+    // spring.security.oauth2.client.registration.google.redirect-uri and
+    // ignores any query parameter on this endpoint.
+    window.location.href = `${API_BASE_URL}/oauth2/authorization/google`;
   };
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -192,7 +194,11 @@ const Login = () => {
     if (err === 'EMAIL_NOT_REGISTERED') msg = 'Email not found. Please sign up first.';
     if (err === 'INVALID_EMAIL') msg = 'Invalid email from Google account.';
     if (err === 'GOOGLE_AUTH_FAILED') msg = 'Google sign-in was cancelled or failed. Please try again.';
-    setErrorMessage(msg);
+    // Top-of-form banner (same one the auth_error cookie uses): errorMessage
+    // is only rendered under the email/password fields when its text
+    // mentions "email"/"password", so GOOGLE_AUTH_FAILED's message was set
+    // but never shown - a failed Google login looked like nothing happened.
+    setErrorMessage1(msg);
     // Same cleanup the auth_error cookie path already does below — the
     // error is captured into state, so ?error=... has no further reason to
     // sit in the address bar (it doesn't otherwise self-clear on this page).
@@ -213,7 +219,7 @@ const Login = () => {
     try {
       const raw = localStorage.getItem('loginuserData');
       if (raw) return;
-      fetch(`https://api.hachion.co/api/me`, {
+      fetch(`${API_BASE_URL}/api/me`, {
         credentials: 'include'
       }).then(r => {
         if (!r.ok) return null;

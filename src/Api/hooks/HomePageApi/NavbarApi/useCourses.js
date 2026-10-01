@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-export function useCourses() {
+import { API_BASE_URL } from "@/lib/apiBase";
+export function useCourses({ enabled = true } = {}) {
   return useQuery({
     queryKey: ["courses"],
+    enabled,
     queryFn: async () => {
-      const res = await axios.get(`https://api.hachion.co/courses/names-and-categories`);
+      const res = await axios.get(`${API_BASE_URL}/courses/names-and-categories`);
       return res.data;
     },
     staleTime: 5 * 60 * 1000,

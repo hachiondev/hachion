@@ -3,6 +3,7 @@ import { buildBreadcrumbSchema } from "@/lib/breadcrumbSchema";
 import JsonLd from "@/components/common/JsonLd";
 import WorkshopDetails from "@/components/UserPanel/WorkshopDetails";
 import { slugifyWorkshopTitle } from "@/lib/workshopSlug";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Server-side fetch (plain fetch, not the client-side useWorkshops() hook the
 // WorkshopDetails.jsx component uses on its own) — same /workshopschedule
@@ -12,7 +13,7 @@ import { slugifyWorkshopTitle } from "@/lib/workshopSlug";
 // find-by-slug approach.
 async function fetchWorkshopForMetadata(slug) {
   try {
-    const res = await fetch(`https://api.hachion.co/workshopschedule`, { next: { revalidate: 300 } });
+    const res = await fetch(`${API_BASE_URL}/workshopschedule`, { next: { revalidate: 300 } });
     if (!res.ok) return null;
     const data = await res.json();
     if (!Array.isArray(data)) return null;

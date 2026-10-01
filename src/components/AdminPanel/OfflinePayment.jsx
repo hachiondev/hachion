@@ -29,6 +29,7 @@ import AdminPagination from './AdminPagination';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { countries as staticCountries } from '../../countryUtils';
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({
   theme
@@ -183,7 +184,7 @@ export default function OfflinePayment() {
     const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'payment' : 'payments'}?`;
     if (window.confirm(confirmMessage)) {
       try {
-        const deletePromises = selectedIds.map(id => axios.delete(`https://api.hachion.co/payments/${id}`));
+        const deletePromises = selectedIds.map(id => axios.delete(`${API_BASE_URL}/payments/${id}`));
         await Promise.all(deletePromises);
         const updatedPayments = offlinePayment.filter(item => !selectedIds.includes(item.id));
         setOfflinePayment(updatedPayments);
@@ -271,7 +272,7 @@ export default function OfflinePayment() {
       return;
     }
     try {
-      const response = await axios.delete(`https://api.hachion.co/payments/${id}`);
+      const response = await axios.delete(`${API_BASE_URL}/payments/${id}`);
       if (response.status === 200) {
         setSuccessMessage("✅ Payment deleted successfully.");
         setErrorMessage("");
@@ -354,7 +355,7 @@ export default function OfflinePayment() {
     }));
     const stopReminderValue = checked ? "start" : "stop";
     try {
-      const response = await axios.put(`https://api.hachion.co/payments/stop-reminder`, {
+      const response = await axios.put(`${API_BASE_URL}/payments/stop-reminder`, {
         stopReminder: stopReminderValue,
         courseName: paymentData.course_name,
         studentId: paymentData.student_ID,
@@ -385,7 +386,7 @@ export default function OfflinePayment() {
     const fetchByStudentId = async () => {
       if (paymentData.student_ID) {
         try {
-          const res = await fetch(`https://api.hachion.co/payments/studentInfo?studentId=${paymentData.student_ID}`);
+          const res = await fetch(`${API_BASE_URL}/payments/studentInfo?studentId=${paymentData.student_ID}`);
           const data = await res.json();
           setPaymentData(prev => ({
             ...prev,
@@ -411,7 +412,7 @@ export default function OfflinePayment() {
     const fetchByEmail = async () => {
       if (paymentData.email) {
         try {
-          const res = await fetch(`https://api.hachion.co/payments/studentInfo?email=${paymentData.email}`);
+          const res = await fetch(`${API_BASE_URL}/payments/studentInfo?email=${paymentData.email}`);
           const data = await res.json();
           setPaymentData(prev => ({
             ...prev,
@@ -437,7 +438,7 @@ export default function OfflinePayment() {
     const fetchByMobile = async () => {
       if (paymentData.mobile) {
         try {
-          const res = await fetch(`https://api.hachion.co/payments/studentInfo?mobile=${paymentData.mobile}`);
+          const res = await fetch(`${API_BASE_URL}/payments/studentInfo?mobile=${paymentData.mobile}`);
           const data = await res.json();
           setPaymentData(prev => ({
             ...prev,
@@ -463,7 +464,7 @@ export default function OfflinePayment() {
     const fetchCourseFee = async () => {
       if (paymentData.course_name) {
         try {
-          const res = await fetch(`https://api.hachion.co/payments/courseFee?courseName=${encodeURIComponent(paymentData.course_name)}`);
+          const res = await fetch(`${API_BASE_URL}/payments/courseFee?courseName=${encodeURIComponent(paymentData.course_name)}`);
           const data = await res.json();
           if (data) {
             setCourseAmounts(data); // store API result
@@ -573,7 +574,7 @@ export default function OfflinePayment() {
   }, []);
   const fetchPayments = async () => {
     try {
-      const response = await axios.get(`https://api.hachion.co/payments`);
+      const response = await axios.get(`${API_BASE_URL}/payments`);
       const normalizedData = response.data.map(item => ({
         id: item.paymentId,
         student_ID: item.studentId,
@@ -872,7 +873,7 @@ export default function OfflinePayment() {
       }
     });
     try {
-      const response = await axios.post(`https://api.hachion.co/payments`, formData, {
+      const response = await axios.post(`${API_BASE_URL}/payments`, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
@@ -908,7 +909,7 @@ export default function OfflinePayment() {
     try {
       const start = dayjs(startDate).format("YYYY-MM-DD");
       const end = dayjs(endDate).format("YYYY-MM-DD");
-      const response = await axios.get(`https://api.hachion.co/payments/payment-summary?startDate=${start}&endDate=${end}`);
+      const response = await axios.get(`${API_BASE_URL}/payments/payment-summary?startDate=${start}&endDate=${end}`);
       setSummaryData(response.data);
     } catch (error) {
       console.error("Error fetching payment summary:", error);
@@ -953,7 +954,7 @@ export default function OfflinePayment() {
       }))
     };
     try {
-      await axios.post(`https://api.hachion.co/payments/generateInvoice`, invoicePayload);
+      await axios.post(`${API_BASE_URL}/payments/generateInvoice`, invoicePayload);
       setSuccessMessage("📩 Invoice generated and sent to email.");
     } catch (err) {
       console.error("❌ Invoice generation failed:", err);
@@ -1015,7 +1016,7 @@ export default function OfflinePayment() {
       selectedInstallmentId: selectedInstallmentId
     }));
     try {
-      const response = await axios.put(`https://api.hachion.co/payments/${selectedPaymentId}`, formData, {
+      const response = await axios.put(`${API_BASE_URL}/payments/${selectedPaymentId}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
@@ -1053,7 +1054,7 @@ export default function OfflinePayment() {
         totalAmount: parseFloat(paymentData.total),
         reminderEnabled: reminderEnabled
       };
-      const response = await axios.post(`https://api.hachion.co/payments/reminder`, reminderPayload, {
+      const response = await axios.post(`${API_BASE_URL}/payments/reminder`, reminderPayload, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -1114,7 +1115,7 @@ export default function OfflinePayment() {
       }
     });
     try {
-      const saveResponse = await axios.post(`https://api.hachion.co/payments`, formData, {
+      const saveResponse = await axios.post(`${API_BASE_URL}/payments`, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
@@ -1153,7 +1154,7 @@ export default function OfflinePayment() {
             receivedPay: totalReceivedPay
           }))
         };
-        await axios.post(`https://api.hachion.co/payments/generateInvoice`, invoicePayload);
+        await axios.post(`${API_BASE_URL}/payments/generateInvoice`, invoicePayload);
         setSuccessMessage("📩 Invoice generated and sent to email.");
         setIsInvoiceSent(true);
         await fetchPayments();
@@ -1538,7 +1539,7 @@ export default function OfflinePayment() {
                       position: 'relative',
                       display: 'inline-block'
                     }}>
-                              <img src={typeof curr.proof_image === 'string' ? `https://api.hachion.co/payments/download/${encodeURIComponent(curr.proof_image)}` : URL.createObjectURL(curr.proof_image)} alt="proof" onError={e => {
+                              <img src={typeof curr.proof_image === 'string' ? `${API_BASE_URL}/payments/download/${encodeURIComponent(curr.proof_image)}` : URL.createObjectURL(curr.proof_image)} alt="proof" onError={e => {
                         e.target.onerror = null;
                         e.target.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50'><rect width='100%25' height='100%25' fill='%23eee'/><text x='50%25' y='50%25' font-size='7' text-anchor='middle' fill='%23999' dy='.3em'>No Image</text></svg>";
                       }} style={{
@@ -1548,7 +1549,7 @@ export default function OfflinePayment() {
                         objectFit: 'cover',
                         borderRadius: 4,
                         border: '1px solid #ccc'
-                      }} onClick={() => window.open(typeof curr.proof_image === 'string' ? `https://api.hachion.co/payments/download/${encodeURIComponent(curr.proof_image)}` : URL.createObjectURL(curr.proof_image), '_blank')} />
+                      }} onClick={() => window.open(typeof curr.proof_image === 'string' ? `${API_BASE_URL}/payments/download/${encodeURIComponent(curr.proof_image)}` : URL.createObjectURL(curr.proof_image), '_blank')} />
                               <FaTimesCircle style={{
                         position: 'absolute',
                         top: -8,

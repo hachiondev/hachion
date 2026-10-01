@@ -16,6 +16,7 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import './Admin.css';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({
   theme
@@ -86,7 +87,7 @@ export default function AdminPostJob() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/hire-from-us`);
+        const response = await axios.get(`${API_BASE_URL}/hire-from-us`);
         const data = response.data || [];
         console.log("Fetched job data:", data);
         setJobData(data);
@@ -105,7 +106,7 @@ export default function AdminPostJob() {
       status: newStatus
     };
     try {
-      await axios.put(`https://api.hachion.co/hire-from-us`, payload);
+      await axios.put(`${API_BASE_URL}/hire-from-us`, payload);
       const updatedJobs = jobData.map(job => job.jobId === jobId ? {
         ...job,
         status: newStatus
@@ -174,7 +175,7 @@ export default function AdminPostJob() {
         await Promise.all(selectedIds.map(id => {
           const jobToDelete = jobData.find(job => job.jobId === id);
           if (jobToDelete) {
-            return axios.put(`https://api.hachion.co/hire-from-us`, {
+            return axios.put(`${API_BASE_URL}/hire-from-us`, {
               ...jobToDelete,
               status: 'rejected'
             });
@@ -331,7 +332,7 @@ export default function AdminPostJob() {
                                     <StyledTableCell align="left">{row.firstName} {row.lastName}</StyledTableCell>
                                     <StyledTableCell align="left">{row.email}</StyledTableCell>
                                     <StyledTableCell align="center">{row.mobileNumber}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.companyLogo ? <img src={`https://api.hachion.co/hire-from-us/${row.companyLogo}`} alt="logo" width="50" /> : 'No Image'}
+                                    <StyledTableCell align="center">{row.companyLogo ? <img src={`${API_BASE_URL}/hire-from-us/${row.companyLogo}`} alt="logo" width="50" /> : 'No Image'}
                                     </StyledTableCell>
                                     <StyledTableCell align="left">{row.company}</StyledTableCell>
                                     <StyledTableCell align="left">{row.companyUrl}</StyledTableCell>

@@ -19,6 +19,7 @@ import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const normalizeTrainer = t => ({
   ...t,
@@ -143,7 +144,7 @@ export default function Trainer() {
   }, []);
   const fetchTrainers = async () => {
     try {
-      const res = await axios.get(`https://api.hachion.co/trainers`);
+      const res = await axios.get(`${API_BASE_URL}/trainers`);
       const normalized = Array.isArray(res.data) ? res.data.map(normalizeTrainer) : [];
       setTrainers(normalized);
       setFilteredTrainers(normalized);
@@ -154,7 +155,7 @@ export default function Trainer() {
   };
   const fetchCourseCategories = async () => {
     try {
-      const res = await axios.get(`https://api.hachion.co/course-categories/all`);
+      const res = await axios.get(`${API_BASE_URL}/course-categories/all`);
       setCourseCategoriesList(res.data || []);
     } catch (err) {
       console.error('Error fetching course categories:', err);
@@ -162,7 +163,7 @@ export default function Trainer() {
   };
   const fetchCourseList = async () => {
     try {
-      const res = await axios.get(`https://api.hachion.co/courses/all`);
+      const res = await axios.get(`${API_BASE_URL}/courses/all`);
       setCourseCategory(res.data || []);
     } catch (err) {
       console.error('Error fetching courses list:', err);
@@ -324,14 +325,14 @@ export default function Trainer() {
       }
       let response;
       if (formData.id) {
-        response = await axios.put(`https://api.hachion.co/trainer/update/${formData.id}`, formDataToSend);
+        response = await axios.put(`${API_BASE_URL}/trainer/update/${formData.id}`, formDataToSend);
         const updated = normalizeTrainer(response.data);
         setTrainers(prev => prev.map(t => t.trainer_id === formData.id ? updated : t));
         setFilteredTrainers(prev => prev.map(t => t.trainer_id === formData.id ? updated : t));
         setAllTrainers(prev => prev.map(t => t.trainer_id === formData.id ? updated : t));
         setSuccessMessage("✅ Trainer updated successfully.");
       } else {
-        response = await axios.post(`https://api.hachion.co/trainer/add`, formDataToSend);
+        response = await axios.post(`${API_BASE_URL}/trainer/add`, formDataToSend);
         const added = normalizeTrainer(response.data);
         setTrainers(prev => [...prev, added]);
         setFilteredTrainers(prev => [...prev, added]);
@@ -356,7 +357,7 @@ export default function Trainer() {
   };
   const handleDelete = async id => {
     try {
-      await axios.delete(`https://api.hachion.co/trainer/delete/${id}`);
+      await axios.delete(`${API_BASE_URL}/trainer/delete/${id}`);
       setTrainers(prev => prev.filter(t => t.trainer_id !== id));
       setFilteredTrainers(prev => prev.filter(t => t.trainer_id !== id));
       setAllTrainers(prev => prev.filter(t => t.trainer_id !== id));
@@ -375,7 +376,7 @@ export default function Trainer() {
     setShowForm(true);
     try {
       if (row?.trainer_id) {
-        const res = await axios.get(`https://api.hachion.co/trainers/${row.trainer_id}`);
+        const res = await axios.get(`${API_BASE_URL}/trainers/${row.trainer_id}`);
         const trainer = res.data || row;
         setFormData({
           id: trainer.trainer_id || '',
@@ -471,7 +472,7 @@ export default function Trainer() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected trainers
-        await Promise.all(selectedIds.map(id => axios.delete(`https://api.hachion.co/trainer/delete/${id}`)));
+        await Promise.all(selectedIds.map(id => axios.delete(`${API_BASE_URL}/trainer/delete/${id}`)));
 
         // Update state
         const updatedTrainers = trainers.filter(item => !selectedIds.includes(item.trainer_id));

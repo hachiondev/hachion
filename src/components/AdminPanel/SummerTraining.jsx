@@ -19,6 +19,7 @@ import { useState, useEffect } from 'react';
 import AdminPagination from './AdminPagination';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({
   theme
@@ -83,7 +84,7 @@ export default function SummerTraining() {
   const displayedCategories = filteredTraining.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
   console.log("filteredTraining:", filteredTraining);
   useEffect(() => {
-    axios.get(`https://api.hachion.co/kids-summer-training`).then(response => {
+    axios.get(`${API_BASE_URL}/kids-summer-training`).then(response => {
       console.log("API response:", response.data);
       setSummerTraining(response.data); // Populate data here
     }).catch(error => {

@@ -4,17 +4,19 @@ import React, { useState, useEffect } from "react";
 import styles from "./CourseCurriculum.module.css";
 import { cn } from "@/utils";
 import VideoModal from "./VideoModal";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCurriculumAll } from "@/Api/hooks/CurriculumApi/useCurriculumAll";
 import { openCurriculumPdf } from "@/Api/hooks/CurriculumApi/downloadCurriculumPdf";
 import { useUserProfile } from "@/Api/hooks/CourseApi/useUserProfile";
+import { useAuthStatus } from "@/Api/hooks/CourseApi/useAuthStatus";
 import { useAssessmentAccess } from "@/Api/hooks/CurriculumApi/useAssessmentAccess";
 import { useCourseByName } from "@/Api/hooks/CourseApi/useCourseByName";
 import { useProjectsByCourseName } from "@/Api/hooks/CurriculumApi/useProjectsByCourseName";
-import { toApiCourseName } from "@/components/UserPanel/CoursePage/courseRouteUtils";
+import { useCourseApiName } from "@/components/UserPanel/CoursePage/CourseApiNameContext";
 import { saveRedirectUrl } from "@/redirectAfterLogin";
 import LoginModal from "../../Common/Loginmodal";
 import loginPopupImage from "@/assets/loginpopup.webp";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 function toEmbedUrl(url) {
   if (!url) return "";
@@ -52,9 +54,8 @@ export default function CourseCurriculum({ onViewDemoClass, initialCourse, initi
   const [assessmentError, setAssessmentError] = useState({ curriculumId: null, message: "" });
   const [expandedProjects, setExpandedProjects] = useState({});
   const router = useRouter();
-  const { courseName: courseNameSlug } = useParams();
   const [showAll, setShowAll] = useState(false);
-  const courseName = courseNameSlug ? toApiCourseName(courseNameSlug) : "";
+  const courseName = useCourseApiName();
   const encodedCourseName = encodeURIComponent(courseName);
   // initialCourse/initialCurriculum are server-fetched props from
   // app/(public)/courses/[categoryName]/[courseName]/page.js — see
@@ -69,6 +70,7 @@ export default function CourseCurriculum({ onViewDemoClass, initialCourse, initi
   const { data: userData } = useUserProfile();
   const studentId = userData?.studentId || null;
   const email = userData?.email || null;
+  const { status: authStatus } = useAuthStatus();
   const [showEnrollPrompt, setShowEnrollPrompt] = useState(false);
   const [checkParams, setCheckParams] = useState({
     studentId: null,
@@ -94,7 +96,7 @@ export default function CourseCurriculum({ onViewDemoClass, initialCourse, initi
   }, [courseName]);
   useEffect(() => {
     if (accessData?.canDownload) {
-      const fileUrl = `https://api.hachion.co/curriculum/assessments/${checkParams.assessmentFileName}`;
+      const fileUrl = `${API_BASE_URL}/curriculum/assessments/${checkParams.assessmentFileName}`;
       window.open(fileUrl, "_blank", "noopener,noreferrer");
       // Syncs from the assessment-access query result (an external source).
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -143,7 +145,10 @@ export default function CourseCurriculum({ onViewDemoClass, initialCourse, initi
   };
 
   const downloadPdf = async () => {
-    if (!email) {
+    // Auth not restored yet (the button is disabled meanwhile) - not the same
+    // as logged out, so don't show the login prompt.
+    if (authStatus === "loading") return;
+    if (authStatus !== "authenticated") {
       saveRedirectUrl();
       setShowRegisterPrompt(true);
       return;
@@ -182,7 +187,7 @@ export default function CourseCurriculum({ onViewDemoClass, initialCourse, initi
         <div className={styles.cchead}>
           <h2>{courseDetails?.courseName ? `${courseDetails.courseName} Course Curriculum` : "Course Curriculum"}</h2>
 
-          <button className={styles.ccdownload} onClick={downloadPdf} disabled={isDownloading} aria-busy={isDownloading}>
+          <button className={styles.ccdownload} onClick={downloadPdf} disabled={isDownloading || authStatus === "loading"} aria-busy={isDownloading || authStatus === "loading"}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/Download.png" alt="" height={24} />
             {isDownloading ? "Preparing..." : "Download Detailed Curriculum"}

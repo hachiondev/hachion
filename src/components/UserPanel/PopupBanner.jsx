@@ -6,6 +6,7 @@ import Image from "next/image";
 import "./Home.css";
 import { RiCloseCircleLine } from "react-icons/ri";
 import { useRouter } from "next/navigation";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const PopupBanner = () => {
   const [showPopup, setShowPopup] = useState(false);
@@ -23,7 +24,7 @@ const PopupBanner = () => {
     if (alreadyShown) return;
     const fetchPopupBanner = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/banner`);
+        const response = await axios.get(`${API_BASE_URL}/banner`);
         const enabledPopup = response.data.find(banner => banner.status === "Enabled" && banner.banner_image);
         if (enabledPopup) {
           // Mounts the overlay (still hidden — see the `popupBanner` effect
@@ -104,7 +105,7 @@ const PopupBanner = () => {
               this single image was measured via Lighthouse at ~2MB of
               avoidable transfer. */}
           <Image
-            src={`https://api.hachion.co/uploads/prod/banner_images/${popupBanner.banner_image}`}
+            src={`${API_BASE_URL}/uploads/prod/banner_images/${popupBanner.banner_image}`}
             alt="Popup Banner"
             className="popup-image"
             width={800}

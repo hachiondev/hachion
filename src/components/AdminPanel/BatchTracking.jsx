@@ -14,6 +14,7 @@ import AdminPagination from './AdminPagination';
 import './Admin.css';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({
   theme
@@ -95,7 +96,7 @@ export default function BatchTracking() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   useEffect(() => {
-    axios.get(`https://api.hachion.co/course-categories/all`).then(response => {
+    axios.get(`${API_BASE_URL}/course-categories/all`).then(response => {
       setFilterCategory(response.data);
     }).catch(error => {
       console.error('Error fetching course categories:', error);
@@ -103,7 +104,7 @@ export default function BatchTracking() {
   }, []);
   useEffect(() => {
     if (studentData.category_name) {
-      axios.get(`https://api.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(studentData.category_name)}`).then(response => {
+      axios.get(`${API_BASE_URL}/courses/coursenames-by-category?categoryName=${encodeURIComponent(studentData.category_name)}`).then(response => {
         const courseList = response.data.map((courseName, index) => ({
           id: index,
           courseName
@@ -168,7 +169,7 @@ export default function BatchTracking() {
         // Extract studentId and batchId from selected keys
         const deletePromises = selectedItems.map(key => {
           const [studentId, batchId] = key.split('-');
-          return axios.delete(`https://api.hachion.co/studentsTracking/delete`, {
+          return axios.delete(`${API_BASE_URL}/studentsTracking/delete`, {
             params: {
               studentId: studentId,
               batchId: batchId
@@ -218,7 +219,7 @@ export default function BatchTracking() {
     if (studentData.category_name && studentData.course_name && studentData.type) {
       const fetchBatchIds = async () => {
         try {
-          const response = await axios.get(`https://api.hachion.co/studentsTracking/batch-ids`, {
+          const response = await axios.get(`${API_BASE_URL}/studentsTracking/batch-ids`, {
             params: {
               categoryName: studentData.category_name,
               courseName: studentData.course_name,
@@ -256,7 +257,7 @@ export default function BatchTracking() {
           batchType: data.batchType
         } : {})
       };
-      const response = await axios.post(`https://api.hachion.co/studentsTracking/filter`, payload);
+      const response = await axios.post(`${API_BASE_URL}/studentsTracking/filter`, payload);
       const mappedData = response.data.map(item => ({
         student_id: item.studentId,
         name: item.studentName,
@@ -290,7 +291,7 @@ export default function BatchTracking() {
         status,
         remark
       } = editableRow;
-      await axios.put(`https://api.hachion.co/studentsTracking/update-fields`, null, {
+      await axios.put(`${API_BASE_URL}/studentsTracking/update-fields`, null, {
         params: {
           studentId: studentId,
           batchId: batch_id,

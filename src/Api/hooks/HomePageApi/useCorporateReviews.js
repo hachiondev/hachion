@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const fetchCorporateReviews = async () => {
-  const res = await fetch(`https://api.hachion.co/corporatereview`);
+  const res = await fetch(`${API_BASE_URL}/corporatereview`);
   const data = await res.json();
   return Array.isArray(data) ? data : [];
 };

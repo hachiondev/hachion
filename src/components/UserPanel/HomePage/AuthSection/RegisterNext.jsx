@@ -12,6 +12,7 @@ import PopupInterest4 from "@/components/UserPanel/PopupInterest4";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import LoginBanner from "@/assets/loginbackground.webp";
 import "./LoginSection/Login.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const OTP_LENGTH = 4;
 
@@ -91,7 +92,7 @@ const RegisterNext = () => {
     }
     setIsLoading(true);
     try {
-      const verifyResponse = await fetch(`https://api.hachion.co/api/v1/user/verify-otp`, {
+      const verifyResponse = await fetch(`${API_BASE_URL}/api/v1/user/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: registeruserData.email, otp: otpJoined }),
@@ -109,7 +110,7 @@ const RegisterNext = () => {
         setIsLoading(false);
         return;
       }
-      const registerResponse = await fetch(`https://api.hachion.co/api/v1/user/register`, {
+      const registerResponse = await fetch(`${API_BASE_URL}/api/v1/user/register`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -131,7 +132,7 @@ const RegisterNext = () => {
           setMessageType("error");
           // Frontend workaround: try to fetch profile and if found, treat as existing user and complete login locally.
           try {
-            const profileResp = await fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${registeruserData.email}`);
+            const profileResp = await fetch(`${API_BASE_URL}/api/v1/user/myprofile?email=${registeruserData.email}`);
             if (profileResp.ok) {
               const profileData = await profileResp.json();
               const fullName = (profileData.name && String(profileData.name).trim()) || `${registeruserData.firstName || ""} ${registeruserData.lastName || ""}`.trim() || "User";
@@ -182,7 +183,7 @@ const RegisterNext = () => {
     setEmailExists(false);
     try {
       const response = await fetch(
-        `https://api.hachion.co/api/v1/user/regenerate-otp?email=${encodeURIComponent(registeruserData.email)}`,
+        `${API_BASE_URL}/api/v1/user/regenerate-otp?email=${encodeURIComponent(registeruserData.email)}`,
         { method: "PUT" }
       );
       if (response.ok) {
@@ -222,7 +223,7 @@ const RegisterNext = () => {
 
   const handleSubmitPopup = async () => {
     try {
-      const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile?email=${registeruserData.email}`);
+      const profileResponse = await axios.get(`${API_BASE_URL}/api/v1/user/myprofile?email=${registeruserData.email}`);
       const profileData = profileResponse.data;
       nukeAvatarCookies();
       localStorage.removeItem("pendingOAuth");
@@ -250,7 +251,7 @@ const RegisterNext = () => {
         speakToCourseAdvisor: formData.speakToCourseAdvisor || "",
         whereYouHeard: formData.whereYouHeard || "",
       };
-      await axios.post(`https://api.hachion.co/popup-onboarding`, payload);
+      await axios.post(`${API_BASE_URL}/popup-onboarding`, payload);
       localStorage.setItem("userPreferences", JSON.stringify(payload));
       localStorage.setItem("user", JSON.stringify(registeruserData));
       router.push("/");

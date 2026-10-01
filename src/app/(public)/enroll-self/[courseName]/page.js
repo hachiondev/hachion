@@ -1,4 +1,6 @@
 import { buildCanonicalUrl } from "@/lib/seo";
+import { resolveCourseApiName } from "@/lib/courseApiName";
+import { CourseApiNameProvider } from "@/components/UserPanel/CoursePage/CourseApiNameContext";
 import NewEnrollSelfPaced from "@/components/UserPanel/NewEnrollSelfPaced";
 
 export async function generateMetadata({ params }) {
@@ -11,6 +13,12 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default function EnrollSelfPage() {
-  return <NewEnrollSelfPaced />;
+export default async function EnrollSelfPage({ params }) {
+  const { courseName } = await params;
+  const apiCourseName = await resolveCourseApiName(courseName);
+  return (
+    <CourseApiNameProvider value={apiCourseName}>
+      <NewEnrollSelfPaced />
+    </CourseApiNameProvider>
+  );
 }

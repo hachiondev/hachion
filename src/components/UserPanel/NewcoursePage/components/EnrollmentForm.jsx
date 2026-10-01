@@ -11,11 +11,11 @@ import { useCourses } from "@/Api/hooks/HomePageApi/NavbarApi/useCourses";
 import { useUserProfile } from "@/Api/hooks/CourseApi/useUserProfile";
 import { useTopBarApi } from "@/Api/hooks/HomePageApi/useTopBarApi";
 import axios from "axios";
-import { useParams } from "next/navigation";
 import { useCourseByName } from "@/Api/hooks/CourseApi/useCourseByName";
-import { toApiCourseName } from "@/components/UserPanel/CoursePage/courseRouteUtils";
+import { useCourseApiName } from "@/components/UserPanel/CoursePage/CourseApiNameContext";
 import { countries, getDefaultCountry } from "@/countryUtils";
 import ReCAPTCHA from "react-google-recaptcha";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Ported from the CRA app's
 // src/Components/UserPanel/NewcoursePage/components/EnrollmentForm.jsx.
@@ -24,8 +24,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 // components/common/CountryFlag.jsx) instead of importing the package
 // directly, matching the established bundle-size optimization.
 const EnrollmentForm = ({ onClose, onSuccess }) => {
-  const { courseName: courseNameSlug } = useParams();
-  const courseName = courseNameSlug ? toApiCourseName(courseNameSlug) : "";
+  const courseName = useCourseApiName();
   const { data: course } = useCourseByName(courseName);
   const [formData, setFormData] = useState({
     name: "",
@@ -269,7 +268,7 @@ const EnrollmentForm = ({ onClose, onSuccess }) => {
           recaptchaToken: recaptchaValue,
           timestamp: new Date().toISOString(),
         };
-        await axios.post(`https://api.hachion.co/api/webhook/enrollment`, submissionData);
+        await axios.post(`${API_BASE_URL}/api/webhook/enrollment`, submissionData);
         setSuccessMessage("✅ Thank you! Your enquiry has been submitted. We will contact you shortly.");
         setTimeout(() => {
           onClose();
@@ -348,7 +347,12 @@ const EnrollmentForm = ({ onClose, onSuccess }) => {
                     value={formData.phone}
                     onChange={handlePhoneInput}
                     onKeyDown={(e) => {
-                      if (!/[0-9\-+()\s]|Backspace|Delete|ArrowLeft|ArrowRight|Tab/.test(e.key)) {
+                      // Only veto a printable character the field doesn't accept. Modifier
+                      // combos (Ctrl/Cmd+V/A/C), Enter, Home/End and other named keys - which
+                      // includes the "Unidentified" key some mobile keyboards report - must
+                      // pass through; handlePhoneInput already rejects bad content on change.
+                      if (e.ctrlKey || e.metaKey || e.altKey || e.key.length > 1) return;
+                      if (!/[0-9\-+()\s]/.test(e.key)) {
                         e.preventDefault();
                       }
                     }}
@@ -361,6 +365,9 @@ const EnrollmentForm = ({ onClose, onSuccess }) => {
                   )}
                 </div>
               </div>
+              {/* "invalid" is the live per-keystroke flag (red border + icon); the readable
+                  messages come from validateForm() on submit and were never rendered. */}
+              {errors.phone && errors.phone !== "invalid" && <span className={styles.errorMessage}>{errors.phone}</span>}
             </div>
 
             <div className={styles.formGroup}>

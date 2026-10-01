@@ -8,6 +8,7 @@ import LoginBanner from "@/assets/loginbackground.webp";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import "../LoginSection/Login.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const OTP_LENGTH = 4;
 const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -71,7 +72,7 @@ const ForgotPassword = () => {
       // fresh OTP every time it's called — the fix for "requesting a new
       // OTP for the same email doesn't send one."
       const res = await fetch(
-        `https://api.hachion.co/api/v1/user/forgotpassword?email=${encodeURIComponent(email)}`,
+        `${API_BASE_URL}/api/v1/user/forgotpassword?email=${encodeURIComponent(email)}`,
         { method: "PUT" }
       );
       const { raw } = await readResponse(res);
@@ -120,7 +121,7 @@ const ForgotPassword = () => {
     }
     setIsLoading(true);
     try {
-      const res = await fetch(`https://api.hachion.co/api/v1/user/verify-otp`, {
+      const res = await fetch(`${API_BASE_URL}/api/v1/user/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp }),
@@ -147,7 +148,7 @@ const ForgotPassword = () => {
       // PUT, not POST, and always overwrites+resends regardless of whether
       // an OTP was already issued for this email.
       const res = await fetch(
-        `https://api.hachion.co/api/v1/user/regenerate-otp?email=${encodeURIComponent(email)}`,
+        `${API_BASE_URL}/api/v1/user/regenerate-otp?email=${encodeURIComponent(email)}`,
         { method: "PUT" }
       );
       const { raw } = await readResponse(res);
@@ -187,7 +188,7 @@ const ForgotPassword = () => {
       // Matches the live site's ResetPassword.jsx payload exactly — this
       // endpoint doesn't take the otp at all (the earlier verify-otp step
       // already gates access to this step).
-      const res = await fetch(`https://api.hachion.co/api/v1/user/reset-password`, {
+      const res = await fetch(`${API_BASE_URL}/api/v1/user/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, newPassword, confirmPassword }),

@@ -2,7 +2,9 @@ import { buildCanonicalUrl, SITE_ORIGIN } from "@/lib/seo";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbSchema";
 import JsonLd from "@/components/common/JsonLd";
 import NewCourseDetails from "@/components/UserPanel/NewcoursePage/NewCourseDetails";
-import { toApiCourseName } from "@/components/UserPanel/CoursePage/courseRouteUtils";
+import { resolveCourseApiName } from "@/lib/courseApiName";
+import { CourseApiNameProvider } from "@/components/UserPanel/CoursePage/CourseApiNameContext";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // The default parameter only covers `undefined` — API fields that are
 // explicitly `null` (e.g. an unset metaTitle) skip it entirely and crash
@@ -25,24 +27,22 @@ const toDisplayName = (slug = "") =>
 // same endpoints those hooks call. Ported from CourseBanner.jsx's <Helmet>
 // + 5 JSON-LD <script> blocks (Organization/WebPage/Breadcrumb/Course/
 // FAQPage), moved here per this app's generateMetadata()/JsonLd convention.
-async function fetchCourseForMetadata(courseNameSlug) {
+async function fetchCourseForMetadata(apiName) {
   try {
-    const apiName = toApiCourseName(courseNameSlug);
-    const res = await fetch(`https://api.hachion.co/courses/getByCourseName/${encodeURIComponent(apiName)}`, {
+    const res = await fetch(`${API_BASE_URL}/courses/getByCourseName/${encodeURIComponent(apiName)}`, {
       next: { revalidate: 300 },
     });
     if (!res.ok) return null;
     const data = await res.json();
-    return Array.isArray(data) ? data[0] : null;
+    return Array.isArray(data) ? data[0] ?? null : null;
   } catch {
     return null;
   }
 }
 
-async function fetchFaqsForMetadata(courseNameSlug) {
+async function fetchFaqsForMetadata(apiName) {
   try {
-    const apiName = toApiCourseName(courseNameSlug);
-    const res = await fetch(`https://api.hachion.co/faq/course/${encodeURIComponent(apiName)}`, {
+    const res = await fetch(`${API_BASE_URL}/faq/course/${encodeURIComponent(apiName)}`, {
       next: { revalidate: 300 },
     });
     if (!res.ok) return [];
@@ -60,12 +60,11 @@ async function fetchFaqsForMetadata(courseNameSlug) {
 // mirrors useCurriculumAll's own `normalizedCourse` derivation exactly (see
 // that hook) so the query-cache key this seeds actually matches the one the
 // client component reads from.
-async function fetchCurriculumForMetadata(courseNameSlug) {
+async function fetchCurriculumForMetadata(apiName) {
   try {
-    const apiName = toApiCourseName(courseNameSlug);
     const normalizedCourse = apiName.toLowerCase().replace(/[\s\-_]/g, "");
     if (!normalizedCourse) return null;
-    const res = await fetch(`https://api.hachion.co/curriculum/course/${normalizedCourse}`, {
+    const res = await fetch(`${API_BASE_URL}/curriculum/course/${normalizedCourse}`, {
       next: { revalidate: 300 },
     });
     if (!res.ok) return null;
@@ -79,13 +78,16 @@ async function fetchCurriculumForMetadata(courseNameSlug) {
 
 export async function generateMetadata({ params }) {
   const { categoryName, courseName } = await params;
-  const course = await fetchCourseForMetadata(courseName);
+  const course = await fetchCourseForMetadata(await resolveCourseApiName(courseName, categoryName));
   const canonicalUrl = buildCanonicalUrl(`/courses/${categoryName}/${courseName}`);
 
-  const fallbackTitle = `${toDisplayName(courseName)} Training Course & Certification | Hachion`;
+  // Courses created from the admin panel often have no metaTitle/
+  // metaDescription yet - fall back to the real stored name, not a
+  // slug-derived one ("AI-Augmented", not "Ai Augmented").
+  const fallbackTitle = `${course?.courseName || toDisplayName(courseName)} Training Course & Certification | Hachion`;
   const title = course?.metaTitle || fallbackTitle;
   const description = course?.metaDescription || stripHtml(course?.aboutCourse || "").slice(0, 160) || "Transform your career with Hachion's online IT courses! Enroll now, earn a certificate, get job assistance & try our FREE demo!";
-  const ogImage = course?.courseImage ? `https://api.hachion.co/${course.courseImage}` : `${SITE_ORIGIN}/Hachion-logo.png`;
+  const ogImage = course?.courseImage ? `${API_BASE_URL}/${course.courseImage}` : `${SITE_ORIGIN}/Hachion-logo.png`;
 
   return {
     title,
@@ -113,10 +115,11 @@ export async function generateMetadata({ params }) {
 
 export default async function CourseDetailsPage({ params }) {
   const { categoryName, courseName } = await params;
+  const apiCourseName = await resolveCourseApiName(courseName, categoryName);
   const [course, faqs, curriculum] = await Promise.all([
-    fetchCourseForMetadata(courseName),
-    fetchFaqsForMetadata(courseName),
-    fetchCurriculumForMetadata(courseName),
+    fetchCourseForMetadata(apiCourseName),
+    fetchFaqsForMetadata(apiCourseName),
+    fetchCurriculumForMetadata(apiCourseName),
   ]);
 
   const canonicalUrl = buildCanonicalUrl(`/courses/${categoryName}/${courseName}`);
@@ -159,7 +162,7 @@ export default async function CourseDetailsPage({ params }) {
       name: stripHtml(course.seoH1Title) || stripHtml(course.courseName),
       description: course.metaDescription,
       url: canonicalUrl,
-      image: `https://api.hachion.co/${course.courseImage}`,
+      image: `${API_BASE_URL}/${course.courseImage}`,
       courseMode: "Online",
       inLanguage: "en",
       educationalCredentialAwarded: `${course.courseName} Completion Certification`,
@@ -196,14 +199,16 @@ export default async function CourseDetailsPage({ params }) {
   return (
     <>
       <JsonLd data={schemas} />
-      <NewCourseDetails
-        categoryName={categoryName}
-        categoryDisplay={categoryDisplay}
-        courseDisplay={courseBreadcrumbLabel}
-        initialCourse={course}
-        initialFaqs={faqs}
-        initialCurriculum={curriculum}
-      />
+      <CourseApiNameProvider value={apiCourseName}>
+        <NewCourseDetails
+          categoryName={categoryName}
+          categoryDisplay={categoryDisplay}
+          courseDisplay={courseBreadcrumbLabel}
+          initialCourse={course}
+          initialFaqs={faqs}
+          initialCurriculum={curriculum}
+        />
+      </CourseApiNameProvider>
     </>
   );
 }

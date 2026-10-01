@@ -9,6 +9,7 @@ import { AiFillCaretDown } from "react-icons/ai";
 import { TbRefresh } from "react-icons/tb";
 import axios from "axios";
 import { countries, getDefaultCountry } from "@/countryUtils";
+import { API_BASE_URL } from "@/lib/apiBase";
 const CorporateTrainingForm = ({
   onClose
 }) => {
@@ -93,7 +94,7 @@ const CorporateTrainingForm = ({
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get(`https://api.hachion.co/courses/all`);
+        const res = await axios.get(`${API_BASE_URL}/courses/all`);
         if (Array.isArray(res.data)) setCourses(res.data.map(c => c.courseName));
       } catch (err) {
         console.error("Error fetching courses:", err);
@@ -187,7 +188,7 @@ const CorporateTrainingForm = ({
     };
     setErrorMessage("");
     try {
-      const response = await axios.post(`https://api.hachion.co/advisors`, requestData, {
+      const response = await axios.post(`${API_BASE_URL}/advisors`, requestData, {
         headers: {
           "Content-Type": "application/json"
         }
@@ -252,7 +253,7 @@ const CorporateTrainingForm = ({
     const ctrl = new AbortController();
     (async () => {
       try {
-        const res = await fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`, {
+        const res = await fetch(`${API_BASE_URL}/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`, {
           signal: ctrl.signal
         });
         if (!res.ok) throw new Error("Failed to fetch profile data");

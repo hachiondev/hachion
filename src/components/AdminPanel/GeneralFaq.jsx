@@ -33,11 +33,12 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
+import { API_BASE_URL } from "@/lib/apiBase";
 const htmlToText = html => {
   const doc = new DOMParser().parseFromString(html || "", "text/html");
   return (doc.body.textContent || "").trim();
 };
-const API_BASE = `https://api.hachion.co/general-faq`;
+const API_BASE = `${API_BASE_URL}/general-faq`;
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -174,7 +175,7 @@ export default function GeneralFaq() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/course-categories/all`);
+        const response = await axios.get(`${API_BASE_URL}/course-categories/all`);
         setCourse(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -185,7 +186,7 @@ export default function GeneralFaq() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/courses/all`);
+        const response = await axios.get(`${API_BASE_URL}/courses/all`);
         setCourseCategory(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error.message);

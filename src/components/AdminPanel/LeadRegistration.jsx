@@ -18,6 +18,7 @@ import { useState, useEffect } from 'react';
 import AdminPagination from './AdminPagination';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({
   theme
@@ -83,7 +84,7 @@ export default function LeadRegistration() {
   useEffect(() => {
     const fetchLeads = async () => {
       try {
-        const response = await fetch(`https://api.hachion.co/leadform`); // update URL if needed
+        const response = await fetch(`${API_BASE_URL}/leadform`); // update URL if needed
         if (!response.ok) {
           throw new Error("Failed to fetch leads");
         }

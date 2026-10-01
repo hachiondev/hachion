@@ -14,6 +14,7 @@ import AdminPagination from './AdminPagination';
 import './Admin.css';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({
   theme
@@ -55,7 +56,7 @@ export default function AdminApplyJobs() {
   const [selectedIds, setSelectedIds] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   useEffect(() => {
-    axios.get(`https://api.hachion.co/apply-job/getAll`).then(response => {
+    axios.get(`${API_BASE_URL}/apply-job/getAll`).then(response => {
       setJobData(response.data);
       setFilteredData(response.data);
     }).catch(error => {
@@ -94,7 +95,7 @@ export default function AdminApplyJobs() {
     const confirmed = window.confirm("Are you sure you want to delete this application?");
     if (!confirmed) return;
     try {
-      await axios.delete(`https://api.hachion.co/apply-job/delete/${id}`);
+      await axios.delete(`${API_BASE_URL}/apply-job/delete/${id}`);
       const updatedData = jobData.filter(item => item.applyJobDetailsId !== id);
       setJobData(updatedData);
       setFilteredData(updatedData);
@@ -160,7 +161,7 @@ export default function AdminApplyJobs() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected applications
-        await Promise.all(selectedIds.map(id => axios.delete(`https://api.hachion.co/apply-job/delete/${id}`)));
+        await Promise.all(selectedIds.map(id => axios.delete(`${API_BASE_URL}/apply-job/delete/${id}`)));
 
         // Update state
         const updatedData = jobData.filter(item => !selectedIds.includes(item.applyJobDetailsId));
@@ -300,12 +301,12 @@ export default function AdminApplyJobs() {
                   <StyledTableCell align="left">{row.email}</StyledTableCell>
                   <StyledTableCell align="center">{row.mobileNumber}</StyledTableCell>
                   <StyledTableCell align="center">
-                    {row.companyLogo ? <img src={`https://api.hachion.co/hire-from-us/${row.companyLogo}`} alt="logo" width="50" /> : 'No Image'}
+                    {row.companyLogo ? <img src={`${API_BASE_URL}/hire-from-us/${row.companyLogo}`} alt="logo" width="50" /> : 'No Image'}
                   </StyledTableCell>
                   <StyledTableCell align="left">{row.companyName}</StyledTableCell>
                   <StyledTableCell align="left">{row.jobTitle}</StyledTableCell>
                   <StyledTableCell align="left">
-                    {row.resume ? <a href={`https://api.hachion.co/apply-job/downloadResume?jobId=${encodeURIComponent(row.jobId)}&email=${encodeURIComponent(row.email)}&resumeFileName=${encodeURIComponent(row.resume)}`} target="_blank" rel="noopener noreferrer">
+                    {row.resume ? <a href={`${API_BASE_URL}/apply-job/downloadResume?jobId=${encodeURIComponent(row.jobId)}&email=${encodeURIComponent(row.email)}&resumeFileName=${encodeURIComponent(row.resume)}`} target="_blank" rel="noopener noreferrer">
                         View Resume
                       </a> : 'No Resume'}
                   </StyledTableCell>

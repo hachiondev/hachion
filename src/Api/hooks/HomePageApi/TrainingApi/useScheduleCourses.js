@@ -1,11 +1,12 @@
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // API function (axios)
 const fetchScheduleCourses = async timezone => {
   const {
     data
-  } = await axios.get(`https://api.hachion.co/schedulecourse?timezone=${timezone}`);
+  } = await axios.get(`${API_BASE_URL}/schedulecourse?timezone=${timezone}`);
   return Array.isArray(data) ? data : [];
 };
 export function useScheduleCourses(timezone) {

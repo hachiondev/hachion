@@ -17,6 +17,7 @@ import axios from 'axios';
 import AdminPagination from './AdminPagination';
 import './Admin.css';
 import dayjs from 'dayjs';
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -91,7 +92,7 @@ export default function CorporateCourses() {
   };
   const fetchCourseNamesByCategory = async categoryName => {
     if (!categoryName) return [];
-    const url = `https://api.hachion.co/courses/coursenames-by-category?categoryName=${encodeURIComponent(categoryName)}`;
+    const url = `${API_BASE_URL}/courses/coursenames-by-category?categoryName=${encodeURIComponent(categoryName)}`;
     try {
       const {
         data
@@ -107,7 +108,7 @@ export default function CorporateCourses() {
   };
   const fetchCourses = async () => {
     try {
-      const [catRes, courseRes, corpRes] = await Promise.all([axios.get(`https://api.hachion.co/course-categories/all`), axios.get(`https://api.hachion.co/courses/all`), axios.get(`https://api.hachion.co/corporatecourse`)]);
+      const [catRes, courseRes, corpRes] = await Promise.all([axios.get(`${API_BASE_URL}/course-categories/all`), axios.get(`${API_BASE_URL}/courses/all`), axios.get(`${API_BASE_URL}/corporatecourse`)]);
       setCategory(catRes.data);
       setCourse(courseRes.data);
       setTrendingCourse(corpRes.data);
@@ -154,7 +155,7 @@ export default function CorporateCourses() {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const response = await axios.post(`https://api.hachion.co/corporatecourse/add`, courseData);
+      const response = await axios.post(`${API_BASE_URL}/corporatecourse/add`, courseData);
       if (response.status === 201) {
         alert(response.data);
         fetchCourses();
@@ -167,7 +168,7 @@ export default function CorporateCourses() {
   };
   const handleSave = async () => {
     try {
-      const response = await axios.put(`https://api.hachion.co/corporatecourse/update/${editedData.corporatecourse_id}`, editedData);
+      const response = await axios.put(`${API_BASE_URL}/corporatecourse/update/${editedData.corporatecourse_id}`, editedData);
       fetchCourses();
       setMessage("Course updated successfully!");
       setTimeout(() => setMessage(""), 5000);
@@ -179,7 +180,7 @@ export default function CorporateCourses() {
   };
   const handleDelete = async id => {
     if (window.confirm("Are you sure you want to delete this Course?")) {
-      await axios.delete(`https://api.hachion.co/corporatecourse/delete/${id}`);
+      await axios.delete(`${API_BASE_URL}/corporatecourse/delete/${id}`);
       fetchCourses();
       // Remove from selectedIds if present
       setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
@@ -232,7 +233,7 @@ export default function CorporateCourses() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected courses
-        await Promise.all(selectedIds.map(id => axios.delete(`https://api.hachion.co/corporatecourse/delete/${id}`)));
+        await Promise.all(selectedIds.map(id => axios.delete(`${API_BASE_URL}/corporatecourse/delete/${id}`)));
 
         // Update state
         const updatedCourses = trendingCourse.filter(item => !selectedIds.includes(item.corporatecourse_id));

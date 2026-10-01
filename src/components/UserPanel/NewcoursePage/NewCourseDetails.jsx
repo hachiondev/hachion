@@ -2,9 +2,9 @@
 
 import React, { lazy, Suspense } from "react";
 import CourseBanner from "./components/CourseBanner";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { useAllCourses } from "@/Api/hooks/SitemapPageApi/useAllCourses";
+import { useCourses } from "@/Api/hooks/HomePageApi/NavbarApi/useCourses";
 import Link from "next/link";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { slugifyCourseText as slugify } from "../CoursePage/courseRouteUtils";
@@ -47,7 +47,10 @@ const NewCourseDetails = ({ categoryName: categoryNameProp, categoryDisplay, cou
   const courseName = decodeURIComponent(rawParams.courseName || "");
   const router = useRouter();
   const isLoggedIn = typeof window !== "undefined" && !!localStorage.getItem("loginuserData");
-  const { data: allCourses = [], isLoading } = useAllCourses("courseDetailsPage");
+  // Only courseName/courseCategory are needed here, so the ~16 KB names list
+  // (shared cache with the navbar/enrollment form) instead of /courses/all,
+  // which ships every course's full record (>1 MB) to each course page.
+  const { data: allCourses = [], isLoading } = useCourses();
   const courseData = allCourses.find((c) => slugify(c.courseName) === slugify(courseName) && slugify(c.courseCategory) === slugify(categoryName));
 
   // Popup state
@@ -91,9 +94,9 @@ const NewCourseDetails = ({ categoryName: categoryNameProp, categoryDisplay, cou
   const scrollToDemoClass = () => {
     demoClassRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
-  const handleClosePopup = () => {
+  const handleClosePopup = useCallback(() => {
     setShowPopup(false);
-  };
+  }, []);
 
   return (
     <>

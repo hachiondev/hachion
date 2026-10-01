@@ -17,7 +17,11 @@ const isDev = process.env.NODE_ENV !== "production";
 // https://api.hachion.co
 //https://api.hachion.co
 
-const API_BASE_URL = "https://api.hachion.co";
+// Overridable at build time via NEXT_PUBLIC_API_BASE_URL (same variable as
+// src/lib/apiBase.js) so a test/local build's CSP allows its own backend.
+// Unset = production, exactly as before.
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.hachion.co").replace(/\/+$/, "");
+if (!isDev) console.log(`[next.config] API origin for this build: ${API_BASE_URL}`);
 const extraApiHost = /^https?:\/\/[^/]+/.exec(API_BASE_URL)?.[0];
 // Parsed out for next/image's remotePatterns below - a plain string can't
 // be compared against the protocol/hostname/port shape that config needs.

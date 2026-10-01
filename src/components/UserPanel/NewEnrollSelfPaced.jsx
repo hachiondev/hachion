@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./NewEnrollmentPage/NewEnrollNow.module.css";
 import { Input } from "@/components/ui/input";
 import { useParams, usePathname } from "next/navigation";
+import { useCourseApiName } from "@/components/UserPanel/CoursePage/CourseApiNameContext";
 import Link from "next/link";
 import { useUserProfile } from "@/Api/hooks/CourseApi/useUserProfile";
 import { useCourseByName } from "@/Api/hooks/CourseApi/useCourseByName";
@@ -47,15 +48,7 @@ export default function NewEnrollSelfPaced() {
   const [formData, setFormData] = useState({ fullName: "", email: "", phone: "", coupon: "" });
 
   const { courseName } = useParams();
-
-  const courseSlug = courseName
-    ? decodeURIComponent(courseName)
-        .replace(/[-_]+/g, " ")
-        .replace(/\s+/g, " ")
-        .trim()
-        .toLowerCase()
-        .replace(/\b\w/g, (c) => c.toUpperCase())
-    : "";
+  const courseSlug = useCourseApiName();
 
   const { data: userProfile } = useUserProfile();
   const { data: course } = useCourseByName(courseSlug);

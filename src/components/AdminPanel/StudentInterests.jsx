@@ -14,6 +14,7 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import './Admin.css';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({
   theme
@@ -57,7 +58,7 @@ export default function StudentInterests() {
   useEffect(() => {
     const fetchStudentInterests = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/popup-onboarding/getAllOnboarding`);
+        const response = await axios.get(`${API_BASE_URL}/popup-onboarding/getAllOnboarding`);
         setStudentInterest(response.data);
         setFilteredRows(response.data);
       } catch (err) {
@@ -120,7 +121,7 @@ export default function StudentInterests() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected records
-        const deletePromises = selectedIds.map(id => axios.delete(`https://api.hachion.co/popup-onboarding/${id}`));
+        const deletePromises = selectedIds.map(id => axios.delete(`${API_BASE_URL}/popup-onboarding/${id}`));
         await Promise.all(deletePromises);
 
         // Update state
@@ -168,7 +169,7 @@ export default function StudentInterests() {
   const handleDelete = async id => {
     if (window.confirm("Are you sure you want to delete this record?")) {
       try {
-        await axios.delete(`https://api.hachion.co/popup-onboarding/${id}`);
+        await axios.delete(`${API_BASE_URL}/popup-onboarding/${id}`);
         const updatedData = studentInterest.filter(item => item.popupOnboardingId !== id);
         setStudentInterest(updatedData);
         setFilteredRows(updatedData);

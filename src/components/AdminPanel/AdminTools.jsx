@@ -34,6 +34,7 @@ import { useUpdateToolItem } from "../../Api/hooks/AdminTools/useUpdateToolItem"
 import { useDeleteToolItem } from "../../Api/hooks/AdminTools/useDeleteToolItem";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({
   theme
@@ -230,7 +231,7 @@ export default function AdminTools() {
     }
   }, [successMessage, errorMessage]);
   useEffect(() => {
-    axios.get(`https://api.hachion.co/api/tools/names`).then(res => setToolNames(res.data)).catch(() => setToolNames([]));
+    axios.get(`${API_BASE_URL}/api/tools/names`).then(res => setToolNames(res.data)).catch(() => setToolNames([]));
   }, []);
   useEffect(() => {
     const filtered = allData.filter(item => {
@@ -382,7 +383,7 @@ export default function AdminTools() {
     setRows([{
       id: row.id,
       toolImages: null,
-      preview: row.imageUrl ? `https://api.hachion.co/uploads/prod/tools_images/${row.imageUrl}` : null,
+      preview: row.imageUrl ? `${API_BASE_URL}/uploads/prod/tools_images/${row.imageUrl}` : null,
       toolsName: row.toolsName,
       toolsLink: row.toolsLink
     }]);
@@ -411,7 +412,7 @@ export default function AdminTools() {
   const handleToolCheckboxChange = async (toolName, isChecked) => {
     if (isChecked) {
       try {
-        const res = await axios.get(`https://api.hachion.co/api/tools/details`, {
+        const res = await axios.get(`${API_BASE_URL}/api/tools/details`, {
           params: {
             toolName
           }
@@ -426,7 +427,7 @@ export default function AdminTools() {
             toolsName: tool.toolsName,
             toolsLink: tool.toolsLink,
             toolImages: tool.imageUrl,
-            preview: tool.imageUrl ? `https://api.hachion.co/uploads/prod/tools_images/${tool.imageUrl}` : null
+            preview: tool.imageUrl ? `${API_BASE_URL}/uploads/prod/tools_images/${tool.imageUrl}` : null
           };
           if (firstRowEmpty) {
             return [{
@@ -500,7 +501,7 @@ export default function AdminTools() {
         await Promise.all(selectedIds.map(id => {
           const tool = allData.find(t => t.id === id);
           if (!tool) return Promise.resolve();
-          return axios.delete(`https://api.hachion.co/tools/delete`, {
+          return axios.delete(`${API_BASE_URL}/tools/delete`, {
             data: {
               itemId: id,
               category_name: tool.category_name,
@@ -861,7 +862,7 @@ export default function AdminTools() {
                       <StyledTableCell align="left">{courseRow.category_name}</StyledTableCell>
                       <StyledTableCell align="left">{courseRow.courseName}</StyledTableCell>
                       <StyledTableCell align="center">
-                        {courseRow.imageUrl && <img src={`https://api.hachion.co/uploads/prod/tools_images/${courseRow.imageUrl}`} alt={courseRow.toolsName} onError={e => {
+                        {courseRow.imageUrl && <img src={`${API_BASE_URL}/uploads/prod/tools_images/${courseRow.imageUrl}`} alt={courseRow.toolsName} onError={e => {
                     e.target.onerror = null;
                     e.target.replaceWith(document.createTextNode("No Image"));
                   }} style={{

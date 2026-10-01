@@ -3,11 +3,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./InterviewTabs.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 
-const LIST_ENDPOINT = `https://api.hachion.co/api/interview-templates`; 
+const LIST_ENDPOINT = `${API_BASE_URL}/api/interview-templates`; 
 const DETAIL_ENDPOINT = (id) =>
-  `https://api.hachion.co/api/interview-templates/${id}`; 
+  `${API_BASE_URL}/api/interview-templates/${id}`; 
 
 const InterviewTemplate = () => {
   

@@ -7,6 +7,7 @@ import learn from "@/assets/dash-icon2.webp";
 import cert from "@/assets/dash-icon3.webp";
 import { TbShare3 } from "react-icons/tb";
 import "../../Dashboard.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Ported from the CRA app's UserDashboardPage/components/UserCertificate.jsx.
 export default function UserCertificate() {
@@ -27,7 +28,7 @@ export default function UserCertificate() {
     }
     (async () => {
       try {
-        const res = await fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`);
+        const res = await fetch(`${API_BASE_URL}/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`);
         if (!res.ok) throw new Error(`Profile fetch failed: ${res.status}`);
         const data = await res.json();
         if (!data.studentId) throw new Error("studentId missing in profile response");
@@ -50,11 +51,11 @@ export default function UserCertificate() {
   // filename (it included the course name).
   const getCertificateViewURL = (certificateId) => {
     if (!certificateId) return "#";
-    return `https://api.hachion.co/certificate/downloadForView/${certificateId}`;
+    return `${API_BASE_URL}/certificate/downloadForView/${certificateId}`;
   };
   const getCertificateDownloadURL = (certificateId) => {
     if (!certificateId) return "#";
-    return `https://api.hachion.co/certificate/download/${certificateId}`;
+    return `${API_BASE_URL}/certificate/download/${certificateId}`;
   };
   const checkCertificateExists = async (url) => {
     try {
@@ -72,7 +73,7 @@ export default function UserCertificate() {
       try {
         const userData = JSON.parse(localStorage.getItem("loginuserData") || "null") || {};
         const userEmail = userData.email || "";
-        const res = await fetch(`https://api.hachion.co/certificate/getByEmail?email=${encodeURIComponent(userEmail)}`);
+        const res = await fetch(`${API_BASE_URL}/certificate/getByEmail?email=${encodeURIComponent(userEmail)}`);
         if (!res.ok) throw new Error(`Certificates fetch failed: ${res.status}`);
         const data = await res.json();
         if (!cancelled) {

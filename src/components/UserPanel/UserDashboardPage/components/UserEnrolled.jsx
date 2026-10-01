@@ -10,6 +10,7 @@ import { useEnrollAll } from "@/Api/hooks/UserDashboardApi/useEnrollAll";
 import { useAllCourses } from "@/Api/hooks/SitemapPageApi/useAllCourses";
 import { useTrainerOptions } from "@/Api/hooks/InstructorSection/useTrainerOptions";
 import Loader from "../../Common/Loader/Loader";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 dayjs.extend(customParseFormat);
 
@@ -115,7 +116,7 @@ export default function UserEnrolled() {
                   key={course.uniqueId}
                   heading={course.course_name || course.courseName}
                   courseCategory={course.course_category || course.courseCategory}
-                  image={`https://api.hachion.co/${course.courseImage}`}
+                  image={`${API_BASE_URL}/${course.courseImage}`}
                   level={course.level}
                   trainer_name={course.trainer}
                   month={course.numberOfClasses}

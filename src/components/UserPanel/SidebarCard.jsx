@@ -9,6 +9,7 @@ import fallbackImg from "@/assets/18.webp";
 import "./Home.css";
 import axios from "axios";
 import { buildCourseDetailsPath } from "./CoursePage/courseRouteUtils";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Ported from the CRA app's src/Components/UserPanel/SidebarCard.jsx —
 // the wishlist course-card. useNavigate -> useRouter.
@@ -57,7 +58,7 @@ const SidebarCard = ({
     if (!email || !course_id) return;
     (async () => {
       try {
-        const { data } = await axios.get(`https://api.hachion.co/api/wishlist/exists`, {
+        const { data } = await axios.get(`${API_BASE_URL}/api/wishlist/exists`, {
           params: { email, courseId: course_id },
         });
         if (!stop && data && typeof data.bookmarked === "boolean") {
@@ -118,7 +119,7 @@ const SidebarCard = ({
     }
     if (!course_id) return;
     try {
-      const { data } = await axios.post(`https://api.hachion.co/api/wishlist/toggle`, { email, courseId: course_id });
+      const { data } = await axios.post(`${API_BASE_URL}/api/wishlist/toggle`, { email, courseId: course_id });
       if (data && typeof data.bookmarked === "boolean") {
         setBookmarked(data.bookmarked);
       }

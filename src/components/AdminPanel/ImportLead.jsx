@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from "@/lib/apiBase";
 const ImportLead = () => {
   const [file, setFile] = useState(null);
   const [result, setResult] = useState(null);
@@ -22,7 +23,7 @@ const ImportLead = () => {
     formData.append("file", file);
     try {
       setLoading(true);
-      const response = await axios.post(`https://api.hachion.co/register-student/import`, formData, {
+      const response = await axios.post(`${API_BASE_URL}/register-student/import`, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }

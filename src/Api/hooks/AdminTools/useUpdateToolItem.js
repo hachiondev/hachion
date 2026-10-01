@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-const API_URL = `https://api.hachion.co/api/tools/item`;
+import { API_BASE_URL } from "@/lib/apiBase";
+const API_URL = `${API_BASE_URL}/api/tools/item`;
 export function useUpdateToolItem() {
   const queryClient = useQueryClient();
   return useMutation({

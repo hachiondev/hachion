@@ -5,12 +5,13 @@ import axios from "axios";
 import "./Blogs.css";
 import RecentEntriesCard from "./HomePage/TrendingBlogSection/components/RecentEntriesCard";
 import { getBlogPath } from "@/lib/blogUrl";
+import { API_BASE_URL } from "@/lib/apiBase";
 const LatestArticles = () => {
   const [blogs, setBlogs] = useState([]);
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/blog/recent`);
+        const response = await axios.get(`${API_BASE_URL}/blog/recent`);
         const mappedBlogs = response.data.map(row => {
           const [id, category_name, title, shortTitle, author, author_image, blog_image, date] = row;
           const avatarPath = author_image || "";
@@ -23,8 +24,8 @@ const LatestArticles = () => {
             author,
             date,
             description: "",
-            avatar: avatarPath ? `https://api.hachion.co/uploads/prod/blogs/${avatarPath}` : "",
-            blog_image: blogImagePath ? `https://api.hachion.co/uploads/prod/blogs/${blogImagePath}` : ""
+            avatar: avatarPath ? `${API_BASE_URL}/uploads/prod/blogs/${avatarPath}` : "",
+            blog_image: blogImagePath ? `${API_BASE_URL}/uploads/prod/blogs/${blogImagePath}` : ""
           };
         });
         setBlogs(mappedBlogs);

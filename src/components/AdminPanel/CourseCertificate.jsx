@@ -28,6 +28,7 @@ import { IoMdCloseCircleOutline } from "react-icons/io";
 import axios from 'axios';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -176,7 +177,7 @@ export default function CourseCertificate() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected certificates
-        const deletePromises = selectedIds.map(id => axios.delete(`https://api.hachion.co/certificate/delete/${id}`));
+        const deletePromises = selectedIds.map(id => axios.delete(`${API_BASE_URL}/certificate/delete/${id}`));
         await Promise.all(deletePromises);
 
         // Update state
@@ -205,7 +206,7 @@ export default function CourseCertificate() {
   useEffect(() => {
     const fetchCertificate = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/certificate`);
+        const response = await axios.get(`${API_BASE_URL}/certificate`);
         setCertificate(response.data);
         setFilteredCertificate(response.data);
       } catch (error) {
@@ -221,7 +222,7 @@ export default function CourseCertificate() {
   };
   const handleSave = async () => {
     try {
-      const response = await axios.put(`https://api.hachion.co/certificate/${editedData.id}`, editedData);
+      const response = await axios.put(`${API_BASE_URL}/certificate/${editedData.id}`, editedData);
       setCertificate(prev => prev.map(curr => curr.id === editedData.id ? response.data : curr));
       setFilteredCertificate(prev => prev.map(curr => curr.id === editedData.id ? response.data : curr));
       setSuccessMessage("✅ Certificate updated successfully!");
@@ -237,7 +238,7 @@ export default function CourseCertificate() {
   // UPDATED: handleDelete function
   const handleDelete = async id => {
     try {
-      await axios.delete(`https://api.hachion.co/certificate/delete/${id}`);
+      await axios.delete(`${API_BASE_URL}/certificate/delete/${id}`);
       const updatedCertificates = certificate.filter(item => item.id !== id);
       setCertificate(updatedCertificates);
       setFilteredCertificate(updatedCertificates);
@@ -276,7 +277,7 @@ export default function CourseCertificate() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/course-categories/all`);
+        const response = await axios.get(`${API_BASE_URL}/course-categories/all`);
         setCourse(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -292,7 +293,7 @@ export default function CourseCertificate() {
         // no status filter), same reasoning as RegularVideo.jsx's course
         // dropdown: a draft/inactive course still needs its course
         // certificate template manageable before it goes live.
-        const response = await axios.get(`https://api.hachion.co/courses/allforadmin`);
+        const response = await axios.get(`${API_BASE_URL}/courses/allforadmin`);
         setCourseCategory(response.data);
       } catch (error) {
         console.error("Error fetching courses:", error.message);
@@ -324,7 +325,7 @@ export default function CourseCertificate() {
       return;
     }
     try {
-      const response = await axios.post(`https://api.hachion.co/certificate/add`, formData, {
+      const response = await axios.post(`${API_BASE_URL}/certificate/add`, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
@@ -332,7 +333,7 @@ export default function CourseCertificate() {
       if (response.status === 201 || response.status === 200) {
         alert("Certificate added successfully");
         // Refresh certificate list
-        const fetchResponse = await axios.get(`https://api.hachion.co/certificate`);
+        const fetchResponse = await axios.get(`${API_BASE_URL}/certificate`);
         setCertificate(fetchResponse.data);
         setFilteredCertificate(fetchResponse.data);
         handleReset();
@@ -518,7 +519,7 @@ export default function CourseCertificate() {
                       <StyledTableCell align="center">{curr.course_name}</StyledTableCell>
                       <StyledTableCell align="center">{curr.title}</StyledTableCell>
                       <StyledTableCell align="center">
-                        {curr.certificate_image ? <img src={curr.certificate_image.startsWith("http") ? curr.certificate_image : `https://api.hachion.co${curr.certificate_image.startsWith("/") ? "" : "/"}${curr.certificate_image}`} alt={`Certificate ${index + 1}`} onError={e => {
+                        {curr.certificate_image ? <img src={curr.certificate_image.startsWith("http") ? curr.certificate_image : `${API_BASE_URL}${curr.certificate_image.startsWith("/") ? "" : "/"}${curr.certificate_image}`} alt={`Certificate ${index + 1}`} onError={e => {
                   e.target.onerror = null;
                   e.target.replaceWith(document.createTextNode("No Image"));
                 }} style={{

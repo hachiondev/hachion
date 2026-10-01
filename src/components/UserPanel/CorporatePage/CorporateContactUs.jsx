@@ -11,6 +11,7 @@ import Flag from "@/components/common/CountryFlag";
 import { AiFillCaretDown } from "react-icons/ai";
 import { useTopBarApi } from "@/Api/hooks/HomePageApi/useTopBarApi";
 import { countries, getDefaultCountry } from "@/countryUtils";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const initialValues = {
   name: "",
@@ -62,7 +63,7 @@ const CorporateContactUs = () => {
     const ctrl = new AbortController();
     (async () => {
       try {
-        const res = await fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`, {
+        const res = await fetch(`${API_BASE_URL}/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`, {
           signal: ctrl.signal,
         });
         if (!res.ok) throw new Error("Failed to fetch profile data");
@@ -146,7 +147,7 @@ const CorporateContactUs = () => {
     };
     setIsSubmitting(true);
     try {
-      const response = await axios.post(`https://api.hachion.co/advisors`, requestData, {
+      const response = await axios.post(`${API_BASE_URL}/advisors`, requestData, {
         headers: { "Content-Type": "application/json" },
       });
       if (response.status === 200) {

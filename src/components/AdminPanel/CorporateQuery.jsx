@@ -12,6 +12,7 @@ import { useState, useEffect } from 'react';
 import AdminPagination from './AdminPagination';
 import './Admin.css';
 import dayjs from "dayjs";
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -45,7 +46,7 @@ export default function CorporateQuery() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/advisors`);
+        const response = await axios.get(`${API_BASE_URL}/advisors`);
         setQueries(response.data);
         setFilteredData(response.data);
       } catch (err) {

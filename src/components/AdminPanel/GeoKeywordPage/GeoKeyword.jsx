@@ -31,8 +31,9 @@ import { useCourses } from "../../../Api/hooks/HomePageApi/NavbarApi/useCourses"
 import { useUpdateProject } from "../../../Api/hooks/AdminProjects/useUpdateProject";
 import { useDeleteProject } from "../../../Api/hooks/AdminProjects/useDeleteProject";
 import dayjs from 'dayjs';
+import { API_BASE_URL } from "@/lib/apiBase";
 const fetchGeoKeywordsByCategoryCourse = async (categoryName, courseName) => {
-  const res = await axios.get(`https://api.hachion.co/api/admin/geo-keywords/by-category-course`, {
+  const res = await axios.get(`${API_BASE_URL}/api/admin/geo-keywords/by-category-course`, {
     params: {
       categoryName,
       courseName
@@ -164,7 +165,7 @@ const GeoKeyword = ({
     const fetchGeoKeywords = async () => {
       try {
         setProjectsLoading(true);
-        const res = await axios.get(`https://api.hachion.co/api/admin/geo-keywords`);
+        const res = await axios.get(`${API_BASE_URL}/api/admin/geo-keywords`);
         setProjects(res.data);
       } catch (error) {
         console.error(error);
@@ -221,7 +222,7 @@ const GeoKeyword = ({
     if (formMode === "Edit") {
       try {
         setIsSavingProjects(true);
-        await axios.put(`https://api.hachion.co/api/admin/geo-keywords/update`, {
+        await axios.put(`${API_BASE_URL}/api/admin/geo-keywords/update`, {
           geoKeywordId: editingGeoKeywordId,
           geoKeywordName: rows[0].title
         });
@@ -254,12 +255,12 @@ const GeoKeyword = ({
           courseName: formData.courseName,
           geoKeywords: rows.map(row => row.title)
         };
-        const response = await axios.post(`https://api.hachion.co/api/admin/geo-keywords`, geoKeywordPayload);
+        const response = await axios.post(`${API_BASE_URL}/api/admin/geo-keywords`, geoKeywordPayload);
         console.log("GeoKeyword API Response:", response.data);
         showTimedMessage("success", "⚡ GeoKeywords saved successfully!");
 
         // Refresh the list after successful addition
-        const refreshRes = await axios.get(`https://api.hachion.co/api/admin/geo-keywords`);
+        const refreshRes = await axios.get(`${API_BASE_URL}/api/admin/geo-keywords`);
         setProjects(refreshRes.data);
         setFormData({
           courseCategory: "",
@@ -361,7 +362,7 @@ const GeoKeyword = ({
     }
     if (window.confirm("Are you sure you want to delete this GeoKeyword?")) {
       try {
-        await axios.delete(`https://api.hachion.co/api/admin/geo-keywords/${geoKeywordId}`);
+        await axios.delete(`${API_BASE_URL}/api/admin/geo-keywords/${geoKeywordId}`);
         setProjects(prev => prev.filter(item => item.geoKeywordId !== geoKeywordId));
 
         // Remove from selectedIds if present
@@ -385,7 +386,7 @@ const GeoKeyword = ({
         setIsSavingProjects(true);
 
         // Delete all selected GeoKeywords
-        await Promise.all(selectedIds.map(id => axios.delete(`https://api.hachion.co/api/admin/geo-keywords/${id}`)));
+        await Promise.all(selectedIds.map(id => axios.delete(`${API_BASE_URL}/api/admin/geo-keywords/${id}`)));
 
         // Update state
         const updatedProjects = projects.filter(item => !selectedIds.includes(item.geoKeywordId));

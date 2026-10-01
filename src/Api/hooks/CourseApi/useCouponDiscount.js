@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 export function useCouponDiscount({ couponCode, enabled }) {
   return useQuery({
     queryKey: ["couponDiscount", couponCode],
     queryFn: async () => {
-      const res = await fetch(`https://api.hachion.co/coupon-code/discount/${couponCode}`);
+      const res = await fetch(`${API_BASE_URL}/coupon-code/discount/${couponCode}`);
       const data = await res.json();
       return data;
     },

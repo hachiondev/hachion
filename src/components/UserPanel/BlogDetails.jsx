@@ -19,6 +19,7 @@ import { useAllBlogs } from "@/Api/hooks/HomePageApi/TrendingBlogApi/useAllBlogs
 import { getBlogBySlug } from "./HomePage/TrendingBlogSection/services/blogsService";
 import { slugifyCourseText } from "./CoursePage/courseRouteUtils";
 import { getBlogPath } from "@/lib/blogUrl";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Below-the-fold — related posts, share-preview card, and the inquiry form
 // all render after the main article; no reason to ship their code upfront.
@@ -323,7 +324,7 @@ const BlogDetails = ({ initialBlog = null } = {}) => {
               <div className="detail-middle">
                 {/* Above-the-fold hero/LCP image — must load eagerly. */}
                 <img
-                  src={`https://api.hachion.co/uploads/prod/blogs/${selectedBlog.blog_image}`}
+                  src={`${API_BASE_URL}/uploads/prod/blogs/${selectedBlog.blog_image}`}
                   alt={selectedBlog.title}
                   onError={handleImageError}
                   fetchPriority="high"

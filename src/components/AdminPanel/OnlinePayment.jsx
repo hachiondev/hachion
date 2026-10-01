@@ -15,6 +15,7 @@ import './Admin.css';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import axios from "axios";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({
   theme
@@ -90,7 +91,7 @@ export default function OnlinePayment() {
   useEffect(() => {
     const fetchOnlinePayments = async () => {
       try {
-        const res = await axios.get(`https://api.hachion.co/razorpay/payments`);
+        const res = await axios.get(`${API_BASE_URL}/razorpay/payments`);
         if (res.data) {
           // Map backend response to match your existing table field names
           const mappedData = res.data.map((item, index) => ({
@@ -169,7 +170,7 @@ export default function OnlinePayment() {
       try {
         // Note: This assumes there's a delete endpoint. If not, you may need to adjust this.
         // Delete all selected payments
-        await Promise.all(selectedIds.map(id => axios.delete(`https://api.hachion.co/razorpay/payments/${id}`)));
+        await Promise.all(selectedIds.map(id => axios.delete(`${API_BASE_URL}/razorpay/payments/${id}`)));
 
         // Update state
         const updatedPayments = onlinePayment.filter(item => !selectedIds.includes(item.id));
@@ -199,7 +200,7 @@ export default function OnlinePayment() {
     if (!confirmed) return;
     try {
       // Note: This assumes there's a delete endpoint. If not, you may need to adjust this.
-      await axios.delete(`https://api.hachion.co/razorpay/payments/${id}`);
+      await axios.delete(`${API_BASE_URL}/razorpay/payments/${id}`);
       const updatedPayments = onlinePayment.filter(item => item.id !== id);
       setOnlinePayment(updatedPayments);
       setFilteredRows(updatedPayments);

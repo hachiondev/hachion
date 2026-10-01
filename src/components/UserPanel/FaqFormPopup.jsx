@@ -7,6 +7,7 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "./Home.css";
 import { IoCloseSharp } from "react-icons/io5";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const FaqFormPopup = ({ onClose }) => {
   const popupRef = useRef();
@@ -39,7 +40,7 @@ const FaqFormPopup = ({ onClose }) => {
     const payload = { name, emailId: email, message };
     setSubmitting(true);
     try {
-      await axios.post(`https://api.hachion.co/faq-queries`, payload);
+      await axios.post(`${API_BASE_URL}/faq-queries`, payload);
       alert("Thanks! Your question has been submitted.");
       setName("");
       setEmail("");
@@ -63,7 +64,7 @@ const FaqFormPopup = ({ onClose }) => {
     const userEmail = parsed?.email || "";
     if (userEmail) {
       setEmail((prev) => (prev?.trim() ? prev : userEmail));
-      fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`)
+      fetch(`${API_BASE_URL}/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`)
         .then((res) => {
           if (!res.ok) throw new Error("Failed to fetch profile data");
           return res.json();

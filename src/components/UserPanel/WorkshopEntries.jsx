@@ -5,6 +5,7 @@ import "./Blogs.css";
 import WorkshopEntriesCard from "./WorkshopEntriesCard";
 import { useWorkshops } from "@/Api/hooks/WorkshopApi/useWorkshops";
 import { slugifyWorkshopTitle } from "@/lib/workshopSlug";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const EMPTY_ARRAY = [];
 
@@ -18,7 +19,7 @@ const WorkshopEntries = () => {
         [...workshop].reverse().map((entry) => (
           <WorkshopEntriesCard
             key={entry.id}
-            banner_image={`https://api.hachion.co/${entry.banner_image}`}
+            banner_image={`${API_BASE_URL}/${entry.banner_image}`}
             title={entry.title}
             date={(() => {
               if (!entry?.date) return "Loading...";

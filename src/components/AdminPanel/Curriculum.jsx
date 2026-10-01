@@ -36,6 +36,7 @@ import 'react-quill-new/dist/quill.snow.css';
 import { FiUpload } from "react-icons/fi";
 import { FaTimesCircle } from 'react-icons/fa';
 import { BsFileEarmarkPdfFill } from 'react-icons/bs';
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -191,7 +192,7 @@ export default function Curriculum() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/course-categories/all`);
+        const response = await axios.get(`${API_BASE_URL}/course-categories/all`);
         setCourse(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -202,7 +203,7 @@ export default function Curriculum() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/courses/all`);
+        const response = await axios.get(`${API_BASE_URL}/courses/all`);
         setCourseCategory(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -229,7 +230,7 @@ export default function Curriculum() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/curriculum`);
+        const response = await axios.get(`${API_BASE_URL}/curriculum`);
         setAllData(response.data);
         setFilteredCurriculum(response.data);
       } catch (error) {
@@ -290,7 +291,7 @@ export default function Curriculum() {
       if (editedRow.assessment_pdf && editedRow.assessment_pdf instanceof File) {
         formData.append("assessmentPdf", editedRow.assessment_pdf);
       }
-      const response = await axios.put(`https://api.hachion.co/curriculum/update/${editedRow.curriculum_id}`, formData, {
+      const response = await axios.put(`${API_BASE_URL}/curriculum/update/${editedRow.curriculum_id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         },
@@ -313,7 +314,7 @@ export default function Curriculum() {
   };
   const handleDelete = async curriculum_id => {
     try {
-      const response = await axios.delete(`https://api.hachion.co/curriculum/delete/${curriculum_id}`);
+      const response = await axios.delete(`${API_BASE_URL}/curriculum/delete/${curriculum_id}`);
       console.log("Curriculum deleted successfully:", response.data);
       setAllData(prev => prev.filter(item => item.curriculum_id !== curriculum_id));
       setFilteredCurriculum(prev => prev.filter(item => item.curriculum_id !== curriculum_id));
@@ -422,7 +423,7 @@ export default function Curriculum() {
         formData.append("assessmentPdf", row.assessment_pdf);
       }
       try {
-        const response = await axios.post(`https://api.hachion.co/curriculum/add`, formData, {
+        const response = await axios.post(`${API_BASE_URL}/curriculum/add`, formData, {
           headers: {
             "Content-Type": "multipart/form-data"
           },
@@ -522,7 +523,7 @@ export default function Curriculum() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected curriculums
-        await Promise.all(selectedIds.map(id => axios.delete(`https://api.hachion.co/curriculum/delete/${id}`)));
+        await Promise.all(selectedIds.map(id => axios.delete(`${API_BASE_URL}/curriculum/delete/${id}`)));
 
         // Update state
         setAllData(prev => prev.filter(item => !selectedIds.includes(item.curriculum_id)));

@@ -12,6 +12,7 @@ import { useTrainers } from "@/Api/hooks/HomePageApi/TrainingApi/useTrainers";
 import { useDiscountRules } from "@/Api/hooks/HomePageApi/TrendingApi/useDiscountRules";
 import { useCountdowns } from "@/Api/hooks/HomePageApi/TrendingApi/useCountdowns";
 import CardsPagination from "../Common/CardsPagination";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const countryToCurrencyMap = {
   IN: 'INR',
@@ -289,7 +290,7 @@ const DiscountCards = () => {
       <div className="d-flex justify-content-center gap-3 flex-wrap mb-2">
         {loading ? Array.from({
         length: cardsPerRow
-      }).map((_, idx) => <div className="skeleton-card" key={idx}></div>) : currentCourses.map((course, idx) => <DiscountCourseCard key={idx} heading={course.courseName} courseCategory={course.courseCategory} month={course.numberOfClasses} image={`https://api.hachion.co/${course.courseImage}`} course_id={course.id} discountPercentage={(() => {
+      }).map((_, idx) => <div className="skeleton-card" key={idx}></div>) : currentCourses.map((course, idx) => <DiscountCourseCard key={idx} heading={course.courseName} courseCategory={course.courseCategory} month={course.numberOfClasses} image={`${API_BASE_URL}/${course.courseImage}`} course_id={course.id} discountPercentage={(() => {
         const rulePct = getRuleDiscountPct(course.courseName, country);
         if (rulePct > 0) return rulePct;
         return country === 'IN' ? course.idiscount != null ? Number(course.idiscount) : 0 : course.discount != null ? Number(course.discount) : 0;

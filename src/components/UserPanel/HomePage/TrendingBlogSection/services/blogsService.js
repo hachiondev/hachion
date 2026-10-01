@@ -1,4 +1,5 @@
 import Blogimageplaceholder from "../../../../../assets/blogplaceholder.webp";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 /**
  * Fetch a single blog by numeric id or short-title slug — mirrors
@@ -10,8 +11,8 @@ export const getBlogBySlug = async (titleSlug) => {
   const lastPart = titleSlug?.split("-").pop();
   const id = /^\d+$/.test(lastPart) ? lastPart : null;
   const url = id
-    ? `https://api.hachion.co/blog/${id}`
-    : `https://api.hachion.co/blog/check/${encodeURIComponent(decodeURIComponent(titleSlug).replace(/-/g, " "))}`;
+    ? `${API_BASE_URL}/blog/${id}`
+    : `${API_BASE_URL}/blog/check/${encodeURIComponent(decodeURIComponent(titleSlug).replace(/-/g, " "))}`;
   const response = await fetch(url, { next: { revalidate: 300 } });
   if (!response.ok) return null;
   const data = await response.json();
@@ -25,14 +26,14 @@ export const getBlogBySlug = async (titleSlug) => {
  * BlogDetails.jsx, not separate endpoints.
  */
 export const getAllBlogs = async () => {
-  const response = await fetch(`https://api.hachion.co/blog`);
+  const response = await fetch(`${API_BASE_URL}/blog`);
   if (!response.ok) throw new Error("Failed to fetch blogs");
   const data = await response.json();
   if (!Array.isArray(data)) return [];
   const mapped = data.map((blog) => ({
     ...blog,
     blog_image: blog.blog_image
-      ? `https://api.hachion.co/uploads/prod/blogs/${blog.blog_image}`
+      ? `${API_BASE_URL}/uploads/prod/blogs/${blog.blog_image}`
       : Blogimageplaceholder.src,
   }));
   return mapped.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -56,14 +57,14 @@ export const getAllBlogs = async () => {
  * IN (:categories)` — equivalent to "all blogs" without the heavy payload.
  */
 export const getAllBlogsLightweight = async () => {
-  const categoriesRes = await fetch(`https://api.hachion.co/blog/categories`, { next: { revalidate: 300 } });
+  const categoriesRes = await fetch(`${API_BASE_URL}/blog/categories`, { next: { revalidate: 300 } });
   if (!categoriesRes.ok) return [];
   const categories = await categoriesRes.json();
   if (!Array.isArray(categories) || categories.length === 0) return [];
 
   const params = new URLSearchParams();
   categories.forEach((c) => params.append("category", c));
-  const blogsRes = await fetch(`https://api.hachion.co/blog/filter?${params.toString()}`, { next: { revalidate: 300 } });
+  const blogsRes = await fetch(`${API_BASE_URL}/blog/filter?${params.toString()}`, { next: { revalidate: 300 } });
   if (!blogsRes.ok) return [];
   const rows = await blogsRes.json();
   if (!Array.isArray(rows)) return [];
@@ -79,7 +80,7 @@ export const getAllBlogsLightweight = async () => {
  * Returns transformed blog data with full image URLs
  */
 export const getRecentBlogs = async () => {
-  const response = await fetch(`https://api.hachion.co/blog/recent`);
+  const response = await fetch(`${API_BASE_URL}/blog/recent`);
   if (!response.ok) {
     throw new Error("Failed to fetch recent blogs");
   }
@@ -96,8 +97,8 @@ export const getRecentBlogs = async () => {
   // links for anything built from this endpoint's data.
   return data.map(row => {
     const [id, category_name, title, short_title, author, author_image, blog_image, date] = row;
-    const avatar = author_image ? `https://api.hachion.co/uploads/prod/blogs/${author_image}` : "";
-    const blogImg = blog_image ? `https://api.hachion.co/uploads/prod/blogs/${blog_image}` : "";
+    const avatar = author_image ? `${API_BASE_URL}/uploads/prod/blogs/${author_image}` : "";
+    const blogImg = blog_image ? `${API_BASE_URL}/uploads/prod/blogs/${blog_image}` : "";
     return {
       id,
       category_name,

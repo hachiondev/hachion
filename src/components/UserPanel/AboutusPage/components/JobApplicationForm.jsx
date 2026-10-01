@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Bricolage_Grotesque } from "next/font/google";
 import styles from "./JobApplicationForm.module.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Self-hosted via next/font instead of the render-blocking Google Fonts
 // @import this module.css used to have — same weights, but no external
@@ -177,7 +178,7 @@ const JobApplicationForm = () => {
         })
       );
       form.append("resume", formData.resume);
-      const res = await fetch(`https://api.hachion.co/job-application-aboutus`, {
+      const res = await fetch(`${API_BASE_URL}/job-application-aboutus`, {
         method: "POST",
         body: form,
       });

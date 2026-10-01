@@ -10,6 +10,7 @@ import { useTrendingData } from "@/Api/hooks/HomePageApi/TrendingApi/useTrending
 import { useGeoData } from "@/Api/hooks/HomePageApi/TrendingApi/useGeoData";
 import { useDiscountRules } from "@/Api/hooks/HomePageApi/TrendingApi/useDiscountRules";
 import { useCountdowns } from "@/Api/hooks/HomePageApi/TrendingApi/useCountdowns";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
 const fmt = n => Math.round(Number(n) || 0).toLocaleString();
@@ -112,7 +113,7 @@ const Trending = () => {
           of: () => ""
         });
         const discountPercentage = rulePct > 0 ? rulePct : isIN ? course.idiscount != null ? Number(course.idiscount) : 0 : course.discount != null ? Number(course.discount) : 0;
-        return <CourseCard key={course.id || i} course_id={course.id} heading={course.courseName} courseCategory={course.courseCategory} month={course.numberOfClasses} image={`https://api.hachion.co/${course.courseImage}`} trainer_name={trainerName} discountPercentage={discountPercentage} amount={`${currency} ${fmt(finalPrice)}`} totalAmount={`${fmt(displayMrp)}`} level={course.level} onClick={() => handleCardClick(course)} className="course-card" timeLeftLabel={countdowns[course.id ?? course.courseName] || ""} />;
+        return <CourseCard key={course.id || i} course_id={course.id} heading={course.courseName} courseCategory={course.courseCategory} month={course.numberOfClasses} image={`${API_BASE_URL}/${course.courseImage}`} trainer_name={trainerName} discountPercentage={discountPercentage} amount={`${currency} ${fmt(finalPrice)}`} totalAmount={`${fmt(displayMrp)}`} level={course.level} onClick={() => handleCardClick(course)} className="course-card" timeLeftLabel={countdowns[course.id ?? course.courseName] || ""} />;
       }) : <p>No courses available.</p>}
       </div>
     </div>;

@@ -8,6 +8,7 @@ import Link from "next/link";
 import "./Corporate.css";
 import { useWorkshops } from "@/Api/hooks/WorkshopApi/useWorkshops";
 import { slugifyWorkshopTitle } from "@/lib/workshopSlug";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const EMPTY_ARRAY = [];
 
@@ -129,7 +130,7 @@ const Workshop = () => {
               return (
                 <WorkshopCard
                   key={workshop.id}
-                  banner_image={`https://api.hachion.co/${workshop.banner_image}`}
+                  banner_image={`${API_BASE_URL}/${workshop.banner_image}`}
                   title={workshop.title}
                   date={(() => {
                     if (!workshop?.date) return "Loading...";

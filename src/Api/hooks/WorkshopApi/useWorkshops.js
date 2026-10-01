@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const fetchWorkshops = async () => {
-  const { data } = await axios.get(`https://api.hachion.co/workshopschedule`);
+  const { data } = await axios.get(`${API_BASE_URL}/workshopschedule`);
   return Array.isArray(data) ? data : [];
 };
 

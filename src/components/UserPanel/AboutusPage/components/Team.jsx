@@ -5,6 +5,7 @@ import { Avatar } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import JobApplicationForm from "./JobApplicationForm";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const getEmployeeImageUrl = (companyImage) => {
   if (!companyImage) return null;
@@ -12,7 +13,7 @@ const getEmployeeImageUrl = (companyImage) => {
     return companyImage;
   }
   const clean = companyImage.startsWith("/") ? companyImage.substring(1) : companyImage;
-  return `https://api.hachion.co/uploads/prod/employee_company_logo/${clean}`;
+  return `${API_BASE_URL}/uploads/prod/employee_company_logo/${clean}`;
 };
 
 const Team = () => {
@@ -33,7 +34,7 @@ const Team = () => {
     setIsLoadingTeam(true);
     setTeamError("");
     axios
-      .get(`https://api.hachion.co/employees`)
+      .get(`${API_BASE_URL}/employees`)
       .then((res) => {
         setEmployees(res.data || []);
       })

@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useCourseApiName } from "@/components/UserPanel/CoursePage/CourseApiNameContext";
 import styles from "./StudentsSay.module.css";
 import { cn } from "@/utils";
 import { useUserReviewsByCourse } from "@/Api/hooks/CourseApi/useUserReviewsByCourse";
@@ -28,17 +29,7 @@ export default function StudentsSay({ onCta }) {
       router.push("/courses");
     });
 
-  const { courseName } = useParams();
-  const rawSlug = courseName ? decodeURIComponent(courseName) : "";
-
-  const normalizeCourseSlug = (slug) =>
-    slug
-      .replace(/[-_]+/g, " ")
-      .replace(/\s+/g, " ")
-      .trim()
-      .toLowerCase();
-
-  const courseNameForApi = rawSlug ? normalizeCourseSlug(rawSlug) : "";
+  const courseNameForApi = useCourseApiName();
 
   const { data: reviews = [], isLoading } = useUserReviewsByCourse(courseNameForApi);
 

@@ -15,7 +15,7 @@ import DemoClassSectionCrashTab from "./DemoClassSectionCrashTab";
 import DemoClassSectionMentoringTab from "./DemoClassSectionMentoringTab";
 import DemoClassSectionSelfTab from "./DemoClassSectionSelfTab";
 import { useCourseByName } from "@/Api/hooks/CourseApi/useCourseByName";
-import { toApiCourseName } from "@/components/UserPanel/CoursePage/courseRouteUtils";
+import { useCourseApiName } from "@/components/UserPanel/CoursePage/CourseApiNameContext";
 import { useDemoLivePayment } from "@/Api/hooks/CourseApi/useDemoLivePayment";
 import { useCurrency } from "@/Api/hooks/CourseApi/useCurrency";
 import { saveRedirectUrl } from "@/redirectAfterLogin";
@@ -96,7 +96,7 @@ const DemoClassSection = forwardRef(({ onViewDemoClass }, ref) => {
     router.push(path);
   };
 
-  const courseNameForApi = courseName ? toApiCourseName(courseName) : "";
+  const courseNameForApi = useCourseApiName();
 
   const courseSlug = courseNameForApi || "";
 

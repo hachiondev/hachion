@@ -15,7 +15,8 @@ import Flag from "react-world-flags";
 import { AiFillCaretDown } from "react-icons/ai";
 import AdminPagination from "../AdminPagination";
 import { countries, getDefaultCountry } from "../../../countryUtils";
-const API_BASE = `https://api.hachion.co`;
+import { API_BASE_URL } from "@/lib/apiBase";
+const API_BASE = `${API_BASE_URL}`;
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -561,9 +562,9 @@ const EmployeesDetailForm = () => {
     if (!storedPath) return null;
     if (storedPath.startsWith("images/")) {
       const fileOnly = storedPath.substring("images/".length);
-      return `https://api.hachion.co/uploads/prod/employee_company_logo/${fileOnly}`;
+      return `${API_BASE_URL}/uploads/prod/employee_company_logo/${fileOnly}`;
     }
-    return `https://api.hachion.co/uploads/prod/employees/${storedPath}`;
+    return `${API_BASE_URL}/uploads/prod/employees/${storedPath}`;
   };
   const formatDate = dateString => {
     if (!dateString) return "—";
@@ -585,7 +586,7 @@ const EmployeesDetailForm = () => {
   };
   const getResumeLink = resumePath => {
     if (!resumePath) return null;
-    return `https://api.hachion.co/uploads/prod/${resumePath}`;
+    return `${API_BASE_URL}/uploads/prod/${resumePath}`;
   };
 
   // Render personal information tab

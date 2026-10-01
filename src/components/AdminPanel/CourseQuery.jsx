@@ -18,6 +18,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import AdminPagination from './AdminPagination';
 import dayjs from "dayjs";
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -54,7 +55,7 @@ export default function CourseQuery() {
   useEffect(() => {
     const fetchCourseQuery = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/haveanyquery`);
+        const response = await axios.get(`${API_BASE_URL}/haveanyquery`);
         setCourseQuery(response.data);
         setFilteredData(response.data);
       } catch (error) {

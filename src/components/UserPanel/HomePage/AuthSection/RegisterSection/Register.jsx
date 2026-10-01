@@ -14,6 +14,8 @@ import google from "@/assets/google-new.webp";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { useTopBarApi } from "@/Api/hooks/HomePageApi/useTopBarApi";
 import { useUserMe } from "@/Api/hooks/HomePageApi/RegisterApi/useUserMe";
+import { API_BASE_URL } from "@/lib/apiBase";
+import { sharedCookieAttrs } from "@/lib/authCookies";
 
 function getCookie(name) {
   const m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()[\]\\/+^])/g, '\\$1') + '=([^;]*)'));
@@ -81,7 +83,7 @@ const Register = () => {
     // to a plain window.alert() per explicit instruction — was briefly an inline
     // errors.email message, reverted back to match the old/CRA-style alert.
     try {
-      const statusRes = await fetch(`https://api.hachion.co/get-status?email=${email}`);
+      const statusRes = await fetch(`${API_BASE_URL}/get-status?email=${email}`);
       const data = await statusRes.text();
       const accountExists = Boolean(data) && !data.toLowerCase().includes("not found");
       if (accountExists && data.toLowerCase().includes("disabled")) {
@@ -115,7 +117,7 @@ const Register = () => {
   };
   const SHARED_DOMAIN = "hachion.co";
   function setSharedCookie(name, value, maxAgeSeconds = 300) {
-    document.cookie = `${name}=${encodeURIComponent(value)}; Domain=${SHARED_DOMAIN}; ` + `Path=/; Max-Age=${maxAgeSeconds}; SameSite=Lax; Secure`;
+    document.cookie = `${name}=${encodeURIComponent(value)}; Max-Age=${maxAgeSeconds}; ` + sharedCookieAttrs(`Domain=${SHARED_DOMAIN}; Path=/; SameSite=Lax; Secure`);
   }
   function clearCookieAllScopes(name) {
     document.cookie = `${name}=; Path=/; Max-Age=0`;
@@ -129,7 +131,7 @@ const Register = () => {
     clearCookieAllScopes("avatar");
     setSharedCookie("flow", "signup", 300);
     setTimeout(() => {
-      window.location.href = `https://api.hachion.co/oauth2/authorization/google`;
+      window.location.href = `${API_BASE_URL}/oauth2/authorization/google`;
     }, 50);
   };
   useEffect(() => {

@@ -14,6 +14,7 @@ import { Menu, MenuItem } from "@mui/material";
 import Flag from "@/components/common/CountryFlag";
 import { AiFillCaretDown } from "react-icons/ai";
 import { countries } from "@/countryUtils";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const initialValues = {
   name: "",
@@ -104,7 +105,7 @@ const ContactUs = () => {
     setValues((prev) => ({ ...prev, email: userEmail }));
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${userEmail}`);
+        const response = await fetch(`${API_BASE_URL}/api/v1/user/myprofile?email=${userEmail}`);
         if (!response.ok) {
           throw new Error("Failed to fetch profile data");
         }
@@ -169,7 +170,7 @@ const ContactUs = () => {
       country: selectedCountry.name,
     };
     try {
-      const response = await axios.post(`https://api.hachion.co/haveanyquery/add`, requestData, {
+      const response = await axios.post(`${API_BASE_URL}/haveanyquery/add`, requestData, {
         headers: {
           "Content-Type": "application/json",
         },

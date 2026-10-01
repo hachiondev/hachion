@@ -12,6 +12,7 @@ import Paper from "@mui/material/Paper";
 import { FiDownload } from "react-icons/fi";
 import dayjs from "dayjs";
 import "../../Dashboard.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Ported from the CRA app's UserDashboardPage/components/UserOrders.jsx.
 export default function UserOrders() {
@@ -24,7 +25,7 @@ export default function UserOrders() {
     const email = user?.email;
     if (!email) return;
     axios
-      .get(`https://api.hachion.co/razorpay/orders?email=${email}`)
+      .get(`${API_BASE_URL}/razorpay/orders?email=${email}`)
       .then((res) => {
         const data = res.data.map((item, index) => {
           let formattedDate = "-";
@@ -54,7 +55,7 @@ export default function UserOrders() {
       return;
     }
     axios
-      .get(`https://api.hachion.co/api/v1/user/myprofile`, { params: { email } })
+      .get(`${API_BASE_URL}/api/v1/user/myprofile`, { params: { email } })
       .then((res) => {
         setStudentName(res.data?.studentName || res.data?.name || null);
       })
@@ -72,7 +73,7 @@ export default function UserOrders() {
     const safeCourse = courseName.trim().replace(/\s+/g, "_");
     const fileName = `${safeStudent}_${safeCourse}.pdf`;
     const encodedFileName = encodeURIComponent(fileName);
-    return `https://api.hachion.co/uploads/prod/payments/invoices/${encodedFileName}`;
+    return `${API_BASE_URL}/uploads/prod/payments/invoices/${encodedFileName}`;
   };
 
   const handleDownloadInvoice = (courseName) => {

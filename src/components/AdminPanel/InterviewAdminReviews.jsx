@@ -24,6 +24,7 @@ import { IoSearch } from 'react-icons/io5';
 import { FiPlus } from 'react-icons/fi';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -145,7 +146,7 @@ const InterviewTemplate = ({
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/course-categories/all`);
+        const response = await axios.get(`${API_BASE_URL}/course-categories/all`);
         setCourse(response.data);
       } catch (error) {}
     };
@@ -154,7 +155,7 @@ const InterviewTemplate = ({
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/courses/all`);
+        const response = await axios.get(`${API_BASE_URL}/courses/all`);
         setCategories(response.data);
         setFilteredCourses(response.data);
         setAllCourses(response.data);
@@ -217,7 +218,7 @@ const InterviewTemplate = ({
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected courses
-        const deletePromises = selectedIds.map(id => axios.delete(`https://api.hachion.co/courses/delete/${id}`));
+        const deletePromises = selectedIds.map(id => axios.delete(`${API_BASE_URL}/courses/delete/${id}`));
         await Promise.all(deletePromises);
 
         // Update state
@@ -412,7 +413,7 @@ const InterviewTemplate = ({
     }
     try {
       if (formMode === "Edit") {
-        const response = await axios.put(`https://api.hachion.co/courses/update/${formData.id}`, formNewData, {
+        const response = await axios.put(`${API_BASE_URL}/courses/update/${formData.id}`, formNewData, {
           headers: {
             "Content-Type": "multipart/form-data"
           }
@@ -424,7 +425,7 @@ const InterviewTemplate = ({
           setShowAddCourse(false);
         }
       } else {
-        const response = await axios.post(`https://api.hachion.co/courses/add`, formNewData, {
+        const response = await axios.post(`${API_BASE_URL}/courses/add`, formNewData, {
           headers: {
             "Content-Type": "multipart/form-data"
           }
@@ -444,7 +445,7 @@ const InterviewTemplate = ({
   const handleEditClick = async courseId => {
     setShowAddCourse(true);
     try {
-      const response = await fetch(`https://api.hachion.co/courses/${courseId}`);
+      const response = await fetch(`${API_BASE_URL}/courses/${courseId}`);
       if (response.ok) {
         const course = await response.json();
         setFormData({
@@ -549,7 +550,7 @@ const InterviewTemplate = ({
   // UPDATED: handleDelete function to remove from selectedIds
   const handleDelete = async id => {
     try {
-      const response = await axios.delete(`https://api.hachion.co/courses/delete/${id}`);
+      const response = await axios.delete(`${API_BASE_URL}/courses/delete/${id}`);
       if (response.status === 200) {
         setSuccessMessage("✅ Course deleted successfully.");
         setErrorMessage("");
@@ -579,7 +580,7 @@ const InterviewTemplate = ({
     const shortCourseValue = formData.shortCourse;
     if (!shortCourseValue) return;
     try {
-      await axios.get(`https://api.hachion.co/courses/shortCourse`, {
+      await axios.get(`${API_BASE_URL}/courses/shortCourse`, {
         params: {
           shortCourse: shortCourseValue
         }
@@ -1068,7 +1069,7 @@ const InterviewTemplate = ({
                         </StyledTableCell>
                         <StyledTableCell align="center">{idx + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
                         <StyledTableCell align="center">
-                          {course.courseImage ? <img src={`https://api.hachion.co/${course.courseImage}`} alt="Course" width="50" /> : 'No Image'}
+                          {course.courseImage ? <img src={`${API_BASE_URL}/${course.courseImage}`} alt="Course" width="50" /> : 'No Image'}
                         </StyledTableCell>
                         <StyledTableCell align="left">{course.courseCategory}</StyledTableCell>
                         <StyledTableCell align="left">{course.shortCourse}</StyledTableCell>

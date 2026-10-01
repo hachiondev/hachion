@@ -18,6 +18,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import AdminPagination from './AdminPagination';
 import dayjs from "dayjs";
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -56,7 +57,7 @@ export default function AskFaq() {
       try {
         const {
           data
-        } = await axios.get(`https://api.hachion.co/faq-queries`);
+        } = await axios.get(`${API_BASE_URL}/faq-queries`);
         const normalized = (Array.isArray(data) ? data : []).map((x, idx) => {
           let formattedDate = "";
           if (x.date) {

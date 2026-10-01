@@ -23,6 +23,7 @@ import "../Style.css";
 import "../Home.css";
 import "../Corporate.css";
 import styles from "./InstructorDetails.module.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const EMPTY_ARRAY = [];
 
@@ -99,7 +100,7 @@ const InstructorDetails = () => {
     if (!trainer?.trainer_name || !trainer?.course_name) return;
     let cancelled = false;
     axios
-      .get(`https://api.hachion.co/enroll/count`, {
+      .get(`${API_BASE_URL}/enroll/count`, {
         params: { trainerName: trainer.trainer_name, courseName: trainer.course_name.replace(/\s+/g, "+") },
       })
       .then((res) => {
@@ -152,7 +153,7 @@ const InstructorDetails = () => {
 
       <div className="container">
         <div className={styles.container}>
-          <Avatar alt={trainer.trainer_name} src={trainer.trainerImage ? `https://api.hachion.co/${trainer.trainerImage}` : ""} className={styles.avatar} />
+          <Avatar alt={trainer.trainer_name} src={trainer.trainerImage ? `${API_BASE_URL}/${trainer.trainerImage}` : ""} className={styles.avatar} />
 
           <div className={styles.contentWrapper}>
             <div className={styles.mainContent}>
@@ -211,7 +212,7 @@ const InstructorDetails = () => {
                 heading={course.courseName}
                 courseCategory={course.courseCategory}
                 month={course.numberOfClasses || course.duration || 0}
-                image={`https://api.hachion.co/${course.courseImage || course.image}`}
+                image={`${API_BASE_URL}/${course.courseImage || course.image}`}
                 trainer_name={trainer.trainer_name}
                 discountPercentage={country === "IN" ? (course.idiscount != null ? Number(course.idiscount) : 0) : course.discount != null ? Number(course.discount) : 0}
                 amount={(() => {
@@ -242,7 +243,7 @@ const InstructorDetails = () => {
         <div className="feedback-grid">
           {reviews.length > 0 ? (
             reviews.map((fb) => (
-              <LearnerCard key={fb.review_id} name={fb.name} location={fb.location} content={fb.review} rating={fb.rating} profileImage={fb.user_image ? `https://api.hachion.co/userreview/${fb.user_image}` : ""} />
+              <LearnerCard key={fb.review_id} name={fb.name} location={fb.location} content={fb.review} rating={fb.rating} profileImage={fb.user_image ? `${API_BASE_URL}/userreview/${fb.user_image}` : ""} />
             ))
           ) : (
             <p>No reviews available.</p>

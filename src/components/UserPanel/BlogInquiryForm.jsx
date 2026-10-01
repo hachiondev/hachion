@@ -11,6 +11,7 @@ import CountryFlag from '@/components/common/CountryFlag';
 import { countries, getDefaultCountry } from '@/countryUtils';
 import { useTopBarApi } from '@/Api/hooks/HomePageApi/useTopBarApi';
 import { useUserProfile } from '@/Api/hooks/CourseApi/useUserProfile';
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // ── Shared form content (used in both desktop & mobile) ──
 const FormContent = ({
@@ -317,7 +318,7 @@ const BlogInquiryForm = ({ blogTitle }) => {
     setError('');
     try {
       const fullPhone = `${selectedCountry.code} ${formData.phone}`;
-      const response = await axios.post(`https://api.hachion.co/blog/inquiry`, {
+      const response = await axios.post(`${API_BASE_URL}/blog/inquiry`, {
         ...formData,
         phone: fullPhone,
         blogTitle,

@@ -10,6 +10,7 @@ import AddressIcon from "@/assets/addressicon.webp";
 import ContactIcon from "@/assets/contacticon.webp";
 import TimeIcon from "@/assets/timeicon.webp";
 import FaqFormPopup from "@/components/UserPanel/FaqFormPopup";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const AllFaqs = () => {
   const [faqs, setFaqs] = useState([]);
@@ -24,7 +25,7 @@ const AllFaqs = () => {
       try {
         setLoading(true);
         setError("");
-        const res = await fetch(`https://api.hachion.co/general-faq`, { signal: ac.signal });
+        const res = await fetch(`${API_BASE_URL}/general-faq`, { signal: ac.signal });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         setFaqs(Array.isArray(data) ? data : []);

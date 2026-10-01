@@ -15,6 +15,7 @@ import './Admin.css';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { FaCheckCircle } from 'react-icons/fa';
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({
   theme
@@ -61,7 +62,7 @@ export default function OnlineEnroll() {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   useEffect(() => {
-    axios.get(`https://api.hachion.co/enroll`).then(response => {
+    axios.get(`${API_BASE_URL}/enroll`).then(response => {
       setEnrollData(response.data);
       setFilteredData(response.data);
     }).catch(error => {
@@ -158,7 +159,7 @@ export default function OnlineEnroll() {
   };
   const handleDelete = async id => {
     try {
-      await axios.delete(`https://api.hachion.co/enroll/delete/${id}`);
+      await axios.delete(`${API_BASE_URL}/enroll/delete/${id}`);
       setEnrollData(prev => prev.filter(item => item.id !== id));
       setFilteredData(prev => prev.filter(item => item.id !== id));
 
@@ -242,7 +243,7 @@ export default function OnlineEnroll() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected enrollments
-        await Promise.all(selectedIds.map(id => axios.delete(`https://api.hachion.co/enroll/delete/${id}`)));
+        await Promise.all(selectedIds.map(id => axios.delete(`${API_BASE_URL}/enroll/delete/${id}`)));
 
         // Update state
         const updatedEnrollments = enrollData.filter(item => !selectedIds.includes(item.id));
@@ -472,7 +473,7 @@ export default function OnlineEnroll() {
                       if (confirmed) {
                         try {
                           // ✅ CALL BACKEND API
-                          await axios.put(`https://api.hachion.co/enroll/update-status`, null, {
+                          await axios.put(`${API_BASE_URL}/enroll/update-status`, null, {
                             params: {
                               studentId: row.studentId,
                               batchId: row.batchId,
@@ -513,7 +514,7 @@ export default function OnlineEnroll() {
                       if (confirmed) {
                         try {
                           // ✅ CALL BACKEND API (ADD THIS)
-                          await axios.put(`https://api.hachion.co/enroll/update-status`, null, {
+                          await axios.put(`${API_BASE_URL}/enroll/update-status`, null, {
                             params: {
                               studentId: row.studentId,
                               batchId: row.batchId,

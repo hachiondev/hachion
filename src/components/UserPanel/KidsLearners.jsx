@@ -6,6 +6,7 @@ import './Blogs.css';
 import { Carousel, Modal } from 'react-bootstrap';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
 import LearnerCard from './HomePage/LearnerSection/components/LearnerCard';
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const KidsLearners = ({ page }) => {
   const [reviews, setReviews] = useState([]);
@@ -18,7 +19,7 @@ const KidsLearners = ({ page }) => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch(`https://api.hachion.co/userreview`);
+        const response = await fetch(`${API_BASE_URL}/userreview`);
         const data = await response.json();
         if (Array.isArray(data)) {
           const filteredReviews = data.filter(review => review.type === true && review.display && typeof review.display === 'string' && review.display.split(',').map(d => d.trim()).includes(page));
@@ -61,7 +62,7 @@ const KidsLearners = ({ page }) => {
         <Carousel activeIndex={activeIndex} onSelect={selectedIndex => setActiveIndex(selectedIndex)} indicators={false} controls={false} interval={null}>
           {groupedReviews.map((group, index) => <Carousel.Item key={index}>
               <div className="learner-card-container">
-                {group.map((review, idx) => <LearnerCard key={review.review_id} name={review.name} profile={review.course_name} location={review.location} content={review.review} social_id={review.social_id} rating={review.rating} profileImage={review.user_image ? `https://api.hachion.co/${review.user_image}` : ''} onReadMore={() => handleReadMore(index * (isMobile ? 1 : 3) + idx)} />)}
+                {group.map((review, idx) => <LearnerCard key={review.review_id} name={review.name} profile={review.course_name} location={review.location} content={review.review} social_id={review.social_id} rating={review.rating} profileImage={review.user_image ? `${API_BASE_URL}/${review.user_image}` : ''} onReadMore={() => handleReadMore(index * (isMobile ? 1 : 3) + idx)} />)}
               </div>
             </Carousel.Item>)}
         </Carousel>

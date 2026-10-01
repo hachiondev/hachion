@@ -17,6 +17,7 @@ import Loader from "../Common/Loader/Loader";
 import { useTrainerOptions } from "@/Api/hooks/InstructorSection/useTrainerOptions";
 import TrainingEvents from "../HomePage/TrainingSection/TrainingEvents";
 import Learners from "../HomePage/LearnerSection/Learners";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const isCourseOpen = (courseName) => {
   if (!courseName) return false;
@@ -167,7 +168,7 @@ const Instructors = () => {
         filteredTrainers.map(async (trainer) => {
           if (!isCourseOpen(trainer.course_name)) return;
           try {
-            const res = await axios.get(`https://api.hachion.co/enroll/count`, {
+            const res = await axios.get(`${API_BASE_URL}/enroll/count`, {
               params: {
                 trainerName: trainer.trainer_name,
                 courseName: trainer.course_name.replace(/\s+/g, "+"),
@@ -321,7 +322,7 @@ const Instructors = () => {
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           alt={trainer.trainer_name}
-                          src={trainer.trainerImage ? `https://api.hachion.co/${trainer.trainerImage}` : "/defaulttrainer.jpg"}
+                          src={trainer.trainerImage ? `${API_BASE_URL}/${trainer.trainerImage}` : "/defaulttrainer.jpg"}
                           className="instructor-image-single"
                           onError={(e) => {
                             e.target.onerror = null;

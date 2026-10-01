@@ -34,6 +34,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import "./Admin.css";
 import AdminPagination from "./AdminPagination";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({
   theme
@@ -192,7 +193,7 @@ export default function CourseSchedule() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/course-categories/all`);
+        const response = await axios.get(`${API_BASE_URL}/course-categories/all`);
         setCategory(response.data);
       } catch (error) {}
     };
@@ -201,7 +202,7 @@ export default function CourseSchedule() {
   useEffect(() => {
     const fetchCoordinators = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/employees/by-departments`);
+        const response = await axios.get(`${API_BASE_URL}/employees/by-departments`);
         setCoordinators(response.data);
       } catch (error) {
         console.error("Error fetching coordinators:", error);
@@ -212,7 +213,7 @@ export default function CourseSchedule() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/courses/all`);
+        const response = await axios.get(`${API_BASE_URL}/courses/all`);
         setCourseCategory(response.data);
       } catch (error) {}
     };
@@ -229,7 +230,7 @@ export default function CourseSchedule() {
   useEffect(() => {
     const fetchTrainerNames = async (categoryName, courseName) => {
       try {
-        const response = await axios.get(`https://api.hachion.co/trainernames`, {
+        const response = await axios.get(`${API_BASE_URL}/trainernames`, {
           params: {
             categoryName,
             courseName
@@ -269,7 +270,7 @@ export default function CourseSchedule() {
     }));
     if (name === "coordinator" && value) {
       try {
-        const response = await axios.get(`https://api.hachion.co/employees/recording-folder`, {
+        const response = await axios.get(`${API_BASE_URL}/employees/recording-folder`, {
           params: {
             name: value
           }
@@ -374,7 +375,7 @@ export default function CourseSchedule() {
         recordingsFolderId: courseData.recordingsFolderId
       };
       try {
-        const response = await axios.post(`https://api.hachion.co/schedulecourse/add`, formattedCourseData);
+        const response = await axios.post(`${API_BASE_URL}/schedulecourse/add`, formattedCourseData);
         return response.status === 201 || response.status === 200;
       } catch (error) {
         const errorMessage = error.response?.data?.message || error.response?.data || "Schedule already exists with same category, course, date, time and mode";
@@ -420,7 +421,7 @@ export default function CourseSchedule() {
           created_date: "",
           meeting: ""
         }]);
-        const response = await axios.get(`https://api.hachion.co/schedulecourse?userType=admin`);
+        const response = await axios.get(`${API_BASE_URL}/schedulecourse?userType=admin`);
         setCourses(response.data);
         setFilteredCourses(response.data);
         setIsSubmitting(false);
@@ -468,7 +469,7 @@ export default function CourseSchedule() {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/schedulecourse?userType=admin`);
+        const response = await axios.get(`${API_BASE_URL}/schedulecourse?userType=admin`);
         setCourses(response.data);
         setFilteredCourses(response.data);
       } catch (error) {}
@@ -486,7 +487,7 @@ export default function CourseSchedule() {
   };
   const handleDelete = async course_schedule_id => {
     try {
-      await axios.delete(`https://api.hachion.co/schedulecourse/delete/${course_schedule_id}`);
+      await axios.delete(`${API_BASE_URL}/schedulecourse/delete/${course_schedule_id}`);
       setCourses(prevCourses => prevCourses.filter(course => course.course_schedule_id !== course_schedule_id));
       setSelectedIds(prev => prev.filter(id => id !== course_schedule_id));
     } catch (error) {}
@@ -507,7 +508,7 @@ export default function CourseSchedule() {
         ...editedRow,
         schedule_date: formattedDateForBackend
       };
-      const response = await axios.put(`https://api.hachion.co/schedulecourse/update/${selectedRow.course_schedule_id}`, updatedEditedRow);
+      const response = await axios.put(`${API_BASE_URL}/schedulecourse/update/${selectedRow.course_schedule_id}`, updatedEditedRow);
       setCourses(prevCourses => prevCourses.map(course => course.course_schedule_id === selectedRow.course_schedule_id ? response.data : course));
       setMessage(true);
       setTimeout(() => {
@@ -614,7 +615,7 @@ export default function CourseSchedule() {
     const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'schedule' : 'schedules'}?`;
     if (window.confirm(confirmMessage)) {
       try {
-        await Promise.all(selectedIds.map(id => axios.delete(`https://api.hachion.co/schedulecourse/delete/${id}`)));
+        await Promise.all(selectedIds.map(id => axios.delete(`${API_BASE_URL}/schedulecourse/delete/${id}`)));
         setCourses(prev => prev.filter(item => !selectedIds.includes(item.course_schedule_id)));
         setFilteredCourses(prev => prev.filter(item => !selectedIds.includes(item.course_schedule_id)));
         setSelectedIds([]);

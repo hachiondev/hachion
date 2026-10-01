@@ -11,6 +11,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import AdminPagination from './AdminPagination';
 import './Admin.css';
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -45,7 +46,7 @@ export default function RegisterStudent() {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   useEffect(() => {
-    axios.get(`https://api.hachion.co/api/v1/user/students`).then(response => {
+    axios.get(`${API_BASE_URL}/api/v1/user/students`).then(response => {
       setEnrollData(response.data);
     }).catch(error => {
       console.error("Error fetching enrollment data:", error);

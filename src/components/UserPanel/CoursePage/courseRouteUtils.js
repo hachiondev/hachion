@@ -57,3 +57,28 @@ export const toApiCourseName = (slug = '') =>
     .replace(/\s+/g, ' ')
     .trim()
     .toLowerCase();
+
+// toApiCourseName() is a guess: it cannot know whether a "-" in the slug was
+// a space or a real hyphen in the stored name, so a course saved from the
+// admin panel as "AI-Augmented DevOps Certification Training" (slug
+// "ai-augmented-devops-certification-training") was looked up as
+// "ai augmented devops certification training" and every course-name API
+// (course, FAQs, tools, projects, trainers, reviews) came back empty.
+// Matching the slug against the real stored names with the SAME
+// slugifyCourseText() that built the link is exact for any name; the guess
+// is only the fallback when the course isn't in the list.
+export const findCourseNameForSlug = (courses, courseSlug, categorySlug) => {
+  if (!Array.isArray(courses) || !courseSlug) return null;
+  let target;
+  try {
+    target = slugifyCourseText(decodeURIComponent(courseSlug));
+  } catch {
+    target = slugifyCourseText(courseSlug);
+  }
+  const matches = courses.filter((c) => c?.courseName && slugifyCourseText(c.courseName) === target);
+  if (matches.length > 1 && categorySlug) {
+    const inCategory = matches.find((c) => slugifyCourseText(c.courseCategory) === slugifyCourseText(categorySlug));
+    if (inCategory) return inCategory.courseName;
+  }
+  return matches[0]?.courseName ?? null;
+};

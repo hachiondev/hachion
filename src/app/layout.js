@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
 import { SITE_ORIGIN } from "@/lib/seo";
 import DeferredAnalyticsScripts from "@/components/common/DeferredAnalyticsScripts";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // The CRA site loads Poppins (weights 300-700) from Google Fonts and every
 // component CSS file ported from it already declares
@@ -49,13 +50,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={poppins.variable}>
       <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-      {/* "https://api.hachion.co" is called from many components
+      {/* The API origin (API_BASE_URL) is called from many components
           across every page (course data, reviews, geo lookups, etc.) —
           preconnecting lets the TLS/TCP handshake happen in parallel with
           the initial HTML instead of only starting once the first fetch
           call actually fires. */}
-      <link rel="preconnect" href={"https://api.hachion.co"} crossOrigin="anonymous" />
-      <link rel="dns-prefetch" href={"https://api.hachion.co"} />
+      <link rel="preconnect" href={API_BASE_URL} crossOrigin="anonymous" />
+      <link rel="dns-prefetch" href={API_BASE_URL} />
       <body>
         {/* Meta Pixel + GA4 — ported from CRA's public/index.html, now
             loaded by DeferredAnalyticsScripts on first user interaction
@@ -100,7 +101,7 @@ export default function RootLayout({ children }) {
             The check-ip call intentionally hits production (api.hachion.co)
             regardless of which environment is running this app — matches
             CRA's own hardcoded choice, not this app's configurable
-            "https://api.hachion.co". */}
+            API_BASE_URL. */}
         <Script id="visitor-tracking" strategy="lazyOnload">
           {`async function getUserDetails() {
             let shouldSkipTracking = false;

@@ -7,6 +7,7 @@ import "../Course.css";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useAllCourses } from "@/Api/hooks/SitemapPageApi/useAllCourses";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 
 const countryToCurrencyMap = {
@@ -69,7 +70,7 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange, 
   useEffect(() => {
     const fetchTrainers = async () => {
       try {
-        const res = await axios.get(`https://api.hachion.co/trainers`);
+        const res = await axios.get(`${API_BASE_URL}/trainers`);
         setTrainers(Array.isArray(res.data) ? res.data : []);
       } catch (error) {
         console.error("Error fetching trainers:", error.message);
@@ -138,7 +139,7 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange, 
   useEffect(() => {
     const fetchRules = async () => {
       try {
-        const { data } = await axios.get(`https://api.hachion.co/discounts-courses`);
+        const { data } = await axios.get(`${API_BASE_URL}/discounts-courses`);
         setDiscountRules(Array.isArray(data) ? data : []);
       } catch (e) {
         console.error("Failed to load discount rules", e);
@@ -308,7 +309,7 @@ const SidebarRight = ({ filters, currentPage, cardsPerPage, onTotalCardsChange, 
                 key={course.id || index}
                 heading={course.courseName}
                 courseCategory={course.courseCategory}
-                image={`https://api.hachion.co/${course.courseImage}`}
+                image={`${API_BASE_URL}/${course.courseImage}`}
                 priority={currentPage === 1 && index === 0}
                 discountPercentage={discountPercentage}
                 amount={`${currency} ${fmt(effectiveNow)}`}

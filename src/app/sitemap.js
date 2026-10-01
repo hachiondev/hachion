@@ -5,6 +5,7 @@ import { slugifyWorkshopTitle } from "@/lib/workshopSlug";
 import { slugifyJobTitle } from "@/lib/jobSlug";
 import { getAllBlogs } from "@/components/UserPanel/HomePage/TrendingBlogSection/services/blogsService";
 import { getApprovedJobs } from "@/components/UserPanel/services/careerService";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Auto-served at /sitemap.xml (Next.js MetadataRoute.Sitemap convention).
 // Didn't exist at all before this — robots.js referenced a sitemap URL with
@@ -58,7 +59,7 @@ async function safeFetchJson(url, options) {
 
 async function getCourseEntries() {
   const [categories, courses] = await Promise.all([
-    safeFetchJson(`https://api.hachion.co/course-categories/all`, {
+    safeFetchJson(`${API_BASE_URL}/course-categories/all`, {
       headers: { Authorization: `Bearer ${process.env.SITEMAP_API_TOKEN}` },
       next: { revalidate: 3600 },
     }),
@@ -71,7 +72,7 @@ async function getCourseEntries() {
     // vs. names-and-categories returning the same courseName/courseCategory
     // fields this function actually uses in ~1.2s). Swapped to the
     // lightweight projection endpoint instead.
-    safeFetchJson(`https://api.hachion.co/courses/names-and-categories`, { next: { revalidate: 3600 } }),
+    safeFetchJson(`${API_BASE_URL}/courses/names-and-categories`, { next: { revalidate: 3600 } }),
   ]);
 
   const entries = [];
@@ -123,7 +124,7 @@ function slugifyTrainerName(name = "") {
 }
 
 async function getTrainerEntries() {
-  const trainers = await safeFetchJson(`https://api.hachion.co/trainersnames-unique`, { next: { revalidate: 3600 } });
+  const trainers = await safeFetchJson(`${API_BASE_URL}/trainersnames-unique`, { next: { revalidate: 3600 } });
   if (!Array.isArray(trainers)) return [];
   return trainers
     .map((t) => {
@@ -134,7 +135,7 @@ async function getTrainerEntries() {
 }
 
 async function getWorkshopEntries() {
-  const workshops = await safeFetchJson(`https://api.hachion.co/workshopschedule`, { next: { revalidate: 3600 } });
+  const workshops = await safeFetchJson(`${API_BASE_URL}/workshopschedule`, { next: { revalidate: 3600 } });
   if (!Array.isArray(workshops)) return [];
   return workshops
     .map((w) => {

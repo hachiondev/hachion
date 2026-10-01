@@ -1,4 +1,6 @@
 import { buildCanonicalUrl } from "@/lib/seo";
+import { resolveCourseApiName } from "@/lib/courseApiName";
+import { CourseApiNameProvider } from "@/components/UserPanel/CoursePage/CourseApiNameContext";
 import NewEnrollNow from "@/components/UserPanel/NewEnrollmentPage/NewEnrollNow";
 
 export async function generateMetadata({ params }) {
@@ -11,6 +13,12 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default function EnrollNowPage() {
-  return <NewEnrollNow />;
+export default async function EnrollNowPage({ params }) {
+  const { courseName } = await params;
+  const apiCourseName = await resolveCourseApiName(courseName);
+  return (
+    <CourseApiNameProvider value={apiCourseName}>
+      <NewEnrollNow />
+    </CourseApiNameProvider>
+  );
 }

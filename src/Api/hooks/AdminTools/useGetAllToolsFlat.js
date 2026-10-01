@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-const API_URL = `https://api.hachion.co/api/tools/all/flat`;
+import { API_BASE_URL } from "@/lib/apiBase";
+const API_URL = `${API_BASE_URL}/api/tools/all/flat`;
 export function useGetAllToolsFlat() {
   return useQuery({
     queryKey: ["admin-tools-flat"],

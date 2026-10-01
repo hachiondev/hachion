@@ -7,6 +7,7 @@ import CountryFlag from "@/components/common/CountryFlag";
 import { AiFillCaretDown } from "react-icons/ai";
 import axios from "axios";
 import { countries, getDefaultCountry } from "@/countryUtils";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const timeZoneAbbreviationMap = {
   "Europe/Amsterdam": "CEST",
@@ -128,7 +129,7 @@ const PostJob = () => {
     finalFormData.append("data", new Blob([JSON.stringify(payload)], { type: "application/json" }));
     finalFormData.append("companyLogo", companyLogo);
     try {
-      await axios.post(`https://api.hachion.co/hire-from-us`, finalFormData, {
+      await axios.post(`${API_BASE_URL}/hire-from-us`, finalFormData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setError("Job posted successful!");

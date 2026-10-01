@@ -6,6 +6,7 @@ import "./Blogs.css";
 import { Carousel, Modal } from "react-bootstrap";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import LearnerCard from "./HomePage/LearnerSection/components/LearnerCard";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const WorkshopLearners = ({ page }) => {
   const [reviews, setReviews] = useState([]);
@@ -20,7 +21,7 @@ const WorkshopLearners = ({ page }) => {
     setIsMobile(window.innerWidth <= 768);
     const fetchReviews = async () => {
       try {
-        const response = await fetch(`https://api.hachion.co/userreview`);
+        const response = await fetch(`${API_BASE_URL}/userreview`);
         const data = await response.json();
         if (Array.isArray(data)) {
           const filteredReviews = data.filter(
@@ -78,7 +79,7 @@ const WorkshopLearners = ({ page }) => {
                     content={review.review}
                     social_id={review.social_id}
                     rating={review.rating}
-                    profileImage={review.user_image ? `https://api.hachion.co/${review.user_image}` : ""}
+                    profileImage={review.user_image ? `${API_BASE_URL}/${review.user_image}` : ""}
                     onReadMore={() => handleReadMore(index * (isMobile ? 1 : 3) + idx)}
                   />
                 ))}

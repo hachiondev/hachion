@@ -6,6 +6,7 @@ import Link from "next/link";
 import "./CoursePage/Course.css";
 import "./Blogs.css";
 import axios from "axios";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // CRA's version used `useFormik` + a shared `LoginSchema` (a generic Yup
 // schema reused across many unrelated forms — login/comment/company fields
@@ -56,14 +57,14 @@ const ApplyForm = ({ job }) => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setValues((prev) => ({ ...prev, email: userEmail }));
     if (userEmail && jobId) {
-      fetch(`https://api.hachion.co/apply-job/check?jobId=${jobId}&email=${userEmail}`)
+      fetch(`${API_BASE_URL}/apply-job/check?jobId=${jobId}&email=${userEmail}`)
         .then((res) => res.json())
         .then((isApplied) => setAlreadyApplied(isApplied))
         .catch((err) => console.error("Error checking job application status:", err));
     }
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${userEmail}`);
+        const response = await fetch(`${API_BASE_URL}/api/v1/user/myprofile?email=${userEmail}`);
         if (!response.ok) throw new Error("Failed to fetch profile data");
         const data = await response.json();
         setValues((prev) => ({ ...prev, name: data.name || prev.name }));
@@ -114,7 +115,7 @@ const ApplyForm = ({ job }) => {
     };
     formData.append("data", new Blob([JSON.stringify(requestData)], { type: "application/json" }));
     try {
-      const response = await axios.post(`https://api.hachion.co/apply-job/create`, formData, {
+      const response = await axios.post(`${API_BASE_URL}/apply-job/create`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       if (response.status === 201) {

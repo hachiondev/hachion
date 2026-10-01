@@ -1,14 +1,15 @@
 import axios from "axios";
+import { API_BASE_URL } from "@/lib/apiBase";
 export const getTrendingCourses = async () => {
   const {
     data
-  } = await axios.get(`https://api.hachion.co/trendingcourse`);
+  } = await axios.get(`${API_BASE_URL}/trendingcourse`);
   return data || [];
 };
 export const getCoursesSummary = async () => {
   const {
     data
-  } = await axios.get(`https://api.hachion.co/courses/summary`);
+  } = await axios.get(`${API_BASE_URL}/courses/summary`);
   const raw = data || [];
   return raw.map(row => ({
     id: row[0],

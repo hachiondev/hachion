@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Server-side counterpart of Sidebar.jsx's useCategories/useAllCourses/
 // useDiscountRules and SidebarRight.jsx's own courses fetch — same
@@ -18,15 +19,15 @@ import { headers } from "next/headers";
 // are fetched server-side.
 export async function fetchCourseListingInitialData() {
   const [categories, courses, discountRules] = await Promise.all([
-    fetchJsonOrEmpty(`https://api.hachion.co/course-categories/all`, {
+    fetchJsonOrEmpty(`${API_BASE_URL}/course-categories/all`, {
       headers: {
        
         "Content-Type": "application/json",
       },
       next: { revalidate: 300 },
     }),
-    fetchJsonOrEmpty(`https://api.hachion.co/courses/all`, { next: { revalidate: 300 } }),
-    fetchJsonOrEmpty(`https://api.hachion.co/discounts-courses`, { next: { revalidate: 300 } }),
+    fetchJsonOrEmpty(`${API_BASE_URL}/courses/all`, { next: { revalidate: 300 } }),
+    fetchJsonOrEmpty(`${API_BASE_URL}/discounts-courses`, { next: { revalidate: 300 } }),
   ]);
 
   return { categories, courses, discountRules };

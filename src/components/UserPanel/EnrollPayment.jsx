@@ -11,6 +11,8 @@ import TableRow from "@mui/material/TableRow";
 import Link from "next/link";
 import Loader from "./Common/Loader/Loader";
 import { getNavState } from "@/lib/navState";
+import { useCourseApiName } from "@/components/UserPanel/CoursePage/CourseApiNameContext";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Ported from the CRA app's
 // src/Components/UserPanel/EnrollPayment.jsx (/payment/:courseName) — the
@@ -31,6 +33,7 @@ const EnrollPayment = () => {
   const [currency, setCurrency] = useState("USD");
   const [exchangeRate, setExchangeRate] = useState(1);
   const { courseName } = useParams();
+  const apiCourseName = useCourseApiName();
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isGeneratingInvoice, setIsGeneratingInvoice] = useState(false);
@@ -59,7 +62,7 @@ const EnrollPayment = () => {
     const batchData = JSON.parse(localStorage.getItem("selectedBatchData")) || {};
     const discount = batchData.discount ?? 0;
     try {
-      await axios.post(`https://api.hachion.co/capture-order`, null, {
+      await axios.post(`${API_BASE_URL}/capture-order`, null, {
         params: { orderId, studentId, courseName, batchId, discount },
       });
       localStorage.removeItem("studentId");
@@ -109,7 +112,7 @@ const EnrollPayment = () => {
       const userEmail = user?.email;
       if (!userEmail) return;
       try {
-        const response = await axios.get(`https://api.hachion.co/api/v1/user/students`);
+        const response = await axios.get(`${API_BASE_URL}/api/v1/user/students`);
         const allStudents = response.data;
         const matchedStudent = allStudents.find((student) => student.email === userEmail);
         if (matchedStudent) {
@@ -137,14 +140,7 @@ const EnrollPayment = () => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        let formattedCourseName = courseName;
-        formattedCourseName = decodeURIComponent(formattedCourseName);
-        formattedCourseName = formattedCourseName.replace(/-/g, " ");
-        formattedCourseName = formattedCourseName
-          .split(" ")
-          .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-          .join(" ");
-        const response = await axios.get(`https://api.hachion.co/courses/getByCourseName/${formattedCourseName}`);
+        const response = await axios.get(`${API_BASE_URL}/courses/getByCourseName/${encodeURIComponent(apiCourseName)}`);
         if (response.data && response.data.length > 0) {
           const course = response.data[0];
           const mappedCourse = {
@@ -164,13 +160,13 @@ const EnrollPayment = () => {
     };
     fetchCourse();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [courseName]);
+  }, [apiCourseName]);
 
   useEffect(() => {
     if (!email || !selectedBatchData?.schedule_course_name) return;
     const fetchPaymentData = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/razorpay/getByEmailAndCourse`, {
+        const response = await axios.get(`${API_BASE_URL}/razorpay/getByEmailAndCourse`, {
           params: { email, courseName: selectedBatchData.schedule_course_name, batchId: selectedBatchData.batchId },
         });
         const payment = Array.isArray(response.data) ? response.data[0] : response.data;
@@ -213,7 +209,7 @@ const EnrollPayment = () => {
           },
         ],
       };
-      await axios.post(`https://api.hachion.co/payments/generateInvoiceForOnline`, payload);
+      await axios.post(`${API_BASE_URL}/payments/generateInvoiceForOnline`, payload);
       setInvoiceMessage("✅ Invoice has been sent to your email.");
     } catch (err) {
       console.error(err);
@@ -301,7 +297,7 @@ const EnrollPayment = () => {
                 <span className="detail-label">Course Name :</span>
                 <span className="detail-value">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={`https://api.hachion.co/${courseData.courseImage}`} alt="" style={{ width: "40px", height: "40px", marginRight: "10px" }} />
+                  <img src={`${API_BASE_URL}/${courseData.courseImage}`} alt="" style={{ width: "40px", height: "40px", marginRight: "10px" }} />
                   {selectedBatchData.schedule_course_name || courseData?.courseName || "—"}
                 </span>
               </div>

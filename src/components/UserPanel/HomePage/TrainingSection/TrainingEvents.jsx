@@ -17,6 +17,7 @@ import { useGeoData } from "@/Api/hooks/HomePageApi/TrendingApi/useGeoData";
 import { useScheduleCourses } from "@/Api/hooks/HomePageApi/TrainingApi/useScheduleCourses";
 import { useCoursesSummary } from "@/Api/hooks/HomePageApi/TrainingApi/useCoursesSummary";
 import { useDiscountRules } from "@/Api/hooks/HomePageApi/TrendingApi/useDiscountRules";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const TrainingEvents = ({
   limit,
@@ -266,7 +267,7 @@ const TrainingEvents = ({
         const rulePct = getRuleDiscountPct(course.schedule_course_name, country);
         if (rulePct > 0) return rulePct;
         return country === "IN" ? Number(course.idiscount) : Number(course.discount);
-      })()} trainer_name={course.trainerName} level={course.level} month={course.numberOfClasses} image={course.course_image ? `https://api.hachion.co/${course.course_image}` : ""} date={course.schedule_date ? formatDate(course.schedule_date) : ""} time={course.schedule_time || ""} duration={course.schedule_duration ? `Duration: ${course.schedule_duration}` : ""} mode={course.schedule_mode || ""} scheduleCount={course.sessions?.length || 0} />) : <div className="no-schedules-message">
+      })()} trainer_name={course.trainerName} level={course.level} month={course.numberOfClasses} image={course.course_image ? `${API_BASE_URL}/${course.course_image}` : ""} date={course.schedule_date ? formatDate(course.schedule_date) : ""} time={course.schedule_time || ""} duration={course.schedule_duration ? `Duration: ${course.schedule_duration}` : ""} mode={course.schedule_mode || ""} scheduleCount={course.sessions?.length || 0} />) : <div className="no-schedules-message">
             <p>No schedules are available</p>
           </div>}
       </div>

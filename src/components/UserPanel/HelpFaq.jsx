@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import './CoursePage/Course.css';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { API_BASE_URL } from "@/lib/apiBase";
 const HelpFaq = () => {
   const [faqs, setFaqs] = useState([]);
   const [expandedTopics, setExpandedTopics] = useState({});
@@ -14,7 +15,7 @@ const HelpFaq = () => {
       try {
         setLoading(true);
         setError("");
-        const res = await fetch(`https://api.hachion.co/general-faq`, {
+        const res = await fetch(`${API_BASE_URL}/general-faq`, {
           signal: ac.signal
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);

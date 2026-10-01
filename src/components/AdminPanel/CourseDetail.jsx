@@ -27,6 +27,7 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({
   theme
@@ -168,7 +169,7 @@ const CourseDetail = ({
     const fetchTrainerNames = async () => {
       if (formMode === "Edit" && formData.courseCategory && formData.courseName) {
         try {
-          const response = await axios.get(`https://api.hachion.co/trainernames`, {
+          const response = await axios.get(`${API_BASE_URL}/trainernames`, {
             params: {
               categoryName: formData.courseCategory,
               courseName: formData.courseName
@@ -186,7 +187,7 @@ const CourseDetail = ({
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/course-categories/all`);
+        const response = await axios.get(`${API_BASE_URL}/course-categories/all`);
         setCourse(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -197,7 +198,7 @@ const CourseDetail = ({
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/courses/allforadmin`);
+        const response = await axios.get(`${API_BASE_URL}/courses/allforadmin`);
         setCategories(response.data);
         setFilteredCourses(response.data);
         setAllCourses(response.data);
@@ -417,7 +418,7 @@ const CourseDetail = ({
     }
     try {
       if (formMode === "Edit") {
-        const response = await axios.put(`https://api.hachion.co/courses/update/${formData.id}`, formNewData, {
+        const response = await axios.put(`${API_BASE_URL}/courses/update/${formData.id}`, formNewData, {
           headers: {
             "Content-Type": "multipart/form-data"
           }
@@ -429,7 +430,7 @@ const CourseDetail = ({
           setShowAddCourse(false);
         }
       } else {
-        const response = await axios.post(`https://api.hachion.co/courses/addCourseDetails`, formNewData, {
+        const response = await axios.post(`${API_BASE_URL}/courses/addCourseDetails`, formNewData, {
           headers: {
             "Content-Type": "multipart/form-data"
           }
@@ -457,7 +458,7 @@ const CourseDetail = ({
   const handleEditClick = async courseId => {
     setShowAddCourse(true);
     try {
-      const response = await fetch(`https://api.hachion.co/courses/${courseId}`);
+      const response = await fetch(`${API_BASE_URL}/courses/${courseId}`);
       if (response.ok) {
         const course = await response.json();
         setFormData({
@@ -601,7 +602,7 @@ const CourseDetail = ({
   };
   const handleDelete = async id => {
     try {
-      const response = await axios.delete(`https://api.hachion.co/courses/delete/${id}`);
+      const response = await axios.delete(`${API_BASE_URL}/courses/delete/${id}`);
       if (response.status === 200) {
         setSuccessMessage("✅ Course deleted successfully.");
         setErrorMessage("");
@@ -630,7 +631,7 @@ const CourseDetail = ({
     const shortCourseValue = formData.shortCourse;
     if (!shortCourseValue) return;
     try {
-      await axios.get(`https://api.hachion.co/courses/shortCourse`, {
+      await axios.get(`${API_BASE_URL}/courses/shortCourse`, {
         params: {
           shortCourse: shortCourseValue
         }
@@ -779,7 +780,7 @@ const CourseDetail = ({
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected courses
-        await Promise.all(selectedIds.map(id => axios.delete(`https://api.hachion.co/courses/delete/${id}`)));
+        await Promise.all(selectedIds.map(id => axios.delete(`${API_BASE_URL}/courses/delete/${id}`)));
 
         // Update state
         setCourses(prev => prev.filter(item => !selectedIds.includes(item.id)));
@@ -1864,7 +1865,7 @@ const CourseDetail = ({
                         </StyledTableCell>
                         <StyledTableCell align="center">{idx + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
                         <StyledTableCell align="center">
-                          {course.courseImage ? <img src={`https://api.hachion.co/${course.courseImage}`} alt="Course" width="50" onError={e => {
+                          {course.courseImage ? <img src={`${API_BASE_URL}/${course.courseImage}`} alt="Course" width="50" onError={e => {
                     e.target.onerror = null;
                     e.target.replaceWith(document.createTextNode("No Image"));
                   }} /> : 'No Image'}

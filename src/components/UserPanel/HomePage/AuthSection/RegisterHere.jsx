@@ -9,6 +9,8 @@ import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import google from "@/assets/google-new.webp";
 import LoginBanner from "@/assets/loginbackground.webp";
+import { API_BASE_URL } from "@/lib/apiBase";
+import { sharedCookieAttrs } from "@/lib/authCookies";
 
 const getStep1 = () => {
   const raw =
@@ -51,7 +53,7 @@ const RegisterHere = () => {
         router.push("/register");
         return;
       }
-      const res = await fetch(`https://api.hachion.co/api/v1/user/send-otp?email=${encodeURIComponent(step1.email)}`, {
+      const res = await fetch(`${API_BASE_URL}/api/v1/user/send-otp?email=${encodeURIComponent(step1.email)}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
@@ -92,8 +94,8 @@ const RegisterHere = () => {
   // "not registered", even though they were in the middle of signing up.
   const SHARED_DOMAIN = "hachion.co";
   const loginWithGoogle = () => {
-    document.cookie = `flow=signup; Domain=${SHARED_DOMAIN}; Path=/; Max-Age=300; SameSite=Lax; Secure`;
-    window.location.href = `https://api.hachion.co/oauth2/authorization/google`;
+    document.cookie = "flow=signup; Max-Age=300; " + sharedCookieAttrs(`Domain=${SHARED_DOMAIN}; Path=/; SameSite=Lax; Secure`);
+    window.location.href = `${API_BASE_URL}/oauth2/authorization/google`;
   };
 
   return (

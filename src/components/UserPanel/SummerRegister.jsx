@@ -7,6 +7,7 @@ import Flag from '@/components/common/CountryFlag';
 import { AiFillCaretDown } from 'react-icons/ai';
 import regkid from '@/assets/regkid.webp';
 import axios from 'axios';
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const countries = [
   { name: 'India', code: '+91', flag: 'IN' },
@@ -134,7 +135,7 @@ const SummerRegister = () => {
       batchTiming: batchTiming
     };
     try {
-      const response = await axios.post(`https://api.hachion.co/kids-summer-training`, payload);
+      const response = await axios.post(`${API_BASE_URL}/kids-summer-training`, payload);
       setError('Registration successful!');
       setMessageType('success');
       setFormData({

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import LearnerCard from "@/components/UserPanel/HomePage/LearnerSection/components/LearnerCard";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Shared "Our Corporate Feedback" / "Our Student Feedback" / "Live Reviews"
 // carousel on the View All Reviews page — same card/arrow mechanics as the
@@ -107,7 +108,7 @@ export const mapLearnerReview = (review) => ({
   role: review.role,
   content: review.review,
   rating: review.rating,
-  profileImage: review.user_image ? `https://api.hachion.co/userreview/${review.user_image}` : "",
+  profileImage: review.user_image ? `${API_BASE_URL}/userreview/${review.user_image}` : "",
 });
 
 // Normalizes /corporatereview records (employeeName/comment/companyLogo) to
@@ -121,7 +122,7 @@ export const mapCorporateReview = (review) => ({
   content: review.comment,
   rating: review.employeeRating,
   profileImage: review.companyLogo
-    ? `https://api.hachion.co/corporatereview/logos/${review.companyLogo.replace(/^logos\//, "")}`
+    ? `${API_BASE_URL}/corporatereview/logos/${review.companyLogo.replace(/^logos\//, "")}`
     : "",
 });
 

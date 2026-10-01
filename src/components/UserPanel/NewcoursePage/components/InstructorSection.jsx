@@ -2,10 +2,10 @@
 
 import React from "react";
 import styles from "./InstructorSection.module.css";
-import { useParams } from "next/navigation";
 import { useTrainerDetailsByCourse } from "@/Api/hooks/InstructorSection/useTrainerDetailsByCourse";
 import { useCourseByName } from "@/Api/hooks/CourseApi/useCourseByName";
-import { toApiCourseName } from "@/components/UserPanel/CoursePage/courseRouteUtils";
+import { useCourseApiName } from "@/components/UserPanel/CoursePage/CourseApiNameContext";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Ported from the CRA app's
 // src/Components/UserPanel/NewcoursePage/components/InstructorSection.jsx.
@@ -15,8 +15,7 @@ export default function InstructorSection({
   stats = { years: "12+", students: "50K+", rating: "4.9" },
   bio = `With over 12 years of industry experience...`,
 }) {
-  const { courseName: courseNameSlug } = useParams();
-  const courseName = courseNameSlug ? toApiCourseName(courseNameSlug) : "";
+  const courseName = useCourseApiName();
 
   const { data: courseData } = useCourseByName(courseName);
   const { data: trainerList = [] } = useTrainerDetailsByCourse(courseName);
@@ -32,7 +31,7 @@ export default function InstructorSection({
   const finalRating = Number(trainerRating || stats.rating);
   const stars = Array.from({ length: 5 }, (_, i) => (i < Math.round(finalRating) ? "★" : "☆")).join("");
   const trainerImagePath = selectedTrainer?.trainerImage;
-  const trainerImageSrc = trainerImagePath ? `https://api.hachion.co/${trainerImagePath}` : "/defaulttrainer.jpg";
+  const trainerImageSrc = trainerImagePath ? `${API_BASE_URL}/${trainerImagePath}` : "/defaulttrainer.jpg";
   return (
     <section className={styles.iswrap}>
       <div className="container">

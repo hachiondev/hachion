@@ -18,6 +18,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import AdminPagination from './AdminPagination';
 import dayjs from "dayjs";
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -54,7 +55,7 @@ export default function JoinedWorkshop() {
   useEffect(() => {
     const fetchJoinedWorkshop = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/workshops`); // Check API URL
+        const response = await axios.get(`${API_BASE_URL}/workshops`); // Check API URL
         console.log("API Response:", response.data); // Debugging line
         setJoinedWorkshop(response.data);
         // setFilteredWorkshop(response.data);

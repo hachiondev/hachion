@@ -15,6 +15,7 @@ import UserWriteReview from "../../UserWriteReview";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import "../../Dashboard.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Ported from the CRA app's UserDashboardPage/components/UserReviews.jsx.
 export default function UserReviews() {
@@ -39,7 +40,7 @@ export default function UserReviews() {
         console.warn("fetchReviews called without email");
         return;
       }
-      const url = `https://api.hachion.co/userreview/email/${encodeURIComponent(emailToUse)}`;
+      const url = `${API_BASE_URL}/userreview/email/${encodeURIComponent(emailToUse)}`;
       const response = await axios.get(url);
       const data = response.data;
       if (Array.isArray(data)) {
@@ -83,7 +84,7 @@ export default function UserReviews() {
     const confirmed = window.confirm("Are you sure you want to delete this review?");
     if (!confirmed) return;
     axios
-      .delete(`https://api.hachion.co/userreview/delete/${reviewId}`)
+      .delete(`${API_BASE_URL}/userreview/delete/${reviewId}`)
       .then(() => {
         fetchReviews();
         setSuccessMessage("Review deleted successfully!");

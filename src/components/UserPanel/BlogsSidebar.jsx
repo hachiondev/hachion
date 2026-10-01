@@ -5,6 +5,7 @@ import axios from "axios";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { LuListFilter } from "react-icons/lu";
 import "./CoursePage/Course.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 const BlogsSidebar = ({
   onFilterChange,
   onCategoriesLoaded
@@ -27,7 +28,7 @@ const BlogsSidebar = ({
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/blog/categories`);
+        const response = await axios.get(`${API_BASE_URL}/blog/categories`);
         if (Array.isArray(response.data)) {
           setCategories(response.data);
           onCategoriesLoaded?.(response.data);

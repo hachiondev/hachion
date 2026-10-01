@@ -6,6 +6,7 @@ import JsonLd from "@/components/common/JsonLd";
 import BlogDetails from "@/components/UserPanel/BlogDetails";
 import { getBlogBySlug } from "@/components/UserPanel/HomePage/TrendingBlogSection/services/blogsService";
 import { extractFaqsFromHtml } from "@/lib/blogFaq";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // The bug this exists to fix: generateMetadata()/the page below used to
 // build the canonical URL directly from the raw [category_name]/[title]
@@ -50,8 +51,8 @@ export async function generateMetadata({ params }) {
 
   const metaTitle = blog?.meta_title || "Hachion Blogs";
   const description = blog?.meta_description || "Blogs description";
-  const ogImage = blog?.blog_image ? `https://api.hachion.co/uploads/prod/blogs/${blog.blog_image}` : `${SITE_ORIGIN}/Hachion-logo.png`;
-  const twitterImage = blog?.blog_image ? `https://api.hachion.co/uploads/prod/blogs/${blog.blog_image}` : `${SITE_ORIGIN}/Hachion-logo.png`;
+  const ogImage = blog?.blog_image ? `${API_BASE_URL}/uploads/prod/blogs/${blog.blog_image}` : `${SITE_ORIGIN}/Hachion-logo.png`;
+  const twitterImage = blog?.blog_image ? `${API_BASE_URL}/uploads/prod/blogs/${blog.blog_image}` : `${SITE_ORIGIN}/Hachion-logo.png`;
 
   return {
     title: metaTitle,
@@ -103,7 +104,7 @@ export default async function BlogDetailsPage({ params }) {
   const canonicalUrl = buildCanonicalUrl(correctPath || `/blogs/${category_name}/${title}`);
   const categoryUrl = buildCanonicalUrl(`/blogs/${category_name}`);
   const blogImage = blog?.blog_image
-    ? `https://api.hachion.co/uploads/prod/blogs/${blog.blog_image}`
+    ? `${API_BASE_URL}/uploads/prod/blogs/${blog.blog_image}`
     : `${SITE_ORIGIN}/Hachion-logo.png`;
 
   const schemas = [

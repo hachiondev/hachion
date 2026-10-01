@@ -25,7 +25,8 @@ const staticChecks = [
   { label: "Calendar image", path: "/calendar.png", expectType: "image" },
   { label: "Share icon", path: "/share.png", expectType: "image" },
   { label: "Download icon", path: "/Download.png", expectType: "image" },
-  { label: "Certificate image", path: "/Certificate_Of_Hachion.jpg", expectType: "image" },
+  // CertificateSection.jsx renders /cer.webp (the old .jpg no longer exists).
+  { label: "Certificate image", path: "/cer.webp", expectType: "image" },
   { label: "ISO image", path: "/ISO.png", expectType: "image" },
   { label: "PMI/Microsoft Project image", path: "/MicrosoftProject.png", expectType: "image" },
 ];

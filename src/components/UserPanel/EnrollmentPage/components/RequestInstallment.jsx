@@ -8,6 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -62,7 +63,7 @@ const RequestInstallment = ({ selectedBatchData, closeModal, onInstallmentChange
         courseFee: courseFee,
         numSelectedInstallments: selectedInstallments,
       };
-      const response = await axios.post(`https://api.hachion.co/razorpay/installment-request`, requestData);
+      const response = await axios.post(`${API_BASE_URL}/razorpay/installment-request`, requestData);
       if (response.status === 200) {
         setSuccessMessage("Your installment request has been submitted successfully. Once it is approved, you will receive an email notification.");
         setErrorMessage("");

@@ -3,17 +3,16 @@
 import React, { useEffect, useState, useMemo } from "react";
 import styles from "./LearnSection.module.css";
 import { useCourseByName } from "@/Api/hooks/CourseApi/useCourseByName";
-import { useParams } from "next/navigation";
 import { useToolsByCourse } from "@/Api/hooks/CourseApi/useToolsByCourse";
 import CardsPagination from "@/components/UserPanel/Common/CardsPagination";
-import { toApiCourseName } from "@/components/UserPanel/CoursePage/courseRouteUtils";
+import { useCourseApiName } from "@/components/UserPanel/CoursePage/CourseApiNameContext";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Ported from the CRA app's
 // src/Components/UserPanel/NewcoursePage/components/LearnSection.jsx.
 // checkMark/person/job asset imports dropped — they were imported in the
 // CRA original but never referenced anywhere in its JSX (dead imports).
 export default function LearnSection() {
-  const { courseName: courseNameSlug } = useParams();
   const [currentStartIndex, setCurrentStartIndex] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(6);
   const [activeTab, setActiveTab] = useState("learn");
@@ -23,7 +22,7 @@ export default function LearnSection() {
     who: false,
     career: false,
   });
-  const courseName = courseNameSlug ? toApiCourseName(courseNameSlug) : "";
+  const courseName = useCourseApiName();
   const { data: course } = useCourseByName(courseName);
   const { data: allTools = [], isLoading } = useToolsByCourse(courseName);
   useEffect(() => {
@@ -204,7 +203,7 @@ export default function LearnSection() {
                 <div key={tool.toolsName} className={styles.lstoolcard}>
                   <div className={styles.lstoolicon}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`https://api.hachion.co/uploads/prod/tools_images/${tool.imageUrl}`} alt={tool.toolsName} className={styles.lstooliconimg} />
+                    <img src={`${API_BASE_URL}/uploads/prod/tools_images/${tool.imageUrl}`} alt={tool.toolsName} className={styles.lstooliconimg} />
                   </div>
                   <div className={styles.lstoolname}>{tool.toolsName}</div>
                 </div>

@@ -21,6 +21,7 @@ import Flag from "react-world-flags";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import worldCountries from "world-countries";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const getDialCode = c => {
   if (!c.idd || !c.idd.root) return "";
@@ -113,7 +114,7 @@ const AdminCoupon = ({
   };
   const isSubmitDisabled = !areMandatoryFieldsFilled();
   useEffect(() => {
-    axios.get(`https://api.hachion.co/courses/all`).then(res => {
+    axios.get(`${API_BASE_URL}/courses/all`).then(res => {
       setCourses(res.data);
     }).catch(err => {
       console.error("Error fetching courses:", err);
@@ -156,7 +157,7 @@ const AdminCoupon = ({
     }));
   };
   useEffect(() => {
-    axios.get(`https://api.hachion.co/coupon-code/all`).then(res => {
+    axios.get(`${API_BASE_URL}/coupon-code/all`).then(res => {
       setCoupon(res.data);
       setAllCoupon(res.data);
     }).catch(console.error);
@@ -244,14 +245,14 @@ const AdminCoupon = ({
         usageLimit: formData.usageLimit || ""
       };
       if (formMode === "Add") {
-        await axios.post(`https://api.hachion.co/coupon-code/create`, payload);
+        await axios.post(`${API_BASE_URL}/coupon-code/create`, payload);
         setSuccessMessage("✅ Coupon created successfully.");
         setErrorMessage("");
         handleReset(); // ✅ RESET FORM
         setStartDate(null); // ✅ RESET DATE
         setEndDate(null);
       } else if (formMode === "Edit") {
-        await axios.put(`https://api.hachion.co/coupon-code/update`, payload);
+        await axios.put(`${API_BASE_URL}/coupon-code/update`, payload);
         setSuccessMessage("✅ Coupon updated successfully.");
         setErrorMessage("");
 
@@ -291,7 +292,7 @@ const AdminCoupon = ({
   const handleDelete = async couponId => {
     if (window.confirm("Are you sure you want to delete this coupon?")) {
       try {
-        await axios.delete(`https://api.hachion.co/coupon-code/delete/${couponId}`);
+        await axios.delete(`${API_BASE_URL}/coupon-code/delete/${couponId}`);
         setCoupon(prev => prev.filter(c => c.couponId !== couponId));
         setAllCoupon(prev => prev.filter(c => c.couponId !== couponId));
         setSelectedIds(prev => prev.filter(id => id !== couponId));
@@ -391,7 +392,7 @@ const AdminCoupon = ({
     const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'coupon' : 'coupons'}?`;
     if (window.confirm(confirmMessage)) {
       try {
-        await Promise.all(selectedIds.map(id => axios.delete(`https://api.hachion.co/coupon-code/delete/${id}`)));
+        await Promise.all(selectedIds.map(id => axios.delete(`${API_BASE_URL}/coupon-code/delete/${id}`)));
         setCoupon(prev => prev.filter(item => !selectedIds.includes(item.couponId)));
         setAllCoupon(prev => prev.filter(item => !selectedIds.includes(item.couponId)));
         setFilteredCoupon(prev => prev.filter(item => !selectedIds.includes(item.couponId)));

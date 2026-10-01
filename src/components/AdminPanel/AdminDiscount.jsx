@@ -21,6 +21,7 @@ import Flag from "react-world-flags";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import worldCountries from "world-countries";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const getDialCode = c => {
   if (!c.idd || !c.idd.root) return "";
@@ -99,7 +100,7 @@ const AdminDiscount = ({
   const [selectedIds, setSelectedIds] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   useEffect(() => {
-    axios.get(`https://api.hachion.co/courses/all`).then(res => {
+    axios.get(`${API_BASE_URL}/courses/all`).then(res => {
       setCourses(res.data);
     }).catch(err => {
       console.error("Error fetching courses:", err);
@@ -142,7 +143,7 @@ const AdminDiscount = ({
     }));
   };
   useEffect(() => {
-    axios.get(`https://api.hachion.co/discounts-courses`).then(res => {
+    axios.get(`${API_BASE_URL}/discounts-courses`).then(res => {
       setCoupon(res.data);
       setAllCoupon(res.data);
       setFilteredCoupon(res.data);
@@ -211,7 +212,7 @@ const AdminDiscount = ({
       if (formMode === "Add") {
         const {
           data: created
-        } = await axios.post(`https://api.hachion.co/discounts-courses`, payload);
+        } = await axios.post(`${API_BASE_URL}/discounts-courses`, payload);
         setCoupon(prev => [created, ...prev]);
         setAllCoupon(prev => [created, ...prev]);
         setFilteredCoupon(prev => [created, ...prev]);
@@ -224,7 +225,7 @@ const AdminDiscount = ({
       } else if (formMode === "Edit") {
         const {
           data: updated
-        } = await axios.put(`https://api.hachion.co/discounts-courses`, payload);
+        } = await axios.put(`${API_BASE_URL}/discounts-courses`, payload);
         setCoupon(prev => prev.map(c => c.discountId === updated.discountId ? updated : c));
         setAllCoupon(prev => prev.map(c => c.discountId === updated.discountId ? updated : c));
         setFilteredCoupon(prev => prev.map(c => c.discountId === updated.discountId ? updated : c));
@@ -314,7 +315,7 @@ const AdminDiscount = ({
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected discounts
-        const deletePromises = selectedIds.map(discountId => axios.delete(`https://api.hachion.co/discounts-courses/${discountId}`));
+        const deletePromises = selectedIds.map(discountId => axios.delete(`${API_BASE_URL}/discounts-courses/${discountId}`));
         await Promise.all(deletePromises);
 
         // Update state
@@ -344,7 +345,7 @@ const AdminDiscount = ({
   const handleDelete = async discountId => {
     if (!window.confirm("Are you sure you want to delete this coupon?")) return;
     try {
-      const resp = await axios.delete(`https://api.hachion.co/discounts-courses/${discountId}`);
+      const resp = await axios.delete(`${API_BASE_URL}/discounts-courses/${discountId}`);
       const serverMsg = resp?.data ? String(resp.data) : "";
       const updatedCoupon = coupon.filter(c => c.discountId !== discountId);
       setCoupon(updatedCoupon);

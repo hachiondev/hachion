@@ -25,7 +25,8 @@ import { CgPathOutline, CgMenuGridR } from "react-icons/cg";
 import { BsBookmarkHeart } from "react-icons/bs";
 import { PiNotePencilBold, PiCertificateBold, PiBriefcase } from "react-icons/pi";
 import { MdOutlineRateReview } from "react-icons/md";
-const API_BASE = `https://api.hachion.co`;
+import { API_BASE_URL } from "@/lib/apiBase";
+const API_BASE = `${API_BASE_URL}`;
 const resolveImageUrl = img => {
   if (!img) return "";
   if (/^https?:\/\//i.test(img)) return img;
@@ -98,7 +99,7 @@ const NavbarTop = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get(`https://api.hachion.co/courses/names-and-categories`);
+        const res = await axios.get(`${API_BASE_URL}/courses/names-and-categories`);
         setCourses(res.data);
         setCourses(res.data.map(course => ({
           ...course,
@@ -206,7 +207,7 @@ const NavbarTop = () => {
   };
   const handleLogout = async () => {
     try {
-      await fetch(`https://api.hachion.co/api/logout`, {
+      await fetch(`${API_BASE_URL}/api/logout`, {
         method: "POST",
         credentials: "include",
         redirect: "manual"

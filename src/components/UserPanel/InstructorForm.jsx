@@ -9,6 +9,7 @@ import { AiFillCaretDown } from "react-icons/ai";
 import { GrAttachment } from "react-icons/gr";
 import axios from "axios";
 import { countries, getDefaultCountry } from "@/countryUtils";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 
 // Ported from the CRA app's src/Components/UserPanel/InstructorForm.jsx
@@ -75,7 +76,7 @@ const InstructorForm = ({ onClose }) => {
     const ctrl = new AbortController();
     (async () => {
       try {
-        const res = await fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`, {
+        const res = await fetch(`${API_BASE_URL}/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`, {
           signal: ctrl.signal,
         });
         if (!res.ok) throw new Error("Failed to fetch profile data");
@@ -104,7 +105,7 @@ const InstructorForm = ({ onClose }) => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get(`https://api.hachion.co/courses/all`);
+        const res = await axios.get(`${API_BASE_URL}/courses/all`);
         if (Array.isArray(res.data)) {
           setCourses(res.data.map((c) => c.courseName));
         }
@@ -188,7 +189,7 @@ const InstructorForm = ({ onClose }) => {
       const formData = new FormData();
       formData.append("instructor", JSON.stringify(payload));
       if (upload) formData.append("resume", upload);
-      const res = await axios.post(`https://api.hachion.co/instructor/apply`, formData, {
+      const res = await axios.post(`${API_BASE_URL}/instructor/apply`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       if (res.status === 200 || res.status === 201) {

@@ -34,6 +34,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -144,7 +145,7 @@ export default function TrendingCourseTable() {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/trendingcourse`);
+        const response = await axios.get(`${API_BASE_URL}/trendingcourse`);
         setTrendingCourse(response.data); // Use the curriculum state
       } catch (error) {
         console.error("Error fetching video:", error.message);
@@ -170,7 +171,7 @@ export default function TrendingCourseTable() {
   };
   const handleSave = async () => {
     try {
-      const response = await axios.put(`https://api.hachion.co/trendingcourse/update/${editedData.trendingcourse_id}`, editedData);
+      const response = await axios.put(`${API_BASE_URL}/trendingcourse/update/${editedData.trendingcourse_id}`, editedData);
       setTrendingCourse(prev => prev.map(curr => curr.trendingcourse_id === editedData.trendingcourse_id ? response.data : curr));
       setMessage("Trending Course updated successfully!");
       setTimeout(() => setMessage(""), 5000);
@@ -181,7 +182,7 @@ export default function TrendingCourseTable() {
   };
   const handleDelete = async trendingcourse_id => {
     try {
-      const response = await axios.delete(`https://api.hachion.co/trendingcourse/delete/${trendingcourse_id}`);
+      const response = await axios.delete(`${API_BASE_URL}/trendingcourse/delete/${trendingcourse_id}`);
       console.log("Trending Courses deleted successfully:", response.data);
     } catch (error) {
       console.error("Error deleting Courses:", error);
@@ -214,7 +215,7 @@ export default function TrendingCourseTable() {
       date: currentDate // Ensure this is added
     };
     try {
-      const response = await axios.post(`https://api.hachion.co/trendingcourse/add`, dataToSubmit);
+      const response = await axios.post(`${API_BASE_URL}/trendingcourse/add`, dataToSubmit);
       if (response.status === 200) {
         alert("Courses added successfully");
         setCourseData([...courseData, dataToSubmit]); // Update local state
@@ -231,7 +232,7 @@ export default function TrendingCourseTable() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/course-categories/all`);
+        const response = await axios.get(`${API_BASE_URL}/course-categories/all`);
         setCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -242,7 +243,7 @@ export default function TrendingCourseTable() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/courses/all`);
+        const response = await axios.get(`${API_BASE_URL}/courses/all`);
         console.log("API response:", response.data); // Check the API response
         if (Array.isArray(response.data)) {
           setCourse(response.data); // Update state

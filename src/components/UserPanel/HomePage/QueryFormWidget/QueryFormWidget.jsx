@@ -11,6 +11,7 @@ import styles from "./QueryFormWidget.module.css";
 import { useTopBarApi } from "@/Api/hooks/HomePageApi/useTopBarApi";
 import { countries, getDefaultCountry } from "@/countryUtils";
 import MobileQueryForm from "./MobileQueryForm";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const QueryFormWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -73,7 +74,7 @@ const QueryFormWidget = () => {
     setFormData((prev) => ({ ...prev, email: userEmail }));
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${userEmail}`);
+        const response = await fetch(`${API_BASE_URL}/api/v1/user/myprofile?email=${userEmail}`);
         if (!response.ok) {
           throw new Error("Failed to fetch profile");
         }
@@ -220,7 +221,7 @@ const QueryFormWidget = () => {
         timeZone: selectedCountry.timezone,
         country: selectedCountry.name,
       };
-      const response = await fetch(`https://api.hachion.co/ask-query/send-to-webhook`, {
+      const response = await fetch(`${API_BASE_URL}/ask-query/send-to-webhook`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(submitData),

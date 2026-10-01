@@ -16,9 +16,11 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { saveRedirectUrl } from "@/redirectAfterLogin";
 import { useUserProfile } from "@/Api/hooks/CourseApi/useUserProfile";
+import { useAuthStatus } from "@/Api/hooks/CourseApi/useAuthStatus";
 import { useCurriculumAll } from "@/Api/hooks/CurriculumApi/useCurriculumAll";
 import { openCurriculumPdf } from "@/Api/hooks/CurriculumApi/downloadCurriculumPdf";
-import { toApiCourseName } from "@/components/UserPanel/CoursePage/courseRouteUtils";
+import { useCourseApiName } from "@/components/UserPanel/CoursePage/CourseApiNameContext";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 
 function extractYoutubeInfo(url) {
@@ -97,8 +99,9 @@ export default function CourseBanner({ onEnroll, initialCourse, initialCurriculu
   const { courseName } = useParams();
   const { data: userData } = useUserProfile();
   const email = userData?.email || null;
+  const { status: authStatus } = useAuthStatus();
   const encodedCourseName = encodeURIComponent(courseName);
-  const courseNameForApi = courseName ? toApiCourseName(courseName) : "";
+  const courseNameForApi = useCourseApiName();
   // initialCourse/initialCurriculum come from the Server Component page
   // (app/(public)/courses/[categoryName]/[courseName]/page.js), which
   // already fetches this same data (same courseName route param, same
@@ -156,7 +159,7 @@ export default function CourseBanner({ onEnroll, initialCourse, initialCurriculu
 
   const fullSubtitle = stripHtml(course.aboutCourse) || "Course overview coming soon.";
   const subtitle = showFullDescription ? fullSubtitle : fullSubtitle.split(" ").slice(0, 35).join(" ") + (fullSubtitle.split(" ").length > 35 ? "..." : "");
-  const ogImage = course.courseImage ? `https://api.hachion.co/${course.courseImage}` : heroImage.src;
+  const ogImage = course.courseImage ? `${API_BASE_URL}/${course.courseImage}` : heroImage.src;
   const author = course?.defaultTrainer?.trim() || "Hachion Certified Trainer";
   const categories = course.courseCategory ? [course.courseCategory] : ["Technology"];
   const rating = course.starRating ?? 4.5;
@@ -256,7 +259,10 @@ export default function CourseBanner({ onEnroll, initialCourse, initialCurriculu
   const oldPrice = hasSpecialDiscount && originalPrice > finalPrice ? `${currency} ${Math.round(originalPrice)}` : "";
 
   const downloadPdf = async () => {
-    if (!email) {
+    // Auth not restored yet (the button is disabled meanwhile) - not the same
+    // as logged out, so don't show the login prompt.
+    if (authStatus === "loading") return;
+    if (authStatus !== "authenticated") {
       saveRedirectUrl();
       setShowRegisterPrompt(true);
       return;
@@ -353,7 +359,7 @@ export default function CourseBanner({ onEnroll, initialCourse, initialCurriculu
                   Enroll Now - Start Learning
                 </button>
 
-                <button className={styles.ccdownload} onClick={downloadPdf} disabled={isDownloading} aria-busy={isDownloading}>
+                <button className={styles.ccdownload} onClick={downloadPdf} disabled={isDownloading || authStatus === "loading"} aria-busy={isDownloading || authStatus === "loading"}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/Download.png" alt="" height={24} />
                   {isDownloading ? "Preparing..." : "Download Curriculum"}

@@ -5,8 +5,9 @@ import styles from "./DemoClassSection.module.css";
 import { useCheckEnrollmentForSessions } from "@/Api/hooks/CourseApi/useCheckEnrollmentForSessions";
 import { useResendEnrollEmail } from "@/Api/hooks/CourseApi/useResendEnrollEmail";
 import axios from "axios";
+import { API_BASE_URL } from "@/lib/apiBase";
 
-const API_BASE = `https://api.hachion.co`;
+const API_BASE = `${API_BASE_URL}`;
 
 // Ported from the CRA app's
 // src/Components/UserPanel/NewcoursePage/components/DemoClassSectionSelfTab.jsx.

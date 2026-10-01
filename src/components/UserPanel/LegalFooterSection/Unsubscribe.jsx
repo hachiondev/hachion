@@ -10,6 +10,10 @@ import { Menu, MenuItem } from "@mui/material";
 import Flag from "@/components/common/CountryFlag";
 import { AiFillCaretDown } from "react-icons/ai";
 import { countries, getDefaultCountry } from "@/countryUtils";
+import { API_BASE_URL } from "@/lib/apiBase";
+
+const GENERIC_ERROR = "We couldn't process your unsubscribe request. Please try again.";
+const EMAIL_PATTERN = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
 const initialValues = {
   name: "",
@@ -30,6 +34,7 @@ export default function Unsubscribe() {
   const [error, setError] = useState("");
   const [mobileError, setMobileError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [resultMessage, setResultMessage] = useState("");
   const [selectedReasons, setSelectedReasons] = useState([]);
   const [values, setValues] = useState(initialValues);
   const mobileInputRef = useRef(null);
@@ -68,7 +73,7 @@ export default function Unsubscribe() {
     if (userEmail) {
       const fetchUserProfile = async () => {
         try {
-          const res = await fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${userEmail}`);
+          const res = await fetch(`${API_BASE_URL}/api/v1/user/myprofile?email=${encodeURIComponent(userEmail)}`);
           const data = await res.json();
           if (res.ok) {
             setValues((prev) => ({ ...prev, email: userEmail, name: data.name || "" }));
@@ -111,25 +116,39 @@ export default function Unsubscribe() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    const email = values.email.trim();
+    if (!EMAIL_PATTERN.test(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    setError("");
     setIsSubmitting(true);
     const requestBody = {
       userName: values.name,
-      email: values.email,
+      email,
       mobile: mobileNumber,
       reason: selectedReasons.join(", "),
       comments: values.comment,
       country: matchedCountry.name,
     };
     try {
-      const res = await fetch(`https://api.hachion.co/unsubscribe`, {
+      const res = await fetch(`${API_BASE_URL}/unsubscribe`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(requestBody),
       });
+      // A non-JSON body (proxy error page, empty 5xx) must not be mistaken for
+      // "can't reach the server" - parse defensively and fall back to nothing.
+      const data = await res.json().catch(() => null);
       if (res.ok) {
         setIsSubmitting(false);
+        setResultMessage(
+          data?.status === "ALREADY_UNSUBSCRIBED"
+            ? "This email is already unsubscribed."
+            : "You have been unsubscribed successfully."
+        );
         setShowModal(true);
         setValues({ name: "", email: "", comment: "" });
         setMobileNumber("");
@@ -140,15 +159,15 @@ export default function Unsubscribe() {
           router.push("/login");
         }, 3000);
       } else {
-        const errorData = await res.json();
         setIsSubmitting(false);
 
-        if (errorData?.message) {
-          // Remove leading "400 BAD_REQUEST" / "404 NOT_FOUND" style prefixes
-          const cleanMessage = errorData.message.replace(/^\d+\s+\w+\s*/, "");
-          setError(cleanMessage);
+        if (data?.message) {
+          // The backend now returns a clean message; the prefix/quote strip only
+          // matters if an older backend build (raw `404 NOT_FOUND "..."`) is
+          // still deployed, and is harmless otherwise.
+          setError(data.message.replace(/^\d+\s+\w+\s*/, "").replace(/^"(.*)"$/, "$1"));
         } else {
-          setError("Something went wrong. Please try again.");
+          setError(GENERIC_ERROR);
         }
       }
     } catch {
@@ -423,7 +442,7 @@ export default function Unsubscribe() {
                   </button>
                   <div className="modal-body">
                     <Image src="/images/success.gif" alt="Success" className="success-gif" width={60} height={60} unoptimized />
-                    <p className="modal-para">You have successfully unsubscribed from Hachion</p>
+                    <p className="modal-para">{resultMessage}</p>
                   </div>
                 </div>
               </div>

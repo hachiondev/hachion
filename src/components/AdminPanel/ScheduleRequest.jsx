@@ -22,6 +22,7 @@ import { useState, useEffect } from 'react';
 import AdminPagination from './AdminPagination';
 import dayjs from 'dayjs';
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({
   theme
@@ -60,7 +61,7 @@ export default function ScheduleRequest() {
   useEffect(() => {
     const fetchRequestBatch = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/requestbatch`);
+        const response = await axios.get(`${API_BASE_URL}/requestbatch`);
         setRequestBatch(response.data);
         setFilteredData(response.data);
       } catch (error) {
@@ -76,7 +77,7 @@ export default function ScheduleRequest() {
   };
   const handleDelete = async batch_id => {
     try {
-      const response = await axios.delete(`https://api.hachion.co/requestbatch/delete/${batch_id}`);
+      const response = await axios.delete(`${API_BASE_URL}/requestbatch/delete/${batch_id}`);
       console.log("Request batch Deleting Successfully:", response.data);
     } catch (error) {
       console.error("Error deleting batch:", error);

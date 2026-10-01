@@ -15,7 +15,8 @@ import Flag from "react-world-flags";
 import { AiFillCaretDown } from "react-icons/ai";
 import AdminPagination from "../AdminPagination";
 import { countries, getDefaultCountry } from "../../../countryUtils";
-const API_BASE = `https://api.hachion.co`;
+import { API_BASE_URL } from "@/lib/apiBase";
+const API_BASE = `${API_BASE_URL}`;
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -348,9 +349,9 @@ const Employees = () => {
     if (!storedPath) return null;
     if (storedPath.startsWith("images/")) {
       const fileOnly = storedPath.substring("images/".length);
-      return `https://api.hachion.co/uploads/prod/employee_company_logo/${fileOnly}`;
+      return `${API_BASE_URL}/uploads/prod/employee_company_logo/${fileOnly}`;
     }
-    return `https://api.hachion.co/uploads/prod/employees/${storedPath}`;
+    return `${API_BASE_URL}/uploads/prod/employees/${storedPath}`;
   };
   return <>
       {showForm ? <div className="course-category">
@@ -661,7 +662,7 @@ const Employees = () => {
                         {index + 1 + (currentPage - 1) * rowsPerPage}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {emp.companyImage ? <img src={emp.companyImage.startsWith("http") ? emp.companyImage : `https://api.hachion.co/uploads/prod/employee_company_logo/${emp.companyImage.startsWith("/") ? emp.companyImage.substring(1) : emp.companyImage}`} alt="Employee" width="50" height="50" style={{
+                        {emp.companyImage ? <img src={emp.companyImage.startsWith("http") ? emp.companyImage : `${API_BASE_URL}/uploads/prod/employee_company_logo/${emp.companyImage.startsWith("/") ? emp.companyImage.substring(1) : emp.companyImage}`} alt="Employee" width="50" height="50" style={{
                   borderRadius: "50%"
                 }} onError={e => {
                   e.currentTarget.style.display = "none";

@@ -4,15 +4,15 @@ import React, { useEffect, useState, useRef } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useParams } from "next/navigation";
+import { useCourseApiName } from "@/components/UserPanel/CoursePage/CourseApiNameContext";
 import "./RequestBatch.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Ported from the CRA app's
 // src/Components/UserPanel/NewcoursePage/components/RequestBatch.jsx.
 // useParams (react-router-dom) -> useParams (next/navigation) — same
 // "read current route's dynamic segments" semantics either way.
 const RequestBatch = ({ closeModal }) => {
-  const { courseName } = useParams();
   const [startDate, setStartDate] = useState("");
   const [time, setTime] = useState("");
   const [mode, setMode] = useState("");
@@ -26,11 +26,7 @@ const RequestBatch = ({ closeModal }) => {
   const [trainersError, setTrainersError] = useState("");
   const datePickerRef = useRef(null);
   const timeInputRef = useRef(null);
-  const formattedCourseName = courseName
-    ?.replace(/-/g, " ")
-    .split(" ")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
+  const formattedCourseName = useCourseApiName();
   const userData = JSON.parse(localStorage.getItem("loginuserData")) || {};
   const userName = userData.name || "";
   const userEmail = userData.email || "";
@@ -46,7 +42,7 @@ const RequestBatch = ({ closeModal }) => {
 
   useEffect(() => {
     if (!userEmail) return;
-    fetch(`https://api.hachion.co/api/v1/user/myprofile?email=${userEmail}`)
+    fetch(`${API_BASE_URL}/api/v1/user/myprofile?email=${userEmail}`)
       .then((res) => res.json())
       .then((data) => {
         if (data?.mobile) setMobile(data.mobile);
@@ -60,7 +56,7 @@ const RequestBatch = ({ closeModal }) => {
       setLoadingTrainers(true);
       setTrainersError("");
       try {
-        const response = await fetch(`https://api.hachion.co/trainernames/by-course?courseName=${encodeURIComponent(formattedCourseName)}`);
+        const response = await fetch(`${API_BASE_URL}/trainernames/by-course?courseName=${encodeURIComponent(formattedCourseName)}`);
         if (!response.ok) {
           throw new Error("Failed to fetch trainers");
         }
@@ -104,7 +100,7 @@ const RequestBatch = ({ closeModal }) => {
       userName,
     };
     try {
-      const res = await fetch(`https://api.hachion.co/requestbatch/add`, {
+      const res = await fetch(`${API_BASE_URL}/requestbatch/add`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

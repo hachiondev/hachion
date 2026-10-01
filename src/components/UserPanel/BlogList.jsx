@@ -8,6 +8,7 @@ import { BsPersonCircle } from "react-icons/bs";
 import Blogimageplaceholder from "@/assets/blogplaceholder.webp";
 import { getBlogPath } from "@/lib/blogUrl";
 import "./Bloglist.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 const BlogList = ({
   selectedCategories,
   // Every known category (reported by BlogsSidebar once its own
@@ -36,7 +37,7 @@ const BlogList = ({
       }
       setLoading(true);
       try {
-        const res = await axios.get(`https://api.hachion.co/blog/filter`, {
+        const res = await axios.get(`${API_BASE_URL}/blog/filter`, {
           params: {
             category: categoriesToFetch
           }
@@ -52,8 +53,8 @@ const BlogList = ({
             shortTitle: shortTitle,
             author,
             date,
-            avatar: avatarPath ? `https://api.hachion.co/uploads/prod/blogs/${avatarPath}` : "",
-            blog_image: blogImagePath ? `https://api.hachion.co/uploads/prod/blogs/${blogImagePath}` : ""
+            avatar: avatarPath ? `${API_BASE_URL}/uploads/prod/blogs/${avatarPath}` : "",
+            blog_image: blogImagePath ? `${API_BASE_URL}/uploads/prod/blogs/${blogImagePath}` : ""
           };
         });
         setBlogs(mapped);

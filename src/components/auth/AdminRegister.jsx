@@ -5,6 +5,7 @@ import '../AdminPanel/Admin.css';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
+import { API_BASE_URL } from "@/lib/apiBase";
 const AdminRegister = () => {
   const router = useRouter();
   const [passwordType, setPasswordType] = useState('password');
@@ -21,7 +22,7 @@ const AdminRegister = () => {
     setIsSubmitting(true);
     setErrorMessage('');
     try {
-      const response = await fetch(`https://api.hachion.co/api/v1/user/adminregister`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/user/adminregister`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

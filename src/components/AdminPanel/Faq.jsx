@@ -39,6 +39,7 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -175,7 +176,7 @@ export default function Faq() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/course-categories/all`);
+        const response = await axios.get(`${API_BASE_URL}/course-categories/all`);
         setCourse(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -202,7 +203,7 @@ export default function Faq() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/courses/all`);
+        const response = await axios.get(`${API_BASE_URL}/courses/all`);
         setCourseCategory(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -261,7 +262,7 @@ export default function Faq() {
       if (editedRow.faq_pdf && editedRow.faq_pdf instanceof File) {
         formData.append("faqPdf", editedRow.faq_pdf);
       }
-      const response = await axios.put(`https://api.hachion.co/faq/update/${editedRow.faq_id}`, formData, {
+      const response = await axios.put(`${API_BASE_URL}/faq/update/${editedRow.faq_id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         },
@@ -303,7 +304,7 @@ export default function Faq() {
   };
   const fetchData = async () => {
     try {
-      const response = await axios.get(`https://api.hachion.co/faq`);
+      const response = await axios.get(`${API_BASE_URL}/faq`);
       setAllData(response.data);
       setFilteredCurriculum(response.data);
     } catch (error) {
@@ -380,7 +381,7 @@ export default function Faq() {
         formData.append("faqPdf", curriculumData.faq_pdf);
       }
       try {
-        const response = await axios.post(`https://api.hachion.co/faq/add`, formData, {
+        const response = await axios.post(`${API_BASE_URL}/faq/add`, formData, {
           headers: {
             "Content-Type": "multipart/form-data"
           },
@@ -460,7 +461,7 @@ export default function Faq() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected FAQs
-        await axios.post(`https://api.hachion.co/faq/delete`, selectedIds);
+        await axios.post(`${API_BASE_URL}/faq/delete`, selectedIds);
 
         // Update state
         setAllData(prev => prev.filter(item => !selectedIds.includes(item.faq_id)));
@@ -491,7 +492,7 @@ export default function Faq() {
   // You also need the handleDelete function:
   const handleDelete = async faq_id => {
     try {
-      const response = await axios.delete(`https://api.hachion.co/faq/delete/${faq_id}`);
+      const response = await axios.delete(`${API_BASE_URL}/faq/delete/${faq_id}`);
       console.log("FAQ deleted successfully:", response.data);
       setAllData(prev => prev.filter(item => item.faq_id !== faq_id));
       setFilteredCurriculum(prev => prev.filter(item => item.faq_id !== faq_id));

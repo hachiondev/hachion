@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { API_BASE_URL } from "@/lib/apiBase";
 export function useAddProjects() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async payload => {
-      const res = await axios.post(`https://api.hachion.co/projects/bulk`, payload, {
+      const res = await axios.post(`${API_BASE_URL}/projects/bulk`, payload, {
         headers: {
           "Content-Type": "application/json"
         }

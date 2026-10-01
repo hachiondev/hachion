@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const fetchTrainerOptions = async () => {
-  const res = await axios.get(`https://api.hachion.co/trainersnames-unique`);
+  const res = await axios.get(`${API_BASE_URL}/trainersnames-unique`);
   return Array.isArray(res.data) ? res.data : [];
 };
 

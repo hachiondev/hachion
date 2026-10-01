@@ -17,6 +17,7 @@ import { useDiscountRules } from "@/Api/hooks/HomePageApi/TrendingApi/useDiscoun
 import { useGeoData } from "@/Api/hooks/HomePageApi/TrendingApi/useGeoData";
 import { getRuleDiscountPct, getActiveRuleFor } from "./HomePage/TrendingSection/utils/discountUtils";
 import axios from "axios";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 dayjs.extend(customParseFormat);
 
@@ -45,8 +46,8 @@ const ExploreDeals = () => {
       setLoading(true);
       try {
         const [allCoursesResponse, trainersResponse] = await Promise.all([
-          axios.get(`https://api.hachion.co/courses/all`),
-          axios.get(`https://api.hachion.co/trainers`),
+          axios.get(`${API_BASE_URL}/courses/all`),
+          axios.get(`${API_BASE_URL}/trainers`),
         ]);
         const courses = allCoursesResponse.data || [];
         const trainers = trainersResponse.data || [];
@@ -243,7 +244,7 @@ const ExploreDeals = () => {
                 heading={course.courseName}
                 courseCategory={course.courseCategory}
                 month={course.numberOfClasses}
-                image={`https://api.hachion.co/${course.courseImage}`}
+                image={`${API_BASE_URL}/${course.courseImage}`}
                 course_id={course.id}
                 trainer_name={course.trainerName}
                 discountPercentage={discountPercentage}

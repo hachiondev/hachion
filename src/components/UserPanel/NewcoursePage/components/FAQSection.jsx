@@ -3,18 +3,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./FAQSection.module.css";
 import { cn } from "@/utils";
-import { useParams } from "next/navigation";
 import { useCourseByName } from "@/Api/hooks/CourseApi/useCourseByName";
 import { useFaqsByCourse } from "@/Api/hooks/CourseApi/useFaqsByCourse";
-import { toApiCourseName } from "@/components/UserPanel/CoursePage/courseRouteUtils";
+import { useCourseApiName } from "@/components/UserPanel/CoursePage/CourseApiNameContext";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 
 // Ported from the CRA app's
 // src/Components/UserPanel/NewcoursePage/components/FAQSection.jsx.
 export default function FAQSection({ initialCourse, initialFaqs }) {
-  const { courseName } = useParams();
 
-  const courseNameForApi = courseName ? toApiCourseName(courseName) : "";
+  const courseNameForApi = useCourseApiName();
 
   // initialCourse/initialFaqs are server-fetched props from
   // app/(public)/courses/[categoryName]/[courseName]/page.js (same data

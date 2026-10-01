@@ -6,6 +6,7 @@ import "./Style.css";
 import "./Home.css";
 import Learners from "./HomePage/LearnerSection/Learners";
 import ExploreDeals from "./ExploreDeals";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Ported from the CRA app's src/Components/UserPanel/DiscountDeals.jsx
 // (the /discountdeals page). Metadata/canonical live in
@@ -18,7 +19,7 @@ const DiscountDeals = () => {
   useEffect(() => {
     (async () => {
       try {
-        const res = await axios.get(`https://api.hachion.co/banner`);
+        const res = await axios.get(`${API_BASE_URL}/banner`);
         const enabledHomeBanners = (res.data || []).filter(
           (b) => b.home_status === "Enabled" && b.home_banner_image
         );
@@ -51,7 +52,7 @@ const DiscountDeals = () => {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   key={banner.banner_id}
-                  src={`https://api.hachion.co/uploads/prod/banner_images/${banner.home_banner_image}`}
+                  src={`${API_BASE_URL}/uploads/prod/banner_images/${banner.home_banner_image}`}
                   alt={`Banner ${index + 1}`}
                   className="discount-banner-slide"
                   onClick={() => banner.path && window.open(banner.path, "_blank")}

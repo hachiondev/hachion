@@ -15,10 +15,11 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 dayjs.extend(customParseFormat);
 
-const API_BASE = "https://api.hachion.co".replace(/\/+$/, "");
+const API_BASE = API_BASE_URL.replace(/\/+$/, "");
 
 const resolveImageUrl = (img) => {
   if (!img) return "";
@@ -153,7 +154,7 @@ const UserProfile = () => {
       if (canChangePassword && isFileLike(profileImage)) {
         form.append("profileImage", profileImage);
       }
-      const resp = await axios.post(`https://api.hachion.co/api/v1/user/profile/update`, form);
+      const resp = await axios.post(`${API_BASE_URL}/api/v1/user/profile/update`, form);
       const r = resp?.data || {};
       const storedUserRaw = localStorage.getItem("loginuserData");
       const storedUser = storedUserRaw ? JSON.parse(storedUserRaw) : {};
@@ -170,7 +171,7 @@ const UserProfile = () => {
       window.dispatchEvent(new CustomEvent("profile-updated", { detail: updatedUser }));
       if (updatedUser.picture) setProfileImage(updatedUser.picture);
       if (r.profileImageUrl) {
-        const fullUrl = r.profileImageUrl.startsWith("http") ? r.profileImageUrl : `https://api.hachion.co${r.profileImageUrl}`;
+        const fullUrl = r.profileImageUrl.startsWith("http") ? r.profileImageUrl : `${API_BASE_URL}${r.profileImageUrl}`;
         setProfileImage(fullUrl);
       }
       setName(resolvedName);
@@ -187,7 +188,7 @@ const UserProfile = () => {
         address,
         bio,
         dob,
-        profileImage: r.profileImage ? `https://api.hachion.co/api/v1/user/profile/${r.profileImage}` : profileImage,
+        profileImage: r.profileImage ? `${API_BASE_URL}/api/v1/user/profile/${r.profileImage}` : profileImage,
       });
     } catch {
       setMessages((prev) => ({ ...prev, profile: { success: "", error: "❌ Failed to update profile." } }));
@@ -200,7 +201,7 @@ const UserProfile = () => {
     const parsedUser = JSON.parse(storedUser);
     const parsedEmail = parsedUser.email;
     axios
-      .get(`https://api.hachion.co/api/v1/user/myprofile`, { params: { email: parsedEmail } })
+      .get(`${API_BASE_URL}/api/v1/user/myprofile`, { params: { email: parsedEmail } })
       .then((response) => {
         const data = response.data;
         setFacebook(data.facebook || "");
@@ -220,7 +221,7 @@ const UserProfile = () => {
           address: data.address || "",
           bio: data.bio || "",
           dob: parseDobFromApi(data.dob),
-          profileImage: data.profileImage ? `https://api.hachion.co/api/v1/user/profile/${data.profileImage}` : null,
+          profileImage: data.profileImage ? `${API_BASE_URL}/api/v1/user/profile/${data.profileImage}` : null,
         });
         setName(data.name || "");
         if (data.name) {
@@ -248,7 +249,7 @@ const UserProfile = () => {
           setCanChangePassword(true);
         }
         if (data.profileImage) {
-          setProfileImage(`https://api.hachion.co/api/v1/user/profile/${data.profileImage}`);
+          setProfileImage(`${API_BASE_URL}/api/v1/user/profile/${data.profileImage}`);
         }
       })
       .catch(() => {});
@@ -298,7 +299,7 @@ const UserProfile = () => {
       github: (github || "").trim(),
     };
     try {
-      await axios.patch(`https://api.hachion.co/api/v1/user/social-links`, payload, { params: { email: emailVal } });
+      await axios.patch(`${API_BASE_URL}/api/v1/user/social-links`, payload, { params: { email: emailVal } });
       setMessages((prev) => ({ ...prev, social: { success: "✅ Social links updated successfully.", error: "" } }));
     } catch {
       setMessages((prev) => ({ ...prev, social: { success: "", error: "❌ Failed to update social links." } }));
@@ -317,7 +318,7 @@ const UserProfile = () => {
     }
     try {
       const encodedMobile = encodeURIComponent(value);
-      await axios.get(`https://api.hachion.co/check-mobile?mobile=${encodedMobile}`);
+      await axios.get(`${API_BASE_URL}/check-mobile?mobile=${encodedMobile}`);
       setMobileError("");
     } catch (error) {
       if (error.response && error.response.status === 409) {
@@ -359,7 +360,7 @@ const UserProfile = () => {
     }
     setIsUpdating(true);
     try {
-      const response = await axios.post(`https://api.hachion.co/api/v1/user/reset-password`, formData, {
+      const response = await axios.post(`${API_BASE_URL}/api/v1/user/reset-password`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setIsUpdating(false);

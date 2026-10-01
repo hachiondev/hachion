@@ -19,6 +19,7 @@ import dayjs from 'dayjs';
 import './Admin.css';
 import { FiPlus } from 'react-icons/fi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -59,7 +60,7 @@ export default function StudentReview() {
   useEffect(() => {
     const fetchReview = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/userreview`);
+        const response = await axios.get(`${API_BASE_URL}/userreview`);
         const filteredReviews = response.data.filter(review => review.type === false);
         setReview(filteredReviews);
         setFilteredReview(filteredReviews);
@@ -127,7 +128,7 @@ export default function StudentReview() {
       };
       const formData = new FormData();
       formData.append("review", JSON.stringify(updatedReview));
-      const response = await axios.put(`https://api.hachion.co/userreview/update/${review_id}`, formData, {
+      const response = await axios.put(`${API_BASE_URL}/userreview/update/${review_id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
@@ -161,7 +162,7 @@ export default function StudentReview() {
       };
       const formData = new FormData();
       formData.append("review", JSON.stringify(updatedReview));
-      const response = await axios.put(`https://api.hachion.co/userreview/update/${review_id}`, formData, {
+      const response = await axios.put(`${API_BASE_URL}/userreview/update/${review_id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
@@ -200,7 +201,7 @@ export default function StudentReview() {
         await Promise.all(selectedIds.map(id => {
           const reviewToDelete = review.find(r => r.review_id === id);
           if (!reviewToDelete) return null;
-          return axios.delete(`https://api.hachion.co/userreview/delete`, {
+          return axios.delete(`${API_BASE_URL}/userreview/delete`, {
             params: {
               name: reviewToDelete.name,
               email: reviewToDelete.email,
@@ -234,7 +235,7 @@ export default function StudentReview() {
   const handleSingleDelete = async reviewItem => {
     if (!window.confirm("Are you sure you want to delete this review?")) return;
     try {
-      await axios.delete(`https://api.hachion.co/userreview/delete`, {
+      await axios.delete(`${API_BASE_URL}/userreview/delete`, {
         params: {
           name: reviewItem.name,
           email: reviewItem.email,
@@ -348,7 +349,7 @@ export default function StudentReview() {
                   </StyledTableCell>
                   <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
                   <StyledTableCell align="center">
-                    <img src={`https://api.hachion.co//user_review/${review.user_image}`} alt="User" width="50" height="50" />
+                    <img src={`${API_BASE_URL}//user_review/${review.user_image}`} alt="User" width="50" height="50" />
                   </StyledTableCell>
 
                   <StyledTableCell align="left">{review.name}</StyledTableCell>

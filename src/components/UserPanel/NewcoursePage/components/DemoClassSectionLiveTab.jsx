@@ -10,6 +10,7 @@ import { saveRedirectUrl } from "@/redirectAfterLogin";
 import { useResendLiveClassEnrollEmail } from "@/Api/hooks/CourseApi/useResendLiveClassEnrollEmail";
 import LoginModal from "../../Common/Loginmodal";
 import axios from "axios";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Ported from the CRA app's
 // src/Components/UserPanel/NewcoursePage/components/DemoClassSectionLiveTab.jsx.
@@ -92,7 +93,7 @@ function DemoClassSectionLiveTab({
       return;
     }
     try {
-      const res = await axios.get(`https://api.hachion.co/razorpay/checkInstallment`, {
+      const res = await axios.get(`${API_BASE_URL}/razorpay/checkInstallment`, {
         params: {
           studentId: userProfile.studentId,
           courseName: courseName,

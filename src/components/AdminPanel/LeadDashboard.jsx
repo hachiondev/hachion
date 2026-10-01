@@ -28,6 +28,7 @@ import { Menu, MenuItem } from '@mui/material';
 import Flag from 'react-world-flags';
 import { countries as staticCountries } from '../../countryUtils';
 import Select from 'react-select';
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({
   theme
@@ -163,7 +164,7 @@ export default function LeadDashboard() {
     hasFetched.current = true;
     const fetchStudent = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/lead-dashboard`);
+        const response = await axios.get(`${API_BASE_URL}/lead-dashboard`);
         setRegisterStudent(response.data);
       } catch (error) {
         console.error("Error fetching student list:", error.message);
@@ -171,7 +172,7 @@ export default function LeadDashboard() {
     };
     const fetchDropdownData = async () => {
       try {
-        const [tagRes, statusRes] = await Promise.all([axios.get(`https://api.hachion.co/register-leadtag`), axios.get(`https://api.hachion.co/register-leadstatus`)]);
+        const [tagRes, statusRes] = await Promise.all([axios.get(`${API_BASE_URL}/register-leadtag`), axios.get(`${API_BASE_URL}/register-leadstatus`)]);
         setLeadTags(tagRes.data || []);
         setLeadStatuses(statusRes.data || []);
       } catch (error) {
@@ -258,7 +259,7 @@ export default function LeadDashboard() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected students
-        await Promise.all(selectedIds.map(id => axios.delete(`https://api.hachion.co/registerstudent/delete/${id}`)));
+        await Promise.all(selectedIds.map(id => axios.delete(`${API_BASE_URL}/registerstudent/delete/${id}`)));
 
         // Update state
         const updatedStudents = registerStudent.filter(item => !selectedIds.includes(item.id));

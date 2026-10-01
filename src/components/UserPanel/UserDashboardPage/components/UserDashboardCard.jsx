@@ -11,8 +11,9 @@ import progress from "@/assets/dash-icon4.webp";
 import Learn from "@/assets/dash-icon5.webp";
 import assignment from "@/assets/dash-icon6.webp";
 import activity from "@/assets/dash-icon7.webp";
+import { API_BASE_URL } from "@/lib/apiBase";
 
-const API_BASE = `https://api.hachion.co`;
+const API_BASE = `${API_BASE_URL}`;
 
 function parseDateFlexible(s) {
   if (!s) return null;

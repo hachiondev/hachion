@@ -39,6 +39,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -140,7 +141,7 @@ export default function Resume() {
   useEffect(() => {
     const fetchResume = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/resume`);
+        const response = await axios.get(`${API_BASE_URL}/resume`);
         setResume(response.data); // Use the curriculum state
         setFilteredResume(response.data);
       } catch (error) {
@@ -166,7 +167,7 @@ export default function Resume() {
   };
   const handleSave = async () => {
     try {
-      const response = await axios.put(`https://api.hachion.co/resume/update/${editedData.resume_id}`, editedData);
+      const response = await axios.put(`${API_BASE_URL}/resume/update/${editedData.resume_id}`, editedData);
       setResume(prev => prev.map(curr => curr.resume_id === editedData.resume_id ? response.data : curr));
       setFilteredResume(prev => prev.map(curr => curr.resume_id === editedData.resume_id ? response.data : curr));
       setMessage("Resume updated successfully!");
@@ -178,7 +179,7 @@ export default function Resume() {
   };
   const handleDelete = async resume_id => {
     try {
-      const response = await axios.delete(`https://api.hachion.co/resume/delete/${resume_id}`);
+      const response = await axios.delete(`${API_BASE_URL}/resume/delete/${resume_id}`);
       console.log("Resume deleted successfully:", response.data);
 
       // Update state
@@ -224,7 +225,7 @@ export default function Resume() {
       date: currentDate // Ensure this is added
     };
     try {
-      const response = await axios.post(`https://api.hachion.co/resume/add`, dataToSubmit);
+      const response = await axios.post(`${API_BASE_URL}/resume/add`, dataToSubmit);
       if (response.status === 200) {
         alert("Resume details added successfully");
         setResumeData([...resumeData, dataToSubmit]); // Update local state
@@ -241,7 +242,7 @@ export default function Resume() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/course-categories/all`);
+        const response = await axios.get(`${API_BASE_URL}/course-categories/all`);
         setCourse(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -252,7 +253,7 @@ export default function Resume() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/courses/all`);
+        const response = await axios.get(`${API_BASE_URL}/courses/all`);
         setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -314,7 +315,7 @@ export default function Resume() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected resumes
-        await Promise.all(selectedIds.map(id => axios.delete(`https://api.hachion.co/resume/delete/${id}`)));
+        await Promise.all(selectedIds.map(id => axios.delete(`${API_BASE_URL}/resume/delete/${id}`)));
 
         // Update state
         setResume(prev => prev.filter(item => !selectedIds.includes(item.resume_id)));

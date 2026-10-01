@@ -20,6 +20,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -51,7 +52,7 @@ const CourseTable = ({
   };
   const handleDelete = async id => {
     try {
-      await axios.delete(`https://api.hachion.co/courses/all/${id}`);
+      await axios.delete(`${API_BASE_URL}/courses/all/${id}`);
       setSuccessMessage('Course deleted successfully!');
       fetchCourses();
     } catch (error) {
@@ -60,7 +61,7 @@ const CourseTable = ({
   };
   const handleSave = async () => {
     try {
-      await axios.put(`https://api.hachion.co/courses/all/${selectedRow.id}`, selectedRow);
+      await axios.put(`${API_BASE_URL}/courses/all/${selectedRow.id}`, selectedRow);
       setSuccessMessage('Course updated successfully!');
       fetchCourses();
       setOpen(false);

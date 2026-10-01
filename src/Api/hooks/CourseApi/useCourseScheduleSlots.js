@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import dayjs from "dayjs";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 export function useCourseScheduleSlots({ courseSlug, timezone }) {
   const enabled = !!courseSlug && !!timezone;
@@ -13,7 +14,7 @@ export function useCourseScheduleSlots({ courseSlug, timezone }) {
   } = useQuery({
     queryKey: ["courseSchedule", courseSlug, timezone],
     queryFn: async () => {
-      const res = await axios.get(`https://api.hachion.co/schedulecourse`, {
+      const res = await axios.get(`${API_BASE_URL}/schedulecourse`, {
         params: { timezone },
       });
       return Array.isArray(res.data) ? res.data : [];

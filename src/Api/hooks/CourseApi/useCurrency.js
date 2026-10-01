@@ -1,5 +1,8 @@
+import { useSyncExternalStore } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+
+const noopSubscribe = () => () => {};
 
 const GEO_URL = "https://ipinfo.io?token=9da91c409ab4b2";
 const RATES_URL = "https://api.exchangerate-api.com/v4/latest/USD";
@@ -44,6 +47,16 @@ export function useCurrency() {
     queryFn: fetchExchangeRates,
     staleTime: 24 * 60 * 60 * 1000,
   });
+
+  // The server always renders USD (no geo lookup there). A section that
+  // hydrates late (lazy/Suspense, e.g. DemoClassSection) can find another
+  // section's already-resolved currency in the shared cache and render
+  // "INR 400" over server HTML saying "USD 18000" - React error #418.
+  // useSyncExternalStore's server snapshot is also what hydration renders
+  // use, so every hydration render matches the server; the real currency
+  // follows in the re-render right after.
+  const hydrated = useSyncExternalStore(noopSubscribe, () => true, () => false);
+  if (!hydrated) return { currency: "USD", exchangeRate: 1 };
 
   const exchangeRate = currency === "USD" ? 1 : rates?.[currency] || 1;
 

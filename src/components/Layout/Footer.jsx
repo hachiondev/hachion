@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 const FooterLogo = '/images/Logowhite.webp';
 import { IoIosMail, IoIosArrowForward } from "react-icons/io";
@@ -19,18 +19,7 @@ import '../UserPanel/Home.css';
 import { useTopBarApi } from '../../Api/hooks/HomePageApi/useTopBarApi';
 import { useTrendingData } from '../../Api/hooks/HomePageApi/TrendingApi/useTrendingData';
 import { useGeoKeywordsByCourse } from '../../Api/hooks/HomePageApi/TrendingApi/useGeoKeywordsByCourse';
-
-const normalizeCourseNameFromSlug = (slug) => {
-  if (!slug) return null;
-
-  return decodeURIComponent(slug)
-    .replace(/---+/g, " - ")
-    .replace(/\b([a-zA-Z]{2,3})-(\d{3})\b/g, "$1@@$2")
-    .replace(/[-_]+/g, " ")
-    .replace(/@@/g, "-")
-    .replace(/\s+/g, " ")
-    .trim();
-};
+import { useCourseNameForSlug } from '@/components/UserPanel/CoursePage/CourseApiNameContext';
 
 const Footer = () => {
   const pathname = usePathname();
@@ -41,16 +30,9 @@ const Footer = () => {
 
   const { courseName } = useParams();
 
-  const toTitleCase = (str) =>
-    str.replace(/\w\S*/g, (txt) =>
-      txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase()
-    );
-
-  const normalizedCourseName = useMemo(() => {
-    if (!courseName) return null;
-    const decoded = normalizeCourseNameFromSlug(courseName);
-    return toTitleCase(decoded);
-  }, [courseName]);
+  // Exact stored name (a slug-derived guess loses real hyphens, e.g.
+  // "AI-Augmented ..." -> 400 from geo-keywords/by-course).
+  const normalizedCourseName = useCourseNameForSlug(courseName);
 
   const geoQuery = useGeoKeywordsByCourse(normalizedCourseName);
   const geoKeywords = geoQuery?.data ?? [];

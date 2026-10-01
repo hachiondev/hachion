@@ -34,6 +34,7 @@ import Switch from "@mui/material/Switch";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import AdminPagination from "./AdminPagination";
 import dayjs from "dayjs";
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -172,7 +173,7 @@ export default function Other() {
   useEffect(() => {
     const fetchBanner = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/banner`);
+        const response = await axios.get(`${API_BASE_URL}/banner`);
         console.log(response.data);
         setBanner(response.data);
         setFilteredBanner(response.data);
@@ -195,7 +196,7 @@ export default function Other() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected banners
-        const deletePromises = selectedIds.map(banner_id => axios.delete(`https://api.hachion.co/banner/delete/${banner_id}`));
+        const deletePromises = selectedIds.map(banner_id => axios.delete(`${API_BASE_URL}/banner/delete/${banner_id}`));
         await Promise.all(deletePromises);
 
         // Update state
@@ -243,7 +244,7 @@ export default function Other() {
   // UPDATED: handleDelete function to handle both single and bulk delete
   const handleDelete = async ids => {
     try {
-      const deletePromises = ids.map(banner_id => axios.delete(`https://api.hachion.co/banner/delete/${banner_id}`));
+      const deletePromises = ids.map(banner_id => axios.delete(`${API_BASE_URL}/banner/delete/${banner_id}`));
       await Promise.all(deletePromises);
 
       // Update state
@@ -293,7 +294,7 @@ export default function Other() {
       for (let pair of formDataToSend.entries()) {
         console.log(pair[0], pair[1]);
       }
-      const response = await axios.put(`https://api.hachion.co/banner/update/${editedData.banner_id}`, formDataToSend, {
+      const response = await axios.put(`${API_BASE_URL}/banner/update/${editedData.banner_id}`, formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
@@ -331,7 +332,7 @@ export default function Other() {
   };
   const fetchBanners = async () => {
     try {
-      const response = await axios.get(`https://api.hachion.co/banner`);
+      const response = await axios.get(`${API_BASE_URL}/banner`);
       setFilteredBanner(response.data);
       setSelectedIds([]); // Reset selection when refreshing
       setSelectAll(false);
@@ -369,7 +370,7 @@ export default function Other() {
       type: "application/json"
     }));
     try {
-      const response = await axios.post(`https://api.hachion.co/banner/add`, formDataToSend);
+      const response = await axios.post(`${API_BASE_URL}/banner/add`, formDataToSend);
       console.log(response.data);
       if (response.status === 201) {
         alert("Banner added successfully!");
@@ -590,7 +591,7 @@ export default function Other() {
                         {index + 1 + (currentPage - 1) * rowsPerPage}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {curr.banner_image ? <img src={`https://api.hachion.co/uploads/prod/banner_images/${curr.banner_image}`} alt={`Banner ${index + 1}`} onError={e => {
+                        {curr.banner_image ? <img src={`${API_BASE_URL}/uploads/prod/banner_images/${curr.banner_image}`} alt={`Banner ${index + 1}`} onError={e => {
                     e.target.onerror = null;
                     e.target.replaceWith(document.createTextNode("No Image"));
                   }} style={{
@@ -602,7 +603,7 @@ export default function Other() {
                         {curr.banner_image ? curr.status ? capitalize(curr.status) : "Enabled" : ""}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {curr.home_banner_image ? <img src={`https://api.hachion.co/uploads/prod/banner_images/${curr.home_banner_image}`} alt={`Banner ${index + 1}`} onError={e => {
+                        {curr.home_banner_image ? <img src={`${API_BASE_URL}/uploads/prod/banner_images/${curr.home_banner_image}`} alt={`Banner ${index + 1}`} onError={e => {
                     e.target.onerror = null;
                     e.target.replaceWith(document.createTextNode("No Image"));
                   }} style={{

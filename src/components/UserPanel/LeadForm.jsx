@@ -14,6 +14,7 @@ import registerbanner from "@/assets/register.webp";
 import aboutHachion from "@/assets/aboutlead.webp";
 import Benefits from "./LeadBenefits";
 import { countries, getDefaultCountry } from "@/countryUtils";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const ALLOWED_MARKETER_REFS = ["a", "b", "c", "d", "e"];
 
@@ -90,7 +91,7 @@ const LeadForm = () => {
       return;
     }
     try {
-      const response = await fetch(`https://api.hachion.co/leadform`, {
+      const response = await fetch(`${API_BASE_URL}/leadform`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fullName, email, mobileNumber, country, courseInterest, batchTiming, marketerId }),

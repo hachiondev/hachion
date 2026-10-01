@@ -8,6 +8,7 @@ import { FaYoutube } from "react-icons/fa6";
 import "swiper/css";
 import "swiper/css/navigation";
 import "./CoursePage/Course.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 const WatchVideos = () => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,7 +17,7 @@ const WatchVideos = () => {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const response = await fetch(`https://api.hachion.co/api/youtube/videos?handle=@hachion&pages=3&pageSize=50&limit=12`);
+        const response = await fetch(`${API_BASE_URL}/api/youtube/videos?handle=@hachion&pages=3&pageSize=50&limit=12`);
         const data = await response.json();
         if (data && data.videos) {
           const formatted = data.videos.map(v => ({

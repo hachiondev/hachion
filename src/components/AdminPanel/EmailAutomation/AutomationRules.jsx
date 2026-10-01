@@ -10,7 +10,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import AdminPagination from '../AdminPagination';
 import dayjs from 'dayjs';
-const API_BASE = `https://api.hachion.co`;
+import { API_BASE_URL } from "@/lib/apiBase";
+const API_BASE = `${API_BASE_URL}`;
 const AutomationRules = () => {
   const [leadStatuses, setLeadStatuses] = useState([]);
   const [timezones, setTimezones] = useState([]);
@@ -47,7 +48,7 @@ const AutomationRules = () => {
   // =====================================================
 
   useEffect(() => {
-    fetch(`https://api.hachion.co/register-leadtag`).then(res => res.json()).then(data => setLeadStatuses(data || [])).catch(error => console.error("Error fetching lead statuses:", error));
+    fetch(`${API_BASE_URL}/register-leadtag`).then(res => res.json()).then(data => setLeadStatuses(data || [])).catch(error => console.error("Error fetching lead statuses:", error));
   }, []);
 
   // =====================================================

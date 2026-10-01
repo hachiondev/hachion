@@ -7,6 +7,7 @@ import Pagination from "../../Common/Pagination";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import "../../Dashboard.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 dayjs.extend(customParseFormat);
 
@@ -41,7 +42,7 @@ export default function UserWishlist() {
         alert("Please login before changing wishlist.");
         return;
       }
-      const { data } = await axios.post(`https://api.hachion.co/api/wishlist/toggle`, { email, courseId });
+      const { data } = await axios.post(`${API_BASE_URL}/api/wishlist/toggle`, { email, courseId });
       if (data && data.bookmarked === false) {
         setCourses((prev) => {
           const next = prev.filter((c) => c.id !== courseId);
@@ -68,7 +69,7 @@ export default function UserWishlist() {
           setTotalCards(0);
           return;
         }
-        const { data } = await axios.get(`https://api.hachion.co/api/wishlist/courses`, { params: { email } });
+        const { data } = await axios.get(`${API_BASE_URL}/api/wishlist/courses`, { params: { email } });
         const all = Array.isArray(data) ? data : [];
         setCourses(all);
         setTotalCards(all.length);
@@ -84,7 +85,7 @@ export default function UserWishlist() {
   useEffect(() => {
     const fetchRules = async () => {
       try {
-        const { data } = await axios.get(`https://api.hachion.co/discounts-courses`);
+        const { data } = await axios.get(`${API_BASE_URL}/discounts-courses`);
         setDiscountRules(Array.isArray(data) ? data : []);
       } catch (e) {
         console.error("Failed to load discount rules", e);
@@ -279,7 +280,7 @@ export default function UserWishlist() {
                   key={course.id || index}
                   heading={course.courseName}
                   courseCategory={course.courseCategory}
-                  image={`https://api.hachion.co/${course.courseImage}`}
+                  image={`${API_BASE_URL}/${course.courseImage}`}
                   discountPercentage={discountPercentage}
                   amount={`${currency} ${fmt(effectiveNow)}`}
                   totalAmount={`${fmt(mrpVal)}`}

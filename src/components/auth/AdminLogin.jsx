@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
+import { API_BASE_URL } from "@/lib/apiBase";
 const AdminLogin = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ const AdminLogin = () => {
   const handleFormSubmit = async e => {
     e.preventDefault();
     try {
-      const response = await axios.post(`https://api.hachion.co/api/v1/user/adminlogin`, {
+      const response = await axios.post(`${API_BASE_URL}/api/v1/user/adminlogin`, {
         email,
         password
       });

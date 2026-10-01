@@ -6,6 +6,7 @@ import CardsPagination from "./Common/CardsPagination";
 import "./Blogs.css";
 import RecentEntriesCard from "./HomePage/TrendingBlogSection/components/RecentEntriesCard";
 import { getBlogPath } from "@/lib/blogUrl";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const MoreBlogs = ({
   scrollToTop = false,
@@ -52,11 +53,11 @@ const MoreBlogs = ({
     const fetchBlogs = async () => {
       setSelfLoading(true);
       try {
-        const response = await axios.get(`https://api.hachion.co/blog`);
+        const response = await axios.get(`${API_BASE_URL}/blog`);
         const mappedBlogs = response.data.map(blog => ({
           ...blog,
-          avatar: blog.authorImage ? `https://api.hachion.co/uploads/prod/blogs/${blog.authorImage}` : "",
-          blog_image: blog.blog_image ? `https://api.hachion.co/uploads/prod/blogs/${blog.blog_image}` : ""
+          avatar: blog.authorImage ? `${API_BASE_URL}/uploads/prod/blogs/${blog.authorImage}` : "",
+          blog_image: blog.blog_image ? `${API_BASE_URL}/uploads/prod/blogs/${blog.blog_image}` : ""
         }));
 
         const sortedBlogs = mappedBlogs.sort((a, b) => new Date(b.date) - new Date(a.date));

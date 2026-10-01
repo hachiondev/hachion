@@ -5,6 +5,7 @@ import axios from "axios";
 import Box from "@mui/material/Box";
 import Rating from "@mui/material/Rating";
 import "./Dashboard.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Ported from the CRA app's src/Components/UserPanel/UserWriteReview.jsx
 // (the review-submission form embedded in the dashboard's Reviews tab).
@@ -51,7 +52,7 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
     const fetchTrainers = async () => {
       try {
         const response = await axios.get(
-          `https://api.hachion.co/enroll/trainers/${encodeURIComponent(userEmail)}/${encodeURIComponent(reviewData.course_name)}`
+          `${API_BASE_URL}/enroll/trainers/${encodeURIComponent(userEmail)}/${encodeURIComponent(reviewData.course_name)}`
         );
         setFilteredTrainers(response.data || []);
       } catch (error) {
@@ -66,7 +67,7 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
     if (!userEmail) return;
     const fetchUserCourses = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/enroll/courses/${encodeURIComponent(userEmail)}`);
+        const response = await axios.get(`${API_BASE_URL}/enroll/courses/${encodeURIComponent(userEmail)}`);
         setFilteredCourses(response.data || []);
       } catch (error) {
         console.error("Error fetching course names by email:", error);
@@ -121,7 +122,7 @@ const UserWriteReview = ({ setShowReviewForm, onSubmitReview }) => {
       formData.append("user_image", reviewData.user_image, reviewData.user_image.name);
     }
     try {
-      await axios.post(`https://api.hachion.co/userreview/add`, formData, {
+      await axios.post(`${API_BASE_URL}/userreview/add`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setSuccessMessage("Review submitted successfully!");

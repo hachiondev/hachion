@@ -30,6 +30,7 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({
   theme
@@ -169,7 +170,7 @@ export default function OfflineEnroll() {
   useEffect(() => {
     const fetchEnrollments = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/offline-enrollments`);
+        const response = await axios.get(`${API_BASE_URL}/offline-enrollments`);
         console.log("Offline Enrollment API Response:", response.data);
         setEnroll(response.data);
         setFilteredEnroll(response.data);
@@ -182,7 +183,7 @@ export default function OfflineEnroll() {
     // Fetch course categories
     const fetchCourseCategories = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/course-categories/all`);
+        const response = await axios.get(`${API_BASE_URL}/course-categories/all`);
         setCourse(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -199,7 +200,7 @@ export default function OfflineEnroll() {
         return;
       }
       try {
-        const response = await axios.get(`https://api.hachion.co/courses/category`, {
+        const response = await axios.get(`${API_BASE_URL}/courses/category`, {
           params: {
             courseCategory: enrollData.category_name
           }
@@ -225,7 +226,7 @@ export default function OfflineEnroll() {
     const fetchBatchIds = async () => {
       if (enrollData.category_name && enrollData.course_name && enrollData.duration) {
         try {
-          const response = await axios.get(`https://api.hachion.co/batch-ids`, {
+          const response = await axios.get(`${API_BASE_URL}/batch-ids`, {
             params: {
               categoryName: enrollData.category_name,
               courseName: enrollData.course_name,
@@ -254,7 +255,7 @@ export default function OfflineEnroll() {
   };
   const handleDelete = async id => {
     try {
-      await axios.delete(`https://api.hachion.co/offline-enroll/delete/${id}`);
+      await axios.delete(`${API_BASE_URL}/offline-enroll/delete/${id}`);
       const updatedEnrollments = enroll.filter(item => item.id !== id);
       setEnroll(updatedEnrollments);
       setFilteredEnroll(updatedEnrollments);
@@ -462,12 +463,12 @@ export default function OfflineEnroll() {
         batch_id: enrollData.batch_id
       };
       console.log("Payload:", payload);
-      const response = await axios.post(`https://api.hachion.co/offline-enroll/add`, payload);
+      const response = await axios.post(`${API_BASE_URL}/offline-enroll/add`, payload);
       if (response.status === 200 || response.status === 201) {
         setSuccessMessage("✅ Offline Enrollment Added Successfully");
         setErrorMessage("");
         handleReset();
-        const enrollResponse = await axios.get(`https://api.hachion.co/offline-enrollments`);
+        const enrollResponse = await axios.get(`${API_BASE_URL}/offline-enrollments`);
         setEnroll(enrollResponse.data);
         setFilteredEnroll(enrollResponse.data);
         setTimeout(() => setSuccessMessage(""), 5000);
@@ -532,7 +533,7 @@ export default function OfflineEnroll() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected enrollments
-        await Promise.all(selectedIds.map(id => axios.delete(`https://api.hachion.co/enroll/delete/${id}`)));
+        await Promise.all(selectedIds.map(id => axios.delete(`${API_BASE_URL}/enroll/delete/${id}`)));
 
         // Update state
         const updatedEnrollments = enroll.filter(item => !selectedIds.includes(item.id));

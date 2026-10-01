@@ -2,6 +2,7 @@ import { buildCanonicalUrl, SITE_ORIGIN } from "@/lib/seo";
 import { buildBreadcrumbSchema } from "@/lib/breadcrumbSchema";
 import JsonLd from "@/components/common/JsonLd";
 import InstructorDetails from "@/components/UserPanel/InstructorsPage/InstructorDetails";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const slugifyName = (name = "") => name.trim().toLowerCase().replace(/\s+/g, "-");
 
@@ -15,7 +16,7 @@ const slugifyName = (name = "") => name.trim().toLowerCase().replace(/\s+/g, "-"
 // present in the CRA source.
 async function fetchTrainerForMetadata(trainerSlug) {
   try {
-    const res = await fetch(`https://api.hachion.co/trainersnames-unique`, { next: { revalidate: 300 } });
+    const res = await fetch(`${API_BASE_URL}/trainersnames-unique`, { next: { revalidate: 300 } });
     if (!res.ok) return null;
     const data = await res.json();
     if (!Array.isArray(data)) return null;
@@ -64,7 +65,7 @@ export default async function InstructorDetailsPage({ params }) {
       name: trainer.trainer_name,
       jobTitle: trainer.course_name ? `${trainer.course_name} Instructor` : "Instructor",
       description: `Meet ${trainer.trainer_name}, an expert instructor at Hachion.`,
-      image: trainer.trainerImage ? `https://api.hachion.co/${trainer.trainerImage}` : undefined,
+      image: trainer.trainerImage ? `${API_BASE_URL}/${trainer.trainerImage}` : undefined,
       url: canonicalUrl,
       worksFor: { "@type": "EducationalOrganization", "@id": `${SITE_ORIGIN}/#organization`, name: "Hachion" },
     });

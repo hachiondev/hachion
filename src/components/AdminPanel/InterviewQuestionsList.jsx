@@ -3,19 +3,20 @@
 import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import "./InterviewTabs.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 
-const TEMPLATES_ENDPOINT = `https://api.hachion.co/api/interview-templates`;
+const TEMPLATES_ENDPOINT = `${API_BASE_URL}/api/interview-templates`;
 
 
-const ALL_QUESTIONS_ENDPOINT = `https://api.hachion.co/api/interviews/questions`;
+const ALL_QUESTIONS_ENDPOINT = `${API_BASE_URL}/api/interviews/questions`;
 
 
 const QUESTIONS_FOR_TEMPLATE = (templateId) =>
-  `https://api.hachion.co/api/interviews/templates/${templateId}/questions`;
+  `${API_BASE_URL}/api/interviews/templates/${templateId}/questions`;
 
 const QUESTION_BY_ID = (questionId) =>
-  `https://api.hachion.co/api/interviews/questions/${questionId}`;
+  `${API_BASE_URL}/api/interviews/questions/${questionId}`;
 
 const InterviewQuestionsList = () => {
   const [templates, setTemplates] = useState([]);

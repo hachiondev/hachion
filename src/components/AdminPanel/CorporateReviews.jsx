@@ -23,7 +23,8 @@ import AdminPagination from './AdminPagination';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-const API_BASE = `https://api.hachion.co`;
+import { API_BASE_URL } from "@/lib/apiBase";
+const API_BASE = `${API_BASE_URL}`;
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({

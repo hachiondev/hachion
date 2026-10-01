@@ -44,7 +44,13 @@ import { Menu, MenuItem } from '@mui/material';
 import Flag from 'react-world-flags';
 import { countries as staticCountries } from '../../countryUtils';
 import Select from 'react-select';
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
+// Source of Enquiry choices. The backend stores `source` as free text (no
+// enum/lookup table), so this list is the single place the options live -
+// it drives both the rendered <option>s and the "keep a stored value that
+// isn't in the list" check below, so the two can't drift apart.
+const SOURCE_OF_ENQUIRY_OPTIONS = ["Linkedin", "Instagram", "Facebook", "Meta Ads", "Twitter", "Other"];
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -215,10 +221,10 @@ export default function RegisterList() {
       setSendingId(studentId); // 👈 start loading
       setSuccessMessage("");
       setErrorMessage("");
-      await axios.post(`https://api.hachion.co/send-email/${studentId}`);
+      await axios.post(`${API_BASE_URL}/send-email/${studentId}`);
 
       // ✅ Refresh latest table data from DB
-      const response = await axios.get(`https://api.hachion.co/registerstudent-with-remarks`);
+      const response = await axios.get(`${API_BASE_URL}/registerstudent-with-remarks`);
       setRegisterStudent(response.data);
       setFilteredStudent(response.data);
       setSuccessMessage("✅ Email sent successfully!");
@@ -236,7 +242,7 @@ export default function RegisterList() {
   useEffect(() => {
     const fetchDropdownData = async () => {
       try {
-        const [tagRes, statusRes] = await Promise.all([axios.get(`https://api.hachion.co/register-leadtag`), axios.get(`https://api.hachion.co/register-leadstatus`)]);
+        const [tagRes, statusRes] = await Promise.all([axios.get(`${API_BASE_URL}/register-leadtag`), axios.get(`${API_BASE_URL}/register-leadstatus`)]);
         setLeadTags(tagRes.data || []);
         setLeadStatuses(statusRes.data || []);
       } catch (error) {
@@ -267,7 +273,7 @@ export default function RegisterList() {
           continue;
         }
         try {
-          await axios.post(`https://api.hachion.co/send-email/${student.studentId}`);
+          await axios.post(`${API_BASE_URL}/send-email/${student.studentId}`);
           successCount++;
         } catch {
           failCount++;
@@ -394,7 +400,7 @@ export default function RegisterList() {
         coordinator: updateForm.coordinator,
         callStatus: updateForm.status // ✅ correct mapping
       };
-      const response = await axios.post(`https://api.hachion.co/register-student/add-remark`, payload);
+      const response = await axios.post(`${API_BASE_URL}/register-student/add-remark`, payload);
       const saved = response.data;
       const newUpdate = {
         remark: saved.remark,
@@ -444,7 +450,7 @@ export default function RegisterList() {
   };
   const fetchStudent = async () => {
     try {
-      const response = await axios.get(`https://api.hachion.co/registerstudent-with-remarks`);
+      const response = await axios.get(`${API_BASE_URL}/registerstudent-with-remarks`);
       const mappedData = response.data.map(item => ({
         ...item,
         time_zone: item.time_zone || item.timeZone || "",
@@ -462,8 +468,8 @@ export default function RegisterList() {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const allRes = await axios.get(`https://api.hachion.co/employees/enteredBy`);
-        const seoRes = await axios.get(`https://api.hachion.co/seo-team`);
+        const allRes = await axios.get(`${API_BASE_URL}/employees/enteredBy`);
+        const seoRes = await axios.get(`${API_BASE_URL}/seo-team`);
         setAllEmployees(allRes.data);
         setSeoEmployees(seoRes.data);
       } catch (error) {
@@ -522,7 +528,7 @@ export default function RegisterList() {
   };
   const handleSave = async () => {
     try {
-      const response = await axios.put(`https://api.hachion.co/registerstudent/update/${editedData.student_Id}`, editedData);
+      const response = await axios.put(`${API_BASE_URL}/registerstudent/update/${editedData.student_Id}`, editedData);
       setRegisterStudent(prev => prev.map(curr => curr.student_Id === editedData.student_Id ? response.data : curr));
       setMessage("Student details updated successfully!");
       setTimeout(() => setMessage(""), 5000);
@@ -551,7 +557,7 @@ export default function RegisterList() {
   };
   const handleDelete = async id => {
     try {
-      const response = await axios.delete(`https://api.hachion.co/registerstudent/delete/${id}`);
+      const response = await axios.delete(`${API_BASE_URL}/registerstudent/delete/${id}`);
       setRegisterStudent(prev => prev.filter(s => s.id !== id));
       setFilteredStudent(prev => prev.filter(s => s.id !== id));
       await fetchStudent();
@@ -620,7 +626,9 @@ export default function RegisterList() {
       location: row.location ?? "",
       time_zone: row.time_zone ?? "",
       analyst_name: row.analyst_name ?? "",
-      source: row.source ?? "Select",
+      // "" selects the placeholder; the old "Select" default rendered as a
+      // fake option and was saved back as the literal source "Select".
+      source: row.source ?? "",
       // visa_status: row.visa_status ?? "Select Visa Status",
       visa_status: row.visa_status || row.visaStatus || "Select Visa Status",
       coordinator: row.coordinator ?? "",
@@ -634,7 +642,7 @@ export default function RegisterList() {
       status: row.status ? row.status.toUpperCase() : "ACTIVE"
     });
     try {
-      const res = await axios.get(`https://api.hachion.co/remarks/${row.studentId}`);
+      const res = await axios.get(`${API_BASE_URL}/remarks/${row.studentId}`);
       const data = res.data;
       if (data && data.length > 0) {
         // ✅ PICK LATEST (LAST RECORD)
@@ -682,7 +690,7 @@ export default function RegisterList() {
         course_name: studentData.technology,
         status: studentData.status || "ACTIVE"
       };
-      const response = await axios.put(`https://api.hachion.co/registerstudent/update/${studentData.id}`, updatedData);
+      const response = await axios.put(`${API_BASE_URL}/registerstudent/update/${studentData.id}`, updatedData);
       setRegisterStudent(prev => prev.map(s => s.id === studentData.id ? response.data : s));
       await fetchStudent();
       setMessage("Student updated successfully!");
@@ -732,10 +740,11 @@ export default function RegisterList() {
       [name]: value
     }));
   };
+  const isValidPhoneNumber = number => /^\d{6,14}$/.test(number || "");
   const handleMobileBlur = () => {
     const mobile = studentData.mobile?.trim();
-    if (!mobile || mobile.length !== 10) {
-      setMobileError("❌ Mobile number must be exactly 10 digits.");
+    if (!isValidPhoneNumber(mobile)) {
+      setMobileError("❌ Mobile number must be 6-14 digits.");
     } else {
       setMobileError("");
     }
@@ -754,8 +763,8 @@ export default function RegisterList() {
   };
   const handleWhatsappBlur = () => {
     const whatsapp = studentData.whatsapp?.trim();
-    if (!whatsapp || whatsapp.length !== 10) {
-      setWhatsappError("❌ WhatsApp number must be exactly 10 digits.");
+    if (!isValidPhoneNumber(whatsapp)) {
+      setWhatsappError("❌ WhatsApp number must be 6-14 digits.");
     } else {
       setWhatsappError("");
     }
@@ -766,8 +775,8 @@ export default function RegisterList() {
     setIsSubmitting(true);
     const mobileNumber = studentData.mobile?.trim();
     const countryCode = selectedCountry.code?.trim() || "";
-    if (!mobileNumber || mobileNumber.length !== 10) {
-      setErrorMessage("❌ Mobile number must be exactly 10 digits.");
+    if (!isValidPhoneNumber(mobileNumber)) {
+      setErrorMessage("❌ Mobile number must be 6-14 digits.");
       setSuccessMessage("");
       setIsSubmitting(false);
       return;
@@ -787,7 +796,7 @@ export default function RegisterList() {
       coordinator: studentData.coordinator
     };
     try {
-      const response = await axios.post(`https://api.hachion.co/registerstudent/add`, dataToSubmit);
+      const response = await axios.post(`${API_BASE_URL}/registerstudent/add`, dataToSubmit);
       if (response.status === 200) {
         await fetchStudent();
         setIsSubmitting(false);
@@ -821,7 +830,7 @@ export default function RegisterList() {
   };
   const isFormValid = () => {
     const safeTrim = val => (val ?? "").trim();
-    return safeTrim(studentData.userName) !== "" && safeTrim(studentData.email) !== "" && safeTrim(studentData.mobile).length === 10 && safeTrim(studentData.whatsapp).length === 10 && (safeTrim(studentData.country) !== "" || safeTrim(selectedCountry.code) !== "") &&
+    return safeTrim(studentData.userName) !== "" && safeTrim(studentData.email) !== "" && isValidPhoneNumber(safeTrim(studentData.mobile)) && isValidPhoneNumber(safeTrim(studentData.whatsapp)) && (safeTrim(studentData.country) !== "" || safeTrim(selectedCountry.code) !== "") &&
     // safeTrim(studentData.location) !== "" &&
 
     safeTrim(studentData.time_zone) !== "" && safeTrim(studentData.analyst_name) !== "" && safeTrim(studentData.seoTeam) !== "" && safeTrim(studentData.stateCity) !== "" && safeTrim(studentData.leadStatus) !== "" && safeTrim(studentData.coordinator) !== "" && safeTrim(studentData.status) !== "";
@@ -839,8 +848,8 @@ export default function RegisterList() {
     const missing = [];
     if (safeTrim(studentData.userName) === "") missing.push("Student Name");
     if (safeTrim(studentData.email) === "") missing.push("Email");
-    if (safeTrim(studentData.mobile).length !== 10) missing.push("Mobile (10 digits)");
-    if (safeTrim(studentData.whatsapp).length !== 10) missing.push("WhatsApp (10 digits)");
+    if (!isValidPhoneNumber(safeTrim(studentData.mobile))) missing.push("Mobile (6-14 digits)");
+    if (!isValidPhoneNumber(safeTrim(studentData.whatsapp))) missing.push("WhatsApp (6-14 digits)");
     if (safeTrim(studentData.country) === "" && safeTrim(selectedCountry.code) === "") missing.push("Country");
     if (safeTrim(studentData.time_zone) === "") missing.push("Time Zone");
     if (safeTrim(studentData.analyst_name) === "") missing.push("Entered By");
@@ -898,7 +907,7 @@ export default function RegisterList() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected students
-        await Promise.all(selectedIds.map(id => axios.delete(`https://api.hachion.co/registerstudent/delete/${id}`)));
+        await Promise.all(selectedIds.map(id => axios.delete(`${API_BASE_URL}/registerstudent/delete/${id}`)));
 
         // Update state
         const updatedStudents = registerStudent.filter(item => !selectedIds.includes(item.id));
@@ -1002,7 +1011,19 @@ export default function RegisterList() {
                 }} />
                             {selectedCountry.value} ({selectedCountry.code})
                           </div>
-            } : null} styles={{
+            } : null} filterOption={(option, inputValue) => {
+              // react-select's default filter searches `${label} ${value}`,
+              // and label here is JSX ("[object Object] India"), so typing a
+              // dial code like 91 / 1 / 44 never matched anything. Names match
+              // anywhere; codes match by leading digits, so "1" finds +1 (and
+              // +1-684) rather than every code containing a 1.
+              const search = inputValue.trim().toLowerCase();
+              if (!search) return true;
+              const name = (option.data.value || '').toLowerCase();
+              const searchDigits = search.replace(/\D/g, '');
+              const codeDigits = (option.data.code || '').replace(/\D/g, '');
+              return name.includes(search) || (searchDigits !== '' && /^[+\d\s-]+$/.test(search) && codeDigits.startsWith(searchDigits));
+            }} styles={{
               control: base => ({
                 ...base,
                 minHeight: '50px',
@@ -1157,15 +1178,11 @@ export default function RegisterList() {
   <option value="">Select</option>
 
   {/* ✅ SHOW DB VALUE IF NOT IN DROPDOWN */}
-  {studentData.source && !["Linkedin", "Instagram", "Facebook", "Twitter", "Other"].includes(studentData.source) && <option value={studentData.source}>
+  {studentData.source && !SOURCE_OF_ENQUIRY_OPTIONS.includes(studentData.source) && <option value={studentData.source}>
         {studentData.source}
       </option>}
 
-  <option value="Linkedin">Linkedin</option>
-  <option value="Instagram">Instagram</option>
-  <option value="Facebook">Facebook</option>
-  <option value="Twitter">Twitter</option>
-  <option value="Other">Other</option>
+  {SOURCE_OF_ENQUIRY_OPTIONS.map(option => <option key={option} value={option}>{option}</option>)}
             </select>
               </div>
               

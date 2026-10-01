@@ -3,6 +3,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import "./PopupInterest.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Ported from the CRA app's src/Components/UserPanel/Pathfinder4.jsx —
 // final step, PUTs the updated onboarding/preferences data.
@@ -21,7 +22,7 @@ const Pathfinder4 = ({ formData, onBack, onChange }) => {
     if (!email) return;
     setStudentEmail(email);
     axios
-      .get(`https://api.hachion.co/api/v1/user/myprofile`, { params: { email } })
+      .get(`${API_BASE_URL}/api/v1/user/myprofile`, { params: { email } })
       .then((resp) => {
         const data = resp.data || {};
         if (data.studentId) setStudentId(data.studentId);
@@ -58,7 +59,7 @@ const Pathfinder4 = ({ formData, onBack, onChange }) => {
       additionalInfo: formData.additionalInfo,
     };
     try {
-      await axios.put(`https://api.hachion.co/popup-onboarding/update-by-email`, payload);
+      await axios.put(`${API_BASE_URL}/popup-onboarding/update-by-email`, payload);
       setSuccessMessage("Your details have been updated successfully!");
       setErrorMessage("");
     } catch (err) {

@@ -12,6 +12,7 @@ import { FiUpload } from "react-icons/fi";
 import axios from 'axios';
 import AdminPagination from './AdminPagination';
 import './Admin.css';
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -119,7 +120,7 @@ export default function CandidateCertificate() {
   // }, []);
   const handleSave = useCallback(async () => {
     try {
-      const response = await axios.put(`https://api.hachion.co/certificate/${editedData.id}`, editedData);
+      const response = await axios.put(`${API_BASE_URL}/certificate/${editedData.id}`, editedData);
       setCertificate(prev => prev.map(curr => curr.id === editedData.id ? response.data : curr));
       setMessage("Certificate updated successfully!");
       setTimeout(() => setMessage(""), 5000);
@@ -143,7 +144,7 @@ export default function CandidateCertificate() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/course-categories/all`);
+        const response = await axios.get(`${API_BASE_URL}/course-categories/all`);
         setCourse(response.data);
       } catch (error) {}
     };
@@ -152,7 +153,7 @@ export default function CandidateCertificate() {
   useEffect(() => {
     const fetchCandidateCertificate = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/courses/all`);
+        const response = await axios.get(`${API_BASE_URL}/courses/all`);
         setCourseCategory(response.data);
       } catch (error) {}
     };

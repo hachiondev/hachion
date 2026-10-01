@@ -17,6 +17,7 @@ import './Admin.css';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import axios from 'axios';
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({
   theme
@@ -94,7 +95,7 @@ export default function RequestInstallment() {
   useEffect(() => {
     const fetchRequestInstallments = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/razorpay/request-installments`);
+        const response = await axios.get(`${API_BASE_URL}/razorpay/request-installments`);
         const mappedData = response.data.map(item => ({
           id: item.id,
           student_ID: item.studentId,
@@ -124,7 +125,7 @@ export default function RequestInstallment() {
 
   //     try {
   //       // Note: This assumes there's a delete endpoint. If not, you may need to adjust this.
-  //       await axios.delete(`https://api.hachion.co`);
+  //       await axios.delete(`${API_BASE_URL}`);
 
   //       const updatedPayments = onlinePayment.filter(item => item.id !== id);
   //       setOnlinePayment(updatedPayments);
@@ -148,7 +149,7 @@ export default function RequestInstallment() {
     const confirmed = window.confirm("Are you sure you want to delete this installment request?");
     if (!confirmed) return;
     try {
-      const response = await axios.delete(`https://api.hachion.co/razorpay/delete-installment-request`, {
+      const response = await axios.delete(`${API_BASE_URL}/razorpay/delete-installment-request`, {
         params: {
           studentId: row.student_ID,
           email: row.email,
@@ -225,7 +226,7 @@ export default function RequestInstallment() {
     if (window.confirm(confirmMessage)) {
       try {
         // Approve all selected requests
-        await Promise.all(selectedIds.map(id => axios.put(`https://api.hachion.co/razorpay/update-status/${id}`, null, {
+        await Promise.all(selectedIds.map(id => axios.put(`${API_BASE_URL}/razorpay/update-status/${id}`, null, {
           params: {
             requestStatus: "approved"
           }
@@ -268,7 +269,7 @@ export default function RequestInstallment() {
     if (window.confirm(confirmMessage)) {
       try {
         // Reject all selected requests
-        await Promise.all(selectedIds.map(id => axios.put(`https://api.hachion.co/razorpay/update-status/${id}`, null, {
+        await Promise.all(selectedIds.map(id => axios.put(`${API_BASE_URL}/razorpay/update-status/${id}`, null, {
           params: {
             requestStatus: "rejected"
           }
@@ -435,7 +436,7 @@ export default function RequestInstallment() {
                     color: 'green'
                   }} onClick={async () => {
                     try {
-                      await axios.put(`https://api.hachion.co/razorpay/update-status/${row.id}`, null, {
+                      await axios.put(`${API_BASE_URL}/razorpay/update-status/${row.id}`, null, {
                         params: {
                           requestStatus: "approved"
                         }
@@ -458,7 +459,7 @@ export default function RequestInstallment() {
                     color: 'red'
                   }} onClick={async () => {
                     try {
-                      await axios.put(`https://api.hachion.co/razorpay/update-status/${row.id}`, null, {
+                      await axios.put(`${API_BASE_URL}/razorpay/update-status/${row.id}`, null, {
                         params: {
                           requestStatus: "rejected"
                         }

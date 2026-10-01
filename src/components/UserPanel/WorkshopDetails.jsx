@@ -19,6 +19,7 @@ import axios from "axios";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { useWorkshops } from "@/Api/hooks/WorkshopApi/useWorkshops";
 import { slugifyWorkshopTitle } from "@/lib/workshopSlug";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const EMPTY_ARRAY = [];
 
@@ -153,7 +154,7 @@ const WorkshopDetails = () => {
       country: selectedCountry.name,
     };
     try {
-      await axios.post(`https://api.hachion.co/workshops`, updatedFormData);
+      await axios.post(`${API_BASE_URL}/workshops`, updatedFormData);
       setError("Registration for workshop done successfully");
       setMessageType("success");
     } catch (err) {
@@ -197,7 +198,7 @@ const WorkshopDetails = () => {
       <div className="course-top">
         <div className="about-banner">
           <img
-            src={workshop?.banner_image && workshop.banner_image.trim() !== "" ? `https://api.hachion.co/${workshop.banner_image}` : Banner2.src}
+            src={workshop?.banner_image && workshop.banner_image.trim() !== "" ? `${API_BASE_URL}/${workshop.banner_image}` : Banner2.src}
             alt="Workshop Banner"
             onError={handleImageError}
             className="d-block w-100"

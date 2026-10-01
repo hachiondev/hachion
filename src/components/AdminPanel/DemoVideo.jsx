@@ -36,6 +36,7 @@ import { GoPlus } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -135,7 +136,7 @@ export default function DemoVideo() {
   useEffect(() => {
     const fetchVideo = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/demovideo`);
+        const response = await axios.get(`${API_BASE_URL}/demovideo`);
         setDemoVideo(response.data); // Use the curriculum state
       } catch (error) {
         console.error("Error fetching video:", error.message);
@@ -171,7 +172,7 @@ export default function DemoVideo() {
   };
   const handleSave = async () => {
     try {
-      const response = await axios.put(`https://api.hachion.co/demovideo/update/${editedRow.demovideo_id}`, editedRow);
+      const response = await axios.put(`${API_BASE_URL}/demovideo/update/${editedRow.demovideo_id}`, editedRow);
       setDemoVideo(prev => prev.map(curr => curr.demovideo_id === editedRow.demovideo_id ? response.data : curr));
       setMessage("Video updated successfully!");
       setTimeout(() => setMessage(""), 5000);
@@ -182,7 +183,7 @@ export default function DemoVideo() {
   };
   const handleDelete = async demovideo_id => {
     try {
-      const response = await axios.delete(`https://api.hachion.co/demovideo/delete/${demovideo_id}`);
+      const response = await axios.delete(`${API_BASE_URL}/demovideo/delete/${demovideo_id}`);
       console.log("Demo Video deleted successfully:", response.data);
     } catch (error) {
       console.error("Error deleting Demo Video:", error);
@@ -218,7 +219,7 @@ export default function DemoVideo() {
       date: currentDate // Ensure this is added
     };
     try {
-      const response = await axios.post(`https://api.hachion.co/demovideo/add`, dataToSubmit);
+      const response = await axios.post(`${API_BASE_URL}/demovideo/add`, dataToSubmit);
       if (response.status === 200) {
         alert("video details added successfully");
         setVideoData([...videoData, dataToSubmit]); // Update local state
@@ -232,7 +233,7 @@ export default function DemoVideo() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/course-categories/all`);
+        const response = await axios.get(`${API_BASE_URL}/course-categories/all`);
         setCourse(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -243,7 +244,7 @@ export default function DemoVideo() {
   useEffect(() => {
     const fetchCourseCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/courses/all`);
+        const response = await axios.get(`${API_BASE_URL}/courses/all`);
         setCourseCategory(response.data); // Assuming the data contains an array of trainer objects
       } catch (error) {
         console.error("Error fetching categories:", error.message);

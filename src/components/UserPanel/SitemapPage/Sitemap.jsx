@@ -5,6 +5,7 @@ import axios from "axios";
 import Link from "next/link";
 import "../Blogs.css";
 import { MdKeyboardArrowRight } from "react-icons/md";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 export default function Sitemap() {
   const [category, setCategory] = useState([]);
@@ -30,7 +31,7 @@ export default function Sitemap() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/courses/all`);
+        const response = await axios.get(`${API_BASE_URL}/courses/all`);
         if (Array.isArray(response.data)) {
           setCourses(response.data);
         } else {

@@ -2,8 +2,9 @@ import { useMemo, useEffect } from "react";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { API_BASE_URL } from "@/lib/apiBase";
 
-const API_BASE = `https://api.hachion.co`;
+const API_BASE = `${API_BASE_URL}`;
 
 let razorpayScriptPromise = null;
 function loadRazorpayScript() {

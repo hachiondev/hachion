@@ -11,6 +11,7 @@ import { AiFillCaretDown } from "react-icons/ai";
 import { countries, getDefaultCountry } from "@/countryUtils";
 import LoginBanner from "@/assets/loginbackground.webp";
 import { MdKeyboardArrowRight } from "react-icons/md";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Ported from the CRA app's
 // src/Components/UserPanel/HomePage/AuthSection/GoogleMobileNumber.jsx —
@@ -84,7 +85,7 @@ const GoogleMobileNumber = () => {
       country: selectedCountry.name,
     };
     try {
-      const res = await fetch(`https://api.hachion.co/api/v1/user/complete-signup`, {
+      const res = await fetch(`${API_BASE_URL}/api/v1/user/complete-signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

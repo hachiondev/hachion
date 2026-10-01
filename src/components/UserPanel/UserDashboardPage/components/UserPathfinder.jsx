@@ -7,6 +7,7 @@ import Pathfinder2 from "../../Pathfinder2";
 import Pathfinder3 from "../../Pathfinder3";
 import Pathfinder4 from "../../Pathfinder4";
 import "../../Dashboard.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Ported from the CRA app's UserDashboardPage/components/UserPathfinder.jsx.
 const UserPathfinder = () => {
@@ -42,7 +43,7 @@ const UserPathfinder = () => {
     if (formData.studentEmail) {
       setLoading(true);
       axios
-        .get(`https://api.hachion.co/popup-onboarding/get-by-email/${formData.studentEmail}`)
+        .get(`${API_BASE_URL}/popup-onboarding/get-by-email/${formData.studentEmail}`)
         .then((res) => {
           const data = res.data;
           setFormData((prev) => ({

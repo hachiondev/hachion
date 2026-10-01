@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 function resolveCertificateImageUrl(path) {
   if (!path) return null;
   if (path.startsWith("http")) return path;
-  return `https://api.hachion.co${path.startsWith("/") ? "" : "/"}${path}`;
+  return `${API_BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
 }
 
 // Admin-managed certificate templates are uploaded via Student Admin ->
@@ -17,7 +18,7 @@ export function useCourseCertificateImage(courseName) {
   return useQuery({
     queryKey: ["courseCertificateImage", courseName],
     queryFn: async () => {
-      const res = await axios.get(`https://api.hachion.co/certificate`);
+      const res = await axios.get(`${API_BASE_URL}/certificate`);
       const list = Array.isArray(res.data) ? res.data : [];
       const normalized = String(courseName).trim().toLowerCase();
       const match = list.find((c) => (c.course_name || "").trim().toLowerCase() === normalized && c.certificate_image);

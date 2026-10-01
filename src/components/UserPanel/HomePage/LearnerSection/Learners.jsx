@@ -8,6 +8,7 @@ import { Modal } from "react-bootstrap";
 import Link from "next/link";
 import LearnerCard from "./components/LearnerCard";
 import { useLearnerReviews } from "@/Api/hooks/HomePageApi/LearnerApi/useLearnerReviews";
+import { API_BASE_URL } from "@/lib/apiBase";
 const Learners = ({
   page
 }) => {
@@ -82,7 +83,7 @@ const Learners = ({
                 </div>)}
 
             {!isLoading && currentReviews.map((review, index) => <div key={review.review_id} className="col-12 col-md-6 col-lg-4 mb-3">
-                  <LearnerCard name={review.name} location={review.location} company={review.company} role={review.role} content={review.review} rating={review.rating} profileImage={review.user_image ? `https://api.hachion.co/userreview/${review.user_image}` : ""} onReadMore={() => handleReadMore(index)} />
+                  <LearnerCard name={review.name} location={review.location} company={review.company} role={review.role} content={review.review} rating={review.rating} profileImage={review.user_image ? `${API_BASE_URL}/userreview/${review.user_image}` : ""} onReadMore={() => handleReadMore(index)} />
                 </div>)}
           </div>
         </div>

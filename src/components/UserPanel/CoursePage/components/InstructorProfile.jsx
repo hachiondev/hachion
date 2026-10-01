@@ -9,6 +9,7 @@ import "swiper/css/navigation";
 import axios from "axios";
 import InstructorCard from "../../InstructorCard";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Ported from the CRA app's
 // src/Components/UserPanel/CoursePage/components/InstructorProfile.jsx.
@@ -32,7 +33,7 @@ const InstructorProfile = () => {
     const fetchTrainers = async () => {
       try {
         setLoading(true);
-        const trainerRes = await axios.get(`https://api.hachion.co/trainers`);
+        const trainerRes = await axios.get(`${API_BASE_URL}/trainers`);
         setTrainers(trainerRes.data);
       } catch (error) {
         console.error("Error fetching trainers:", error);
@@ -97,7 +98,7 @@ const InstructorProfile = () => {
                     trainer_name={trainer.trainer_name}
                     profile={trainer.course_name}
                     summary={trainer.summary}
-                    profileImage={trainer.trainerImage ? `https://api.hachion.co/${trainer.trainerImage}` : ""}
+                    profileImage={trainer.trainerImage ? `${API_BASE_URL}/${trainer.trainerImage}` : ""}
                     demo_link_1={trainer.demo_link_1}
                     trainerRating={trainer.trainerRating}
                     trainerUserRating={trainer.trainerUserRating}

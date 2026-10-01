@@ -10,6 +10,7 @@ import { useParams, usePathname, useRouter } from "next/navigation";
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { getNavState, setNavState } from "@/lib/navState";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -77,7 +78,7 @@ const OnlineInstallments = () => {
     const fetchCoursePricing = async () => {
       try {
         if (!selectedBatchData?.schedule_course_name) return;
-        const response = await axios.get(`https://api.hachion.co/courses/all`);
+        const response = await axios.get(`${API_BASE_URL}/courses/all`);
         const matchedCourse = response.data.find((c) => c.courseName.toLowerCase().replace(/\s+/g, "-") === selectedBatchData.schedule_course_name?.toLowerCase().replace(/\s+/g, "-"));
         if (matchedCourse) {
           setCourseData({
@@ -104,7 +105,7 @@ const OnlineInstallments = () => {
         setErrorMessage("Please login to continue.");
         return;
       }
-      const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile`, { params: { email: user.email } });
+      const profileResponse = await axios.get(`${API_BASE_URL}/api/v1/user/myprofile`, { params: { email: user.email } });
       const studentId = profileResponse.data?.studentId;
       const mobile = profileResponse.data?.mobile || "";
       const batchId = selectedBatchData?.batchId;
@@ -132,7 +133,7 @@ const OnlineInstallments = () => {
 
       amount = Math.round(amount);
       if (mobile.startsWith("+91")) {
-        const orderRes = await axios.post(`https://api.hachion.co/razorpay/create-razorpay-order`, null, {
+        const orderRes = await axios.post(`${API_BASE_URL}/razorpay/create-razorpay-order`, null, {
           params: { amount, studentId, courseName: courseNm, batchId },
         });
         const razorpayOrder = orderRes.data;
@@ -145,7 +146,7 @@ const OnlineInstallments = () => {
           order_id: razorpayOrder.id,
           handler: async function (response) {
             try {
-              await axios.post(`https://api.hachion.co/razorpay/capture-razorpay`, null, {
+              await axios.post(`${API_BASE_URL}/razorpay/capture-razorpay`, null, {
                 params: {
                   paymentId: response.razorpay_payment_id,
                   orderId: response.razorpay_order_id,
@@ -156,7 +157,7 @@ const OnlineInstallments = () => {
                 },
               });
 
-              await axios.put(`https://api.hachion.co/enroll/update-payment`, { studentId, courseName: courseNm, batchId, amount });
+              await axios.put(`${API_BASE_URL}/enroll/update-payment`, { studentId, courseName: courseNm, batchId, amount });
               setSuccessMessage("✅ Payment successful!");
               setNavState(`/payment/${slug}`, {
                 selectedBatchData: { schedule_course_name: courseNm, batchId },
@@ -179,7 +180,7 @@ const OnlineInstallments = () => {
         localStorage.setItem("courseName", courseNm);
         localStorage.setItem("batchId", batchId);
         const returnUrl = `https://hachion.co/enroll/${slug}`;
-        const paypalRes = await axios.post(`https://api.hachion.co/create-order`, null, { params: { amount, returnUrl } });
+        const paypalRes = await axios.post(`${API_BASE_URL}/create-order`, null, { params: { amount, returnUrl } });
         const approvalUrl = paypalRes.data;
         if (approvalUrl.startsWith("https://www.paypal.com")) {
           window.location.href = approvalUrl;
@@ -209,7 +210,7 @@ const OnlineInstallments = () => {
       const email = user?.email;
       if (!email) return;
       try {
-        const response = await axios.get(`https://api.hachion.co/api/v1/user/students`);
+        const response = await axios.get(`${API_BASE_URL}/api/v1/user/students`);
         const allStudents = response.data;
         const matchedStudent = allStudents.find((student) => student.email === email);
         if (matchedStudent) {
@@ -242,7 +243,7 @@ const OnlineInstallments = () => {
     const batchId = selectedBatchData?.batchId;
     if (!studentId || !courseNm || !batchId) return;
     axios
-      .get(`https://api.hachion.co/razorpay/checkbox-status`, { params: { studentId, courseName: courseNm, batchId } })
+      .get(`${API_BASE_URL}/razorpay/checkbox-status`, { params: { studentId, courseName: courseNm, batchId } })
       .then((res) => {
         const disabledArray = Array.from({ length: res.data }, (_, i) => i + 1);
         setPaidCheckBoxInstallment(disabledArray);
@@ -295,7 +296,7 @@ const OnlineInstallments = () => {
         return;
       }
       const userEmail = user.email;
-      const profileResponse = await axios.get(`https://api.hachion.co/api/v1/user/myprofile`, { params: { email: userEmail } });
+      const profileResponse = await axios.get(`${API_BASE_URL}/api/v1/user/myprofile`, { params: { email: userEmail } });
       const studentId = profileResponse.data?.studentId;
       const mobile = profileResponse.data?.mobile || "";
       const batchId = selectedBatchData?.batchId;
@@ -312,7 +313,7 @@ const OnlineInstallments = () => {
       const slug = courseNm.toLowerCase().replace(/\s+/g, "-");
       const returnUrl = `https://hachion.co/enroll/${slug}`;
       if (mobile.startsWith("+91")) {
-        const orderRes = await axios.post(`https://api.hachion.co/razorpay/create-razorpay-order`, null, { params: { amount, studentId, courseName: courseNm, batchId } });
+        const orderRes = await axios.post(`${API_BASE_URL}/razorpay/create-razorpay-order`, null, { params: { amount, studentId, courseName: courseNm, batchId } });
         const razorpayOrder = orderRes.data;
         const razorpayOrderId = razorpayOrder.id;
         const options = {
@@ -325,7 +326,7 @@ const OnlineInstallments = () => {
           handler: async function (response) {
             const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
             try {
-              const captureRes = await axios.post(`https://api.hachion.co/razorpay/capture-razorpay-installments`, null, {
+              const captureRes = await axios.post(`${API_BASE_URL}/razorpay/capture-razorpay-installments`, null, {
                 params: {
                   paymentId: razorpay_payment_id,
                   orderId: razorpay_order_id,
@@ -365,7 +366,7 @@ const OnlineInstallments = () => {
           setSuccessMessage("");
         }
       } else {
-        const paypalRes = await axios.post(`https://api.hachion.co/create-order`, null, { params: { amount, returnUrl } });
+        const paypalRes = await axios.post(`${API_BASE_URL}/create-order`, null, { params: { amount, returnUrl } });
         const approvalUrl = paypalRes.data;
         if (approvalUrl.startsWith("https://www.paypal.com")) {
           window.location.href = approvalUrl;
@@ -384,7 +385,7 @@ const OnlineInstallments = () => {
   const handleApplyCoupon = async () => {
     if (!couponCode) return;
     try {
-      const res = await axios.get(`https://api.hachion.co/coupon-code/discount/${couponCode}`);
+      const res = await axios.get(`${API_BASE_URL}/coupon-code/discount/${couponCode}`);
       if (!res.data || Object.keys(res.data).length === 0) {
         setErrorMessageForCoupon("Invalid coupon code");
         setSuccessMessage("");

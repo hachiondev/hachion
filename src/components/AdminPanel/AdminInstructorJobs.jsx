@@ -14,8 +14,9 @@ import AdminPagination from './AdminPagination';
 import './Admin.css';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
-const API_BASE = `https://api.hachion.co`;
+const API_BASE = `${API_BASE_URL}`;
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({

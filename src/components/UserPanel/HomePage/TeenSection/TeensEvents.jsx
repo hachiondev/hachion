@@ -12,6 +12,7 @@ import { getRuleDiscountPct, getActiveRuleFor } from "../TrendingSection/utils/d
 import { useCoursesSummary } from "@/Api/hooks/HomePageApi/TrainingApi/useCoursesSummary";
 import { useTrainers } from "@/Api/hooks/HomePageApi/TrainingApi/useTrainers";
 import "../../Home.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toLocaleString();
 const fmt = n => Math.round(Number(n) || 0).toLocaleString();
@@ -192,7 +193,7 @@ export default function TeensEvents() {
         }
         const rulePct = getRuleDiscountPct(course.courseName, country, discountRules, regionNames);
         const discountPercentage = rulePct > 0 ? rulePct : isIN ? Number(course.idiscount) || 0 : Number(course.discount) || 0;
-        return <CourseCard key={course.id || i} course_id={course.id} heading={course.courseName} courseCategory={course.courseCategory} month={course.numberOfClasses} image={`https://api.hachion.co/${course.courseImage}`} trainer_name={trainerName} discountPercentage={discountPercentage} amount={`${currency} ${fmt(finalPrice)}`} totalAmount={`${fmt(displayMrp)}`} level={course.level} onClick={() => handleCardClick(course)} className="course-card" timeLeftLabel={countdowns[course.id ?? course.courseName] || ""} />;
+        return <CourseCard key={course.id || i} course_id={course.id} heading={course.courseName} courseCategory={course.courseCategory} month={course.numberOfClasses} image={`${API_BASE_URL}/${course.courseImage}`} trainer_name={trainerName} discountPercentage={discountPercentage} amount={`${currency} ${fmt(finalPrice)}`} totalAmount={`${fmt(displayMrp)}`} level={course.level} onClick={() => handleCardClick(course)} className="course-card" timeLeftLabel={countdowns[course.id ?? course.courseName] || ""} />;
       }) : <p>No courses available.</p>}
       </div>
     </div>;

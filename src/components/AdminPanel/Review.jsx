@@ -29,6 +29,7 @@ import { IoMdCloseCircleOutline } from "react-icons/io";
 import axios from 'axios';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -198,7 +199,7 @@ export default function Review() {
     }
     try {
       setLoadingTrainers(true);
-      const response = await axios.get(`https://api.hachion.co/trainernames`, {
+      const response = await axios.get(`${API_BASE_URL}/trainernames`, {
         params: {
           categoryName,
           courseName
@@ -271,7 +272,7 @@ export default function Review() {
         return;
       }
       try {
-        const response = await axios.get(`https://api.hachion.co/courses/coursenames-by-category`, {
+        const response = await axios.get(`${API_BASE_URL}/courses/coursenames-by-category`, {
           params: {
             categoryName: editedData.categoryName
           }
@@ -294,7 +295,7 @@ export default function Review() {
   }, [editedData.categoryName, editedData.course_name]);
   const fetchReview = async () => {
     try {
-      const response = await axios.get(`https://api.hachion.co/userreview`);
+      const response = await axios.get(`${API_BASE_URL}/userreview`);
       const filteredReviews = response.data.filter(review => review.type === true);
       setReview(filteredReviews);
       setFilteredReview(filteredReviews);
@@ -350,7 +351,7 @@ export default function Review() {
       if (editedData.image instanceof File) {
         formData.append("user_image", editedData.image);
       }
-      const response = await axios.put(`https://api.hachion.co/userreview/update/${editedData.review_id}`, formData, {
+      const response = await axios.put(`${API_BASE_URL}/userreview/update/${editedData.review_id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
@@ -374,7 +375,7 @@ export default function Review() {
   };
   const handleDelete = async review_id => {
     try {
-      const response = await axios.delete(`https://api.hachion.co/userreview/delete/${review_id}`);
+      const response = await axios.delete(`${API_BASE_URL}/userreview/delete/${review_id}`);
       console.log("Review deleted successfully:", response.data);
       await fetchReview();
 
@@ -480,7 +481,7 @@ export default function Review() {
       formData.append("user_image", reviewData.image);
     }
     try {
-      const response = await axios.post(`https://api.hachion.co/userreview/add`, formData, {
+      const response = await axios.post(`${API_BASE_URL}/userreview/add`, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
@@ -515,7 +516,7 @@ export default function Review() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await axios.get(`https://api.hachion.co/course-categories/all`);
+        const response = await axios.get(`${API_BASE_URL}/course-categories/all`);
         setCourse(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error.message);
@@ -530,7 +531,7 @@ export default function Review() {
         return;
       }
       try {
-        const response = await axios.get(`https://api.hachion.co/courses/coursenames-by-category`, {
+        const response = await axios.get(`${API_BASE_URL}/courses/coursenames-by-category`, {
           params: {
             categoryName: reviewData.categoryName
           }
@@ -590,7 +591,7 @@ export default function Review() {
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected reviews
-        await Promise.all(selectedIds.map(id => axios.delete(`https://api.hachion.co/userreview/delete/${id}`)));
+        await Promise.all(selectedIds.map(id => axios.delete(`${API_BASE_URL}/userreview/delete/${id}`)));
 
         // Update state
         await fetchReview();
@@ -951,7 +952,7 @@ export default function Review() {
                     <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>{/* S.No. */}
 
                     <StyledTableCell align="center">
-                      {curr.user_image ? <img src={`https://api.hachion.co/userreview/${curr.user_image}`} alt="User" width="50" height="50" /> : 'No Image'}
+                      {curr.user_image ? <img src={`${API_BASE_URL}/userreview/${curr.user_image}`} alt="User" width="50" height="50" /> : 'No Image'}
                     </StyledTableCell>
                     <StyledTableCell align="left">{curr.name}</StyledTableCell>
                     <StyledTableCell align="center">{curr.social_id}</StyledTableCell>

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./CoursePage/Course.css";
 import { useRouter } from "next/navigation";
+import { API_BASE_URL } from "@/lib/apiBase";
 const DropdownCourseList = ({
   category,
   onCourseSelect
@@ -20,7 +21,7 @@ const DropdownCourseList = ({
       try {
         const {
           data
-        } = await axios.get(`https://api.hachion.co/courses/summary`);
+        } = await axios.get(`${API_BASE_URL}/courses/summary`);
         const rows = Array.isArray(data) ? data : [];
         const mapped = rows.map(row => ({
           id: row[0],

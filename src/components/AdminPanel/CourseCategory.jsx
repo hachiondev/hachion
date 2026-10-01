@@ -30,6 +30,7 @@ import Button from '@mui/material/Button';
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import AdminPagination from './AdminPagination';
+import { API_BASE_URL } from "@/lib/apiBase";
 const StyledTableCell = styled(TableCell)(({
   theme
 }) => ({
@@ -97,7 +98,7 @@ const CourseCategory = ({
     setCurrentPage(1);
   };
   const displayedCategories = filteredCategories.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
-  const API_URL = `https://api.hachion.co/course-categories/all`;
+  const API_URL = `${API_BASE_URL}/course-categories/all`;
   useEffect(() => {
     fetchCourses();
   }, []);
@@ -152,7 +153,7 @@ const CourseCategory = ({
   };
   const handleSubmit = async () => {
     try {
-      const response = await axios.post(`https://api.hachion.co/course-categories/add`, {
+      const response = await axios.post(`${API_BASE_URL}/course-categories/add`, {
         name: courseData.category_name,
         date: dayjs(courseData.date).format("YYYY-MM-DD")
       });
@@ -193,7 +194,7 @@ const CourseCategory = ({
         name: editedRow.name,
         date: dayjs(editedRow.date).format("YYYY-MM-DD")
       };
-      await axios.put(`https://api.hachion.co/course-categories/update/${editedRow.id}`, payload);
+      await axios.put(`${API_BASE_URL}/course-categories/update/${editedRow.id}`, payload);
       setCategories(prev => prev.map(item => item.id === editedRow.id ? {
         ...item,
         ...payload
@@ -215,7 +216,7 @@ const CourseCategory = ({
   };
   const handleDelete = async id => {
     try {
-      await axios.delete(`https://api.hachion.co/course-categories/delete/${id}`);
+      await axios.delete(`${API_BASE_URL}/course-categories/delete/${id}`);
       setCategories(prev => prev.filter(item => item.id !== id));
       setFilteredCategories(prev => prev.filter(item => item.id !== id));
       setSuccessMessage("Category deleted successfully");
@@ -283,7 +284,7 @@ const CourseCategory = ({
     if (window.confirm(confirmMessage)) {
       try {
         // Delete all selected categories
-        await Promise.all(selectedIds.map(id => axios.delete(`https://api.hachion.co/course-categories/delete/${id}`)));
+        await Promise.all(selectedIds.map(id => axios.delete(`${API_BASE_URL}/course-categories/delete/${id}`)));
 
         // Update state
         setCategories(prev => prev.filter(item => !selectedIds.includes(item.id)));

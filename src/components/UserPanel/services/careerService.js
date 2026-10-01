@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Ported from CRA's JobsDisplay.jsx — the same field-mapping/posted-label
 // logic, extracted into a plain function so both the client-side
@@ -19,7 +20,7 @@ export function formatApprovedJobs(rawJobs) {
       id: job.hireFromUsId || index,
       jobTitle: job.jobTitle,
       companyName: job.company || "Unknown",
-      image: job.companyLogo ? `https://api.hachion.co/hire-from-us/${job.companyLogo}` : null,
+      image: job.companyLogo ? `${API_BASE_URL}/hire-from-us/${job.companyLogo}` : null,
       exp: job.experience,
       location: job.location,
       time: job.employmentType,
@@ -38,7 +39,7 @@ export function formatApprovedJobs(rawJobs) {
 }
 
 export async function getApprovedJobs() {
-  const res = await fetch(`https://api.hachion.co/hire-from-us/getApprovedJobs`);
+  const res = await fetch(`${API_BASE_URL}/hire-from-us/getApprovedJobs`);
   if (!res.ok) throw new Error("Failed to fetch approved jobs");
   const data = await res.json();
   return Array.isArray(data) ? formatApprovedJobs(data) : [];

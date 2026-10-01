@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import styles from "./NewEnrollNow.module.css";
 import { Input } from "@/components/ui/input";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useCourseApiName } from "@/components/UserPanel/CoursePage/CourseApiNameContext";
 import Link from "next/link";
 import { useDemoScheduleLogic } from "@/Api/hooks/DemoClassSectionLogics/useDemoScheduleLogic";
 import { useUserProfile } from "@/Api/hooks/CourseApi/useUserProfile";
@@ -48,16 +49,7 @@ export default function NewEnrollNow() {
   const email = typeof window !== "undefined" ? JSON.parse(localStorage.getItem("loginuserData") || "null")?.email : undefined;
   const { data: studentData } = useStudentDetails(email);
 
-  const { courseName } = useParams();
-
-  const courseSlug = courseName
-    ? decodeURIComponent(courseName)
-        .replace(/[-_]+/g, " ")
-        .replace(/\s+/g, " ")
-        .trim()
-        .toLowerCase()
-        .replace(/\b\w/g, (c) => c.toUpperCase())
-    : "";
+  const courseSlug = useCourseApiName();
 
   const timezone = typeof window !== "undefined" ? Intl.DateTimeFormat().resolvedOptions().timeZone : "UTC";
 

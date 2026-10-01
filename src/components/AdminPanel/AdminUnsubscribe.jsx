@@ -16,6 +16,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { IoSearch } from "react-icons/io5";
 import { useState, useEffect } from 'react';
 import AdminPagination from './AdminPagination';
+import { API_BASE_URL } from "@/lib/apiBase";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
@@ -74,7 +75,7 @@ export default function AdminUnsubscribe() {
   useEffect(() => {
     const fetchUnsubscribeList = async () => {
       try {
-        const response = await fetch(`https://api.hachion.co/unsubscribe`);
+        const response = await fetch(`${API_BASE_URL}/unsubscribe`);
         const data = await response.json();
         setUnsubscribe(data);
         setList(data);

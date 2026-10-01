@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import "../../Home.css";
 import Link from "next/link";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 // Ported from the CRA app's
 // src/Components/UserPanel/CoursePage/components/TrendingCourseNames.jsx.
@@ -12,7 +13,7 @@ const TrendingCourseNames = () => {
   useEffect(() => {
     const fetchTrendingCourses = async () => {
       try {
-        const response = await fetch(`https://api.hachion.co/trendingcourse`);
+        const response = await fetch(`${API_BASE_URL}/trendingcourse`);
         const data = await response.json();
         const activeCourses = data.filter((course) => course.status === true);
         setCourses(activeCourses);

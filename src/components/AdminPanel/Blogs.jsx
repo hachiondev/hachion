@@ -20,6 +20,7 @@ import { normalizeRichText } from "@/lib/normalizeRichText";
 import AdminPagination from './AdminPagination';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { API_BASE_URL } from "@/lib/apiBase";
 dayjs.extend(customParseFormat);
 const StyledTableCell = styled(TableCell)(({
   theme
@@ -82,10 +83,10 @@ const Blogs = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [shortTitleError, setShortTitleError] = useState("");
   useEffect(() => {
-    axios.get(`https://api.hachion.co/course-categories/all`).then(res => setCategories(res.data)).catch(console.error);
+    axios.get(`${API_BASE_URL}/course-categories/all`).then(res => setCategories(res.data)).catch(console.error);
   }, []);
   useEffect(() => {
-    axios.get(`https://api.hachion.co/blog`).then(res => {
+    axios.get(`${API_BASE_URL}/blog`).then(res => {
       setAllBlogs(res.data);
       setBlogs(res.data);
       setFilteredBlogs(res.data);
@@ -134,7 +135,7 @@ const Blogs = () => {
     const confirmMessage = `Are you sure you want to delete ${selectedIds.length} selected ${selectedIds.length === 1 ? 'blog' : 'blogs'}?`;
     if (window.confirm(confirmMessage)) {
       try {
-        const deletePromises = selectedIds.map(id => axios.delete(`https://api.hachion.co/blog/delete/${id}`));
+        const deletePromises = selectedIds.map(id => axios.delete(`${API_BASE_URL}/blog/delete/${id}`));
         await Promise.all(deletePromises);
         const updatedBlogs = blogs.filter(item => !selectedIds.includes(item.id));
         setBlogs(updatedBlogs);
@@ -177,7 +178,7 @@ const Blogs = () => {
     if (formData.id) return;
     if (!formData.shortTitle) return;
     try {
-      await axios.get(`https://api.hachion.co/blog/shortTitle`, {
+      await axios.get(`${API_BASE_URL}/blog/shortTitle`, {
         params: {
           shortTitle: formData.shortTitle
         }
@@ -255,7 +256,7 @@ const Blogs = () => {
     if (formData.blog_image) formDataToSend.append("blogImage", formData.blog_image);
     if (formData.blog_pdf) formDataToSend.append("blogPdf", formData.blog_pdf);
     try {
-      const endpoint = formData.id ? `https://api.hachion.co/blog/update/${formData.id}` : `https://api.hachion.co/blog/add`;
+      const endpoint = formData.id ? `${API_BASE_URL}/blog/update/${formData.id}` : `${API_BASE_URL}/blog/add`;
       const method = formData.id ? axios.put : axios.post;
       const response = await method(endpoint, formDataToSend, {
         maxBodyLength: Infinity,
@@ -289,7 +290,7 @@ const Blogs = () => {
   const handleDelete = async id => {
     if (!window.confirm("Are you sure you want to delete this Blog?")) return;
     try {
-      await axios.delete(`https://api.hachion.co/blog/delete/${id}`);
+      await axios.delete(`${API_BASE_URL}/blog/delete/${id}`);
       setBlogs(prev => prev.filter(blog => blog.id !== id));
       setAllBlogs(prev => prev.filter(blog => blog.id !== id));
       setFilteredBlogs(prev => prev.filter(blog => blog.id !== id));
@@ -306,7 +307,7 @@ const Blogs = () => {
     setFormMode('Edit');
     setShowForm(true);
     try {
-      const res = await axios.get(`https://api.hachion.co/blog/${id}`);
+      const res = await axios.get(`${API_BASE_URL}/blog/${id}`);
       const blog = res.data;
       setFormData({
         id: blog.id,
@@ -586,7 +587,7 @@ const Blogs = () => {
                       <StyledTableCell align="center">{index + 1 + (currentPage - 1) * rowsPerPage}</StyledTableCell>
                       <StyledTableCell align="center">{blog.category_name}</StyledTableCell>
                       <StyledTableCell align="center">
-                        {blog.blog_image ? <img src={`https://api.hachion.co/uploads/prod/blogs/${blog.blog_image}`} alt="Blog" width="50" /> : 'No Image'}
+                        {blog.blog_image ? <img src={`${API_BASE_URL}/uploads/prod/blogs/${blog.blog_image}`} alt="Blog" width="50" /> : 'No Image'}
                       </StyledTableCell>
                       <StyledTableCell align="left" style={{
                   maxHeight: '100px',
@@ -608,7 +609,7 @@ const Blogs = () => {
                   }} />
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {blog.authorImage ? <img src={`https://api.hachion.co/uploads/prod/blogs/${blog.authorImage}`} alt="Author" width="50" /> : 'No Image'}
+                        {blog.authorImage ? <img src={`${API_BASE_URL}/uploads/prod/blogs/${blog.authorImage}`} alt="Author" width="50" /> : 'No Image'}
                       </StyledTableCell>
                       <StyledTableCell align="center">{blog.author}</StyledTableCell>
                       <StyledTableCell align="center">{dayjs(blog.date).format('MMM-DD-YYYY').toUpperCase()}</StyledTableCell>

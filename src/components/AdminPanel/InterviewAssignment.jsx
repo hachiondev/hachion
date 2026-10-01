@@ -3,18 +3,19 @@
 import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import "./InterviewTabs.css";
+import { API_BASE_URL } from "@/lib/apiBase";
 
 
-const TEMPLATES_ENDPOINT = `https://api.hachion.co/api/interview-templates`;
+const TEMPLATES_ENDPOINT = `${API_BASE_URL}/api/interview-templates`;
 
 
-const ASSIGNMENTS_SEARCH_ENDPOINT = `https://api.hachion.co/api/interviews/assignments`;
+const ASSIGNMENTS_SEARCH_ENDPOINT = `${API_BASE_URL}/api/interviews/assignments`;
 const ASSIGNMENT_CREATE = (templateId) =>
-  `https://api.hachion.co/api/interviews/templates/${templateId}/assignments`;
+  `${API_BASE_URL}/api/interviews/templates/${templateId}/assignments`;
 const ASSIGNMENT_UPDATE = (assignmentId) =>
-  `https://api.hachion.co/api/interviews/assignments/${assignmentId}`;
+  `${API_BASE_URL}/api/interviews/assignments/${assignmentId}`;
 const ASSIGNMENT_DELETE = (assignmentId) =>
-  `https://api.hachion.co/api/interviews/assignments/${assignmentId}`;
+  `${API_BASE_URL}/api/interviews/assignments/${assignmentId}`;
 
 
 const getCandidateLink = (assignmentId, token) => {

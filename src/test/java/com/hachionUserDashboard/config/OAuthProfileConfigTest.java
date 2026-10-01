@@ -54,13 +54,14 @@ class OAuthProfileConfigTest {
 
 	@Test
 	void documentsTheDefaultProfileWhenNothingIsSelected() {
-		// application.properties sets spring.profiles.active=test. A production host that
-		// does not override the profile (SPRING_PROFILES_ACTIVE / --spring.profiles.active)
-		// would therefore start with TEST settings. This test pins that fact so a change to
-		// the default is a conscious one.
+		// application.properties no longer sets spring.profiles.active, so every host
+		// must select one (SPRING_PROFILES_ACTIVE / --spring.profiles.active). Without
+		// one, the unqualified default redirect is PRODUCTION's - a local backend
+		// started that way sends Google's callback to api.hachion.co, not localhost.
+		// This test pins that fact so a change to the default is a conscious one.
 		new ApplicationContextRunner().withInitializer(new ConfigDataApplicationContextInitializer()).run(ctx -> {
-			assertEquals("test", p(ctx, "spring.profiles.active"));
-			assertEquals("https://api.test.hachion.co/login/oauth2/code/google", p(ctx, REDIRECT));
+			assertEquals(null, p(ctx, "spring.profiles.active"));
+			assertEquals("https://api.hachion.co/login/oauth2/code/google", p(ctx, REDIRECT));
 		});
 	}
 }
